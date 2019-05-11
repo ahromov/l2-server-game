@@ -48,7 +48,7 @@ import com.l2jserver.gameserver.network.serverpackets.EtcStatusUpdate;
 public abstract class L2Playable extends L2Character {
 	private L2Character _lockedTarget = null;
 	private L2PcInstance transferDmgTo = null;
-	
+    
 	/**
 	 * Creates an abstract playable creature.
 	 * @param objectId the playable object ID
@@ -316,7 +316,7 @@ public abstract class L2Playable extends L2Character {
 	public long getExp() {
 		return 0;
 	}
-	
+	    	
 	/**
 	 * <B><U> Overridden in </U> :</B>
 	 * <li>L2PcInstance</li>
@@ -326,7 +326,7 @@ public abstract class L2Playable extends L2Character {
 	public int getSp() {
 		return 0;
 	}
-	
+		
 	/**
 	 * Handle packets send on level change.<br>
 	 * <B><U> Overridden in </U> :</B>

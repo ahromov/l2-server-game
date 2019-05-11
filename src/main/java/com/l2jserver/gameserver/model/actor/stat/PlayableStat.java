@@ -37,37 +37,67 @@ public class PlayableStat extends CharStat {
 	protected static final Logger _log = Logger.getLogger(PlayableStat.class.getName());
 	private final AtomicLong _exp = new AtomicLong();
 	private final AtomicInteger _sp = new AtomicInteger();
-	
+	private boolean expBlock = false;
+	private boolean spBlock = false;
+
 	public PlayableStat(L2Playable activeChar) {
 		super(activeChar);
 	}
-	
+
 	public long getExp() {
 		return _exp.get();
 	}
-	
+
 	public int getSp() {
 		return _sp.get();
 	}
-	
+
 	/**
 	 * This method not contains checks!
+	 * 
 	 * @param exp
 	 */
 	public void setExp(long exp) {
 		_exp.set(exp);
 	}
-	
+
 	/**
 	 * This method not contains checks!
+	 * 
 	 * @param sp
 	 */
 	public void setSp(int sp) {
 		_sp.set(sp);
 	}
-	
+
+	public boolean isExpBlock() {
+		return expBlock;
+	}
+
+	/**
+	 * @param _expBlock the _expBlock to set
+	 */
+	public void setExpBlock(boolean _expBlock) {
+		this.expBlock = _expBlock;
+	}
+
+	/**
+	 * @return the _spBlock
+	 */
+	public boolean isSpBlock() {
+		return spBlock;
+	}
+
+	/**
+	 * @param _spBlock the _spBlock to set
+	 */
+	public void setSpBlock(boolean _spBlock) {
+		this.spBlock = _spBlock;
+	}
+
 	/**
 	 * Contains only under zero check
+	 * 
 	 * @param exp
 	 * @return
 	 */
@@ -81,9 +111,10 @@ public class PlayableStat extends CharStat {
 		syncExpLevel(false);
 		return true;
 	}
-	
+
 	/**
 	 * Contains only under zero check
+	 * 
 	 * @param sp
 	 * @return
 	 */
@@ -96,32 +127,38 @@ public class PlayableStat extends CharStat {
 		}
 		return true;
 	}
-	
+
 	public boolean addExp(long value) {
+		if (isExpBlock())
+			return false;
+
 		final long currentExp = getExp();
 		final long totalExp = currentExp + value;
-		final TerminateReturn term = EventDispatcher.getInstance().notifyEvent(new OnPlayableExpChanged(getActiveChar(), currentExp, totalExp), getActiveChar(), TerminateReturn.class);
+		final TerminateReturn term = EventDispatcher.getInstance().notifyEvent(
+				new OnPlayableExpChanged(getActiveChar(), currentExp, totalExp), getActiveChar(),
+				TerminateReturn.class);
 		if ((term != null) && term.terminate()) {
 			return false;
 		}
-		
+
 		if ((totalExp < 0) || ((value > 0) && (currentExp == (getExpForLevel(getMaxExpLevel()) - 1)))) {
 			return true;
 		}
-		
+
 		if (totalExp >= getExpForLevel(getMaxExpLevel())) {
 			value = (getExpForLevel(getMaxExpLevel()) - 1 - currentExp);
 		}
-		
+
 		if (_exp.addAndGet(value) >= getExpForLevel(getLevel() + 1)) {
 			syncExpLevel(true);
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Check if level need to be increased / decreased
+	 * 
 	 * @param isExpIncreased
 	 */
 	public void syncExpLevel(boolean isExpIncreased) {
@@ -129,7 +166,7 @@ public class PlayableStat extends CharStat {
 		long currentExp = getExp();
 		int maxLevel = getMaxLevel();
 		int currentLevel = getLevel();
-		
+
 		if (isExpIncreased) {
 			for (int tmp = currentLevel; tmp <= maxLevel; tmp++) {
 				if (currentExp >= getExpForLevel(tmp)) {
@@ -139,10 +176,12 @@ public class PlayableStat extends CharStat {
 					if (tmp < minimumLevel) {
 						tmp = minimumLevel;
 					}
-					
+
 					if (tmp != currentLevel) {
 						int newLevel = tmp - currentLevel;
-						EventDispatcher.getInstance().notifyEventAsync(new OnPlayerLevelChanged(getActiveChar().getActingPlayer(), currentLevel, newLevel), getActiveChar());
+						EventDispatcher.getInstance().notifyEventAsync(
+								new OnPlayerLevelChanged(getActiveChar().getActingPlayer(), currentLevel, newLevel),
+								getActiveChar());
 						getActiveChar().addLevel(newLevel);
 					}
 					break;
@@ -158,10 +197,12 @@ public class PlayableStat extends CharStat {
 					if (tmp < minimumLevel) {
 						tmp = minimumLevel;
 					}
-					
+
 					if (tmp != currentLevel) {
 						int newLevel = tmp - currentLevel;
-						EventDispatcher.getInstance().notifyEventAsync(new OnPlayerLevelChanged(getActiveChar().getActingPlayer(), currentLevel, newLevel), getActiveChar());
+						EventDispatcher.getInstance().notifyEventAsync(
+								new OnPlayerLevelChanged(getActiveChar().getActingPlayer(), currentLevel, newLevel),
+								getActiveChar());
 						getActiveChar().addLevel(newLevel);
 					}
 					break;
@@ -169,8 +210,11 @@ public class PlayableStat extends CharStat {
 			}
 		}
 	}
-	
+
 	public boolean addSp(int sp) {
+		if (isSpBlock())
+			return false;
+
 		if (sp < 0) {
 			_log.warning("addSp acept only possitive numbers!");
 			return false;
@@ -179,7 +223,7 @@ public class PlayableStat extends CharStat {
 		if (currentSp == Integer.MAX_VALUE) {
 			return false;
 		}
-		
+
 		if (sp > (Integer.MAX_VALUE - currentSp)) {
 			_sp.set(Integer.MAX_VALUE);
 		} else {
@@ -187,7 +231,7 @@ public class PlayableStat extends CharStat {
 		}
 		return true;
 	}
-	
+
 	public boolean addLevel(int value) {
 		final int currentLevel = getLevel();
 		if ((currentLevel + value) > getMaxLevel()) {
@@ -197,35 +241,36 @@ public class PlayableStat extends CharStat {
 				return false;
 			}
 		}
-		
+
 		boolean levelIncreased = ((currentLevel + value) > currentLevel);
 		value += currentLevel;
 		setLevel(value);
-		
+
 		// Sync up exp with current level
 		if ((getExp() >= getExpForLevel(getLevel() + 1)) || (getExpForLevel(getLevel()) > getExp())) {
 			setExp(getExpForLevel(getLevel()));
 		}
-		
+
 		if (!levelIncreased) {
 			return false;
 		}
-		
+
 		getActiveChar().getStatus().setCurrentHp(getActiveChar().getStat().getMaxHp());
 		getActiveChar().getStatus().setCurrentMp(getActiveChar().getStat().getMaxMp());
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Get required exp for specific level
+	 * 
 	 * @param level
 	 * @return
 	 */
 	public long getExpForLevel(int level) {
 		return ExperienceData.getInstance().getExpForLevel(level);
 	}
-	
+
 	/**
 	 * Get maximum level that playable can reach.<br>
 	 * <B><U> Overridden in </U> :</B>
@@ -236,7 +281,7 @@ public class PlayableStat extends CharStat {
 		// Dummy method
 		return Config.MAX_PLAYER_LEVEL;
 	}
-	
+
 	/**
 	 * Get maximum level of expirince is max level +1 for get (100%)<br>
 	 * <B><U> Overridden in </U> :</B>
@@ -247,12 +292,12 @@ public class PlayableStat extends CharStat {
 		// Dummy method
 		return Config.MAX_PLAYER_LEVEL + 1;
 	}
-	
+
 	@Override
 	public L2Playable getActiveChar() {
 		return (L2Playable) super.getActiveChar();
 	}
-	
+
 	@Override
 	public double getRunSpeed() {
 		if (getActiveChar().isInsideZone(ZoneId.SWAMP)) {
@@ -263,7 +308,7 @@ public class PlayableStat extends CharStat {
 		}
 		return super.getRunSpeed();
 	}
-	
+
 	@Override
 	public double getWalkSpeed() {
 		if (getActiveChar().isInsideZone(ZoneId.SWAMP)) {

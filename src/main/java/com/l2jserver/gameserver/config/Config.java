@@ -786,6 +786,8 @@ public final class Config {
 	public static int L2JMOD_DUALBOX_CHECK_MAX_L2EVENT_PARTICIPANTS_PER_IP;
 	public static Map<Integer, Integer> L2JMOD_DUALBOX_CHECK_WHITELIST;
 	public static boolean L2JMOD_ALLOW_CHANGE_PASSWORD;
+	public static boolean L2JMOD_ALLOW_CUSTOM_MAX_AGGRO_RANGE;
+	public static int L2JMOD_CUSTOM_MAX_AGGRO_RANGE;
 	// --------------------------------------------------
 	// NPC Settings
 	// --------------------------------------------------
@@ -2412,6 +2414,8 @@ public final class Config {
 			}
 		}
 		L2JMOD_ALLOW_CHANGE_PASSWORD = L2JModSettings.getBoolean("AllowChangePassword", false);
+		L2JMOD_ALLOW_CUSTOM_MAX_AGGRO_RANGE = L2JModSettings.getBoolean("AllowCustomMaxAggroRange", false);
+	    L2JMOD_CUSTOM_MAX_AGGRO_RANGE = L2JModSettings.getInt("CustomMaxAggroRange", 450);
 
 		// Load PvP L2Properties file (if exists)
 		final PropertiesParser PVPSettings = new PropertiesParser(PVP_CONFIG_FILE);

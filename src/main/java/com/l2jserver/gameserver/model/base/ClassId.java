@@ -33,8 +33,7 @@ import com.l2jserver.gameserver.model.interfaces.IIdentifiable;
  * @version $Revision: 1.4.4.4 $ $Date: 2005/03/27 15:29:33 $
  */
 public enum ClassId implements IIdentifiable {
-	fighter(0x00, false, Race.HUMAN, null),
-	
+	fighter(0x00, false, Race.HUMAN, null),	
 	warrior(0x01, false, Race.HUMAN, fighter),
 	gladiator(0x02, false, Race.HUMAN, warrior),
 	warlord(0x03, false, Race.HUMAN, warrior),
@@ -306,7 +305,7 @@ public enum ClassId implements IIdentifiable {
 			return 0;
 		}
 		
-		return 1 + _parent.level();
+		return _parent.level() + 1;
 	}
 	
 	/**

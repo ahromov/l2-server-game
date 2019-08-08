@@ -9,7 +9,7 @@
 name="l2-server-game"
 rcvar="l2game_enable"
 folder="/usr/local/l2-server/game/"
-goprogram_user="nobody"
+goprogram_user="l2user"
 pidfile=/var/run/${name}.pid
  
 start_cmd="goprogram_start"
@@ -19,7 +19,7 @@ status_cmd="goprogram_status"
 goprogram_start() {
 	echo "${name} starting ..."
 	cd ${folder}
-	./GameServer_loop.sh ${pidfile}
+	./GameServer_loop.sh ${pidfile} ${goprogram_user}
 }
 
 goprogram_stop() {

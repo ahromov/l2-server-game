@@ -271,6 +271,7 @@ public final class Config {
 	public static boolean SILENCE_MODE_EXCLUDE;
 	public static boolean ALT_VALIDATE_TRIGGER_SKILLS;
 	public static int FREE_BUFFS_TP_TO_LEVEL;
+	public static int TP_FEE;
 
 	// --------------------------------------------------
 	// ClanHall Settings
@@ -1680,6 +1681,7 @@ public final class Config {
 		SILENCE_MODE_EXCLUDE = character.getBoolean("SilenceModeExclude", false);
 		ALT_VALIDATE_TRIGGER_SKILLS = character.getBoolean("AltValidateTriggerSkills", false);
 		FREE_BUFFS_TP_TO_LEVEL = character.getInt("PaidFreeLevel", 0);
+		TP_FEE = character.getInt("TeleportFee", 0);
 		PLAYER_MOVEMENT_BLOCK_TIME = character.getInt("NpcTalkBlockingTime", 0) * 1000;
 
 		// Load Telnet L2Properties file (if exists)

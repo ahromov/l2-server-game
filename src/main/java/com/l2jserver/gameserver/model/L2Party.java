@@ -197,6 +197,7 @@ public class L2Party extends AbstractPlayerGroup {
 	 * @param target
 	 * @return
 	 */
+	@SuppressWarnings("incomplete-switch")
 	private L2PcInstance getActualLooter(L2PcInstance player, int ItemId, boolean spoil, L2Character target) {
 		L2PcInstance looter = null;
 		

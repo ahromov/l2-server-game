@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,13 +18,14 @@
  */
 package com.l2jserver.gameserver.instancemanager;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.AdminData;
 import com.l2jserver.gameserver.enums.PetitionState;
 import com.l2jserver.gameserver.model.Petition;
@@ -233,7 +234,7 @@ public final class PetitionManager {
 	}
 	
 	public boolean isPetitioningAllowed() {
-		return Config.PETITIONING_ALLOWED;
+		return character().petitioningAllowed();
 	}
 	
 	public boolean isPlayerPetitionPending(L2PcInstance petitioner) {

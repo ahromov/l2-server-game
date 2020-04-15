@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.instancemanager;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +35,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.itemauction.ItemAuctionInstance;
 
 /**
@@ -49,7 +51,7 @@ public final class ItemAuctionManager {
 	protected ItemAuctionManager() {
 		_auctionIds = new AtomicInteger(1);
 		
-		if (!Config.ALT_ITEM_AUCTION_ENABLED) {
+		if (!general().itemAuctionEnabled()) {
 			LOG.info("Auction Manager disabled by config.");
 			return;
 		}
@@ -64,7 +66,7 @@ public final class ItemAuctionManager {
 			LOG.error("Failed loading auctions!", e);
 		}
 		
-		final File file = new File(Config.DATAPACK_ROOT + "/data/ItemAuctions.xml");
+		final File file = new File(server().getDatapackRoot(), "data/ItemAuctions.xml");
 		if (!file.exists()) {
 			LOG.warn("Missing ItemAuctions.xml!");
 			return;

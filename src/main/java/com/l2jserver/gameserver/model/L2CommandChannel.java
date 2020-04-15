@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,12 +18,13 @@
  */
 package com.l2jserver.gameserver.model;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.SystemMessageId;
@@ -173,7 +174,7 @@ public class L2CommandChannel extends AbstractPlayerGroup {
 		if (!((obj instanceof L2Character) && ((L2Character) obj).isRaid())) {
 			return false;
 		}
-		return (getMemberCount() >= Config.LOOT_RAIDS_PRIVILEGE_CC_SIZE);
+		return (getMemberCount() >= character().getRaidLootRightsCCSize());
 	}
 	
 	/**

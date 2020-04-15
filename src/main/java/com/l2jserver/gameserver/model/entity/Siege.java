@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model.entity;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -31,7 +33,6 @@ import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.ClanTable;
 import com.l2jserver.gameserver.data.xml.impl.SiegeScheduleData;
 import com.l2jserver.gameserver.enums.SiegeTeleportWhoType;
@@ -469,7 +470,7 @@ public class Siege implements Siegable {
 					member.setSiegeSide(getCastle().getResidenceId());
 					if (checkIfInZone(member)) {
 						member.setIsInSiege(true);
-						member.startFameTask(Config.CASTLE_ZONE_FAME_TASK_FREQUENCY * 1000, Config.CASTLE_ZONE_FAME_AQUIRE_POINTS);
+						member.startFameTask(character().getCastleZoneFameTaskFrequency(), character().getCastleZoneFameAquirePoints());
 					}
 				}
 				member.sendPacket(new UserInfo(member));
@@ -507,7 +508,7 @@ public class Siege implements Siegable {
 					member.setSiegeSide(getCastle().getResidenceId());
 					if (checkIfInZone(member)) {
 						member.setIsInSiege(true);
-						member.startFameTask(Config.CASTLE_ZONE_FAME_TASK_FREQUENCY * 1000, Config.CASTLE_ZONE_FAME_AQUIRE_POINTS);
+						member.startFameTask(character().getCastleZoneFameTaskFrequency(), character().getCastleZoneFameAquirePoints());
 					}
 				}
 				member.sendPacket(new UserInfo(member));
@@ -1380,12 +1381,12 @@ public class Siege implements Siegable {
 	
 	@Override
 	public int getFameFrequency() {
-		return Config.CASTLE_ZONE_FAME_TASK_FREQUENCY;
+		return character().getCastleZoneFameTaskFrequency();
 	}
 	
 	@Override
 	public int getFameAmount() {
-		return Config.CASTLE_ZONE_FAME_AQUIRE_POINTS;
+		return character().getCastleZoneFameAquirePoints();
 	}
 	
 	@Override

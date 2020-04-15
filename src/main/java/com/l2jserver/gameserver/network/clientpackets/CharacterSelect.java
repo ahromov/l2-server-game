@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,12 +18,13 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.general;
 import static com.l2jserver.gameserver.network.L2GameClient.GameClientState.JOINING;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.CharNameTable;
 import com.l2jserver.gameserver.data.xml.impl.SecondaryAuthData;
 import com.l2jserver.gameserver.instancemanager.AntiFeedManager;
@@ -107,16 +108,16 @@ public class CharacterSelect extends L2GameClientPacket {
 						return;
 					}
 					
-					if ((Config.L2JMOD_DUALBOX_CHECK_MAX_PLAYERS_PER_IP > 0) && !AntiFeedManager.getInstance().tryAddClient(AntiFeedManager.GAME_ID, client, Config.L2JMOD_DUALBOX_CHECK_MAX_PLAYERS_PER_IP)) {
+					if ((customs().getDualboxCheckMaxPlayersPerIP() > 0) && !AntiFeedManager.getInstance().tryAddClient(AntiFeedManager.GAME_ID, client, customs().getDualboxCheckMaxPlayersPerIP())) {
 						final NpcHtmlMessage msg = new NpcHtmlMessage();
 						msg.setFile(info.getHtmlPrefix(), "data/html/mods/IPRestriction.htm");
-						msg.replace("%max%", String.valueOf(AntiFeedManager.getInstance().getLimit(client, Config.L2JMOD_DUALBOX_CHECK_MAX_PLAYERS_PER_IP)));
+						msg.replace("%max%", String.valueOf(AntiFeedManager.getInstance().getLimit(client, customs().getDualboxCheckMaxPlayersPerIP())));
 						client.sendPacket(msg);
 						return;
 					}
 					
 					// The L2PcInstance must be created here, so that it can be attached to the L2GameClient
-					if (Config.DEBUG) {
+					if (general().debug()) {
 						_log.fine("selected slot:" + _charSlot);
 					}
 					

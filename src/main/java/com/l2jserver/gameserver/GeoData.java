@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,13 +18,16 @@
  */
 package com.l2jserver.gameserver;
 
+import static com.l2jserver.gameserver.config.Configuration.geodata;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.DoorData;
 import com.l2jserver.gameserver.model.L2Object;
 import com.l2jserver.gameserver.model.L2World;
@@ -53,22 +56,26 @@ public class GeoData {
 	
 	private static final int SPAWN_Z_DELTA_LIMIT = 100;
 	
+	private static final Map<String, Boolean> GEODATA_REGIONS = new HashMap<>();
+	
 	private final GeoDriver _driver = new GeoDriver();
 	
 	protected GeoData() {
+		loadGeodataRegions();
+		
 		int loadedRegions = 0;
 		try {
 			for (int regionX = L2World.TILE_X_MIN; regionX <= L2World.TILE_X_MAX; regionX++) {
 				for (int regionY = L2World.TILE_Y_MIN; regionY <= L2World.TILE_Y_MAX; regionY++) {
-					final Path geoFilePath = Config.GEODATA_PATH.resolve(String.format(FILE_NAME_FORMAT, regionX, regionY));
-					final Boolean loadFile = Config.GEODATA_REGIONS.get(regionX + "_" + regionY);
+					final Path geoFilePath = geodata().getGeoDataPath().toPath().resolve(String.format(FILE_NAME_FORMAT, regionX, regionY));
+					final Boolean loadFile = GEODATA_REGIONS.get(regionX + "_" + regionY);
 					if (loadFile != null) {
 						if (loadFile) {
 							LOG.info("Loading {}...", geoFilePath.getFileName());
 							_driver.loadRegion(geoFilePath, regionX, regionY);
 							loadedRegions++;
 						}
-					} else if (Config.TRY_LOAD_UNSPECIFIED_REGIONS && Files.exists(geoFilePath)) {
+					} else if (geodata().tryLoadUnspecifiedRegions() && Files.exists(geoFilePath)) {
 						try {
 							LOG.info("Loading {}...", geoFilePath.getFileName());
 							_driver.loadRegion(geoFilePath, regionX, regionY);
@@ -85,6 +92,19 @@ public class GeoData {
 		}
 		
 		LOG.info("Loaded {} regions.", loadedRegions);
+	}
+	
+	private static void loadGeodataRegions() {
+		for (int regionX = L2World.TILE_X_MIN; regionX <= L2World.TILE_X_MAX; regionX++) {
+			for (int regionY = L2World.TILE_Y_MIN; regionY <= L2World.TILE_Y_MAX; regionY++) {
+				String key = regionX + "_" + regionY;
+				if (geodata().getIncludedRegions().contains(regionX + "_" + regionY)) {
+					GEODATA_REGIONS.put(key, true);
+				} else if (geodata().getExcludedRegions().contains(regionX + "_" + regionY)) {
+					GEODATA_REGIONS.put(key, false);
+				}
+			}
+		}
 	}
 	
 	public boolean hasGeoPos(int geoX, int geoY) {

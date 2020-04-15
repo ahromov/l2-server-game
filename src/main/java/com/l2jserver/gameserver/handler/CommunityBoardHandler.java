@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,12 +18,13 @@
  */
 package com.l2jserver.gameserver.handler;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.util.Util;
@@ -93,7 +94,7 @@ public final class CommunityBoardHandler implements IHandler<IParseBoardHandler,
 			return;
 		}
 		
-		if (!Config.ENABLE_COMMUNITY_BOARD) {
+		if (!general().enableCommunityBoard()) {
 			player.sendPacket(SystemMessageId.CB_OFFLINE);
 			return;
 		}
@@ -122,7 +123,7 @@ public final class CommunityBoardHandler implements IHandler<IParseBoardHandler,
 			return;
 		}
 		
-		if (!Config.ENABLE_COMMUNITY_BOARD) {
+		if (!general().enableCommunityBoard()) {
 			player.sendPacket(SystemMessageId.CB_OFFLINE);
 			return;
 		}

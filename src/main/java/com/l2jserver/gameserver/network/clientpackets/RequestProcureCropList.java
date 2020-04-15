@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,11 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.instancemanager.CastleManorManager;
 import com.l2jserver.gameserver.model.CropProcure;
@@ -45,7 +46,7 @@ public class RequestProcureCropList extends L2GameClientPacket {
 	@Override
 	protected final void readImpl() {
 		final int count = readD();
-		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != _buf.remaining())) {
+		if ((count <= 0) || (count > MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != _buf.remaining())) {
 			return;
 		}
 		
@@ -125,7 +126,7 @@ public class RequestProcureCropList extends L2GameClientPacket {
 		}
 		
 		// Used when Config.ALT_MANOR_SAVE_ALL_ACTIONS == true
-		final int updateListSize = Config.ALT_MANOR_SAVE_ALL_ACTIONS ? _items.size() : 0;
+		final int updateListSize = general().manorSaveAllActions() ? _items.size() : 0;
 		final List<CropProcure> updateList = new ArrayList<>(updateListSize);
 		
 		// Proceed the purchase
@@ -163,12 +164,12 @@ public class RequestProcureCropList extends L2GameClientPacket {
 			}
 			player.addItem("Manor", i.getRewardId(), rewardItemCount, manager, true);
 			
-			if (Config.ALT_MANOR_SAVE_ALL_ACTIONS) {
+			if (general().manorSaveAllActions()) {
 				updateList.add(cp);
 			}
 		}
 		
-		if (Config.ALT_MANOR_SAVE_ALL_ACTIONS) {
+		if (general().manorSaveAllActions()) {
 			manor.updateCurrentProcure(castleId, updateList);
 		}
 	}

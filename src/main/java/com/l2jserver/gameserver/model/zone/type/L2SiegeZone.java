@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.model.zone.type;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.castle;
+
 import com.l2jserver.gameserver.datatables.SkillData;
 import com.l2jserver.gameserver.enums.MountType;
 import com.l2jserver.gameserver.instancemanager.ClanHallSiegeManager;
@@ -140,12 +141,12 @@ public class L2SiegeZone extends L2ZoneType {
 				if (plyer.isRegisteredOnThisSiegeField(getSettings().getSiegeableId())) {
 					plyer.setIsInSiege(true); // in siege
 					if (getSettings().getSiege().giveFame() && (getSettings().getSiege().getFameFrequency() > 0)) {
-						plyer.startFameTask(getSettings().getSiege().getFameFrequency() * 1000, getSettings().getSiege().getFameAmount());
+						plyer.startFameTask(getSettings().getSiege().getFameFrequency(), getSettings().getSiege().getFameAmount());
 					}
 				}
 				
 				character.sendPacket(SystemMessageId.ENTERED_COMBAT_ZONE);
-				if (!Config.ALLOW_WYVERN_DURING_SIEGE && (plyer.getMountType() == MountType.WYVERN)) {
+				if (!castle().allowRideWyvernDuringSiege() && (plyer.getMountType() == MountType.WYVERN)) {
 					plyer.sendPacket(SystemMessageId.AREA_CANNOT_BE_ENTERED_WHILE_MOUNTED_WYVERN);
 					plyer.enteredNoLanding(DISMOUNT_DELAY);
 				}

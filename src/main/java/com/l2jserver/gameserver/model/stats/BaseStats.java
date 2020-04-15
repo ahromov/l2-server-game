@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model.stats;
 
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.io.File;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
@@ -29,7 +31,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.actor.L2Character;
 
 /**
@@ -140,7 +141,7 @@ public enum BaseStats {
 		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setValidating(false);
 		factory.setIgnoringComments(true);
-		final File file = new File(Config.DATAPACK_ROOT, "data/stats/statBonus.xml");
+		final File file = new File(server().getDatapackRoot(), "data/stats/statBonus.xml");
 		Document doc = null;
 		
 		if (file.exists()) {

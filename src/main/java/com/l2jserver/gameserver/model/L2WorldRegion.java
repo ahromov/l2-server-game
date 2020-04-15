@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -28,7 +30,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Logger;
 
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.datatables.SpawnTable;
 import com.l2jserver.gameserver.model.actor.L2Attackable;
 import com.l2jserver.gameserver.model.actor.L2Character;
@@ -59,7 +60,7 @@ public final class L2WorldRegion {
 		_tileY = pTileY;
 		
 		// default a newly initialized region to inactive, unless always on is specified
-		_active = Config.GRIDS_ALWAYS_ON;
+		_active = general().gridsAlwaysOn();
 	}
 	
 	public List<L2ZoneType> getZones() {
@@ -296,7 +297,7 @@ public final class L2WorldRegion {
 			}
 			
 			// then, set a timer to activate the neighbors
-			_neighborsTask = ThreadPoolManager.getInstance().scheduleGeneral(new NeighborsTask(true), 1000 * Config.GRID_NEIGHBOR_TURNON_TIME);
+			_neighborsTask = ThreadPoolManager.getInstance().scheduleGeneral(new NeighborsTask(true), 1000 * general().getGridNeighborTurnOnTime());
 		}
 	}
 	
@@ -313,7 +314,7 @@ public final class L2WorldRegion {
 			
 			// start a timer to "suggest" a deactivate to self and neighbors.
 			// suggest means: first check if a neighbor has L2PcInstances in it. If not, deactivate.
-			_neighborsTask = ThreadPoolManager.getInstance().scheduleGeneral(new NeighborsTask(false), 1000 * Config.GRID_NEIGHBOR_TURNOFF_TIME);
+			_neighborsTask = ThreadPoolManager.getInstance().scheduleGeneral(new NeighborsTask(false), 1000 * general().getGridNeighborTurnOffTime());
 		}
 	}
 	
@@ -336,7 +337,7 @@ public final class L2WorldRegion {
 			_allPlayable.put(object.getObjectId(), (L2Playable) object);
 			
 			// if this is the first player to enter the region, activate self & neighbors
-			if ((_allPlayable.size() == 1) && (!Config.GRIDS_ALWAYS_ON)) {
+			if ((_allPlayable.size() == 1) && !general().gridsAlwaysOn()) {
 				startActivation();
 			}
 		}
@@ -359,7 +360,7 @@ public final class L2WorldRegion {
 		if (object instanceof L2Playable) {
 			_allPlayable.remove(object.getObjectId());
 			
-			if (_allPlayable.isEmpty() && !Config.GRIDS_ALWAYS_ON) {
+			if (_allPlayable.isEmpty() && !general().gridsAlwaysOn()) {
 				startDeactivation();
 			}
 		}

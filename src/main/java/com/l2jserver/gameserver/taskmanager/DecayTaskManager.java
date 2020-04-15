@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.taskmanager;
 
+import static com.l2jserver.gameserver.config.Configuration.npc;
+
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +28,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import com.l2jserver.gameserver.config.Config;
+import com.l2jserver.gameserver.config.Configuration;
 import com.l2jserver.gameserver.model.actor.L2Attackable;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.templates.L2NpcTemplate;
@@ -41,7 +43,6 @@ public final class DecayTaskManager {
 	
 	/**
 	 * Adds a decay task for the specified character.<br>
-	 * <br>
 	 * If the decay task already exists it cancels it and re-adds it.
 	 * @param character the character
 	 */
@@ -54,11 +55,11 @@ public final class DecayTaskManager {
 		if (character.getTemplate() instanceof L2NpcTemplate) {
 			delay = ((L2NpcTemplate) character.getTemplate()).getCorpseTime();
 		} else {
-			delay = Config.DEFAULT_CORPSE_TIME;
+			delay = npc().getDefaultCorpseTime();
 		}
 		
 		if ((character instanceof L2Attackable) && (((L2Attackable) character).isSpoiled() || ((L2Attackable) character).isSeeded())) {
-			delay += Config.SPOILED_CORPSE_EXTEND_TIME;
+			delay += npc().getSpoiledCorpseExtendTime();
 		}
 		
 		add(character, delay, TimeUnit.SECONDS);
@@ -131,12 +132,12 @@ public final class DecayTaskManager {
 	public String toString() {
 		StringBuilder ret = new StringBuilder();
 		ret.append("============= DecayTask Manager Report ============");
-		ret.append(Config.EOL);
+		ret.append(Configuration.EOL);
 		ret.append("Tasks count: ");
 		ret.append(_decayTasks.size());
-		ret.append(Config.EOL);
+		ret.append(Configuration.EOL);
 		ret.append("Tasks dump:");
-		ret.append(Config.EOL);
+		ret.append(Configuration.EOL);
 		
 		for (Entry<L2Character, ScheduledFuture<?>> entry : _decayTasks.entrySet()) {
 			ret.append("Class/Name: ");
@@ -145,7 +146,7 @@ public final class DecayTaskManager {
 			ret.append(entry.getKey().getName());
 			ret.append(" decay timer: ");
 			ret.append(entry.getValue().getDelay(TimeUnit.MILLISECONDS));
-			ret.append(Config.EOL);
+			ret.append(Configuration.EOL);
 		}
 		
 		return ret.toString();

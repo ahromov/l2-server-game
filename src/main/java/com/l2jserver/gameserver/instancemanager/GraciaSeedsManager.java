@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,12 @@
  */
 package com.l2jserver.gameserver.instancemanager;
 
+import static com.l2jserver.gameserver.config.Configuration.graciaSeeds;
+
 import java.util.Calendar;
 import java.util.logging.Logger;
 
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.instancemanager.tasks.UpdateSoDStateTask;
 import com.l2jserver.gameserver.model.quest.Quest;
 
@@ -88,11 +89,11 @@ public final class GraciaSeedsManager {
 			case 2:
 				// Conquest Complete state, if too much time is passed than change to defense state
 				long timePast = System.currentTimeMillis() - _SoDLastStateChangeDate.getTimeInMillis();
-				if (timePast >= Config.SOD_STAGE_2_LENGTH) {
-					// change to Attack state because Defend statet is not implemented
+				if (timePast >= graciaSeeds().getStage2Length()) {
+					// change to Attack state because Defend state is not implemented
 					setSoDState(1, true);
 				} else {
-					ThreadPoolManager.getInstance().scheduleEffect(new UpdateSoDStateTask(), Config.SOD_STAGE_2_LENGTH - timePast);
+					ThreadPoolManager.getInstance().scheduleEffect(new UpdateSoDStateTask(), graciaSeeds().getStage2Length() - timePast);
 				}
 				break;
 			case 3:
@@ -116,7 +117,7 @@ public final class GraciaSeedsManager {
 	public void increaseSoDTiatKilled() {
 		if (_SoDState == 1) {
 			_SoDTiatKilled++;
-			if (_SoDTiatKilled >= Config.SOD_TIAT_KILL_COUNT) {
+			if (_SoDTiatKilled >= graciaSeeds().getTiatKillCountForNextState()) {
 				setSoDState(2, false);
 			}
 			saveData(SODTYPE);
@@ -154,7 +155,7 @@ public final class GraciaSeedsManager {
 			case 1:
 				return -1;
 			case 2:
-				return ((_SoDLastStateChangeDate.getTimeInMillis() + Config.SOD_STAGE_2_LENGTH) - System.currentTimeMillis());
+				return ((_SoDLastStateChangeDate.getTimeInMillis() + graciaSeeds().getStage2Length()) - System.currentTimeMillis());
 			case 3:
 				// not implemented yet
 				return -1;

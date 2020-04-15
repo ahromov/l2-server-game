@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.status;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.telnet;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,7 +31,6 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.handler.ITelnetHandler;
 import com.l2jserver.gameserver.handler.TelnetHandler;
 
@@ -45,7 +47,7 @@ public final class GameStatusThread extends Thread {
 	private final int _uptime;
 	
 	private void telnetOutput(int type, String text) {
-		if (Config.DEVELOPER) {
+		if (general().developer()) {
 			if (type == 1) {
 				System.out.println("TELNET | " + text);
 			} else if (type == 2) {
@@ -75,18 +77,18 @@ public final class GameStatusThread extends Thread {
 		telnetOutput(1, "Connection from: " + clientStringIP);
 		
 		// read and loop thru list of IPs, compare with newIP
-		if (Config.DEVELOPER) {
+		if (general().developer()) {
 			telnetOutput(2, "");
 		}
 		
-		for (String host : Config.TELNET_HOSTS.split(",")) {
+		for (String host : telnet().getHosts()) {
 			try {
 				String ipToCompare = InetAddress.getByName(host).getHostAddress();
 				if (clientStringIP.equals(ipToCompare)) {
 					result = true;
 				}
 				
-				if (Config.DEBUG) {
+				if (general().debug()) {
 					telnetOutput(3, clientStringIP + " = " + ipToCompare + "(" + host + ") = " + result);
 				}
 			} catch (Exception ex) {
@@ -94,7 +96,7 @@ public final class GameStatusThread extends Thread {
 			}
 		}
 		
-		if (Config.DEVELOPER) {
+		if (general().developer()) {
 			telnetOutput(4, "Allow IP: " + result);
 		}
 		return result;

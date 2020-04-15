@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.instancemanager;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +37,6 @@ import org.w3c.dom.Node;
 
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.commons.util.Rnd;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.datatables.SpawnTable;
 import com.l2jserver.gameserver.model.DimensionalRiftRoom;
 import com.l2jserver.gameserver.model.L2Spawn;
@@ -118,7 +120,7 @@ public final class DimensionalRiftManager {
 			factory.setValidating(false);
 			factory.setIgnoringComments(true);
 			
-			File file = new File(Config.DATAPACK_ROOT, "data/dimensionalRift.xml");
+			File file = new File(server().getDatapackRoot(), "data/dimensionalRift.xml");
 			if (!file.exists()) {
 				LOG.warn("Could not find file {}!", file.getAbsoluteFile());
 				return;
@@ -239,11 +241,11 @@ public final class DimensionalRiftManager {
 			return;
 		}
 		
-		if (player.getParty().getMemberCount() < Config.RIFT_MIN_PARTY_SIZE) {
+		if (player.getParty().getMemberCount() < general().getRiftMinPartySize()) {
 			final NpcHtmlMessage html = new NpcHtmlMessage(npc.getObjectId());
 			html.setFile(player.getHtmlPrefix(), "data/html/seven_signs/rift/SmallParty.htm");
 			html.replace("%npc_name%", npc.getName());
-			html.replace("%count%", Integer.toString(Config.RIFT_MIN_PARTY_SIZE));
+			html.replace("%count%", Integer.toString(general().getRiftMinPartySize()));
 			player.sendPacket(html);
 			return;
 		}
@@ -344,17 +346,17 @@ public final class DimensionalRiftManager {
 	private int getNeededItems(byte type) {
 		switch (type) {
 			case 1:
-				return Config.RIFT_ENTER_COST_RECRUIT;
+				return general().getRecruitCost();
 			case 2:
-				return Config.RIFT_ENTER_COST_SOLDIER;
+				return general().getSoldierCost();
 			case 3:
-				return Config.RIFT_ENTER_COST_OFFICER;
+				return general().getOfficerCost();
 			case 4:
-				return Config.RIFT_ENTER_COST_CAPTAIN;
+				return general().getCaptainCost();
 			case 5:
-				return Config.RIFT_ENTER_COST_COMMANDER;
+				return general().getCommanderCost();
 			case 6:
-				return Config.RIFT_ENTER_COST_HERO;
+				return general().getHeroCost();
 			default:
 				throw new IndexOutOfBoundsException();
 		}
@@ -371,7 +373,7 @@ public final class DimensionalRiftManager {
 		showHtmlFile(player, "data/html/seven_signs/rift/Cheater.htm", npc);
 		if (!player.isGM()) {
 			LOG.warn("Player {} was cheating in dimension rift area!", player);
-			Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " tried to cheat in dimensional rift.", Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " tried to cheat in dimensional rift.");
 		}
 	}
 	

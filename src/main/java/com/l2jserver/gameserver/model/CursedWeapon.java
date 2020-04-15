@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +27,6 @@ import java.util.logging.Logger;
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.TransformData;
 import com.l2jserver.gameserver.datatables.SkillData;
 import com.l2jserver.gameserver.instancemanager.CursedWeaponsManager;
@@ -107,7 +108,7 @@ public class CursedWeapon implements INamable {
 				
 				// Destroy
 				L2ItemInstance removedItem = _player.getInventory().destroyItemByItemId("", _itemId, 1, _player, null);
-				if (!Config.FORCE_INVENTORY_UPDATE) {
+				if (!general().forceInventoryUpdate()) {
 					InventoryUpdate iu = new InventoryUpdate();
 					if (removedItem.getCount() == 0) {
 						iu.addRemovedItem(removedItem);
@@ -152,7 +153,7 @@ public class CursedWeapon implements INamable {
 			if ((_player != null) && (_player.getInventory().getItemByItemId(_itemId) != null)) {
 				// Destroy
 				L2ItemInstance removedItem = _player.getInventory().destroyItemByItemId("", _itemId, 1, _player, null);
-				if (!Config.FORCE_INVENTORY_UPDATE) {
+				if (!general().forceInventoryUpdate()) {
 					InventoryUpdate iu = new InventoryUpdate();
 					if (removedItem.getCount() == 0) {
 						iu.addRemovedItem(removedItem);
@@ -388,7 +389,7 @@ public class CursedWeapon implements INamable {
 		_player.setCurrentCp(_player.getMaxCp());
 		
 		// Refresh inventory
-		if (!Config.FORCE_INVENTORY_UPDATE) {
+		if (!general().forceInventoryUpdate()) {
 			InventoryUpdate iu = new InventoryUpdate();
 			iu.addItem(_item);
 			// iu.addItems(Arrays.asList(items));
@@ -411,7 +412,7 @@ public class CursedWeapon implements INamable {
 	}
 	
 	public void saveData() {
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			_log.info("CursedWeapon: Saving data to disk.");
 		}
 		

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.model;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.hexId;
+
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.interfaces.IIdentifiable;
 import com.l2jserver.gameserver.network.serverpackets.AllyCrest;
@@ -87,17 +88,17 @@ public final class L2Crest implements IIdentifiable {
 		switch (getType()) {
 			case PLEDGE: {
 				activeChar.sendPacket(new PledgeCrest(getId(), getData()));
-				path = "Crest.crest_" + Config.SERVER_ID + "_" + getId();
+				path = "Crest.crest_" + hexId().getServerID() + "_" + getId();
 				break;
 			}
 			case PLEDGE_LARGE: {
 				activeChar.sendPacket(new ExPledgeCrestLarge(getId(), getData()));
-				path = "Crest.crest_" + Config.SERVER_ID + "_" + getId() + "_l";
+				path = "Crest.crest_" + hexId().getServerID() + "_" + getId() + "_l";
 				break;
 			}
 			case ALLY: {
 				activeChar.sendPacket(new AllyCrest(getId(), getData()));
-				path = "Crest.crest_" + Config.SERVER_ID + "_" + getId();
+				path = "Crest.crest_" + hexId().getServerID() + "_" + getId();
 				break;
 			}
 		}

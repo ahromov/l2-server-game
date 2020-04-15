@@ -1,7 +1,22 @@
-image: maven:3.6.0-jdk-11-slim
+image: maven:3.6.3-jdk-11-slim
 
 pipelines:
-  default:
-    - step:
-        script:
-          - mvn -version
+   branches:
+      develop:
+         - step:
+            caches:
+             - maven
+            script:
+             - mvn install
+            artifacts:
+             - target/*.zip
+         - step:
+            deployment: Production
+            script:
+             - pipe: atlassian/ftp-deploy:0.2.3
+               variables:
+                 USER: $FTP_USER
+                 PASSWORD: $FTP_PASSWORD
+                 SERVER: $FTP_HOST
+                 REMOTE_PATH: $FTP_REMOTE_PATH
+                 LOCAL_PATH: 'target/'

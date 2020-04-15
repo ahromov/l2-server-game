@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,11 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import java.util.Arrays;
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.ItemLocation;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -303,7 +303,7 @@ public abstract class AbstractRefinePacket extends L2GameClientPacket {
 		if (item.isTimeLimitedItem()) {
 			return false;
 		}
-		if (item.isPvp() && !Config.ALT_ALLOW_AUGMENT_PVP_ITEMS) {
+		if (item.isPvp() && !character().allowAugmentPvPItems()) {
 			return false;
 		}
 		if (item.getItem().getCrystalType().isLesser(CrystalType.C)) {
@@ -341,11 +341,10 @@ public abstract class AbstractRefinePacket extends L2GameClientPacket {
 			return false; // neither weapon nor armor ?
 		}
 		
-		// blacklist check
-		if (Arrays.binarySearch(Config.AUGMENTATION_BLACKLIST, item.getId()) >= 0) {
+		// Blacklist check
+		if (character().getAugmentationBlacklist().contains(item.getId())) {
 			return false;
 		}
-		
 		return true;
 	}
 	

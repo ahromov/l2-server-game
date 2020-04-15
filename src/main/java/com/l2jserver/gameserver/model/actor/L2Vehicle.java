@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model.actor;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -28,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import com.l2jserver.gameserver.GameTimeController;
 import com.l2jserver.gameserver.ThreadPoolManager;
 import com.l2jserver.gameserver.ai.CtrlIntention;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.InstanceType;
 import com.l2jserver.gameserver.instancemanager.MapRegionManager;
 import com.l2jserver.gameserver.model.L2World;
@@ -332,7 +333,7 @@ public abstract class L2Vehicle extends L2Character {
 			revalidateZone(true);
 		}
 		
-		if (Config.MOVE_BASED_KNOWNLIST && updateKnownObjects) {
+		if (general().moveBasedKnownList() && updateKnownObjects) {
 			getKnownList().findObjects();
 		}
 	}

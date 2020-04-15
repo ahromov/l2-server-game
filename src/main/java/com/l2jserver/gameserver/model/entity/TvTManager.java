@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.model.entity;
 
+import static com.l2jserver.gameserver.config.Configuration.tvt;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
 import java.util.Calendar;
 import java.util.concurrent.ScheduledFuture;
 
@@ -25,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.util.Broadcast;
 
 /**
@@ -39,7 +41,7 @@ public class TvTManager {
 	private TvTStartTask _task;
 	
 	protected TvTManager() {
-		if (Config.TVT_EVENT_ENABLED) {
+		if (tvt().enabled()) {
 			TvTEvent.init();
 			
 			scheduleEventStart();
@@ -58,7 +60,7 @@ public class TvTManager {
 			Calendar currentTime = Calendar.getInstance();
 			Calendar nextStartTime = null;
 			Calendar testStartTime = null;
-			for (String timeOfDay : Config.TVT_EVENT_INTERVAL) {
+			for (String timeOfDay : tvt().getInterval()) {
 				// Creating a Calendar object from the specified interval value
 				testStartTime = Calendar.getInstance();
 				testStartTime.setLenient(true);
@@ -93,10 +95,10 @@ public class TvTManager {
 			
 			scheduleEventStart();
 		} else {
-			Broadcast.toAllOnlinePlayers("TvT Event: Registration opened for " + Config.TVT_EVENT_PARTICIPATION_TIME + " minute(s).");
+			Broadcast.toAllOnlinePlayers("TvT Event: Registration opened for " + tvt().getParticipationTime() + " minute(s).");
 			
 			// schedule registration end
-			_task.setStartTime(System.currentTimeMillis() + (60000L * Config.TVT_EVENT_PARTICIPATION_TIME));
+			_task.setStartTime(System.currentTimeMillis() + (60000L * tvt().getParticipationTime()));
 			ThreadPoolManager.getInstance().executeGeneral(_task);
 		}
 	}
@@ -111,8 +113,8 @@ public class TvTManager {
 			
 			scheduleEventStart();
 		} else {
-			TvTEvent.sysMsgToAllParticipants("TvT Event: Teleporting participants to an arena in " + Config.TVT_EVENT_START_LEAVE_TELEPORT_DELAY + " second(s).");
-			_task.setStartTime(System.currentTimeMillis() + (60000L * Config.TVT_EVENT_RUNNING_TIME));
+			TvTEvent.sysMsgToAllParticipants("TvT Event: Teleporting participants to an arena in " + MILLISECONDS.toSeconds(tvt().getStartLeaveTeleportDelay()) + " second(s).");
+			_task.setStartTime(System.currentTimeMillis() + (60000L * tvt().getRunningTime()));
 			ThreadPoolManager.getInstance().executeGeneral(_task);
 		}
 	}
@@ -122,7 +124,7 @@ public class TvTManager {
 	 */
 	public void endEvent() {
 		Broadcast.toAllOnlinePlayers(TvTEvent.calculateRewards());
-		TvTEvent.sysMsgToAllParticipants("TvT Event: Teleporting back to the registration npc in " + Config.TVT_EVENT_START_LEAVE_TELEPORT_DELAY + " second(s).");
+		TvTEvent.sysMsgToAllParticipants("TvT Event: Teleporting back to the registration npc in " + MILLISECONDS.toSeconds(tvt().getStartLeaveTeleportDelay()) + " second(s).");
 		TvTEvent.stopFight();
 		
 		scheduleEventStart();

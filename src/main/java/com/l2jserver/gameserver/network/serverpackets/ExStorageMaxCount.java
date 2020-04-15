@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.network.serverpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.stats.Stats;
 
@@ -41,11 +42,11 @@ public class ExStorageMaxCount extends L2GameServerPacket {
 		_warehouse = activeChar.getWareHouseLimit();
 		_privateSell = activeChar.getPrivateSellStoreLimit();
 		_privateBuy = activeChar.getPrivateBuyStoreLimit();
-		_clan = Config.WAREHOUSE_SLOTS_CLAN;
+		_clan = character().getMaximumWarehouseSlotsForClan();
 		_receipeD = activeChar.getDwarfRecipeLimit();
 		_recipe = activeChar.getCommonRecipeLimit();
 		_inventoryExtraSlots = (int) activeChar.getStat().calcStat(Stats.INV_LIM, 0, null, null);
-		_inventoryQuestItems = Config.INVENTORY_MAXIMUM_QUEST_ITEMS;
+		_inventoryQuestItems = character().getMaximumSlotsForQuestItems();
 	}
 	
 	@Override

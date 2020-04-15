@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,9 @@
  */
 package com.l2jserver.gameserver.model.drops.strategy;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.rates;
+
 import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.drops.GeneralDropItem;
@@ -28,34 +30,34 @@ import com.l2jserver.gameserver.model.itemcontainer.Inventory;
  * @author Battlecruiser
  */
 public interface IChanceMultiplierStrategy {
-	public static final IChanceMultiplierStrategy DROP = DEFAULT_STRATEGY(Config.RATE_DEATH_DROP_CHANCE_MULTIPLIER);
-	public static final IChanceMultiplierStrategy SPOIL = DEFAULT_STRATEGY(Config.RATE_CORPSE_DROP_CHANCE_MULTIPLIER);
+	public static final IChanceMultiplierStrategy DROP = DEFAULT_STRATEGY(rates().getDeathDropChanceMultiplier());
+	public static final IChanceMultiplierStrategy SPOIL = DEFAULT_STRATEGY(rates().getCorpseDropChanceMultiplier());
 	public static final IChanceMultiplierStrategy STATIC = (item, victim) -> 1;
 	
 	public static final IChanceMultiplierStrategy QUEST = (item, victim) -> {
 		double championmult;
 		if ((item.getItemId() == Inventory.ADENA_ID) || (item.getItemId() == Inventory.ANCIENT_ADENA_ID)) {
-			championmult = Config.L2JMOD_CHAMPION_ADENAS_REWARDS_CHANCE;
+			championmult = customs().getChampionAdenasRewardsChance();
 		} else {
-			championmult = Config.L2JMOD_CHAMPION_REWARDS_CHANCE;
+			championmult = customs().getChampionRewardsChance();
 		}
 		
-		return (Config.L2JMOD_CHAMPION_ENABLE && (victim != null) && victim.isChampion()) ? (Config.RATE_QUEST_DROP * championmult) : Config.RATE_QUEST_DROP;
+		return (customs().championEnable() && (victim != null) && victim.isChampion()) ? (rates().getRateQuestDrop() * championmult) : rates().getRateQuestDrop();
 	};
 	
 	public static IChanceMultiplierStrategy DEFAULT_STRATEGY(final double defaultMultiplier) {
 		return (item, victim) -> {
 			float multiplier = 1;
 			if (victim.isChampion()) {
-				multiplier *= item.getItemId() != Inventory.ADENA_ID ? Config.L2JMOD_CHAMPION_REWARDS_CHANCE : Config.L2JMOD_CHAMPION_ADENAS_REWARDS_CHANCE;
+				multiplier *= item.getItemId() != Inventory.ADENA_ID ? customs().getChampionRewardsChance() : customs().getChampionAdenasRewardsChance();
 			}
-			Float dropChanceMultiplier = Config.RATE_DROP_CHANCE_MULTIPLIER.get(item.getItemId());
+			Float dropChanceMultiplier = rates().getDropChanceMultiplierByItemId().get(item.getItemId());
 			if (dropChanceMultiplier != null) {
 				multiplier *= dropChanceMultiplier;
 			} else if (ItemTable.getInstance().getTemplate(item.getItemId()).hasExImmediateEffect()) {
-				multiplier *= Config.RATE_HERB_DROP_CHANCE_MULTIPLIER;
+				multiplier *= rates().getHerbDropChanceMultiplier();
 			} else if (victim.isRaid()) {
-				multiplier *= Config.RATE_RAID_DROP_CHANCE_MULTIPLIER;
+				multiplier *= rates().getRaidDropChanceMultiplier();
 			} else {
 				multiplier *= defaultMultiplier;
 			}

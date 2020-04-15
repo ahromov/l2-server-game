@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,11 @@
  */
 package com.l2jserver.gameserver.model.actor.templates;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.StatsSet;
 import com.l2jserver.gameserver.model.base.ClassId;
 import com.l2jserver.gameserver.model.itemcontainer.Inventory;
@@ -51,12 +52,12 @@ public class L2PcTemplate extends L2CharTemplate {
 		super(set);
 		_classId = ClassId.getClassId(set.getInt("classId"));
 		setRace(_classId.getRace());
-		_baseHp = new float[Config.MAX_PLAYER_LEVEL + 1];
-		_baseMp = new float[Config.MAX_PLAYER_LEVEL + 1];
-		_baseCp = new float[Config.MAX_PLAYER_LEVEL + 1];
-		_baseHpReg = new double[Config.MAX_PLAYER_LEVEL + 1];
-		_baseMpReg = new double[Config.MAX_PLAYER_LEVEL + 1];
-		_baseCpReg = new double[Config.MAX_PLAYER_LEVEL + 1];
+		_baseHp = new float[character().getMaxPlayerLevel() + 1];
+		_baseMp = new float[character().getMaxPlayerLevel() + 1];
+		_baseCp = new float[character().getMaxPlayerLevel() + 1];
+		_baseHpReg = new double[character().getMaxPlayerLevel() + 1];
+		_baseMpReg = new double[character().getMaxPlayerLevel() + 1];
+		_baseCpReg = new double[character().getMaxPlayerLevel() + 1];
 		
 		_baseSlotDef = new HashMap<>(12);
 		_baseSlotDef.put(Inventory.PAPERDOLL_CHEST, set.getInt("basePDefchest", 0));

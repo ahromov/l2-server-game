@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,12 +18,14 @@
  */
 package com.l2jserver.gameserver.model.olympiad;
 
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.olympiad;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.l2jserver.gameserver.ai.CtrlIntention;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.instancemanager.AntiFeedManager;
 import com.l2jserver.gameserver.instancemanager.CastleManager;
 import com.l2jserver.gameserver.instancemanager.FortManager;
@@ -34,6 +36,7 @@ import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.L2Summon;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.entity.TvTEvent;
+import com.l2jserver.gameserver.model.holders.ItemHolder;
 import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
 import com.l2jserver.gameserver.model.skills.Skill;
 import com.l2jserver.gameserver.model.zone.type.L2OlympiadStadiumZone;
@@ -164,7 +167,7 @@ public abstract class AbstractOlympiadGame {
 			player.setIsInOlympiadMode(true);
 			player.setIsOlympiadStart(false);
 			player.setOlympiadSide(par.getSide());
-			player.setOlympiadBuffCount(Config.ALT_OLY_MAX_BUFFS);
+			player.setOlympiadBuffCount(olympiad().getMaxBuffs());
 			loc.setInstanceId(OlympiadGameManager.getInstance().getOlympiadTask(id).getZone().getInstanceId());
 			player.teleToLocation(loc, false);
 			player.sendPacket(new ExOlympiadMode(2));
@@ -329,7 +332,7 @@ public abstract class AbstractOlympiadGame {
 			player.setCurrentMp(player.getMaxMp());
 			player.getStatus().startHpMpRegeneration();
 			
-			if (Config.L2JMOD_DUALBOX_CHECK_MAX_OLYMPIAD_PARTICIPANTS_PER_IP > 0) {
+			if (customs().getDualboxCheckMaxOlympiadParticipantsPerIP() > 0) {
 				AntiFeedManager.getInstance().removePlayer(AntiFeedManager.OLYMPIAD_ID, player);
 			}
 		} catch (Exception e) {
@@ -351,8 +354,8 @@ public abstract class AbstractOlympiadGame {
 		player.unsetLastLocation();
 	}
 	
-	public static final void rewardParticipant(L2PcInstance player, int[][] reward) {
-		if ((player == null) || !player.isOnline() || (reward == null)) {
+	public static final void rewardParticipant(L2PcInstance player, List<ItemHolder> rewards) {
+		if ((player == null) || !player.isOnline() || (rewards == null) || rewards.isEmpty()) {
 			return;
 		}
 		
@@ -360,20 +363,20 @@ public abstract class AbstractOlympiadGame {
 			SystemMessage sm;
 			L2ItemInstance item;
 			final InventoryUpdate iu = new InventoryUpdate();
-			for (int[] it : reward) {
-				if ((it == null) || (it.length != 2)) {
+			for (ItemHolder reward : rewards) {
+				if (reward == null) {
 					continue;
 				}
 				
-				item = player.getInventory().addItem("Olympiad", it[0], it[1], player, null);
+				item = player.getInventory().addItem("Olympiad", reward.getId(), reward.getCount(), player, null);
 				if (item == null) {
 					continue;
 				}
 				
 				iu.addModifiedItem(item);
 				sm = SystemMessage.getSystemMessage(SystemMessageId.EARNED_S2_S1_S);
-				sm.addItemName(it[0]);
-				sm.addInt(it[1]);
+				sm.addItemName(reward.getId());
+				sm.addLong(reward.getCount());
 				player.sendPacket(sm);
 			}
 			player.sendPacket(iu);
@@ -424,7 +427,7 @@ public abstract class AbstractOlympiadGame {
 	
 	protected abstract int getDivider();
 	
-	protected abstract int[][] getReward();
+	protected abstract List<ItemHolder> getReward();
 	
 	protected abstract String getWeeklyMatchType();
 }

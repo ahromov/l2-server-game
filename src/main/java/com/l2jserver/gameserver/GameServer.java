@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,14 @@
  */
 package com.l2jserver.gameserver;
 
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.database;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.geodata;
+import static com.l2jserver.gameserver.config.Configuration.hexId;
+import static com.l2jserver.gameserver.config.Configuration.mmo;
+import static com.l2jserver.gameserver.config.Configuration.server;
+import static com.l2jserver.gameserver.config.Configuration.telnet;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import java.awt.Toolkit;
@@ -25,7 +33,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.logging.LogManager;
 
@@ -39,7 +46,6 @@ import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.commons.util.IPv4Filter;
 import com.l2jserver.commons.util.Util;
 import com.l2jserver.gameserver.cache.HtmCache;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.dao.factory.impl.DAOFactory;
 import com.l2jserver.gameserver.data.json.ExperienceData;
 import com.l2jserver.gameserver.data.sql.impl.AnnouncementsTable;
@@ -175,13 +181,13 @@ public final class GameServer {
 		final var serverLoadStart = System.currentTimeMillis();
 		printSection("Database");
 		ConnectionFactory.builder() //
-			.withDriver(Config.DATABASE_DRIVER) //
-			.withUrl(Config.DATABASE_URL) //
-			.withUser(Config.DATABASE_LOGIN) //
-			.withPassword(Config.DATABASE_PASSWORD) //
-			.withConnectionPool(Config.DATABASE_CONNECTION_POOL) //
-			.withMaxIdleTime(Config.DATABASE_MAX_IDLE_TIME) //
-			.withMaxPoolSize(Config.DATABASE_MAX_CONNECTIONS) //
+			.withDriver(database().getDriver()) //
+			.withUrl(database().getURL()) //
+			.withUser(database().getUser()) //
+			.withPassword(database().getPassword()) //
+			.withConnectionPool(database().getConnectionPool()) //
+			.withMaxIdleTime(database().getMaxIdleTime()) //
+			.withMaxPoolSize(database().getMaxConnections()) //
 			.build();
 		
 		DAOFactory.getInstance();
@@ -259,7 +265,7 @@ public final class GameServer {
 		printSection("Geodata");
 		GeoData.getInstance();
 		
-		if (Config.PATHFINDING > 0) {
+		if (geodata().getPathFinding() > 0) {
 			PathFinding.getInstance();
 		}
 		
@@ -304,7 +310,7 @@ public final class GameServer {
 		AirShipManager.getInstance();
 		GraciaSeedsManager.getInstance();
 		
-		ScriptEngineManager.getInstance().executeScriptList(new File(Config.DATAPACK_ROOT, "data/scripts.cfg"));
+		ScriptEngineManager.getInstance().executeScriptList(new File(server().getDatapackRoot(), "data/scripts.cfg"));
 		
 		SpawnTable.getInstance().load();
 		DayNightSpawnManager.getInstance().trim().notifyChangeMode();
@@ -326,11 +332,11 @@ public final class GameServer {
 		printSection("Quests");
 		QuestManager.getInstance().report();
 		
-		if (Config.SAVE_DROPPED_ITEM) {
+		if (general().saveDroppedItem()) {
 			ItemsOnGroundManager.getInstance();
 		}
 		
-		if ((Config.AUTODESTROY_ITEM_AFTER > 0) || (Config.HERB_AUTO_DESTROY_TIME > 0)) {
+		if ((general().getAutoDestroyDroppedItemAfter() > 0) || (general().getAutoDestroyHerbTime() > 0)) {
 			ItemsAutoDestroy.getInstance();
 		}
 		
@@ -340,7 +346,7 @@ public final class GameServer {
 		AutoSpawnHandler.getInstance();
 		FaenorScriptEngine.getInstance();
 		
-		if (Config.L2JMOD_ALLOW_WEDDING) {
+		if (customs().allowWedding()) {
 			CoupleManager.getInstance();
 		}
 		
@@ -348,7 +354,7 @@ public final class GameServer {
 		
 		AntiFeedManager.getInstance().registerEvent(AntiFeedManager.GAME_ID);
 		
-		if (Config.ALLOW_MAIL) {
+		if (general().allowMail()) {
 			MailManager.getInstance();
 		}
 		
@@ -361,11 +367,11 @@ public final class GameServer {
 		TvTManager.getInstance();
 		KnownListUpdateTaskManager.getInstance();
 		
-		if ((Config.OFFLINE_TRADE_ENABLE || Config.OFFLINE_CRAFT_ENABLE) && Config.RESTORE_OFFLINERS) {
+		if ((customs().offlineTradeEnable() || customs().offlineCraftEnable()) && customs().restoreOffliners()) {
 			OfflineTradersTable.getInstance().restoreOfflineTraders();
 		}
 		
-		if (Config.DEADLOCK_DETECTOR) {
+		if (general().deadLockDetector()) {
 			_deadDetectThread = new DeadLockDetector();
 			_deadDetectThread.setDaemon(true);
 			_deadDetectThread.start();
@@ -382,64 +388,62 @@ public final class GameServer {
 		LoginServerThread.getInstance().start();
 		
 		final SelectorConfig sc = new SelectorConfig();
-		sc.MAX_READ_PER_PASS = Config.MMO_MAX_READ_PER_PASS;
-		sc.MAX_SEND_PER_PASS = Config.MMO_MAX_SEND_PER_PASS;
-		sc.SLEEP_TIME = Config.MMO_SELECTOR_SLEEP_TIME;
-		sc.HELPER_BUFFER_COUNT = Config.MMO_HELPER_BUFFER_COUNT;
-		sc.TCP_NODELAY = Config.MMO_TCP_NODELAY;
+		sc.MAX_READ_PER_PASS = mmo().getMaxReadPerPass();
+		sc.MAX_SEND_PER_PASS = mmo().getMaxSendPerPass();
+		sc.SLEEP_TIME = mmo().getSleepTime();
+		sc.HELPER_BUFFER_COUNT = mmo().getHelperBufferCount();
+		sc.TCP_NODELAY = mmo().isTcpNoDelay();
 		
 		_gamePacketHandler = new L2GamePacketHandler();
 		_selectorThread = new SelectorThread<>(sc, _gamePacketHandler, _gamePacketHandler, _gamePacketHandler, new IPv4Filter());
 		
 		InetAddress bindAddress = null;
-		if (!Config.GAMESERVER_HOSTNAME.equals("*")) {
+		if (!server().getHost().equals("*")) {
 			try {
-				bindAddress = InetAddress.getByName(Config.GAMESERVER_HOSTNAME);
+				bindAddress = InetAddress.getByName(server().getHost());
 			} catch (UnknownHostException ex) {
 				LOG.warn("Bind address is invalid, using all avaliable IPs!", ex);
 			}
 		}
 		
 		try {
-			_selectorThread.openServerSocket(bindAddress, Config.PORT_GAME);
+			_selectorThread.openServerSocket(bindAddress, server().getPort());
 			_selectorThread.start();
-			LOG.info("Now listening on {}:{}", Config.GAMESERVER_HOSTNAME, Config.PORT_GAME);
+			LOG.info("Now listening on {}:{}", server().getHost(), server().getPort());
 		} catch (IOException ex) {
 			LOG.error("Failed to open server socket!", ex);
 			System.exit(1);
 		}
 		
-		if (Config.ENABLE_UPNP) {
+		if (server().enableUPnP()) {
 			printSection("UPnP");
-			UPnPService.getInstance().load(Config.PORT_GAME, "L2J Game Server");
+			UPnPService.getInstance().load(server().getPort(), "L2J Game Server");
 		}
 		
-		if (Config.TELNET_ENABLED) {
-			new Status(Config.TELNET_PORT, Config.TELNET_PASSWORD).start();
+		if (telnet().isEnabled()) {
+			new Status(telnet().getPort(), telnet().getPassword()).start();
 		} else {
 			LOG.info("Telnet server is currently disabled.");
 		}
 		
-		LOG.info("Maximum numbers of connected players {}.", Config.MAXIMUM_ONLINE_USERS);
-		LOG.info("Server {} loaded in {} seconds.", ServerNameDAO.getServer(Config.SERVER_ID), MILLISECONDS.toSeconds(System.currentTimeMillis() - serverLoadStart));
+		LOG.info("Maximum numbers of connected players {}.", server().getMaxOnlineUsers());
+		LOG.info("Server {} loaded in {} seconds.", ServerNameDAO.getServer(hexId().getServerID()), MILLISECONDS.toSeconds(System.currentTimeMillis() - serverLoadStart));
 	}
 	
 	public static void main(String[] args) throws Exception {
-		Config.load();
-		
-		final String dataPack = Util.parseArg(args, DATAPACK, true);
-		if (dataPack != null) {
-			Config.DATAPACK_ROOT = new File(dataPack);
+		final String datapackRoot = Util.parseArg(args, DATAPACK, true);
+		if (datapackRoot != null) {
+			server().setProperty("DatapackRoot", datapackRoot);
 		}
 		
 		final String scriptRoot = Util.parseArg(args, SCRIPT, true);
 		if (scriptRoot != null) {
-			Config.SCRIPT_ROOT = new File(scriptRoot);
+			server().setProperty("ScriptRoot", scriptRoot);
 		}
 		
 		final String geodata = Util.parseArg(args, GEODATA, true);
 		if (geodata != null) {
-			Config.GEODATA_PATH = Paths.get(geodata);
+			geodata().setProperty("GeoDataPath", geodata);
 		}
 		
 		gameServer = new GameServer();

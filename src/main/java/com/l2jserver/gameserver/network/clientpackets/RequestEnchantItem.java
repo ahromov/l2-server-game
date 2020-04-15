@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,11 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.EnchantItemData;
 import com.l2jserver.gameserver.model.L2World;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -112,7 +113,7 @@ public final class RequestEnchantItem extends L2GameClientPacket {
 		
 		// fast auto-enchant cheat check
 		if ((activeChar.getActiveEnchantTimestamp() == 0) || ((System.currentTimeMillis() - activeChar.getActiveEnchantTimestamp()) < 2000)) {
-			Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " use autoenchant program ", Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " use autoenchant program ");
 			activeChar.setActiveEnchantItemId(L2PcInstance.ID_NONE);
 			activeChar.sendPacket(new EnchantResult(2, 0, 0));
 			return;
@@ -122,7 +123,7 @@ public final class RequestEnchantItem extends L2GameClientPacket {
 		scroll = activeChar.getInventory().destroyItem("Enchant", scroll.getObjectId(), 1, activeChar, item);
 		if (scroll == null) {
 			activeChar.sendPacket(SystemMessageId.NOT_ENOUGH_ITEMS);
-			Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to enchant with a scroll he doesn't have", Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to enchant with a scroll he doesn't have");
 			activeChar.setActiveEnchantItemId(L2PcInstance.ID_NONE);
 			activeChar.sendPacket(new EnchantResult(2, 0, 0));
 			return;
@@ -133,7 +134,7 @@ public final class RequestEnchantItem extends L2GameClientPacket {
 			support = activeChar.getInventory().destroyItem("Enchant", support.getObjectId(), 1, activeChar, item);
 			if (support == null) {
 				activeChar.sendPacket(SystemMessageId.NOT_ENOUGH_ITEMS);
-				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to enchant with a support item he doesn't have", Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to enchant with a support item he doesn't have");
 				activeChar.setActiveEnchantItemId(L2PcInstance.ID_NONE);
 				activeChar.sendPacket(new EnchantResult(2, 0, 0));
 				return;
@@ -167,7 +168,7 @@ public final class RequestEnchantItem extends L2GameClientPacket {
 					}
 					activeChar.sendPacket(new EnchantResult(0, 0, 0));
 					
-					if (Config.LOG_ITEM_ENCHANTS) {
+					if (general().logItemEnchants()) {
 						LOG_ENCHANT_ITEM.info("ENCHANTED {} using {} and {} by {}.", item, scroll, support, activeChar);
 					}
 					
@@ -203,7 +204,7 @@ public final class RequestEnchantItem extends L2GameClientPacket {
 						activeChar.sendPacket(SystemMessageId.SAFE_ENCHANT_FAILED);
 						activeChar.sendPacket(new EnchantResult(5, 0, 0));
 						
-						if (Config.LOG_ITEM_ENCHANTS) {
+						if (general().logItemEnchants()) {
 							LOG_ENCHANT_ITEM.info("FAILED_SAFE_ENCHANTING {} using {} and {} by {}.", item, scroll, support, activeChar);
 						}
 					} else {
@@ -237,7 +238,7 @@ public final class RequestEnchantItem extends L2GameClientPacket {
 							item.updateDatabase();
 							activeChar.sendPacket(new EnchantResult(3, 0, 0));
 							
-							if (Config.LOG_ITEM_ENCHANTS) {
+							if (general().logItemEnchants()) {
 								LOG_ENCHANT_ITEM.info("FAILED_BLESSED_ENCHANTING {} using {} and {} by {}.", item, scroll, support, activeChar);
 							}
 						} else {
@@ -245,11 +246,11 @@ public final class RequestEnchantItem extends L2GameClientPacket {
 							item = activeChar.getInventory().destroyItem("Enchant", item, activeChar, null);
 							if (item == null) {
 								// unable to destroy item, cheater ?
-								Util.handleIllegalPlayerAction(activeChar, "Unable to delete item on enchant failure from player " + activeChar.getName() + ", possible cheater !", Config.DEFAULT_PUNISH);
+								Util.handleIllegalPlayerAction(activeChar, "Unable to delete item on enchant failure from player " + activeChar.getName() + ", possible cheater !");
 								activeChar.setActiveEnchantItemId(L2PcInstance.ID_NONE);
 								activeChar.sendPacket(new EnchantResult(2, 0, 0));
 								
-								if (Config.LOG_ITEM_ENCHANTS) {
+								if (general().logItemEnchants()) {
 									LOG_ENCHANT_ITEM.warn("CANNOT_DESTROY {} using {} and {} by {}.", item, scroll, support, activeChar);
 								}
 								return;
@@ -272,7 +273,7 @@ public final class RequestEnchantItem extends L2GameClientPacket {
 								activeChar.sendPacket(new EnchantResult(4, 0, 0));
 							}
 							
-							if (Config.LOG_ITEM_ENCHANTS) {
+							if (general().logItemEnchants()) {
 								LOG_ENCHANT_ITEM.warn("FAILED_ENCHANTING {} using {} and {} by {}.", item, scroll, support, activeChar);
 							}
 						}
@@ -284,7 +285,7 @@ public final class RequestEnchantItem extends L2GameClientPacket {
 			final StatusUpdate su = new StatusUpdate(activeChar);
 			su.addAttribute(StatusUpdate.CUR_LOAD, activeChar.getCurrentLoad());
 			activeChar.sendPacket(su);
-			if (!Config.FORCE_INVENTORY_UPDATE) {
+			if (!general().forceInventoryUpdate()) {
 				if (scroll.getCount() == 0) {
 					iu.addRemovedItem(scroll);
 				} else {

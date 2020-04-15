@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.network;
 
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -34,7 +37,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.clientstrings.Builder;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
@@ -15263,24 +15265,18 @@ public final class SystemMessageId {
 			}
 		}
 		
-		if (!Config.L2JMOD_MULTILANG_SM_ENABLE) {
+		if (!customs().multiLangSystemMessageEnable()) {
 			_log.log(Level.INFO, "SystemMessageId: MultiLanguage disabled.");
 			return;
 		}
 		
-		final List<String> languages = Config.L2JMOD_MULTILANG_SM_ALLOWED;
+		final List<String> languages = customs().getMultiLangSystemMessageAllowed();
 		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setValidating(false);
 		factory.setIgnoringComments(true);
 		
-		File file;
-		Node node;
-		Document doc;
-		NamedNodeMap nnmb;
-		SystemMessageId smId;
-		String text;
-		for (final String lang : languages) {
-			file = new File(Config.DATAPACK_ROOT, "/data/lang/" + lang + "/sm/SystemMessageLocalisation.xml");
+		for (String lang : languages) {
+			File file = new File(server().getDatapackRoot(), "data/lang/" + lang + "/sm/SystemMessageLocalisation.xml");
 			if (!file.isFile()) {
 				continue;
 			}
@@ -15288,13 +15284,14 @@ public final class SystemMessageId {
 			_log.log(Level.INFO, "SystemMessageId: Loading localisation for '" + lang + "'");
 			
 			try {
-				doc = factory.newDocumentBuilder().parse(file);
+				Document doc = factory.newDocumentBuilder().parse(file);
 				for (Node na = doc.getFirstChild(); na != null; na = na.getNextSibling()) {
 					if ("list".equals(na.getNodeName())) {
 						for (Node nb = na.getFirstChild(); nb != null; nb = nb.getNextSibling()) {
 							if ("sm".equals(nb.getNodeName())) {
-								nnmb = nb.getAttributes();
-								node = nnmb.getNamedItem("id");
+								NamedNodeMap nnmb = nb.getAttributes();
+								Node node = nnmb.getNamedItem("id");
+								SystemMessageId smId;
 								if (node != null) {
 									smId = getSystemMessageId(Integer.parseInt(node.getNodeValue()));
 									if (smId == null) {
@@ -15316,7 +15313,7 @@ public final class SystemMessageId {
 									continue;
 								}
 								
-								text = node.getNodeValue();
+								String text = node.getNodeValue();
 								if (text.isEmpty() || (text.length() > 255)) {
 									_log.log(Level.WARNING, "SystemMessageId: Invalid text defined for SMID '" + smId + "' (to long or empty), lang '" + lang + "'.");
 									continue;

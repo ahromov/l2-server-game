@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  *
  * This file is part of L2J Server.
  *
@@ -99,7 +99,7 @@ public class LongTimeEvent extends Quest {
 	 * Load event configuration file
 	 */
 	private void loadConfig() {
-		File configFile = new File("data/scripts/events/" + getName() + "/config.xml");
+		File configFile = new File("com/l2jserver/datapack/events/" + getName() + "/config.xml");
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();

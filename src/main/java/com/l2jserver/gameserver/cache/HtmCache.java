@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.cache;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Objects;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.util.file.filter.HTMLFilter;
 
 /**
@@ -43,7 +45,7 @@ public class HtmCache {
 	
 	private static final HTMLFilter HTML_FILTER = new HTMLFilter();
 	
-	private static final Map<String, String> HTML_CACHE = Config.LAZY_CACHE ? new ConcurrentHashMap<>() : new HashMap<>();
+	private static final Map<String, String> HTML_CACHE = general().lazyCache() ? new ConcurrentHashMap<>() : new HashMap<>();
 	
 	private int _loadedFiles;
 	
@@ -54,11 +56,11 @@ public class HtmCache {
 	}
 	
 	public void reload() {
-		reload(Config.DATAPACK_ROOT);
+		reload(server().getDatapackRoot());
 	}
 	
 	public void reload(File f) {
-		if (!Config.LAZY_CACHE) {
+		if (!general().lazyCache()) {
 			LOG.info("Html cache start...");
 			parseDir(f);
 			LOG.info(String.format("%.3f", getMemoryUsage()) + " megabytes on " + getLoadedFiles() + " files loaded");
@@ -127,10 +129,10 @@ public class HtmCache {
 	public String getHtm(String prefix, String path) {
 		final var newPath = Objects.firstNonNull(prefix, "") + path;
 		var content = HTML_CACHE.get(newPath);
-		if (Config.LAZY_CACHE && (content == null)) {
-			content = loadFile(new File(Config.DATAPACK_ROOT, newPath));
+		if (general().lazyCache() && (content == null)) {
+			content = loadFile(new File(server().getDatapackRoot(), newPath));
 			if (content == null) {
-				content = loadFile(new File(Config.SCRIPT_ROOT, newPath));
+				content = loadFile(new File(server().getScriptRoot(), newPath));
 			}
 		}
 		return content;
@@ -145,7 +147,7 @@ public class HtmCache {
 	 * @return {@code true} if the path targets a HTM or HTML file, {@code false} otherwise.
 	 */
 	public boolean isLoadable(String path) {
-		return HTML_FILTER.accept(new File(Config.DATAPACK_ROOT, path));
+		return HTML_FILTER.accept(new File(server().getDatapackRoot(), path));
 	}
 	
 	public static HtmCache getInstance() {

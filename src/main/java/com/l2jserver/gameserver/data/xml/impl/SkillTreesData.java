@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.data.xml.impl;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,7 +37,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.datatables.SkillData;
 import com.l2jserver.gameserver.enums.Race;
 import com.l2jserver.gameserver.model.L2Clan;
@@ -462,7 +463,7 @@ public final class SkillTreesData implements IXmlReader {
 		}
 		
 		for (L2SkillLearn skill : skills.values()) {
-			if (((skill.getSkillId() == CommonSkill.DIVINE_INSPIRATION.getId()) && (!Config.AUTO_LEARN_DIVINE_INSPIRATION && includeAutoGet) && !player.isGM())) {
+			if (((skill.getSkillId() == CommonSkill.DIVINE_INSPIRATION.getId()) && (!character().autoLearnDivineInspiration() && includeAutoGet) && !player.isGM())) {
 				continue;
 			}
 			

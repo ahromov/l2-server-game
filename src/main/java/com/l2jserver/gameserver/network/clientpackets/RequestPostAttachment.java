@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,9 +18,9 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
 import static com.l2jserver.gameserver.model.itemcontainer.Inventory.ADENA_ID;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.enums.ItemLocation;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
@@ -54,7 +54,7 @@ public final class RequestPostAttachment extends L2GameClientPacket {
 	
 	@Override
 	public void runImpl() {
-		if (!Config.ALLOW_MAIL || !Config.ALLOW_ATTACHMENTS) {
+		if (!general().allowMail() || !general().allowAttachments()) {
 			return;
 		}
 		
@@ -98,7 +98,7 @@ public final class RequestPostAttachment extends L2GameClientPacket {
 		}
 		
 		if (msg.getReceiverId() != activeChar.getObjectId()) {
-			Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to get not own attachment!", Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to get not own attachment!");
 			return;
 		}
 		
@@ -121,17 +121,17 @@ public final class RequestPostAttachment extends L2GameClientPacket {
 			
 			// Calculate needed slots
 			if (item.getOwnerId() != msg.getSenderId()) {
-				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to get wrong item (ownerId != senderId) from attachment!", Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to get wrong item (ownerId != senderId) from attachment!");
 				return;
 			}
 			
 			if (item.getItemLocation() != ItemLocation.MAIL) {
-				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to get wrong item (Location != MAIL) from attachment!", Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to get wrong item (Location != MAIL) from attachment!");
 				return;
 			}
 			
 			if (item.getLocationSlot() != msg.getId()) {
-				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to get items from different attachment!", Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to get items from different attachment!");
 				return;
 			}
 			
@@ -162,14 +162,14 @@ public final class RequestPostAttachment extends L2GameClientPacket {
 		}
 		
 		// Proceed to the transfer
-		InventoryUpdate playerIU = Config.FORCE_INVENTORY_UPDATE ? null : new InventoryUpdate();
+		InventoryUpdate playerIU = general().forceInventoryUpdate() ? null : new InventoryUpdate();
 		for (L2ItemInstance item : attachments.getItems()) {
 			if (item == null) {
 				continue;
 			}
 			
 			if (item.getOwnerId() != msg.getSenderId()) {
-				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to get items with owner != sender !", Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to get items with owner != sender !");
 				return;
 			}
 			

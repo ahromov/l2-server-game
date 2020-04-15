@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,9 +18,9 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import java.util.concurrent.TimeUnit;
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static java.util.concurrent.TimeUnit.DAYS;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.ClanPrivilege;
 import com.l2jserver.gameserver.model.L2Clan;
 import com.l2jserver.gameserver.model.L2ClanMember;
@@ -75,8 +75,8 @@ public final class RequestOustPledgeMember extends L2GameClientPacket {
 		}
 		
 		// this also updates the database
-		clan.removeClanMember(member.getObjectId(), System.currentTimeMillis() + TimeUnit.DAYS.toMillis(Config.ALT_CLAN_JOIN_DAYS));
-		clan.setCharPenaltyExpiryTime(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(Config.ALT_CLAN_JOIN_DAYS));
+		clan.removeClanMember(member.getObjectId(), System.currentTimeMillis() + DAYS.toMillis(character().getDaysBeforeJoinAClan()));
+		clan.setCharPenaltyExpiryTime(System.currentTimeMillis() + DAYS.toMillis(character().getDaysBeforeJoinAClan()));
 		clan.updateClanInDB();
 		
 		SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.CLAN_MEMBER_S1_EXPELLED);

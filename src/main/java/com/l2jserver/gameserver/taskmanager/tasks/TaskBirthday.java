@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,13 +18,14 @@
  */
 package com.l2jserver.gameserver.taskmanager.tasks;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.instancemanager.MailManager;
 import com.l2jserver.gameserver.model.entity.Message;
 import com.l2jserver.gameserver.taskmanager.Task;
@@ -65,12 +66,12 @@ public class TaskBirthday extends Task {
 			ps.setLong(1, TimeUnit.SECONDS.convert(lastActivation, TimeUnit.MILLISECONDS));
 			try (var rs = ps.executeQuery()) {
 				while (rs.next()) {
-					String text = Config.ALT_BIRTHDAY_MAIL_TEXT;
+					String text = general().getBirthdayMailText();
 					text = text.replaceAll("$c1", rs.getString("char_name"));
 					text = text.replaceAll("$s1", Integer.toString(rs.getInt("age")));
 					
-					final Message msg = new Message(rs.getInt("charId"), Config.ALT_BIRTHDAY_MAIL_SUBJECT, text, Message.SendBySystem.ALEGRIA);
-					msg.createAttachments().addItem("Birthday", Config.ALT_BIRTHDAY_GIFT, 1, null, null);
+					final Message msg = new Message(rs.getInt("charId"), general().getBirthdayMailSubject(), text, Message.SendBySystem.ALEGRIA);
+					msg.createAttachments().addItem("Birthday", general().getBirthdayGift(), 1, null, null);
 					MailManager.getInstance().sendMessage(msg);
 					birthdayGiftCount++;
 				}

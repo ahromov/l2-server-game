@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.model.itemcontainer;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import com.l2jserver.gameserver.enums.ItemLocation;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.stats.Stats;
@@ -63,7 +64,7 @@ public class PcFreight extends ItemContainer {
 	
 	@Override
 	public boolean validateCapacity(long slots) {
-		int curSlots = _owner == null ? Config.ALT_FREIGHT_SLOTS : Config.ALT_FREIGHT_SLOTS + (int) _owner.getStat().calcStat(Stats.FREIGHT_LIM, 0, null, null);
+		int curSlots = _owner == null ? character().getMaximumFreightSlots() : character().getMaximumFreightSlots() + (int) _owner.getStat().calcStat(Stats.FREIGHT_LIM, 0, null, null);
 		return ((getSize() + slots) <= curSlots);
 	}
 	

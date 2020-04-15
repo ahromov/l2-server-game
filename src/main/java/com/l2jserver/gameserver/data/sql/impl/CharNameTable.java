@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.data.sql.impl;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 /**
@@ -42,7 +43,7 @@ public class CharNameTable {
 	private final Map<Integer, Integer> _accessLevels = new ConcurrentHashMap<>();
 	
 	protected CharNameTable() {
-		if (Config.CACHE_CHAR_NAMES) {
+		if (general().cacheCharNames()) {
 			loadAll();
 		}
 	}
@@ -78,7 +79,7 @@ public class CharNameTable {
 			}
 		}
 		
-		if (Config.CACHE_CHAR_NAMES) {
+		if (general().cacheCharNames()) {
 			return -1;
 		}
 		
@@ -117,7 +118,7 @@ public class CharNameTable {
 			return name;
 		}
 		
-		if (Config.CACHE_CHAR_NAMES) {
+		if (general().cacheCharNames()) {
 			return null;
 		}
 		

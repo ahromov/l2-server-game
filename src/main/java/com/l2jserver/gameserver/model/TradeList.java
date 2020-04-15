@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.model;
 
-import static com.l2jserver.gameserver.model.itemcontainer.Inventory.MAX_ADENA;
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -26,10 +27,8 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
-import com.l2jserver.gameserver.model.itemcontainer.Inventory;
 import com.l2jserver.gameserver.model.itemcontainer.PcInventory;
 import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
@@ -189,7 +188,7 @@ public class TradeList {
 		}
 		
 		L2ItemInstance item = (L2ItemInstance) o;
-		if (!(item.isTradeable() || (getOwner().isGM() && Config.GM_TRADE_RESTRICTED_ITEMS)) || item.isQuestItem()) {
+		if (!(item.isTradeable() || (getOwner().isGM() && general().gmTradeRestrictedItems())) || item.isQuestItem()) {
 			_log.warning(_owner.getName() + ": Attempt to add a restricted item!");
 			return null;
 		}
@@ -209,7 +208,7 @@ public class TradeList {
 			return null;
 		}
 		
-		if ((Inventory.MAX_ADENA / count) < price) {
+		if ((character().getMaxAdena() / count) < price) {
 			_log.warning(_owner.getName() + ": Attempt to overflow adena !");
 			return null;
 		}
@@ -257,7 +256,7 @@ public class TradeList {
 			return null;
 		}
 		
-		if ((Inventory.MAX_ADENA / count) < price) {
+		if ((character().getMaxAdena() / count) < price) {
 			_log.warning(_owner.getName() + ": Attempt to overflow adena !");
 			return null;
 		}
@@ -519,8 +518,8 @@ public class TradeList {
 			getOwner().sendPacket(SystemMessageId.SLOTS_FULL);
 		} else {
 			// Prepare inventory update packet
-			InventoryUpdate ownerIU = Config.FORCE_INVENTORY_UPDATE ? null : new InventoryUpdate();
-			InventoryUpdate partnerIU = Config.FORCE_INVENTORY_UPDATE ? null : new InventoryUpdate();
+			InventoryUpdate ownerIU = general().forceInventoryUpdate() ? null : new InventoryUpdate();
+			InventoryUpdate partnerIU = general().forceInventoryUpdate() ? null : new InventoryUpdate();
 			
 			// Transfer items
 			partnerList.TransferItems(getOwner(), partnerIU, ownerIU);
@@ -598,7 +597,7 @@ public class TradeList {
 			// item with this objectId and price not found in tradelist
 			if (!found) {
 				if (isPackaged()) {
-					Util.handleIllegalPlayerAction(player, "[TradeList.privateStoreBuy()] Player " + player.getName() + " tried to cheat the package sell and buy only a part of the package! Ban this player for bot usage!", Config.DEFAULT_PUNISH);
+					Util.handleIllegalPlayerAction(player, "[TradeList.privateStoreBuy()] Player " + player.getName() + " tried to cheat the package sell and buy only a part of the package! Ban this player for bot usage!");
 					return 2;
 				}
 				
@@ -607,7 +606,7 @@ public class TradeList {
 			}
 			
 			// check for overflow in the single item
-			if ((MAX_ADENA / item.getCount()) < item.getPrice()) {
+			if ((character().getMaxAdena() / item.getCount()) < item.getPrice()) {
 				// private store attempting to overflow - disable it
 				lock();
 				return 1;
@@ -615,7 +614,7 @@ public class TradeList {
 			
 			totalPrice += item.getCount() * item.getPrice();
 			// check for overflow of the total price
-			if ((MAX_ADENA < totalPrice) || (totalPrice < 0)) {
+			if ((character().getMaxAdena() < totalPrice) || (totalPrice < 0)) {
 				// private store attempting to overflow - disable it
 				lock();
 				return 1;
@@ -791,14 +790,14 @@ public class TradeList {
 			}
 			
 			// check for overflow in the single item
-			if ((MAX_ADENA / item.getCount()) < item.getPrice()) {
+			if ((character().getMaxAdena() / item.getCount()) < item.getPrice()) {
 				lock();
 				break;
 			}
 			
 			long _totalPrice = totalPrice + (item.getCount() * item.getPrice());
 			// check for overflow of the total price
-			if ((MAX_ADENA < _totalPrice) || (_totalPrice < 0)) {
+			if ((character().getMaxAdena() < _totalPrice) || (_totalPrice < 0)) {
 				lock();
 				break;
 			}
@@ -824,7 +823,7 @@ public class TradeList {
 				}
 			}
 			if (oldItem.getId() != item.getItemId()) {
-				Util.handleIllegalPlayerAction(player, player + " is cheating with sell items", Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(player, player + " is cheating with sell items");
 				return false;
 			}
 			

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import com.l2jserver.gameserver.enums.ItemLocation;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
 import com.l2jserver.gameserver.instancemanager.MailManager;
@@ -52,7 +53,7 @@ public final class RequestCancelPostAttachment extends L2GameClientPacket {
 	@Override
 	public void runImpl() {
 		final L2PcInstance activeChar = getClient().getActiveChar();
-		if ((activeChar == null) || !Config.ALLOW_MAIL || !Config.ALLOW_ATTACHMENTS) {
+		if ((activeChar == null) || !general().allowMail() || !general().allowAttachments()) {
 			return;
 		}
 		
@@ -65,7 +66,7 @@ public final class RequestCancelPostAttachment extends L2GameClientPacket {
 			return;
 		}
 		if (msg.getSenderId() != activeChar.getObjectId()) {
-			Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to cancel not own post!", Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to cancel not own post!");
 			return;
 		}
 		
@@ -109,17 +110,17 @@ public final class RequestCancelPostAttachment extends L2GameClientPacket {
 			}
 			
 			if (item.getOwnerId() != activeChar.getObjectId()) {
-				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to get not own item from cancelled attachment!", Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to get not own item from cancelled attachment!");
 				return;
 			}
 			
 			if (item.getItemLocation() != ItemLocation.MAIL) {
-				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to get items not from mail !", Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to get items not from mail !");
 				return;
 			}
 			
 			if (item.getLocationSlot() != msg.getId()) {
-				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to get items from different attachment!", Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " tried to get items from different attachment!");
 				return;
 			}
 			
@@ -142,7 +143,7 @@ public final class RequestCancelPostAttachment extends L2GameClientPacket {
 		}
 		
 		// Proceed to the transfer
-		InventoryUpdate playerIU = Config.FORCE_INVENTORY_UPDATE ? null : new InventoryUpdate();
+		InventoryUpdate playerIU = general().forceInventoryUpdate() ? null : new InventoryUpdate();
 		for (L2ItemInstance item : attachments.getItems()) {
 			if (item == null) {
 				continue;

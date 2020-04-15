@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,13 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.util.Rnd;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.EnchantSkillGroupsData;
 import com.l2jserver.gameserver.datatables.SkillData;
 import com.l2jserver.gameserver.model.L2EnchantSkillGroup.EnchantSkillHolder;
@@ -117,7 +119,7 @@ public final class RequestExEnchantSkillRouteChange extends L2GameClientPacket {
 		if (player.getSp() >= requiredSp) {
 			// only first lvl requires book
 			L2ItemInstance spb = player.getInventory().getItemByItemId(reqItemId);
-			if (Config.ES_SP_BOOK_NEEDED) {
+			if (character().enchantSkillSpBookNeeded()) {
 				if (spb == null)// Haven't spellbook
 				{
 					player.sendPacket(SystemMessageId.YOU_DONT_HAVE_ALL_ITENS_NEEDED_TO_CHANGE_SKILL_ENCHANT_ROUTE);
@@ -132,7 +134,7 @@ public final class RequestExEnchantSkillRouteChange extends L2GameClientPacket {
 			
 			boolean check;
 			check = player.removeSp(requiredSp);
-			if (Config.ES_SP_BOOK_NEEDED) {
+			if (character().enchantSkillSpBookNeeded()) {
 				check &= player.destroyItem("Consume", spb.getObjectId(), 1, player, true);
 			}
 			
@@ -152,7 +154,7 @@ public final class RequestExEnchantSkillRouteChange extends L2GameClientPacket {
 			skill = SkillData.getInstance().getSkill(_skillId, _skillLvl);
 			
 			if (skill != null) {
-				if (Config.LOG_SKILL_ENCHANTS) {
+				if (general().logSkillEnchants()) {
 					LOG_ENCHANT_SKILL.info("ROUTE_CHANGED {} using {} by {}.", skill, spb, player);
 				}
 				
@@ -160,7 +162,7 @@ public final class RequestExEnchantSkillRouteChange extends L2GameClientPacket {
 				player.sendPacket(ExEnchantSkillResult.valueOf(true));
 			}
 			
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.fine("Learned skill ID: " + _skillId + " Level: " + _skillLvl + " for " + requiredSp + " SP, " + requireditems + " Adena.");
 			}
 			

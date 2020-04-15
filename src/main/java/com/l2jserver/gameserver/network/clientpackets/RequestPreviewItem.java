@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,12 +18,14 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.BuyListData;
 import com.l2jserver.gameserver.model.L2Object;
 import com.l2jserver.gameserver.model.actor.L2Npc;
@@ -113,7 +115,7 @@ public final class RequestPreviewItem extends L2GameClientPacket {
 		}
 		
 		// If Alternate rule Karma punishment is set to true, forbid Wear to player with Karma
-		if (!Config.ALT_GAME_KARMA_PLAYER_CAN_SHOP && (activeChar.getKarma() > 0)) {
+		if (!character().karmaPlayerCanShop() && (activeChar.getKarma() > 0)) {
 			return;
 		}
 		
@@ -138,7 +140,7 @@ public final class RequestPreviewItem extends L2GameClientPacket {
 		
 		final L2BuyList buyList = BuyListData.getInstance().getBuyList(_listId);
 		if (buyList == null) {
-			Util.handleIllegalPlayerAction(activeChar, "Warning!! Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " sent a false BuyList list_id " + _listId, Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(activeChar, "Warning!! Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " sent a false BuyList list_id " + _listId);
 			return;
 		}
 		
@@ -150,7 +152,7 @@ public final class RequestPreviewItem extends L2GameClientPacket {
 			
 			final Product product = buyList.getProductByItemId(itemId);
 			if (product == null) {
-				Util.handleIllegalPlayerAction(activeChar, "Warning!! Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " sent a false BuyList list_id " + _listId + " and item_id " + itemId, Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(activeChar, "Warning!! Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " sent a false BuyList list_id " + _listId + " and item_id " + itemId);
 				return;
 			}
 			
@@ -186,9 +188,9 @@ public final class RequestPreviewItem extends L2GameClientPacket {
 			}
 			
 			itemList.put(slot, itemId);
-			totalPrice += Config.WEAR_PRICE;
-			if (totalPrice > Inventory.MAX_ADENA) {
-				Util.handleIllegalPlayerAction(activeChar, "Warning!! Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " tried to purchase over " + Inventory.MAX_ADENA + " adena worth of goods.", Config.DEFAULT_PUNISH);
+			totalPrice += general().getWearPrice();
+			if (totalPrice > character().getMaxAdena()) {
+				Util.handleIllegalPlayerAction(activeChar, "Warning!! Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " tried to purchase over " + character().getMaxAdena() + " adena worth of goods.");
 				return;
 			}
 		}
@@ -202,7 +204,7 @@ public final class RequestPreviewItem extends L2GameClientPacket {
 		if (!itemList.isEmpty()) {
 			activeChar.sendPacket(new ShopPreviewInfo(itemList));
 			// Schedule task
-			ThreadPoolManager.getInstance().scheduleGeneral(new RemoveWearItemsTask(activeChar), Config.WEAR_DELAY * 1000);
+			ThreadPoolManager.getInstance().scheduleGeneral(new RemoveWearItemsTask(activeChar), general().getWearDelay());
 		}
 	}
 	

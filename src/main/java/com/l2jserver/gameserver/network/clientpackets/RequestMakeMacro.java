@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,11 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.MacroType;
 import com.l2jserver.gameserver.model.Macro;
 import com.l2jserver.gameserver.model.MacroCmd;
@@ -48,7 +49,7 @@ public final class RequestMakeMacro extends L2GameClientPacket {
 			_count = MAX_MACRO_LENGTH;
 		}
 		
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			_log.info("Make macro id:" + _id + "\tname:" + _name + "\tdesc:" + _desc + "\tacronym:" + _acronym + "\ticon:" + _icon + "\tcount:" + _count);
 		}
 		

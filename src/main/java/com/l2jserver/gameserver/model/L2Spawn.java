@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.model;
 
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.lang.reflect.Constructor;
 import java.util.Deque;
 import java.util.List;
@@ -31,7 +34,6 @@ import java.util.logging.Logger;
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.GeoData;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.TerritoryTable;
 import com.l2jserver.gameserver.data.xml.impl.NpcData;
 import com.l2jserver.gameserver.datatables.NpcPersonalAIData;
@@ -581,14 +583,14 @@ public class L2Spawn implements IPositionable, IIdentifiable, INamable {
 			((L2Attackable) mob).setChampion(false);
 		}
 		
-		if (Config.L2JMOD_CHAMPION_ENABLE) {
+		if (customs().championEnable()) {
 			// Set champion on next spawn
 			if (mob.isMonster() && !getTemplate().isUndying() && !mob.isRaid() && !mob.isRaidMinion() && //
-				(Config.L2JMOD_CHAMPION_FREQUENCY > 0) && //
-				(mob.getLevel() >= Config.L2JMOD_CHAMP_MIN_LVL) && //
-				(mob.getLevel() <= Config.L2JMOD_CHAMP_MAX_LVL) && //
-				(Config.L2JMOD_CHAMPION_ENABLE_IN_INSTANCES || (getInstanceId() == 0))) {
-				if (Rnd.get(100) < Config.L2JMOD_CHAMPION_FREQUENCY) {
+				(customs().getChampionFrequency() > 0) && //
+				(mob.getLevel() >= customs().getChampionMinLevel()) && //
+				(mob.getLevel() <= customs().getChampionMaxLevel()) && //
+				(customs().championEnableInInstances() || (getInstanceId() == 0))) {
+				if (Rnd.get(100) < customs().getChampionFrequency()) {
 					((L2Attackable) mob).setChampion(true);
 				}
 			}
@@ -611,7 +613,7 @@ public class L2Spawn implements IPositionable, IIdentifiable, INamable {
 			_lastSpawnPoints.put(mob.getObjectId(), new Location(newlocx, newlocy, newlocz));
 		}
 		
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			_log.finest("Spawned Mob Id: " + _template.getId() + " , at: X: " + mob.getX() + " Y: " + mob.getY() + " Z: " + mob.getZ());
 		}
 		// Increase the current number of L2NpcInstance managed by this L2Spawn

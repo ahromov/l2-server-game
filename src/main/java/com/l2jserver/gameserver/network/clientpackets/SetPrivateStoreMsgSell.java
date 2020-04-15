@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,6 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.serverpackets.PrivateStoreMsgSell;
 import com.l2jserver.gameserver.util.Util;
@@ -47,7 +46,7 @@ public class SetPrivateStoreMsgSell extends L2GameClientPacket {
 		}
 		
 		if ((_storeMsg != null) && (_storeMsg.length() > MAX_MSG_LENGTH)) {
-			Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to overflow private store sell message", Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to overflow private store sell message");
 			return;
 		}
 		

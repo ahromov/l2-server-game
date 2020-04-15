@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -20,6 +20,8 @@ package com.l2jserver.gameserver.network.clientpackets;
 
 import static com.l2jserver.gameserver.ai.CtrlEvent.EVT_FINISH_CASTING;
 import static com.l2jserver.gameserver.ai.CtrlIntention.AI_INTENTION_CAST;
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
 import static com.l2jserver.gameserver.enums.PrivateStoreType.NONE;
 import static com.l2jserver.gameserver.enums.Race.KAMAEL;
 import static com.l2jserver.gameserver.model.PcCondOverride.ITEM_CONDITIONS;
@@ -59,7 +61,6 @@ import org.slf4j.LoggerFactory;
 
 import com.l2jserver.gameserver.ThreadPoolManager;
 import com.l2jserver.gameserver.ai.NextAction;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.handler.IItemHandler;
 import com.l2jserver.gameserver.handler.ItemHandler;
 import com.l2jserver.gameserver.instancemanager.FortSiegeManager;
@@ -100,7 +101,7 @@ public final class UseItem extends L2GameClientPacket {
 			return;
 		}
 		
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			LOG.debug("{} uses item with object Id {}.", activeChar.toString(), _objectId);
 		}
 		
@@ -154,7 +155,7 @@ public final class UseItem extends L2GameClientPacket {
 			return;
 		}
 		
-		if (!Config.ALT_GAME_KARMA_PLAYER_CAN_TELEPORT && (activeChar.getKarma() > 0)) {
+		if (!character().karmaPlayerCanTeleport() && (activeChar.getKarma() > 0)) {
 			SkillHolder[] skills = item.getItem().getSkills();
 			if (skills != null) {
 				for (SkillHolder sHolder : skills) {
@@ -304,7 +305,7 @@ public final class UseItem extends L2GameClientPacket {
 			if (handler == null) {
 				if ((etcItem != null) && (etcItem.getHandlerName() != null)) {
 					_log.log(Level.WARNING, "Unmanaged Item handler: " + etcItem.getHandlerName() + " for Item Id: " + _itemId + "!");
-				} else if (Config.DEBUG) {
+				} else if (general().debug()) {
 					_log.log(Level.WARNING, "No Item handler registered for Item Id: " + _itemId + "!");
 				}
 				return;
@@ -356,6 +357,6 @@ public final class UseItem extends L2GameClientPacket {
 	
 	@Override
 	protected boolean triggersOnActionRequest() {
-		return !Config.SPAWN_PROTECTION_ALLOWED_ITEMS.contains(_itemId);
+		return !character().getPlayerSpawnProtectionAllowedItems().contains(_itemId);
 	}
 }

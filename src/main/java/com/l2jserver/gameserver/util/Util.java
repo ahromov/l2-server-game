@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.util;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.io.File;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -33,7 +36,7 @@ import java.util.logging.Logger;
 
 import com.l2jserver.gameserver.GeoData;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
+import com.l2jserver.gameserver.config.Configuration;
 import com.l2jserver.gameserver.enums.HtmlActionScope;
 import com.l2jserver.gameserver.enums.IllegalActionPunishmentType;
 import com.l2jserver.gameserver.model.L2Object;
@@ -50,8 +53,14 @@ import com.l2jserver.gameserver.util.file.filter.ExtFilter;
  * General Utility functions related to game server.
  */
 public final class Util {
+	
 	private static final Logger LOGGER = Logger.getLogger(Util.class.getName());
+	
 	private static final NumberFormat ADENA_FORMATTER = NumberFormat.getIntegerInstance(Locale.ENGLISH);
+	
+	public static void handleIllegalPlayerAction(L2PcInstance actor, String message) {
+		handleIllegalPlayerAction(actor, message, general().getDefaultPunish());
+	}
 	
 	public static void handleIllegalPlayerAction(L2PcInstance actor, String message, IllegalActionPunishmentType punishment) {
 		ThreadPoolManager.getInstance().scheduleGeneral(new IllegalPlayerActionTask(actor, message, punishment), 5000);
@@ -394,7 +403,7 @@ public final class Util {
 	}
 	
 	public static File[] getDatapackFiles(String dirname, String extention) {
-		File dir = new File(Config.DATAPACK_ROOT, "data/" + dirname);
+		File dir = new File(server().getDatapackRoot(), "data/" + dirname);
 		if (!dir.exists()) {
 			return null;
 		}
@@ -431,7 +440,7 @@ public final class Util {
 				bypass = bypass.substring(0, firstParameterStart + 1);
 			}
 			
-			if (Config.HTML_ACTION_CACHE_DEBUG) {
+			if (general().htmlActionCacheDebug()) {
 				LOGGER.info("Cached html bypass(" + scope.toString() + "): '" + bypass + "'");
 			}
 			player.addHtmlAction(scope, bypass);
@@ -462,7 +471,7 @@ public final class Util {
 				continue;
 			}
 			
-			if (Config.HTML_ACTION_CACHE_DEBUG) {
+			if (general().htmlActionCacheDebug()) {
 				LOGGER.info("Cached html link(" + scope.toString() + "): '" + htmlLink + "'");
 			}
 			// let's keep an action cache with "link " lowercase literal kept
@@ -485,7 +494,7 @@ public final class Util {
 			throw new IllegalArgumentException();
 		}
 		
-		if (Config.HTML_ACTION_CACHE_DEBUG) {
+		if (general().htmlActionCacheDebug()) {
 			LOGGER.info("Set html action npc(" + scope.toString() + "): " + npcObjId);
 		}
 		player.setHtmlActionOriginObjectId(scope, npcObjId);
@@ -593,7 +602,7 @@ public final class Util {
 	 * @param text
 	 */
 	public static void fillMultiEditContent(L2PcInstance activeChar, String text) {
-		activeChar.sendPacket(new ShowBoard(Arrays.asList("0", "0", "0", "0", "0", "0", activeChar.getName(), Integer.toString(activeChar.getObjectId()), activeChar.getAccountName(), "9", " ", " ", text.replaceAll("<br>", Config.EOL), "0", "0", "0", "0")));
+		activeChar.sendPacket(new ShowBoard(Arrays.asList("0", "0", "0", "0", "0", "0", activeChar.getName(), Integer.toString(activeChar.getObjectId()), activeChar.getAccountName(), "9", " ", " ", text.replaceAll("<br>", Configuration.EOL), "0", "0", "0", "0")));
 	}
 	
 	/**

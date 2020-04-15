@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.instancemanager;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,7 +36,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.CursedWeapon;
 import com.l2jserver.gameserver.model.actor.L2Attackable;
 import com.l2jserver.gameserver.model.actor.L2Character;
@@ -67,7 +69,7 @@ public final class CursedWeaponsManager {
 	private void init() {
 		_cursedWeapons = new HashMap<>();
 		
-		if (!Config.ALLOW_CURSED_WEAPONS) {
+		if (!general().allowCursedWeapons()) {
 			return;
 		}
 		
@@ -87,7 +89,7 @@ public final class CursedWeaponsManager {
 			factory.setValidating(false);
 			factory.setIgnoringComments(true);
 			
-			File file = new File(Config.DATAPACK_ROOT + "/data/cursedWeapons.xml");
+			File file = new File(server().getDatapackRoot(), "data/cursedWeapons.xml");
 			if (!file.exists()) {
 				LOG.warn("Couldn't find {}!", file.getAbsoluteFile());
 				return;

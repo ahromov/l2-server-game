@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model.entity;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -27,7 +29,6 @@ import java.util.concurrent.Future;
 
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.instancemanager.DimensionalRiftManager;
 import com.l2jserver.gameserver.instancemanager.QuestManager;
 import com.l2jserver.gameserver.model.L2Party;
@@ -182,7 +183,7 @@ public class DimensionalRift {
 			}
 		};
 		
-		spawnTimer.schedule(spawnTimerTask, Config.RIFT_SPAWN_DELAY);
+		spawnTimer.schedule(spawnTimerTask, general().getRiftSpawnDelay());
 	}
 	
 	public void partyMemberInvited() {
@@ -198,7 +199,7 @@ public class DimensionalRift {
 			_revivedInWaitingRoom.remove(player);
 		}
 		
-		if ((_party.getMemberCount() < Config.RIFT_MIN_PARTY_SIZE) || (_party.getMemberCount() == 1)) {
+		if ((_party.getMemberCount() < general().getRiftMinPartySize()) || (_party.getMemberCount() == 1)) {
 			for (L2PcInstance p : _party.getMembers()) {
 				teleportToWaitingRoom(p);
 			}
@@ -337,10 +338,9 @@ public class DimensionalRift {
 	}
 	
 	private long calcTimeToNextJump() {
-		int time = Rnd.get(Config.RIFT_AUTO_JUMPS_TIME_MIN, Config.RIFT_AUTO_JUMPS_TIME_MAX) * 1000;
-		
+		int time = Rnd.get(general().getAutoJumpsDelayMin(), general().getAutoJumpsDelayMax());
 		if (isBossRoom) {
-			return (long) (time * Config.RIFT_BOSS_ROOM_TIME_MUTIPLY);
+			return (long) (time * general().getBossRoomTimeMultiply());
 		}
 		return time;
 	}
@@ -366,7 +366,7 @@ public class DimensionalRift {
 			_deadPlayers.add(player);
 		}
 		
-		if ((_party.getMemberCount() - _revivedInWaitingRoom.size()) < Config.RIFT_MIN_PARTY_SIZE) {
+		if ((_party.getMemberCount() - _revivedInWaitingRoom.size()) < general().getRiftMinPartySize()) {
 			// int pcm = _party.getMemberCount();
 			// int rev = revivedInWaitingRoom.size();
 			// int min = Config.RIFT_MIN_PARTY_SIZE;
@@ -396,9 +396,9 @@ public class DimensionalRift {
 		return DimensionalRiftManager.getInstance().getRoom(_type, room).getTeleportCoorinates();
 	}
 	
-	public byte getMaxJumps() {
-		if ((Config.RIFT_MAX_JUMPS <= 8) && (Config.RIFT_MAX_JUMPS >= 1)) {
-			return (byte) Config.RIFT_MAX_JUMPS;
+	public int getMaxJumps() {
+		if ((general().getMaxRiftJumps() <= 8) && (general().getMaxRiftJumps() >= 1)) {
+			return general().getMaxRiftJumps();
 		}
 		return 4;
 	}

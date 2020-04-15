@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,7 @@
  */
 package com.l2jserver.gameserver.datatables;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
 import static com.l2jserver.gameserver.network.SystemMessageId.C1_WAS_REPORTED_AS_BOT;
 import static com.l2jserver.gameserver.network.SystemMessageId.CANNOT_REPORT_TARGET_ALREDY_REPORTED_BY_CLAN_ALLY_MEMBER_OR_SAME_IP;
 import static com.l2jserver.gameserver.network.SystemMessageId.TARGET_NOT_REPORT_CANNOT_REPORT_PEACE_PVP_ZONE_OR_OLYMPIAD_OR_CLAN_WAR_ENEMY;
@@ -29,6 +30,7 @@ import static com.l2jserver.gameserver.network.SystemMessageId.YOU_CAN_REPORT_IN
 import static com.l2jserver.gameserver.network.SystemMessageId.YOU_HAVE_BEEN_REPORTED_AND_CANNOT_REPORT;
 import static com.l2jserver.gameserver.network.SystemMessageId.YOU_HAVE_USED_ALL_POINTS_POINTS_ARE_RESET_AT_NOON;
 import static com.l2jserver.gameserver.network.SystemMessageId.YOU_HAVE_USED_REPORT_POINT_ON_C1_YOU_HAVE_C2_POINTS_LEFT;
+import static java.util.concurrent.TimeUnit.DAYS;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,7 +49,6 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.L2Clan;
 import com.l2jserver.gameserver.model.L2Object;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -85,7 +86,7 @@ public final class BotReportTable {
 	private Map<Integer, PunishHolder> _punishments;
 	
 	BotReportTable() {
-		if (Config.BOTREPORT_ENABLE) {
+		if (general().enableBotReportButton()) {
 			_ipRegistry = new HashMap<>();
 			_charRegistry = new ConcurrentHashMap<>();
 			_reports = new ConcurrentHashMap<>();
@@ -118,7 +119,7 @@ public final class BotReportTable {
 			var rset = st.executeQuery(SQL_LOAD_REPORTED_CHAR_DATA)) {
 			long lastResetTime = 0;
 			try {
-				String[] hour = Config.BOTREPORT_RESETPOINT_HOUR;
+				String[] hour = general().getBotReportPointsResetHour().split(":");
 				Calendar c = Calendar.getInstance();
 				c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour[0]));
 				c.set(Calendar.MINUTE, Integer.parseInt(hour[1]));
@@ -246,7 +247,7 @@ public final class BotReportTable {
 					return false;
 				}
 				
-				if (!Config.BOTREPORT_ALLOW_REPORTS_FROM_SAME_CLAN_MEMBERS && rcd.reportedBySameClan(reporter.getClan())) {
+				if (!general().allowReportsFromSameClanMembers() && rcd.reportedBySameClan(reporter.getClan())) {
 					reporter.sendPacket(CANNOT_REPORT_TARGET_ALREDY_REPORTED_BY_CLAN_ALLY_MEMBER_OR_SAME_IP);
 					return false;
 				}
@@ -259,7 +260,7 @@ public final class BotReportTable {
 				}
 				
 				long reuse = (System.currentTimeMillis() - rcdRep.getLastReporTime());
-				if (reuse < Config.BOTREPORT_REPORT_DELAY) {
+				if (reuse < general().getBotReportDelay()) {
 					SystemMessage sm = SystemMessage.getSystemMessage(YOU_CAN_REPORT_IN_S1_MINS_YOU_HAVE_S2_POINTS_LEFT);
 					sm.addInt((int) (reuse / 60000));
 					sm.addInt(rcdRep.getPointsLeft());
@@ -361,7 +362,7 @@ public final class BotReportTable {
 	
 	private void scheduleResetPointTask() {
 		try {
-			String[] hour = Config.BOTREPORT_RESETPOINT_HOUR;
+			String[] hour = general().getBotReportPointsResetHour().split(":");
 			Calendar c = Calendar.getInstance();
 			c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour[0]));
 			c.set(Calendar.MINUTE, Integer.parseInt(hour[1]));
@@ -372,7 +373,7 @@ public final class BotReportTable {
 			
 			ThreadPoolManager.getInstance().scheduleGeneral(new ResetPointTask(), c.getTimeInMillis() - System.currentTimeMillis());
 		} catch (Exception ex) {
-			ThreadPoolManager.getInstance().scheduleGeneral(new ResetPointTask(), 24 * 3600 * 1000);
+			ThreadPoolManager.getInstance().scheduleGeneral(new ResetPointTask(), DAYS.toMillis(1));
 			LOG.warn("Could not properly schedule bot report points reset task. Scheduled in 24 hours!", ex);
 		}
 	}
@@ -394,14 +395,14 @@ public final class BotReportTable {
 	}
 	
 	/**
-	 * Checks and return if the abstrat barrier specified by an integer (map key) has accomplished the waiting time
+	 * Checks and return if the abstract barrier specified by an integer (map key) has accomplished the waiting time
 	 * @param map (a Map to study (Int = barrier, Long = fully qualified unix time)
 	 * @param objectId (an existent map key)
 	 * @return true if the time has passed.
 	 */
 	private static boolean timeHasPassed(Map<Integer, Long> map, int objectId) {
 		if (map.containsKey(objectId)) {
-			return (System.currentTimeMillis() - map.get(objectId)) > Config.BOTREPORT_REPORT_DELAY;
+			return (System.currentTimeMillis() - map.get(objectId)) > general().getBotReportDelay();
 		}
 		return true;
 	}

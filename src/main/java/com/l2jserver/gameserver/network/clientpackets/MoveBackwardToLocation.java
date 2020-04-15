@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,12 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.customs;
+
 import java.nio.BufferUnderflowException;
 
 import com.l2jserver.gameserver.ai.CtrlIntention;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.Location;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.SystemMessageId;
@@ -58,9 +60,9 @@ public class MoveBackwardToLocation extends L2GameClientPacket {
 		try {
 			_moveMovement = readD(); // is 0 if cursor keys are used 1 if mouse is used
 		} catch (BufferUnderflowException e) {
-			if (Config.L2WALKER_PROTECTION) {
+			if (customs().l2WalkerProtection()) {
 				L2PcInstance activeChar = getClient().getActiveChar();
-				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " is trying to use L2Walker and got kicked.", Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " is trying to use L2Walker and got kicked.");
 			}
 		}
 	}
@@ -72,7 +74,7 @@ public class MoveBackwardToLocation extends L2GameClientPacket {
 			return;
 		}
 		
-		if ((Config.PLAYER_MOVEMENT_BLOCK_TIME > 0) && !activeChar.isGM() && (activeChar.getNotMoveUntil() > System.currentTimeMillis())) {
+		if ((character().getNpcTalkBlockingTime() > 0) && !activeChar.isGM() && (activeChar.getNotMoveUntil() > System.currentTimeMillis())) {
 			activeChar.sendPacket(SystemMessageId.CANNOT_MOVE_WHILE_SPEAKING_TO_AN_NPC);
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;

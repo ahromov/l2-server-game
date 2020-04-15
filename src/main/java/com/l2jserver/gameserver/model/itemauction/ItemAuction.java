@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,7 @@
  */
 package com.l2jserver.gameserver.model.itemauction;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
@@ -29,7 +30,6 @@ import java.util.logging.Logger;
 
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.instancemanager.ItemAuctionManager;
 import com.l2jserver.gameserver.model.ItemInfo;
 import com.l2jserver.gameserver.model.L2World;
@@ -310,10 +310,10 @@ public final class ItemAuction {
 					break;
 				}
 				case EXTEND_BY_3_MIN:
-					if (Config.ALT_ITEM_AUCTION_TIME_EXTENDS_ON_BID > 0) {
+					if (general().getItemAuctionTimeExtendsOnBid() > 0) {
 						if (getAndSetLastBidPlayerObjectId(player.getObjectId()) != player.getObjectId()) {
 							_auctionEndingExtendState = ItemAuctionExtendState.EXTEND_BY_CONFIG_PHASE_A;
-							_endingTime += Config.ALT_ITEM_AUCTION_TIME_EXTENDS_ON_BID;
+							_endingTime += general().getItemAuctionTimeExtendsOnBid();
 						}
 					}
 					break;
@@ -321,7 +321,7 @@ public final class ItemAuction {
 					if (getAndSetLastBidPlayerObjectId(player.getObjectId()) != player.getObjectId()) {
 						if (_scheduledAuctionEndingExtendState == ItemAuctionExtendState.EXTEND_BY_CONFIG_PHASE_B) {
 							_auctionEndingExtendState = ItemAuctionExtendState.EXTEND_BY_CONFIG_PHASE_B;
-							_endingTime += Config.ALT_ITEM_AUCTION_TIME_EXTENDS_ON_BID;
+							_endingTime += general().getItemAuctionTimeExtendsOnBid();
 						}
 					}
 					break;
@@ -329,7 +329,7 @@ public final class ItemAuction {
 				case EXTEND_BY_CONFIG_PHASE_B: {
 					if (getAndSetLastBidPlayerObjectId(player.getObjectId()) != player.getObjectId()) {
 						if (_scheduledAuctionEndingExtendState == ItemAuctionExtendState.EXTEND_BY_CONFIG_PHASE_A) {
-							_endingTime += Config.ALT_ITEM_AUCTION_TIME_EXTENDS_ON_BID;
+							_endingTime += general().getItemAuctionTimeExtendsOnBid();
 							_auctionEndingExtendState = ItemAuctionExtendState.EXTEND_BY_CONFIG_PHASE_A;
 						}
 					}
@@ -364,7 +364,7 @@ public final class ItemAuction {
 				return false;
 			}
 			case FINISHED: {
-				if (_startingTime < (System.currentTimeMillis() - MILLISECONDS.convert(Config.ALT_ITEM_AUCTION_EXPIRED_AFTER, DAYS))) {
+				if (_startingTime < (System.currentTimeMillis() - MILLISECONDS.convert(general().getItemAuctionExpiredAfter(), DAYS))) {
 					return false;
 				}
 				break;

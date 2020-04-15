@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,9 @@
  */
 package com.l2jserver.gameserver.model.actor.instance;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.npc;
+
 import com.l2jserver.gameserver.enums.InstanceType;
 import com.l2jserver.gameserver.model.actor.templates.L2NpcTemplate;
 import com.l2jserver.gameserver.network.serverpackets.NpcHtmlMessage;
@@ -56,7 +58,7 @@ public class L2PetManagerInstance extends L2MerchantInstance {
 		
 		final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 		html.setFile(player.getHtmlPrefix(), filename);
-		if (Config.ALLOW_RENTPET && Config.LIST_PET_RENT_NPC.contains(getId())) {
+		if (general().allowRentPet() && npc().getPetRentNPCs().contains(getId())) {
 			html.replace("_Quest", "_RentPet\">Rent Pet</a><br><a action=\"bypass -h npc_%objectId%_Quest");
 		}
 		html.replace("%objectId%", String.valueOf(getObjectId()));

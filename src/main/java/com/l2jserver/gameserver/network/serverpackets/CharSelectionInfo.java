@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.network.serverpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.customs;
+
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +28,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.json.ExperienceData;
 import com.l2jserver.gameserver.data.sql.impl.ClanTable;
 import com.l2jserver.gameserver.model.CharSelectInfoPackage;
@@ -75,7 +77,7 @@ public class CharSelectionInfo extends L2GameServerPacket {
 		writeD(size);
 		
 		// Can prevent players from creating new characters (if 0); (if 1, the client will ask if chars may be created (0x13) Response: (0x0D) )
-		writeD(Config.MAX_CHARACTERS_NUMBER_PER_ACCOUNT);
+		writeD(character().getCharMaxNumber());
 		writeC(0x00);
 		
 		long lastAccess = 0L;
@@ -250,10 +252,10 @@ public class CharSelectionInfo extends L2GameServerPacket {
 		charInfopackage.setY(chardata.getInt("y"));
 		charInfopackage.setZ(chardata.getInt("z"));
 		
-		if (Config.L2JMOD_MULTILANG_ENABLE) {
+		if (customs().multiLangEnable()) {
 			String lang = chardata.getString("language");
-			if (!Config.L2JMOD_MULTILANG_ALLOWED.contains(lang)) {
-				lang = Config.L2JMOD_MULTILANG_DEFAULT;
+			if (!customs().getMultiLangAllowed().contains(lang)) {
+				lang = customs().getMultiLangDefault();
 			}
 			charInfopackage.setHtmlPrefix("data/lang/" + lang + "/");
 		}

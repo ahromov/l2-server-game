@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -27,6 +27,7 @@ import static com.l2jserver.gameserver.ai.CtrlIntention.AI_INTENTION_INTERACT;
 import static com.l2jserver.gameserver.ai.CtrlIntention.AI_INTENTION_MOVE_TO;
 import static com.l2jserver.gameserver.ai.CtrlIntention.AI_INTENTION_PICK_UP;
 import static com.l2jserver.gameserver.ai.CtrlIntention.AI_INTENTION_REST;
+import static com.l2jserver.gameserver.config.Configuration.geodata;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,6 @@ import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.GameTimeController;
 import com.l2jserver.gameserver.GeoData;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.ItemLocation;
 import com.l2jserver.gameserver.instancemanager.WalkingManager;
 import com.l2jserver.gameserver.model.L2Object;
@@ -888,7 +888,7 @@ public class L2CharacterAI extends AbstractAI {
 		
 		// If pathfinding enabled the creature will go to the destination or it will go to the nearest obstacle.
 		final Location destination;
-		if (Config.PATHFINDING > 0) {
+		if (geodata().getPathFinding() > 0) {
 			destination = GeoData.getInstance().moveCheck(_actor.getX(), _actor.getY(), _actor.getZ(), posX, posY, posZ, _actor.getInstanceId());
 		} else {
 			destination = new Location(posX, posY, posZ, _actor.getInstanceId());

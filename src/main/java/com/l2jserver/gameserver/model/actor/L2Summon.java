@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,13 +18,14 @@
  */
 package com.l2jserver.gameserver.model.actor;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.geodata;
 import static com.l2jserver.gameserver.enums.InstanceType.L2Summon;
 
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.ai.CtrlIntention;
 import com.l2jserver.gameserver.ai.L2CharacterAI;
 import com.l2jserver.gameserver.ai.L2SummonAI;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.json.ExperienceData;
 import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.enums.Race;
@@ -118,7 +119,7 @@ public abstract class L2Summon extends L2Playable {
 	public void onSpawn() {
 		super.onSpawn();
 		
-		if (Config.SUMMON_STORE_SKILL_COOLTIME && !isTeleporting()) {
+		if (character().summonStoreSkillCooltime() && !isTeleporting()) {
 			restoreEffects();
 		}
 		
@@ -210,14 +211,14 @@ public abstract class L2Summon extends L2Playable {
 	}
 	
 	public long getExpForThisLevel() {
-		if (getLevel() >= (Config.MAX_PET_LEVEL + 1)) {
+		if (getLevel() >= (character().getMaxPetLevel() + 1)) {
 			return 0;
 		}
 		return ExperienceData.getInstance().getExpForLevel(getLevel());
 	}
 	
 	public long getExpForNextLevel() {
-		if (getLevel() >= (Config.MAX_PET_LEVEL)) {
+		if (getLevel() >= (character().getMaxPetLevel())) {
 			return 0;
 		}
 		return ExperienceData.getInstance().getExpForLevel(getLevel() + 1);
@@ -585,7 +586,9 @@ public abstract class L2Summon extends L2Playable {
 			return false;
 		}
 		
-		if ((this != target) && skill.isPhysical() && (Config.PATHFINDING > 0) && (PathFinding.getInstance().findPath(getX(), getY(), getZ(), target.getX(), target.getY(), target.getZ(), getInstanceId(), true) == null)) {
+		if ((this != target) && skill.isPhysical() && //
+			(geodata().getPathFinding() > 0) && //
+			(PathFinding.getInstance().findPath(getX(), getY(), getZ(), target.getX(), target.getY(), target.getZ(), getInstanceId(), true) == null)) {
 			sendPacket(SystemMessageId.CANT_SEE_TARGET);
 			return false;
 		}

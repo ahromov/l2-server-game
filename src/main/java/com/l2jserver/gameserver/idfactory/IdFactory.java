@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,10 @@
  */
 package com.l2jserver.gameserver.idfactory;
 
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 
 /**
  * Id Factory.
@@ -130,8 +133,8 @@ public abstract class IdFactory {
 	
 	protected IdFactory() {
 		setAllCharacterOffline();
-		if (Config.DATABASE_CLEAN_UP) {
-			if (Config.L2JMOD_ALLOW_WEDDING) {
+		if (general().databaseCleanUp()) {
+			if (customs().allowWedding()) {
 				cleanInvalidWeddings();
 			}
 			cleanUpDB();
@@ -140,20 +143,18 @@ public abstract class IdFactory {
 	}
 	
 	static {
-		switch (Config.IDFACTORY_TYPE) {
-			case Compaction:
-				throw new UnsupportedOperationException("Compaction IdFactory is disabled.");
-				// _instance = new CompactionIDFactory();
-				// break;
+		switch (server().getIdFactory()) {
+			default:
 			case BitSet:
 				_instance = new BitSetIDFactory();
 				break;
 			case Stack:
 				_instance = new StackIDFactory();
 				break;
-			default:
-				_instance = null;
-				break;
+			case Compaction:
+				throw new UnsupportedOperationException("Compaction IdFactory is disabled.");
+			// _instance = new CompactionIDFactory();
+			// break;
 		}
 	}
 	

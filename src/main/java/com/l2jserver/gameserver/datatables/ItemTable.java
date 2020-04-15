@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.datatables;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
 import static com.l2jserver.gameserver.model.itemcontainer.Inventory.ADENA_ID;
 import static com.l2jserver.gameserver.model.items.type.EtcItemType.ARROW;
 import static com.l2jserver.gameserver.model.items.type.EtcItemType.SHOT;
@@ -32,7 +34,6 @@ import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.EnchantItemHPBonusData;
 import com.l2jserver.gameserver.engines.DocumentEngine;
 import com.l2jserver.gameserver.enums.ItemLocation;
@@ -203,19 +204,19 @@ public class ItemTable {
 			{
 				L2Attackable raid = (L2Attackable) reference;
 				// if in CommandChannel and was killing a World/RaidBoss
-				if ((raid.getFirstCommandChannelAttacked() != null) && !Config.AUTO_LOOT_RAIDS) {
+				if ((raid.getFirstCommandChannelAttacked() != null) && !character().autoLootRaids()) {
 					item.setOwnerId(raid.getFirstCommandChannelAttacked().getLeaderObjectId());
-					itemLootShedule = ThreadPoolManager.getInstance().scheduleGeneral(new ResetOwner(item), Config.LOOT_RAIDS_PRIVILEGE_INTERVAL);
+					itemLootShedule = ThreadPoolManager.getInstance().scheduleGeneral(new ResetOwner(item), character().getRaidLootRightsInterval());
 					item.setItemLootShedule(itemLootShedule);
 				}
-			} else if (!Config.AUTO_LOOT || ((reference instanceof L2EventMonsterInstance) && ((L2EventMonsterInstance) reference).eventDropOnGround())) {
+			} else if (!character().autoLoot() || ((reference instanceof L2EventMonsterInstance) && ((L2EventMonsterInstance) reference).eventDropOnGround())) {
 				item.setOwnerId(actor.getObjectId());
 				itemLootShedule = ThreadPoolManager.getInstance().scheduleGeneral(new ResetOwner(item), 15000);
 				item.setItemLootShedule(itemLootShedule);
 			}
 		}
 		
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			LOG.info("Item created object Id {} and item Id {}.", item.getObjectId(), itemId);
 		}
 		
@@ -227,8 +228,8 @@ public class ItemTable {
 			item.setCount(count);
 		}
 		
-		if (Config.LOG_ITEMS && !process.equals("Reset")) {
-			if (!Config.LOG_ITEMS_SMALL_LOG || (Config.LOG_ITEMS_SMALL_LOG && (item.isEquipable() || (item.getId() == ADENA_ID)))) {
+		if (general().logItems() && !process.equals("Reset")) {
+			if (!general().logItemsSmallLog() || (general().logItemsSmallLog() && (item.isEquipable() || (item.getId() == ADENA_ID)))) {
 				if (item.getItemType() != ARROW && item.getItemType() != SHOT) {
 					LOG_ITEM.info("CREATED {} by {}, referenced by {}.", item, actor, reference);
 				}
@@ -244,7 +245,7 @@ public class ItemTable {
 					referenceName = (String) reference;
 				}
 				String targetName = (actor.getTarget() != null ? actor.getTarget().getName() : "no-target");
-				if (Config.GMAUDIT) {
+				if (general().gmAudit()) {
 					GMAudit.auditGMAction(actor.getName() + " [" + actor.getObjectId() + "]", process + "(id: " + itemId + " count: " + count + " name: " + item.getItemName() + " objId: " + item.getObjectId() + ")", targetName, "L2Object referencing this action is: " + referenceName);
 				}
 			}
@@ -283,8 +284,8 @@ public class ItemTable {
 			L2World.getInstance().removeObject(item);
 			IdFactory.getInstance().releaseId(item.getObjectId());
 			
-			if (Config.LOG_ITEMS) {
-				if (!Config.LOG_ITEMS_SMALL_LOG || (Config.LOG_ITEMS_SMALL_LOG && (item.isEquipable() || (item.getId() == ADENA_ID)))) {
+			if (general().logItems()) {
+				if (!general().logItemsSmallLog() || (general().logItemsSmallLog() && (item.isEquipable() || (item.getId() == ADENA_ID)))) {
 					if (item.getItemType() != ARROW && item.getItemType() != SHOT) {
 						LOG_ITEM.info("DELETED {} amount {} by {}, referenced by {}.", item, old, actor, reference);
 					}
@@ -300,7 +301,7 @@ public class ItemTable {
 						referenceName = (String) reference;
 					}
 					String targetName = (actor.getTarget() != null ? actor.getTarget().getName() : "no-target");
-					if (Config.GMAUDIT) {
+					if (general().gmAudit()) {
 						GMAudit.auditGMAction(actor.getName() + " [" + actor.getObjectId() + "]", process + "(id: " + item.getId() + " count: " + item.getCount() + " itemObjId: " + item.getObjectId() + ")", targetName, "L2Object referencing this action is: " + referenceName);
 					}
 				}

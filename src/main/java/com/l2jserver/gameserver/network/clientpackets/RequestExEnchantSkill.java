@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,13 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.util.Rnd;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.EnchantSkillGroupsData;
 import com.l2jserver.gameserver.datatables.SkillData;
 import com.l2jserver.gameserver.model.L2EnchantSkillGroup.EnchantSkillHolder;
@@ -100,7 +102,7 @@ public final class RequestExEnchantSkill extends L2GameClientPacket {
 			return;
 		}
 		
-		final int costMultiplier = EnchantSkillGroupsData.NORMAL_ENCHANT_COST_MULTIPLIER;
+		final int costMultiplier = general().getNormalEnchantCostMultipiler();
 		final int requiredSp = esd.getSpCost() * costMultiplier;
 		if (player.getSp() >= requiredSp) {
 			// only first lvl requires book
@@ -108,7 +110,7 @@ public final class RequestExEnchantSkill extends L2GameClientPacket {
 			final int reqItemId = EnchantSkillGroupsData.NORMAL_ENCHANT_BOOK;
 			final L2ItemInstance spb = player.getInventory().getItemByItemId(reqItemId);
 			
-			if (Config.ES_SP_BOOK_NEEDED && usesBook && (spb == null)) // Haven't spellbook
+			if (character().enchantSkillSpBookNeeded() && usesBook && (spb == null)) // Haven't spellbook
 			{
 				player.sendPacket(SystemMessageId.YOU_DONT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL);
 				return;
@@ -121,7 +123,7 @@ public final class RequestExEnchantSkill extends L2GameClientPacket {
 			}
 			
 			boolean check = player.removeSp(requiredSp);
-			if (Config.ES_SP_BOOK_NEEDED && usesBook) {
+			if (character().enchantSkillSpBookNeeded() && usesBook) {
 				check &= player.destroyItem("Consume", spb.getObjectId(), 1, player, true);
 			}
 			
@@ -134,7 +136,7 @@ public final class RequestExEnchantSkill extends L2GameClientPacket {
 			// ok. Destroy ONE copy of the book
 			final int rate = esd.getRate(player);
 			if (Rnd.get(100) <= rate) {
-				if (Config.LOG_SKILL_ENCHANTS) {
+				if (general().logSkillEnchants()) {
 					LOG_ENCHANT_SKILL.info("ENCHANTED {} using {} with rate {} by {}.", skill, spb, rate, player);
 				}
 				
@@ -145,7 +147,7 @@ public final class RequestExEnchantSkill extends L2GameClientPacket {
 				sm.addSkillName(_skillId);
 				player.sendPacket(sm);
 				
-				if (Config.DEBUG) {
+				if (general().debug()) {
 					_log.fine("Learned skill ID: " + _skillId + " Level: " + _skillLvl + " for " + requiredSp + " SP, " + requiredAdena + " Adena.");
 				}
 			} else {
@@ -153,7 +155,7 @@ public final class RequestExEnchantSkill extends L2GameClientPacket {
 				player.sendPacket(SystemMessageId.YOU_HAVE_FAILED_TO_ENCHANT_THE_SKILL_S1);
 				player.sendPacket(ExEnchantSkillResult.valueOf(false));
 				
-				if (Config.LOG_SKILL_ENCHANTS) {
+				if (general().logSkillEnchants()) {
 					LOG_ENCHANT_SKILL.info("FAILED_ENCHANTING {} using {} with rate {} by {}.", skill, spb, rate, player);
 				}
 			}

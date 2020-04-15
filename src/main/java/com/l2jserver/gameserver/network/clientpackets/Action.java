@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,9 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.npc;
+
 import com.l2jserver.gameserver.enums.DuelState;
 import com.l2jserver.gameserver.model.L2Object;
 import com.l2jserver.gameserver.model.L2World;
@@ -51,7 +53,7 @@ public final class Action extends L2GameClientPacket {
 	
 	@Override
 	protected void runImpl() {
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			_log.info(getType() + ": " + (_actionId == 0 ? "Simple-click" : "Shift-click") + " Target object ID: " + _objectId + " orignX: " + _originX + " orignY: " + _originY + " orignZ: " + _originZ);
 		}
 		
@@ -129,7 +131,7 @@ public final class Action extends L2GameClientPacket {
 				break;
 			}
 			case 1: {
-				if (!activeChar.isGM() && !(obj.isNpc() && Config.ALT_GAME_VIEWNPC)) {
+				if (!activeChar.isGM() && !(obj.isNpc() && npc().viewNpc())) {
 					obj.onAction(activeChar, false);
 				} else {
 					obj.onActionShift(activeChar);

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,12 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.util.Rnd;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.EnchantSkillGroupsData;
 import com.l2jserver.gameserver.datatables.SkillData;
 import com.l2jserver.gameserver.model.L2EnchantSkillGroup.EnchantSkillHolder;
@@ -91,7 +92,7 @@ public final class RequestExEnchantSkillSafe extends L2GameClientPacket {
 			return;
 		}
 		
-		int costMultiplier = EnchantSkillGroupsData.SAFE_ENCHANT_COST_MULTIPLIER;
+		int costMultiplier = general().getSafeEnchantCostMultipiler();
 		int reqItemId = EnchantSkillGroupsData.SAFE_ENCHANT_BOOK;
 		
 		L2EnchantSkillLearn s = EnchantSkillGroupsData.getInstance().getSkillEnchantmentBySkillId(_skillId);
@@ -134,13 +135,13 @@ public final class RequestExEnchantSkillSafe extends L2GameClientPacket {
 			
 			// ok. Destroy ONE copy of the book
 			if (Rnd.get(100) <= rate) {
-				if (Config.LOG_SKILL_ENCHANTS) {
+				if (general().logSkillEnchants()) {
 					LOG_ENCHANT_SKILL.info("SAFE_ENCHANTED {} using {} with rate {} by {}.", skill, spb, rate, player);
 				}
 				
 				player.addSkill(skill, true);
 				
-				if (Config.DEBUG) {
+				if (general().debug()) {
 					_log.fine("Learned skill ID: " + _skillId + " Level: " + _skillLvl + " for " + requiredSp + " SP, " + requireditems + " Adena.");
 				}
 				
@@ -150,7 +151,7 @@ public final class RequestExEnchantSkillSafe extends L2GameClientPacket {
 				sm.addSkillName(_skillId);
 				player.sendPacket(sm);
 			} else {
-				if (Config.LOG_SKILL_ENCHANTS) {
+				if (general().logSkillEnchants()) {
 					LOG_ENCHANT_SKILL.info("FAILED_SAFE_ENCHANTING {} using {} with rate {} by {}.", skill, spb, rate, player);
 				}
 				

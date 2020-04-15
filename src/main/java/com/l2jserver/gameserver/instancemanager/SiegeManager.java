@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,22 +18,20 @@
  */
 package com.l2jserver.gameserver.instancemanager;
 
+import static com.l2jserver.gameserver.config.Configuration.siege;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
-import com.l2jserver.gameserver.config.PropertiesParser;
 import com.l2jserver.gameserver.datatables.SkillData;
 import com.l2jserver.gameserver.model.L2Clan;
 import com.l2jserver.gameserver.model.L2Object;
-import com.l2jserver.gameserver.model.Location;
 import com.l2jserver.gameserver.model.TowerSpawn;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.entity.Castle;
@@ -49,19 +47,19 @@ public final class SiegeManager {
 	
 	private final Map<Integer, List<TowerSpawn>> _flameTowers = new HashMap<>();
 	
-	private int _attackerMaxClans = 500; // Max number of clans
+	private int _attackerMaxClans = siege().getAttackerMaxClans();
 	
-	private int _attackerRespawnDelay = 0; // Time in ms. Changeable in siege.config
+	private int _attackerRespawnDelay = siege().getAttackerRespawn();
 	
-	private int _defenderMaxClans = 500; // Max number of clans
+	private int _defenderMaxClans = siege().getDefenderMaxClans();
 	
-	private int _flagMaxCount = 1; // Changeable in siege.config
+	private int _flagMaxCount = siege().getMaxFlags();
 	
-	private int _siegeClanMinLevel = 5; // Changeable in siege.config
+	private int _siegeClanMinLevel = siege().getClanMinLevel();
 	
-	private int _siegeLength = 120; // Time in minute. Changeable in siege.config
+	private int _siegeLength = siege().getSiegeLength();
 	
-	private int _bloodAllianceReward = 0; // Number of Blood Alliance items reward for successful castle defending
+	private int _bloodAllianceReward = siege().getBloodAllianceReward();
 	
 	protected SiegeManager() {
 		load();
@@ -111,68 +109,71 @@ public final class SiegeManager {
 	}
 	
 	private final void load() {
-		// TODO(Zoey76): Move this to Config.
-		
-		final PropertiesParser siegeSettings = new PropertiesParser(Config.SIEGE_CONFIGURATION_FILE);
-		
-		// Siege setting
-		_attackerMaxClans = siegeSettings.getInt("AttackerMaxClans", 500);
-		_attackerRespawnDelay = siegeSettings.getInt("AttackerRespawn", 0);
-		_defenderMaxClans = siegeSettings.getInt("DefenderMaxClans", 500);
-		_flagMaxCount = siegeSettings.getInt("MaxFlags", 1);
-		_siegeClanMinLevel = siegeSettings.getInt("SiegeClanMinLevel", 5);
-		_siegeLength = siegeSettings.getInt("SiegeLength", 120);
-		_bloodAllianceReward = siegeSettings.getInt("BloodAllianceReward", 1);
+		// Gludio
+		_controlTowers.put(1, List.of(siege().getGludioControlTower1(), //
+			siege().getGludioControlTower2(), //
+			siege().getGludioControlTower3()));
+		MercTicketManager.MERCS_MAX_PER_CASTLE[0] = siege().getGludioMaxMercenaries();
+		_flameTowers.put(1, List.of(siege().getGludioFlameTower1(), //
+			siege().getGludioFlameTower1()));
+		// Dion
+		_controlTowers.put(2, List.of(siege().getDionControlTower1(), //
+			siege().getDionControlTower2(), //
+			siege().getDionControlTower3()));
+		_flameTowers.put(2, List.of(siege().getDionFlameTower1(), //
+			siege().getDionFlameTower1()));
+		MercTicketManager.MERCS_MAX_PER_CASTLE[1] = siege().getDionMaxMercenaries();
+		// Giran
+		_controlTowers.put(3, List.of(siege().getGiranControlTower1(), //
+			siege().getGiranControlTower2(), //
+			siege().getGiranControlTower3()));
+		_flameTowers.put(3, List.of(siege().getGiranFlameTower1(), //
+			siege().getGiranFlameTower1()));
+		MercTicketManager.MERCS_MAX_PER_CASTLE[2] = siege().getGiranMaxMercenaries();
+		// Oren
+		_controlTowers.put(4, List.of(siege().getOrenControlTower1(), //
+			siege().getOrenControlTower2(), //
+			siege().getOrenControlTower3()));
+		_flameTowers.put(4, List.of(siege().getOrenFlameTower1(), //
+			siege().getOrenFlameTower1()));
+		MercTicketManager.MERCS_MAX_PER_CASTLE[3] = siege().getOrenMaxMercenaries();
+		// Aden
+		_controlTowers.put(5, List.of(siege().getAdenControlTower1(), //
+			siege().getAdenControlTower2(), //
+			siege().getAdenControlTower3()));
+		_flameTowers.put(5, List.of(siege().getAdenFlameTower1(), //
+			siege().getAdenFlameTower1()));
+		MercTicketManager.MERCS_MAX_PER_CASTLE[4] = siege().getAdenMaxMercenaries();
+		// Innadril
+		_controlTowers.put(6, List.of(siege().getInnadrilControlTower1(), //
+			siege().getInnadrilControlTower2(), //
+			siege().getInnadrilControlTower3()));
+		_flameTowers.put(6, List.of(siege().getInnadrilFlameTower1(), //
+			siege().getInnadrilFlameTower1()));
+		MercTicketManager.MERCS_MAX_PER_CASTLE[5] = siege().getInnadrilMaxMercenaries();
+		// Goddard
+		_controlTowers.put(7, List.of(siege().getGoddardControlTower1(), //
+			siege().getGoddardControlTower2(), //
+			siege().getGoddardControlTower3()));
+		_flameTowers.put(7, List.of(siege().getGoddardFlameTower1(), //
+			siege().getGoddardFlameTower1()));
+		MercTicketManager.MERCS_MAX_PER_CASTLE[6] = siege().getGoddardMaxMercenaries();
+		// Rune
+		_controlTowers.put(8, List.of(siege().getRuneControlTower1(), //
+			siege().getRuneControlTower2(), //
+			siege().getRuneControlTower3()));
+		_flameTowers.put(8, List.of(siege().getRuneFlameTower1(), //
+			siege().getRuneFlameTower1()));
+		MercTicketManager.MERCS_MAX_PER_CASTLE[7] = siege().getRuneMaxMercenaries();
+		// Schuttgart
+		_controlTowers.put(9, List.of(siege().getSchuttgartControlTower1(), //
+			siege().getSchuttgartControlTower2(), //
+			siege().getSchuttgartControlTower3()));
+		_flameTowers.put(9, List.of(siege().getSchuttgartFlameTower1(), //
+			siege().getSchuttgartFlameTower1()));
+		MercTicketManager.MERCS_MAX_PER_CASTLE[8] = siege().getSchuttgartMaxMercenaries();
 		
 		for (Castle castle : CastleManager.getInstance().getCastles()) {
-			final List<TowerSpawn> controlTowers = new ArrayList<>();
-			for (int i = 1; i < 0xFF; i++) {
-				final String settingsKeyName = castle.getName() + "ControlTower" + i;
-				if (!siegeSettings.containskey(settingsKeyName)) {
-					break;
-				}
-				
-				final StringTokenizer st = new StringTokenizer(siegeSettings.getString(settingsKeyName, ""), ",");
-				try {
-					final int x = Integer.parseInt(st.nextToken());
-					final int y = Integer.parseInt(st.nextToken());
-					final int z = Integer.parseInt(st.nextToken());
-					final int npcId = Integer.parseInt(st.nextToken());
-					
-					controlTowers.add(new TowerSpawn(npcId, new Location(x, y, z)));
-				} catch (Exception ex) {
-					LOG.warn("There has been an error while loading control tower(s) for {} castle!", castle.getName(), ex);
-				}
-			}
-			
-			final List<TowerSpawn> flameTowers = new ArrayList<>();
-			for (int i = 1; i < 0xFF; i++) {
-				final String settingsKeyName = castle.getName() + "FlameTower" + i;
-				if (!siegeSettings.containskey(settingsKeyName)) {
-					break;
-				}
-				
-				final StringTokenizer st = new StringTokenizer(siegeSettings.getString(settingsKeyName, ""), ",");
-				try {
-					final int x = Integer.parseInt(st.nextToken());
-					final int y = Integer.parseInt(st.nextToken());
-					final int z = Integer.parseInt(st.nextToken());
-					final int npcId = Integer.parseInt(st.nextToken());
-					final List<Integer> zoneList = new ArrayList<>();
-					
-					while (st.hasMoreTokens()) {
-						zoneList.add(Integer.parseInt(st.nextToken()));
-					}
-					
-					flameTowers.add(new TowerSpawn(npcId, new Location(x, y, z), zoneList));
-				} catch (Exception ex) {
-					LOG.warn("There has been an error while loading flame tower(s) for {} castle!", castle.getName(), ex);
-				}
-			}
-			_controlTowers.put(castle.getResidenceId(), controlTowers);
-			_flameTowers.put(castle.getResidenceId(), flameTowers);
-			MercTicketManager.MERCS_MAX_PER_CASTLE[castle.getResidenceId() - 1] = siegeSettings.getInt(castle.getName() + "MaxMercenaries", MercTicketManager.MERCS_MAX_PER_CASTLE[castle.getResidenceId() - 1]);
-			
 			if (castle.getOwnerId() != 0) {
 				loadTrapUpgrade(castle.getResidenceId());
 			}

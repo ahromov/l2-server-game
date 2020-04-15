@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.model.stats.functions;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.olympiad;
+
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.conditions.Condition;
 import com.l2jserver.gameserver.model.items.L2Item;
@@ -52,12 +53,12 @@ public class FuncEnchant extends AbstractFunction {
 		}
 		
 		if (effector.isPlayer()) {
-			if (effector.getActingPlayer().isInOlympiadMode() && (Config.ALT_OLY_ENCHANT_LIMIT >= 0) && ((enchant + overenchant) > Config.ALT_OLY_ENCHANT_LIMIT)) {
-				if (Config.ALT_OLY_ENCHANT_LIMIT > 3) {
-					overenchant = Config.ALT_OLY_ENCHANT_LIMIT - 3;
+			if (effector.getActingPlayer().isInOlympiadMode() && (olympiad().getEnchantLimit() >= 0) && ((enchant + overenchant) > olympiad().getEnchantLimit())) {
+				if (olympiad().getEnchantLimit() > 3) {
+					overenchant = olympiad().getEnchantLimit() - 3;
 				} else {
 					overenchant = 0;
-					enchant = Config.ALT_OLY_ENCHANT_LIMIT;
+					enchant = olympiad().getEnchantLimit();
 				}
 			}
 		}

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,12 @@
  */
 package com.l2jserver.gameserver.model.actor.knownlist;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.npc;
+
 import java.util.logging.Logger;
 
 import com.l2jserver.gameserver.ai.CtrlIntention;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.L2Object;
 import com.l2jserver.gameserver.model.actor.instance.L2GuardInstance;
 import com.l2jserver.gameserver.model.actor.instance.L2MonsterInstance;
@@ -42,7 +44,7 @@ public class GuardKnownList extends AttackableKnownList {
 		if (object.isPlayer()) {
 			// Check if the object added is a L2PcInstance that owns Karma
 			if (object.getActingPlayer().getKarma() > 0) {
-				if (Config.DEBUG) {
+				if (general().debug()) {
 					_log.fine(getActiveChar().getObjectId() + ": PK " + object.getObjectId() + " entered scan range");
 				}
 				
@@ -51,10 +53,10 @@ public class GuardKnownList extends AttackableKnownList {
 					getActiveChar().getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE, null);
 				}
 			}
-		} else if ((Config.GUARD_ATTACK_AGGRO_MOB && getActiveChar().isInActiveRegion()) && object.isMonster()) {
+		} else if ((npc().guardAttackAggroMob() && getActiveChar().isInActiveRegion()) && object.isMonster()) {
 			// Check if the object added is an aggressive L2MonsterInstance
 			if (((L2MonsterInstance) object).isAggressive()) {
-				if (Config.DEBUG) {
+				if (general().debug()) {
 					_log.fine(getActiveChar().getObjectId() + ": Aggressive mob " + object.getObjectId() + " entered scan range");
 				}
 				

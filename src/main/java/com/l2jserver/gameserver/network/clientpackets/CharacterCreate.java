@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,12 +18,15 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.vitality;
+
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.CharNameTable;
 import com.l2jserver.gameserver.data.xml.impl.InitialEquipmentData;
 import com.l2jserver.gameserver.data.xml.impl.InitialShortcutData;
@@ -92,7 +95,7 @@ public final class CharacterCreate extends L2GameClientPacket {
 	@Override
 	protected void runImpl() {
 		if ((_name.length() < 1) || (_name.length() > 16)) {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.fine("Character Creation Failure: Character name " + _name + " is invalid.");
 			}
 			
@@ -100,7 +103,7 @@ public final class CharacterCreate extends L2GameClientPacket {
 			return;
 		}
 		
-		if (Config.FORBIDDEN_NAMES.contains(_name.toLowerCase())) {
+		if (character().getForbiddenNames().contains(_name.toLowerCase())) {
 			sendPacket(new CharCreateFail(CharCreateFail.REASON_INCORRECT_NAME));
 			return;
 		}
@@ -142,15 +145,16 @@ public final class CharacterCreate extends L2GameClientPacket {
 		 * DrHouse: Since checks for duplicate names are done using SQL, lock must be held until data is written to DB as well.
 		 */
 		synchronized (CharNameTable.getInstance()) {
-			if ((CharNameTable.getInstance().getAccountCharacterCount(getClient().getAccountName()) >= Config.MAX_CHARACTERS_NUMBER_PER_ACCOUNT) && (Config.MAX_CHARACTERS_NUMBER_PER_ACCOUNT != 0)) {
-				if (Config.DEBUG) {
+			if ((CharNameTable.getInstance().getAccountCharacterCount(getClient().getAccountName()) >= character().getCharMaxNumber()) && //
+				(character().getCharMaxNumber() != 0)) {
+				if (general().debug()) {
 					_log.fine("Max number of characters reached. Creation failed.");
 				}
 				
 				sendPacket(new CharCreateFail(CharCreateFail.REASON_TOO_MANY_CHARACTERS));
 				return;
 			} else if (CharNameTable.getInstance().doesCharNameExist(_name)) {
-				if (Config.DEBUG) {
+				if (general().debug()) {
 					_log.fine("Character Creation Failure: Message generated: You cannot create another character. Please delete the existing character and try again.");
 				}
 				
@@ -181,18 +185,18 @@ public final class CharacterCreate extends L2GameClientPacket {
 	}
 	
 	private boolean isValidName(String text) {
-		return Config.PLAYER_NAME_TEMPLATE.matcher(text).matches();
+		return character().getPlayerNameTemplate().matcher(text).matches();
 	}
 	
 	private void initNewChar(L2GameClient client, L2PcInstance newChar) {
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			_log.fine("Character init start");
 		}
 		
 		L2World.getInstance().storeObject(newChar);
 		
-		if (Config.STARTING_ADENA > 0) {
-			newChar.addAdena("Init", Config.STARTING_ADENA, null, false);
+		if (character().getStartingAdena() > 0) {
+			newChar.addAdena("Init", character().getStartingAdena(), null, false);
 		}
 		
 		final L2PcTemplate template = newChar.getTemplate();
@@ -200,14 +204,14 @@ public final class CharacterCreate extends L2GameClientPacket {
 		newChar.setXYZInvisible(createLoc.getX(), createLoc.getY(), createLoc.getZ());
 		newChar.setTitle("");
 		
-		if (Config.ENABLE_VITALITY) {
-			newChar.setVitalityPoints(Math.min(Config.STARTING_VITALITY_POINTS, PcStat.MAX_VITALITY_POINTS), true);
+		if (vitality().enabled()) {
+			newChar.setVitalityPoints(Math.min(vitality().getStartingVitalityPoints(), PcStat.MAX_VITALITY_POINTS), true);
 		}
-		if (Config.STARTING_LEVEL > 1) {
-			newChar.addLevel(Config.STARTING_LEVEL - 1);
+		if (character().getStartingLevel() > 1) {
+			newChar.addLevel(character().getStartingLevel() - 1);
 		}
-		if (Config.STARTING_SP > 0) {
-			newChar.addSp(Config.STARTING_SP);
+		if (character().getStartingSP() > 0) {
+			newChar.addSp(character().getStartingSP());
 		}
 		
 		final List<PcItemTemplate> initialItems = InitialEquipmentData.getInstance().getEquipmentList(newChar.getClassId());
@@ -226,7 +230,7 @@ public final class CharacterCreate extends L2GameClientPacket {
 		}
 		
 		for (L2SkillLearn skill : SkillTreesData.getInstance().getAvailableSkills(newChar, newChar.getClassId(), false, true)) {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.fine("Adding starter skill:" + skill.getSkillId() + " / " + skill.getSkillLevel());
 			}
 			
@@ -244,7 +248,7 @@ public final class CharacterCreate extends L2GameClientPacket {
 		final CharSelectionInfo cl = new CharSelectionInfo(client.getAccountName(), client.getSessionId().playOkID1);
 		client.setCharSelection(cl.getCharInfo());
 		
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			_log.fine("Character init end");
 		}
 	}

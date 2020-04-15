@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,9 @@
  */
 package com.l2jserver.gameserver.model.actor.tasks.player;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.customs;
+
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
@@ -39,10 +41,10 @@ public class FameTask implements Runnable {
 	
 	@Override
 	public void run() {
-		if ((_player == null) || (_player.isDead() && !Config.FAME_FOR_DEAD_PLAYERS)) {
+		if ((_player == null) || (_player.isDead() && !character().fameForDeadPlayers())) {
 			return;
 		}
-		if (((_player.getClient() == null) || _player.getClient().isDetached()) && !Config.OFFLINE_FAME) {
+		if (((_player.getClient() == null) || _player.getClient().isDetached()) && !customs().offlineFame()) {
 			return;
 		}
 		_player.setFame(_player.getFame() + _value);

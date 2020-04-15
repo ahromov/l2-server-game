@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.instancemanager;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.Team;
 import com.l2jserver.gameserver.instancemanager.tasks.PenaltyRemoveTask;
 import com.l2jserver.gameserver.model.ArenaParticipantsHolder;
@@ -78,7 +79,7 @@ public final class HandysBlockCheckerManager {
 			if ((holder.getBlueTeamSize() == 0) || (holder.getRedTeamSize() == 0)) {
 				return;
 			}
-			if (Config.HBCE_FAIR_PLAY) {
+			if (general().isHBCEFairPlay()) {
 				holder.checkAndShuffle();
 			}
 			ThreadPoolManager.getInstance().executeGeneral(holder.getEvent().new StartEvent());

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,9 +18,10 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import com.l2jserver.gameserver.LoginServerThread;
 import com.l2jserver.gameserver.LoginServerThread.SessionKey;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.network.L2GameClient;
 import com.l2jserver.gameserver.network.serverpackets.L2GameServerPacket;
 
@@ -58,7 +59,7 @@ public final class AuthLogin extends L2GameClientPacket {
 			return;
 		}
 		SessionKey key = new SessionKey(_loginKey1, _loginKey2, _playKey1, _playKey2);
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			_log.info("user:" + _loginName);
 			_log.info("key:" + key);
 		}

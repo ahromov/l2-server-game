@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.scripting;
 
-import static com.l2jserver.gameserver.config.Config.SCRIPT_ROOT;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.server;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,8 +39,6 @@ import org.mdkt.compiler.InMemoryJavaCompiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
-
 /**
  * Script engine manager.
  * @author KenM
@@ -48,7 +47,7 @@ import com.l2jserver.gameserver.config.Config;
 public final class ScriptEngineManager {
 	private static final Logger LOG = LoggerFactory.getLogger(ScriptEngineManager.class);
 	
-	private static final String CLASS_PATH = SCRIPT_ROOT.getAbsolutePath() + System.getProperty("path.separator") + System.getProperty("java.class.path");
+	private static final String CLASS_PATH = server().getScriptRoot().getAbsolutePath() + System.getProperty("path.separator") + System.getProperty("java.class.path");
 	
 	private static final String MAIN = "main";
 	
@@ -59,13 +58,13 @@ public final class ScriptEngineManager {
 	};
 	
 	private static final InMemoryJavaCompiler COMPILER = InMemoryJavaCompiler.newInstance() //
-		.useOptions("-classpath", CLASS_PATH) //
+		.useOptions("-classpath", CLASS_PATH, "-g") //
 		.ignoreWarnings();
 	
 	public void executeScriptList(File list) throws Exception {
-		if (Config.NO_QUESTS) {
-			if (!Config.NO_HANDLERS) {
-				addSource(new File(SCRIPT_ROOT, "com/l2jserver/datapack/handlers/MasterHandler.java"));
+		if (general().noQuests()) {
+			if (!general().noHandlers()) {
+				addSource(new File(server().getScriptRoot(), "com/l2jserver/datapack/handlers/MasterHandler.java"));
 				LOG.info("Handlers loaded, all other scripts skipped!");
 			}
 			return;
@@ -77,7 +76,7 @@ public final class ScriptEngineManager {
 				LineNumberReader lnr = new LineNumberReader(isr)) {
 				String line;
 				while ((line = lnr.readLine()) != null) {
-					if (Config.NO_HANDLERS && line.contains("MasterHandler.java")) {
+					if (general().noHandlers() && line.contains("MasterHandler.java")) {
 						continue;
 					}
 					
@@ -92,7 +91,7 @@ public final class ScriptEngineManager {
 							line = line.substring(0, line.length() - 2);
 						}
 						
-						final File file = new File(SCRIPT_ROOT, line);
+						final File file = new File(server().getScriptRoot(), line);
 						if (file.isDirectory() && parts[0].endsWith("/**")) {
 							executeAllScriptsInDirectory(file, true);
 						} else if (file.isDirectory() && parts[0].endsWith("/*")) {
@@ -124,7 +123,7 @@ public final class ScriptEngineManager {
 			
 			for (File file : files) {
 				if (file.isDirectory() && recurseDown) {
-					if (Config.VERBOSE_LOADING) {
+					if (general().debug()) {
 						LOG.info("Entering folder: {}", file.getName());
 					}
 					executeAllScriptsInDirectory(file, recurseDown);
@@ -155,11 +154,11 @@ public final class ScriptEngineManager {
 	}
 	
 	public void executeScript(String file) throws Exception {
-		executeScript(new File(SCRIPT_ROOT, file));
+		executeScript(new File(server().getScriptRoot(), file));
 	}
 	
 	public void addSource(File file) {
-		if (Config.VERBOSE_LOADING) {
+		if (general().debug()) {
 			LOG.info("Loading Script: {}", file.getAbsolutePath());
 		}
 		
@@ -174,7 +173,7 @@ public final class ScriptEngineManager {
 	
 	private static String getClassForFile(File script) {
 		final String path = script.getAbsolutePath();
-		final String scpPath = SCRIPT_ROOT.getAbsolutePath();
+		final String scpPath = server().getScriptRoot().getAbsolutePath();
 		if (path.startsWith(scpPath)) {
 			final int idx = path.lastIndexOf('.');
 			return path.substring(scpPath.length() + 1, idx).replace('/', '.').replace('\\', '.');
@@ -218,10 +217,6 @@ public final class ScriptEngineManager {
 			}
 		} catch (NoSuchMethodException ignored) {
 		}
-		return null;
-	}
-	
-	public File getCurrentLoadingScript() {
 		return null;
 	}
 	

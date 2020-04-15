@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.model.actor.instance;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import com.l2jserver.gameserver.enums.Race;
 import com.l2jserver.gameserver.model.actor.templates.L2NpcTemplate;
 import com.l2jserver.gameserver.model.base.PlayerClass;
@@ -34,7 +35,7 @@ public final class L2VillageMasterKamaelInstance extends L2VillageMasterInstance
 	
 	@Override
 	protected final String getSubClassMenu(Race race) {
-		if (Config.ALT_GAME_SUBCLASS_EVERYWHERE || (race == Race.KAMAEL)) {
+		if (character().subclassEverywhere() || (race == Race.KAMAEL)) {
 			return "data/html/villagemaster/SubClass.htm";
 		}
 		

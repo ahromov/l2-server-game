@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import com.l2jserver.gameserver.instancemanager.DuelManager;
 import com.l2jserver.gameserver.model.L2World;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -98,7 +99,7 @@ public final class RequestDuelStart extends L2GameClientPacket {
 					activeChar.onTransactionRequest(partyLeader);
 					partyLeader.sendPacket(new ExDuelAskStart(activeChar.getName(), _partyDuel));
 					
-					if (Config.DEBUG) {
+					if (general().debug()) {
 						_log.fine(activeChar.getName() + " requested a duel with " + partyLeader.getName());
 					}
 					
@@ -122,7 +123,7 @@ public final class RequestDuelStart extends L2GameClientPacket {
 				activeChar.onTransactionRequest(targetChar);
 				targetChar.sendPacket(new ExDuelAskStart(activeChar.getName(), _partyDuel));
 				
-				if (Config.DEBUG) {
+				if (general().debug()) {
 					_log.fine(activeChar.getName() + " requested a duel with " + targetChar.getName());
 				}
 				

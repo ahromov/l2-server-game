@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,9 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import com.l2jserver.gameserver.model.ClanPrivilege;
 import com.l2jserver.gameserver.model.actor.L2Npc;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -47,7 +49,7 @@ public final class SendWareHouseWithDrawList extends L2GameClientPacket {
 	@Override
 	protected void readImpl() {
 		final int count = readD();
-		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != _buf.remaining())) {
+		if ((count <= 0) || (count > MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != _buf.remaining())) {
 			return;
 		}
 		
@@ -94,12 +96,12 @@ public final class SendWareHouseWithDrawList extends L2GameClientPacket {
 			return;
 		}
 		
-		// Alt game - Karma punishment
-		if (!Config.ALT_GAME_KARMA_PLAYER_CAN_USE_WAREHOUSE && (player.getKarma() > 0)) {
+		// Karma punishment
+		if (!character().karmaPlayerCanUseWareHouse() && (player.getKarma() > 0)) {
 			return;
 		}
 		
-		if (Config.ALT_MEMBERS_CAN_WITHDRAW_FROM_CLANWH) {
+		if (character().membersCanWithdrawFromClanWH()) {
 			if ((warehouse instanceof ClanWarehouse) && !player.hasClanPrivilege(ClanPrivilege.CL_VIEW_WAREHOUSE)) {
 				return;
 			}
@@ -117,7 +119,7 @@ public final class SendWareHouseWithDrawList extends L2GameClientPacket {
 			// Calculate needed slots
 			L2ItemInstance item = warehouse.getItemByObjectId(i.getId());
 			if ((item == null) || (item.getCount() < i.getCount())) {
-				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to withdraw non-existent item from warehouse.", Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to withdraw non-existent item from warehouse.");
 				return;
 			}
 			
@@ -142,7 +144,7 @@ public final class SendWareHouseWithDrawList extends L2GameClientPacket {
 		}
 		
 		// Proceed to the transfer
-		InventoryUpdate playerIU = Config.FORCE_INVENTORY_UPDATE ? null : new InventoryUpdate();
+		InventoryUpdate playerIU = general().forceInventoryUpdate() ? null : new InventoryUpdate();
 		for (ItemHolder i : _items) {
 			L2ItemInstance oldItem = warehouse.getItemByObjectId(i.getId());
 			if ((oldItem == null) || (oldItem.getCount() < i.getCount())) {

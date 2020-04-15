@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.data.xml.impl;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.util.HashMap;
@@ -31,7 +33,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.StatsSet;
 import com.l2jserver.gameserver.model.actor.L2Npc;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -70,7 +71,7 @@ public final class MultisellData implements IXmlReader {
 	public void load() {
 		_entries.clear();
 		parseDatapackDirectory("data/multisell", false);
-		if (Config.CUSTOM_MULTISELL_LOAD) {
+		if (general().customMultisellLoad()) {
 			parseDatapackDirectory("data/multisell/custom", false);
 		}
 		
@@ -99,13 +100,9 @@ public final class MultisellData implements IXmlReader {
 							if (list.getUseRate() <= 1e-6) {
 								throw new NumberFormatException("The value cannot be 0"); // threat 0 as invalid value
 							}
-						} catch (NumberFormatException e) {
-							try {
-								list.setUseRate(Config.class.getField(att.getNodeValue()).getDouble(Config.class));
-							} catch (Exception ex) {
-								LOG.warn("Unable to parse {}!", doc.getLocalName(), ex);
-								list.setUseRate(1.0);
-							}
+						} catch (NumberFormatException ex) {
+							LOG.warn("Unable to parse {}!", doc.getLocalName(), ex);
+							list.setUseRate(1.0);
 						} catch (DOMException ex) {
 							LOG.warn("Unable to parse {}!", doc.getLocalName(), ex);
 						}

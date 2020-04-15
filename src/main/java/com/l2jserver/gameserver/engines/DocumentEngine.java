@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.engines;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +29,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.datatables.SkillData;
 import com.l2jserver.gameserver.engines.items.DocumentItem;
 import com.l2jserver.gameserver.engines.skills.DocumentSkill;
@@ -52,17 +54,17 @@ public class DocumentEngine {
 	
 	protected DocumentEngine() {
 		hashFiles("data/stats/items", _itemFiles);
-		if (Config.CUSTOM_ITEMS_LOAD) {
+		if (general().customItemsLoad()) {
 			hashFiles("data/stats/items/custom", _itemFiles);
 		}
 		hashFiles("data/stats/skills", _skillFiles);
-		if (Config.CUSTOM_SKILLS_LOAD) {
+		if (general().customSkillsLoad()) {
 			hashFiles("data/stats/skills/custom", _skillFiles);
 		}
 	}
 	
 	private void hashFiles(String dirname, List<File> hash) {
-		final var dir = new File(Config.DATAPACK_ROOT, dirname);
+		final var dir = new File(server().getDatapackRoot(), dirname);
 		if (!dir.exists()) {
 			LOG.warn("Directory {} does not exists!", dir.getAbsolutePath());
 			return;

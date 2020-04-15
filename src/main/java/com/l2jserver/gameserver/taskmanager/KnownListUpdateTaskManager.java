@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.taskmanager;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.npc;
+
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,7 +28,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.L2Object;
 import com.l2jserver.gameserver.model.L2World;
 import com.l2jserver.gameserver.model.L2WorldRegion;
@@ -45,7 +47,7 @@ public class KnownListUpdateTaskManager {
 	protected static final Set<L2WorldRegion> FAILED_REGIONS = ConcurrentHashMap.newKeySet(1);
 	
 	protected KnownListUpdateTaskManager() {
-		ThreadPoolManager.getInstance().scheduleAiAtFixedRate(new KnownListUpdate(), 1000, Config.KNOWNLIST_UPDATE_INTERVAL);
+		ThreadPoolManager.getInstance().scheduleAiAtFixedRate(new KnownListUpdate(), 1000, general().getKnownListUpdateInterval());
 	}
 	
 	private class KnownListUpdate implements Runnable {
@@ -97,7 +99,7 @@ public class KnownListUpdateTaskManager {
 			}
 			
 			// Some mobs need faster knownlist update
-			final boolean aggro = (Config.GUARD_ATTACK_AGGRO_MOB && (object instanceof L2GuardInstance));
+			final boolean aggro = (npc().guardAttackAggroMob() && (object instanceof L2GuardInstance));
 			
 			if (forgetObjects) {
 				object.getKnownList().forgetObjects(aggro || fullUpdate);

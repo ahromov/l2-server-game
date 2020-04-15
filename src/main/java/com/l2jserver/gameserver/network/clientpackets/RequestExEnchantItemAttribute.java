@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,8 +18,9 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import com.l2jserver.commons.util.Rnd;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
 import com.l2jserver.gameserver.model.Elementals;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -101,7 +102,7 @@ public class RequestExEnchantItemAttribute extends L2GameClientPacket {
 			}
 			default: {
 				player.setActiveEnchantAttrItemId(L2PcInstance.ID_NONE);
-				Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to use enchant Exploit!", Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to use enchant Exploit!");
 				return;
 			}
 		}
@@ -130,7 +131,7 @@ public class RequestExEnchantItemAttribute extends L2GameClientPacket {
 			for (Elementals elm : item.getElementals()) {
 				if (elm.getElement() == opositeElement) {
 					player.setActiveEnchantAttrItemId(L2PcInstance.ID_NONE);
-					Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to add oposite attribute to item!", Config.DEFAULT_PUNISH);
+					Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to add oposite attribute to item!");
 					return;
 				}
 			}
@@ -150,7 +151,7 @@ public class RequestExEnchantItemAttribute extends L2GameClientPacket {
 		
 		if (!player.destroyItem("AttrEnchant", stone, 1, player, true)) {
 			player.sendPacket(SystemMessageId.NOT_ENOUGH_ITEMS);
-			Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to attribute enchant with a stone he doesn't have", Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to attribute enchant with a stone he doesn't have");
 			player.setActiveEnchantAttrItemId(L2PcInstance.ID_NONE);
 			return;
 		}
@@ -158,16 +159,16 @@ public class RequestExEnchantItemAttribute extends L2GameClientPacket {
 		switch (Elementals.getItemElemental(stoneId)._type) {
 			case Stone:
 			case Roughore:
-				success = Rnd.get(100) < Config.ENCHANT_CHANCE_ELEMENT_STONE;
+				success = Rnd.get(100) < character().getEnchantChanceElementStone();
 				break;
 			case Crystal:
-				success = Rnd.get(100) < Config.ENCHANT_CHANCE_ELEMENT_CRYSTAL;
+				success = Rnd.get(100) < character().getEnchantChanceElementCrystal();
 				break;
 			case Jewel:
-				success = Rnd.get(100) < Config.ENCHANT_CHANCE_ELEMENT_JEWEL;
+				success = Rnd.get(100) < character().getEnchantChanceElementJewel();
 				break;
 			case Energy:
-				success = Rnd.get(100) < Config.ENCHANT_CHANCE_ELEMENT_ENERGY;
+				success = Rnd.get(100) < character().getEnchantChanceElementEnergy();
 				break;
 		}
 		if (success) {

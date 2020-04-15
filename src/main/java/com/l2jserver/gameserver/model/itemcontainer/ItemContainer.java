@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.model.itemcontainer;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.rates;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -26,7 +29,6 @@ import java.util.logging.Logger;
 
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.GameTimeController;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.enums.ItemLocation;
 import com.l2jserver.gameserver.model.L2World;
@@ -206,7 +208,7 @@ public abstract class ItemContainer {
 			item = olditem;
 			
 			// Updates database
-			float adenaRate = Config.RATE_DROP_AMOUNT_MULTIPLIER.getOrDefault(Inventory.ADENA_ID, 1f);
+			float adenaRate = rates().getDropAmountMultiplierByItemId().getOrDefault(Inventory.ADENA_ID, 1f);
 			if ((item.getId() == Inventory.ADENA_ID) && (count < (10000 * adenaRate))) {
 				// Small adena changes won't be saved to database all the time
 				if ((GameTimeController.getInstance().getGameTicks() % 5) == 0) {
@@ -280,7 +282,7 @@ public abstract class ItemContainer {
 			}
 			// Updates database
 			// If Adena drop rate is not present it will be x1.
-			float adenaRate = Config.RATE_DROP_AMOUNT_MULTIPLIER.getOrDefault(Inventory.ADENA_ID, 1f);
+			float adenaRate = rates().getDropAmountMultiplierByItemId().getOrDefault(Inventory.ADENA_ID, 1f);
 			if ((itemId == Inventory.ADENA_ID) && (count < (10000 * adenaRate))) {
 				// Small adena changes won't be saved to database all the time
 				if ((GameTimeController.getInstance().getGameTicks() % 5) == 0) {
@@ -311,7 +313,7 @@ public abstract class ItemContainer {
 				item.updateDatabase();
 				
 				// If stackable, end loop as entire count is included in 1 instance of item
-				if (template.isStackable() || !Config.MULTIPLE_ITEM_DROP) {
+				if (template.isStackable() || !general().multipleItemDrop()) {
 					break;
 				}
 			}

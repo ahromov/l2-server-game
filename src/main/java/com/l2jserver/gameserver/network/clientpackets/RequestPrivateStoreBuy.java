@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -23,7 +23,6 @@ import static com.l2jserver.gameserver.model.actor.L2Npc.INTERACTION_DISTANCE;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
 import com.l2jserver.gameserver.model.ItemRequest;
 import com.l2jserver.gameserver.model.L2Object;
@@ -45,7 +44,7 @@ public final class RequestPrivateStoreBuy extends L2GameClientPacket {
 	protected void readImpl() {
 		_storePlayerId = readD();
 		int count = readD();
-		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != _buf.remaining())) {
+		if ((count <= 0) || (count > MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != _buf.remaining())) {
 			return;
 		}
 		_items = new HashSet<>();
@@ -117,7 +116,7 @@ public final class RequestPrivateStoreBuy extends L2GameClientPacket {
 		if (storePlayer.getPrivateStoreType() == PrivateStoreType.PACKAGE_SELL) {
 			if (storeList.getItemCount() > _items.size()) {
 				String msgErr = "[RequestPrivateStoreBuy] player " + getClient().getActiveChar().getName() + " tried to buy less items than sold by package-sell, ban this player for bot usage!";
-				Util.handleIllegalPlayerAction(getClient().getActiveChar(), msgErr, Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(getClient().getActiveChar(), msgErr);
 				return;
 			}
 		}

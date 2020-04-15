@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,11 @@
  */
 package com.l2jserver.gameserver.pathfinding.cellnodes;
 
+import static com.l2jserver.gameserver.config.Configuration.geodata;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
-
-import com.l2jserver.gameserver.config.Config;
 
 /**
  * @author DS Credits to Diamond
@@ -63,7 +63,7 @@ public class CellNodeBuffer {
 		_targetY = ty;
 		_targetZ = tz;
 		_current = getNode(x, y, z);
-		_current.setCost(getCost(x, y, z, Config.HIGH_WEIGHT));
+		_current.setCost(getCost(x, y, z, geodata().getHighWeight()));
 		
 		for (int count = 0; count < MAX_ITERATIONS; count++) {
 			if ((_current.getLoc().getNodeX() == _targetX) && (_current.getLoc().getNodeY() == _targetY) && (Math.abs(_current.getLoc().getZ() - _targetZ) < 64)) {
@@ -155,7 +155,7 @@ public class CellNodeBuffer {
 			nodeN = addNode(x, y - 1, z, false);
 		}
 		
-		if (Config.ADVANCED_DIAGONAL_STRATEGY) {
+		if (geodata().advancedDiagonalStrategy()) {
 			// SouthEast
 			if ((nodeE != null) && (nodeS != null)) {
 				if (nodeE.getLoc().canGoSouth() && nodeS.getLoc().canGoEast()) {
@@ -226,19 +226,19 @@ public class CellNodeBuffer {
 		final int geoZ = newNode.getLoc().getZ();
 		
 		final int stepZ = Math.abs(geoZ - _current.getLoc().getZ());
-		float weight = diagonal ? Config.DIAGONAL_WEIGHT : Config.LOW_WEIGHT;
+		float weight = diagonal ? geodata().getDiagonalWeight() : geodata().getLowWeight();
 		
 		if (!newNode.getLoc().canGoAll() || (stepZ > 16)) {
-			weight = Config.HIGH_WEIGHT;
+			weight = geodata().getHighWeight();
 		} else {
 			if (isHighWeight(x + 1, y, geoZ)) {
-				weight = Config.MEDIUM_WEIGHT;
+				weight = geodata().getMediumWeight();
 			} else if (isHighWeight(x - 1, y, geoZ)) {
-				weight = Config.MEDIUM_WEIGHT;
+				weight = geodata().getMediumWeight();
 			} else if (isHighWeight(x, y + 1, geoZ)) {
-				weight = Config.MEDIUM_WEIGHT;
+				weight = geodata().getMediumWeight();
 			} else if (isHighWeight(x, y - 1, geoZ)) {
-				weight = Config.MEDIUM_WEIGHT;
+				weight = geodata().getMediumWeight();
 			}
 		}
 		

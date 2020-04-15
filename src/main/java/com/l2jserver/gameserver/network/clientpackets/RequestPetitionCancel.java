@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import com.l2jserver.gameserver.data.xml.impl.AdminData;
 import com.l2jserver.gameserver.instancemanager.PetitionManager;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -61,7 +62,7 @@ public final class RequestPetitionCancel extends L2GameClientPacket {
 		} else {
 			if (PetitionManager.getInstance().isPlayerPetitionPending(activeChar)) {
 				if (PetitionManager.getInstance().cancelActivePetition(activeChar)) {
-					int numRemaining = Config.MAX_PETITIONS_PER_PLAYER - PetitionManager.getInstance().getPlayerTotalPetitionCount(activeChar);
+					int numRemaining = character().getMaxPetitionsPerPlayer() - PetitionManager.getInstance().getPlayerTotalPetitionCount(activeChar);
 					
 					SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.PETITION_CANCELED_SUBMIT_S1_MORE_TODAY);
 					sm.addString(String.valueOf(numRemaining));

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,12 +18,13 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
 import static com.l2jserver.gameserver.model.itemcontainer.Inventory.ADENA_ID;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.actor.L2Npc;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.holders.ItemHolder;
@@ -49,7 +50,7 @@ public final class SendWareHouseDepositList extends L2GameClientPacket {
 	@Override
 	protected void readImpl() {
 		final int size = readD();
-		if ((size <= 0) || (size > Config.MAX_ITEM_IN_PACKET) || ((size * BATCH_LENGTH) != _buf.remaining())) {
+		if ((size <= 0) || (size > MAX_ITEM_IN_PACKET) || ((size * BATCH_LENGTH) != _buf.remaining())) {
 			return;
 		}
 		
@@ -98,12 +99,12 @@ public final class SendWareHouseDepositList extends L2GameClientPacket {
 		}
 		
 		if (player.getActiveEnchantItemId() != L2PcInstance.ID_NONE) {
-			Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to use enchant Exploit!", Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to use enchant Exploit!");
 			return;
 		}
 		
-		// Alt game - Karma punishment
-		if (!Config.ALT_GAME_KARMA_PLAYER_CAN_USE_WAREHOUSE && (player.getKarma() > 0)) {
+		// Karma punishment
+		if (!character().karmaPlayerCanUseWareHouse() && (player.getKarma() > 0)) {
 			return;
 		}
 		
@@ -148,7 +149,7 @@ public final class SendWareHouseDepositList extends L2GameClientPacket {
 		}
 		
 		// Proceed to the transfer
-		InventoryUpdate playerIU = Config.FORCE_INVENTORY_UPDATE ? null : new InventoryUpdate();
+		InventoryUpdate playerIU = general().forceInventoryUpdate() ? null : new InventoryUpdate();
 		for (ItemHolder i : _items) {
 			// Check validity of requested item
 			L2ItemInstance oldItem = player.checkItemManipulation(i.getId(), i.getCount(), "deposit");

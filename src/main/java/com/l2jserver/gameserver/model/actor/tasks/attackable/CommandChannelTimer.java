@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,8 +18,9 @@
  */
 package com.l2jserver.gameserver.model.actor.tasks.attackable;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.actor.L2Attackable;
 
 /**
@@ -38,7 +39,7 @@ public final class CommandChannelTimer implements Runnable {
 			return;
 		}
 		
-		if ((System.currentTimeMillis() - _attackable.getCommandChannelLastAttack()) > Config.LOOT_RAIDS_PRIVILEGE_INTERVAL) {
+		if ((System.currentTimeMillis() - _attackable.getCommandChannelLastAttack()) > character().getRaidLootRightsInterval()) {
 			_attackable.setCommandChannelTimer(null);
 			_attackable.setFirstCommandChannelAttacked(null);
 			_attackable.setCommandChannelLastAttack(0);
@@ -46,5 +47,4 @@ public final class CommandChannelTimer implements Runnable {
 			ThreadPoolManager.getInstance().scheduleGeneral(this, 10000); // 10sec
 		}
 	}
-	
 }

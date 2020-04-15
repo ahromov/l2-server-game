@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.data.xml.impl;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.util.HashMap;
@@ -30,7 +32,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.model.buylist.L2BuyList;
 import com.l2jserver.gameserver.model.buylist.Product;
@@ -58,7 +59,7 @@ public final class BuyListData implements IXmlReader {
 	public synchronized void load() {
 		_buyLists.clear();
 		parseDatapackDirectory("data/buylists", false);
-		if (Config.CUSTOM_BUYLIST_LOAD) {
+		if (general().customBuyListLoad()) {
 			parseDatapackDirectory("data/buylists/custom", false);
 		}
 		

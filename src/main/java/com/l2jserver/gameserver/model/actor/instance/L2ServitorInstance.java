@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,11 @@
  */
 package com.l2jserver.gameserver.model.actor.instance;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import java.util.concurrent.Future;
 
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.dao.factory.impl.DAOFactory;
 import com.l2jserver.gameserver.data.sql.impl.CharSummonTable;
 import com.l2jserver.gameserver.data.sql.impl.SummonEffectsTable;
@@ -162,14 +163,14 @@ public class L2ServitorInstance extends L2Summon implements Runnable {
 			return;
 		}
 		
-		if (Config.RESTORE_SERVITOR_ON_RECONNECT) {
+		if (character().restoreServitorOnReconnect()) {
 			CharSummonTable.getInstance().saveSummon(this);
 		}
 	}
 	
 	@Override
 	public void storeEffect(boolean storeEffects) {
-		if (!Config.SUMMON_STORE_SKILL_COOLTIME) {
+		if (!character().summonStoreSkillCooltime()) {
 			return;
 		}
 		

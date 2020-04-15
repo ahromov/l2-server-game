@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.dao.impl.mysql;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.dao.PlayerSkillSaveDAO;
 import com.l2jserver.gameserver.datatables.SkillData;
 import com.l2jserver.gameserver.model.TimeStamp;
@@ -93,7 +94,7 @@ public class PlayerSkillSaveDAOMySQLImpl implements PlayerSkillSaveDAO {
 					}
 					
 					// Dances and songs are not kept in retail.
-					if (skill.isDance() && !Config.ALT_STORE_DANCES) {
+					if (skill.isDance() && !character().storeDances()) {
 						continue;
 					}
 					

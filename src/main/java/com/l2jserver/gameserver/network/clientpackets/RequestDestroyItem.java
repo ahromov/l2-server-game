@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,11 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.logging.Level;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
 import com.l2jserver.gameserver.instancemanager.CursedWeaponsManager;
 import com.l2jserver.gameserver.model.PcCondOverride;
@@ -60,7 +61,7 @@ public final class RequestDestroyItem extends L2GameClientPacket {
 		
 		if (_count <= 0) {
 			if (_count < 0) {
-				Util.handleIllegalPlayerAction(activeChar, "[RequestDestroyItem] Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " tried to destroy item with oid " + _objectId + " but has count < 0!", Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(activeChar, "[RequestDestroyItem] Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " tried to destroy item with oid " + _objectId + " but has count < 0!");
 			}
 			return;
 		}
@@ -112,7 +113,7 @@ public final class RequestDestroyItem extends L2GameClientPacket {
 		}
 		
 		if (!itemToRemove.isStackable() && (count > 1)) {
-			Util.handleIllegalPlayerAction(activeChar, "[RequestDestroyItem] Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " tried to destroy a non-stackable item with oid " + _objectId + " but has count > 1!", Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(activeChar, "[RequestDestroyItem] Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " tried to destroy a non-stackable item with oid " + _objectId + " but has count > 1!");
 			return;
 		}
 		
@@ -169,7 +170,7 @@ public final class RequestDestroyItem extends L2GameClientPacket {
 			return;
 		}
 		
-		if (!Config.FORCE_INVENTORY_UPDATE) {
+		if (!general().forceInventoryUpdate()) {
 			InventoryUpdate iu = new InventoryUpdate();
 			if (removedItem.getCount() == 0) {
 				iu.addRemovedItem(removedItem);

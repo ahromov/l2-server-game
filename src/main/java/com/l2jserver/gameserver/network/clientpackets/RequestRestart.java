@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,12 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.gameserver.SevenSignsFestival;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
 import com.l2jserver.gameserver.instancemanager.AntiFeedManager;
 import com.l2jserver.gameserver.model.L2Party;
@@ -70,8 +71,8 @@ public final class RequestRestart extends L2GameClientPacket {
 			return;
 		}
 		
-		if (AttackStanceTaskManager.getInstance().hasAttackStanceTask(player) && !(player.isGM() && Config.GM_RESTART_FIGHTING)) {
-			if (Config.DEBUG) {
+		if (AttackStanceTaskManager.getInstance().hasAttackStanceTask(player) && !(player.isGM() && general().gmRestartFighting())) {
+			if (general().debug()) {
 				_log.fine("Player " + player.getName() + " tried to logout while fighting.");
 			}
 			

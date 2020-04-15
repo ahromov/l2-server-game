@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model.entity;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,7 +31,6 @@ import java.util.logging.Logger;
 
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.datatables.SkillData;
 import com.l2jserver.gameserver.datatables.SpawnTable;
 import com.l2jserver.gameserver.enums.Team;
@@ -277,7 +278,7 @@ public final class BlockCheckerEngine {
 				
 				ThreadPoolManager.getInstance().executeGeneral(new EndEvent());
 				
-				if (Config.DEBUG) {
+				if (general().debug()) {
 					_log.config("Handys Block Checker Event at arena " + _arena + " ended due lack of players!");
 				}
 			}

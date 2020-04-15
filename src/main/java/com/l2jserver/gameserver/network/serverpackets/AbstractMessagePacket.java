@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,12 @@
  */
 package com.l2jserver.gameserver.network.serverpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.customs;
+
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.logging.Level;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.DoorData;
 import com.l2jserver.gameserver.data.xml.impl.NpcData;
 import com.l2jserver.gameserver.datatables.ItemTable;
@@ -408,7 +409,7 @@ public abstract class AbstractMessagePacket<T extends AbstractMessagePacket<?>> 
 	}
 	
 	public final T getLocalizedMessage(final String lang) {
-		if (!Config.L2JMOD_MULTILANG_SM_ENABLE || (getSystemMessageId() == SystemMessageId.S1)) {
+		if (!customs().multiLangSystemMessageEnable() || (getSystemMessageId() == SystemMessageId.S1)) {
 			return (T) this;
 		}
 		

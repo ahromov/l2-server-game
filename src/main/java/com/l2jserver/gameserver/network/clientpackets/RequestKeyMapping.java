@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,12 +18,14 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.serverpackets.ExUISetting;
 
 /**
- * @author KenM / mrTJO
+ * @author KenM
+ * @auhtor mrTJO
  */
 public class RequestKeyMapping extends L2GameClientPacket {
 	private static final String _C__D0_21_REQUESTKEYMAPPING = "[C] D0:21 RequestKeyMapping";
@@ -40,7 +42,7 @@ public class RequestKeyMapping extends L2GameClientPacket {
 			return;
 		}
 		
-		if (Config.STORE_UI_SETTINGS) {
+		if (character().storeUISettings()) {
 			activeChar.sendPacket(new ExUISetting(activeChar));
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +34,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.L2Summon;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -1113,9 +1114,9 @@ public final class CharEffectList {
 		if (!skill.isDebuff() && !skill.isToggle() && !skill.is7Signs() && !doesStack(skill)) {
 			int buffsToRemove = -1;
 			if (skill.isDance()) {
-				buffsToRemove = getDanceCount() - Config.DANCES_MAX_AMOUNT;
+				buffsToRemove = getDanceCount() - character().getMaxDanceAmount();
 			} else if (skill.isTrigger()) {
-				buffsToRemove = getTriggeredBuffCount() - Config.TRIGGERED_BUFFS_MAX_AMOUNT;
+				buffsToRemove = getTriggeredBuffCount() - character().getMaxTriggeredBuffAmount();
 			} else if (!skill.isHealingPotionSkill()) {
 				buffsToRemove = getBuffCount() - _owner.getStat().getMaxBuffCount();
 			}

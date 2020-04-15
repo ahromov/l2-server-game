@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.idfactory;
 
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -25,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 
 /**
  * 18.8.2010 - JIV: Disabling until someone update it
@@ -66,7 +67,7 @@ public class CompactionIDFactory extends IdFactory {
 			return N;
 		}
 		// check these IDs not present in DB
-		if (Config.BAD_ID_CHECKING) {
+		if (server().badIdChecking()) {
 			for (String check : ID_CHECKS) {
 				try (var ps = con.prepareStatement(check)) {
 					ps.setInt(1, _curOID);

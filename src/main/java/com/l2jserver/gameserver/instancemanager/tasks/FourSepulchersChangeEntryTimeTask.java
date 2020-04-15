@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,12 @@
  */
 package com.l2jserver.gameserver.instancemanager.tasks;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.Calendar;
 import java.util.concurrent.ScheduledFuture;
 
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.instancemanager.FourSepulchersManager;
 
 /**
@@ -47,8 +48,7 @@ public final class FourSepulchersChangeEntryTimeTask implements Runnable {
 		if (manager.isFirstTimeRun()) {
 			interval = manager.getEntrytTimeEnd() - Calendar.getInstance().getTimeInMillis();
 		} else {
-			interval = Config.FS_TIME_ENTRY * 60000L; // else use stupid
-			// method
+			interval = general().getTimeOfEntry(); // else use stupid method
 		}
 		
 		// launching saying process...

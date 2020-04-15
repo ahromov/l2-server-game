@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model.actor.instance;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +28,6 @@ import com.l2jserver.gameserver.ai.L2CharacterAI;
 import com.l2jserver.gameserver.ai.L2FortSiegeGuardAI;
 import com.l2jserver.gameserver.ai.L2SiegeGuardAI;
 import com.l2jserver.gameserver.ai.L2SpecialSiegeGuardAI;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.InstanceType;
 import com.l2jserver.gameserver.instancemanager.CastleManager;
 import com.l2jserver.gameserver.instancemanager.FortManager;
@@ -118,7 +119,7 @@ public class L2DefenderInstance extends L2Attackable {
 			return;
 		}
 		if (!isInsideRadius(getSpawn(), 40, false, false)) {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				LOG.debug("{} moving home", getObjectId());
 			}
 			setisReturningToSpawnPoint(true);
@@ -154,7 +155,7 @@ public class L2DefenderInstance extends L2Attackable {
 		
 		// Check if the L2PcInstance already target the L2NpcInstance
 		if (this != player.getTarget()) {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				LOG.debug("new target selected: {}", getObjectId());
 			}
 			

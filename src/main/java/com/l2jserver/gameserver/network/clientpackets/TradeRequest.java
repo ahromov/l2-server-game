@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,9 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import com.l2jserver.gameserver.datatables.BotReportTable;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
 import com.l2jserver.gameserver.model.BlockList;
@@ -107,18 +109,17 @@ public final class TradeRequest extends L2GameClientPacket {
 			}
 		}
 		
-		// L2J Customs: Karma punishment
-		if (!Config.ALT_GAME_KARMA_PLAYER_CAN_TRADE && (player.getKarma() > 0)) {
+		if (!character().karmaPlayerCanTrade() && (player.getKarma() > 0)) {
 			player.sendMessage("You cannot trade while you are in a chaotic state.");
 			return;
 		}
 		
-		if (!Config.ALT_GAME_KARMA_PLAYER_CAN_TRADE && (partner.getKarma() > 0)) {
+		if (!character().karmaPlayerCanTrade() && (partner.getKarma() > 0)) {
 			player.sendMessage("You cannot request a trade while your target is in a chaotic state.");
 			return;
 		}
 		
-		if (Config.JAIL_DISABLE_TRANSACTION && (player.isJailed() || partner.isJailed())) {
+		if (general().jailDisableTransaction() && (player.isJailed() || partner.isJailed())) {
 			player.sendMessage("You cannot trade while you are in in Jail.");
 			return;
 		}
@@ -129,7 +130,7 @@ public final class TradeRequest extends L2GameClientPacket {
 		}
 		
 		if (player.isProcessingTransaction()) {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.fine("Already trading with someone else.");
 			}
 			player.sendPacket(SystemMessageId.ALREADY_TRADING);
@@ -138,7 +139,7 @@ public final class TradeRequest extends L2GameClientPacket {
 		
 		SystemMessage sm;
 		if (partner.isProcessingRequest() || partner.isProcessingTransaction()) {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.info("Transaction already in progress.");
 			}
 			sm = SystemMessage.getSystemMessage(SystemMessageId.C1_IS_BUSY_TRY_LATER);

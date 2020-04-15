@@ -27,7 +27,7 @@ Server and Datapack may not be not be bundled or packaged.
 Requeriments
 ---
 
-Windows or Linux system with Java JDK 11+, Maven 3.5+, MySQL 8.0+.
+Windows or Linux system with Java JDK 11+, Maven 3.6+, MariaDB 10.4+.
 
 At least 4gb of RAM and 2 Cores.
 
@@ -44,8 +44,6 @@ Links
 
 - [Live Support](https://gitter.im/L2J/L2J_Server)
 
-- [Downloads](http://www.l2jserver.com/#downloads)
-
-- [Documentation](https://bitbucket.org/l2jserver/l2j_server/wiki)
+- [Trello](https://trello.com/b/qjLoH966)
 
 - [@l2jserver](https://twitter.com/l2jserver)

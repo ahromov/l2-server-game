@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,9 +18,10 @@
  */
 package com.l2jserver.gameserver.network.serverpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import com.l2jserver.gameserver.SevenSigns;
 import com.l2jserver.gameserver.SevenSignsFestival;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.StatsSet;
 import com.l2jserver.gameserver.network.SystemMessageId;
 
@@ -121,7 +122,7 @@ public class SSQStatus extends L2GameServerPacket {
 					duskPercent = Math.round(((float) duskTotalScore / (float) totalOverallScore) * 100);
 				}
 				
-				if (Config.DEBUG) {
+				if (general().debug()) {
 					_log.info("Dusk Stone Score: " + duskStoneScore + " - Dawn Stone Score: " + dawnStoneScore);
 					_log.info("Dusk Festival Score: " + duskFestivalScore + " - Dawn Festival Score: " + dawnFestivalScore);
 					_log.info("Dusk Score: " + duskTotalScore + " - Dawn Score: " + dawnTotalScore);
@@ -205,7 +206,7 @@ public class SSQStatus extends L2GameServerPacket {
 					int dawnProportion = SevenSigns.getInstance().getSealProportion(i, SevenSigns.CABAL_DAWN);
 					int duskProportion = SevenSigns.getInstance().getSealProportion(i, SevenSigns.CABAL_DUSK);
 					
-					if (Config.DEBUG) {
+					if (general().debug()) {
 						_log.info(SevenSigns.getSealName(i, true) + " = Dawn Prop: " + dawnProportion + "(" + ((dawnProportion / totalDawnMembers) * 100) + "%)" + ", Dusk Prop: " + duskProportion + "(" + ((duskProportion / totalDuskMembers) * 100) + "%)");
 					}
 					

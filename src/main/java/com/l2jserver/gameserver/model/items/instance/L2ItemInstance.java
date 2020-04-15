@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,8 +18,10 @@
  */
 package com.l2jserver.gameserver.model.items.instance;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.olympiad;
 import static com.l2jserver.gameserver.model.itemcontainer.Inventory.ADENA_ID;
-import static com.l2jserver.gameserver.model.itemcontainer.Inventory.MAX_ADENA;
 import static com.l2jserver.gameserver.model.items.type.EtcItemType.ARROW;
 import static com.l2jserver.gameserver.model.items.type.EtcItemType.SHOT;
 
@@ -36,7 +38,6 @@ import org.slf4j.LoggerFactory;
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.GeoData;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.EnchantItemOptionsData;
 import com.l2jserver.gameserver.data.xml.impl.OptionData;
 import com.l2jserver.gameserver.datatables.ItemTable;
@@ -102,7 +103,7 @@ public final class L2ItemInstance extends L2Object {
 	/** Initial Quantity of the item */
 	private long _initCount;
 	
-	/** Remaining time (in miliseconds) */
+	/** Remaining time (in milliseconds) */
 	private long _time;
 	
 	/** Quantity of the item can decrease */
@@ -302,8 +303,8 @@ public final class L2ItemInstance extends L2Object {
 	public void setOwnerId(String process, int owner_id, L2PcInstance creator, Object reference) {
 		setOwnerId(owner_id);
 		
-		if (Config.LOG_ITEMS) {
-			if (!Config.LOG_ITEMS_SMALL_LOG || (Config.LOG_ITEMS_SMALL_LOG && (getItem().isEquipable() || (getItem().getId() == ADENA_ID)))) {
+		if (general().logItems()) {
+			if (!general().logItemsSmallLog() || (general().logItemsSmallLog() && (getItem().isEquipable() || (getItem().getId() == ADENA_ID)))) {
 				if (getItemType() != ARROW && getItemType() != SHOT) {
 					LOG_ITEM.info("SET_OWNER {} by {}, referenced by {}.", this, creator, reference);
 				}
@@ -319,7 +320,7 @@ public final class L2ItemInstance extends L2Object {
 					referenceName = (String) reference;
 				}
 				String targetName = (creator.getTarget() != null ? creator.getTarget().getName() : "no-target");
-				if (Config.GMAUDIT) {
+				if (general().gmAudit()) {
 					GMAudit.auditGMAction(creator.getName() + " [" + creator.getObjectId() + "]", process + "(id: " + getId() + " name: " + getName() + ")", targetName, "L2Object referencing this action is: " + referenceName);
 				}
 			}
@@ -425,7 +426,7 @@ public final class L2ItemInstance extends L2Object {
 			return;
 		}
 		long old = getCount();
-		long max = getId() == ADENA_ID ? MAX_ADENA : Integer.MAX_VALUE;
+		long max = getId() == ADENA_ID ? character().getMaxAdena() : Integer.MAX_VALUE;
 		
 		if ((count > 0) && (getCount() > (max - count))) {
 			setCount(max);
@@ -439,8 +440,8 @@ public final class L2ItemInstance extends L2Object {
 		
 		_storedInDb = false;
 		
-		if (Config.LOG_ITEMS && (process != null)) {
-			if (!Config.LOG_ITEMS_SMALL_LOG || (Config.LOG_ITEMS_SMALL_LOG && (_item.isEquipable() || (_item.getId() == ADENA_ID)))) {
+		if (general().logItems() && (process != null)) {
+			if (!general().logItemsSmallLog() || (general().logItemsSmallLog() && (_item.isEquipable() || (_item.getId() == ADENA_ID)))) {
 				if (getItemType() != ARROW && getItemType() != SHOT) {
 					LOG_ITEM.info("CHANGED {} amount {} by {}, referenced by {}.", this, old, creator, reference);
 				}
@@ -456,7 +457,7 @@ public final class L2ItemInstance extends L2Object {
 					referenceName = (String) reference;
 				}
 				String targetName = (creator.getTarget() != null ? creator.getTarget().getName() : "no-target");
-				if (Config.GMAUDIT) {
+				if (general().gmAudit()) {
 					GMAudit.auditGMAction(creator.getName() + " [" + creator.getObjectId() + "]", process + "(id: " + getId() + " objId: " + getObjectId() + " name: " + getName() + " count: " + count + ")", targetName, "L2Object referencing this action is: " + referenceName);
 				}
 			}
@@ -1227,7 +1228,7 @@ public final class L2ItemInstance extends L2Object {
 			if (_existsInDb) {
 				if ((_ownerId == 0) || (_loc == ItemLocation.VOID) || (_loc == ItemLocation.REFUND) || ((getCount() == 0) && (_loc != ItemLocation.LEASE))) {
 					removeFromDb();
-				} else if (!Config.LAZY_ITEMS_UPDATE || force) {
+				} else if (!general().lazyItemsUpdate() || force) {
 					updateInDb();
 				}
 			} else {
@@ -1364,7 +1365,7 @@ public final class L2ItemInstance extends L2Object {
 			// synchronized, to avoid deadlocks
 			// Add the L2ItemInstance dropped in the world as a visible object
 			L2World.getInstance().addVisibleObject(_itm, _itm.getWorldRegion());
-			if (Config.SAVE_DROPPED_ITEM) {
+			if (general().saveDroppedItem()) {
 				ItemsOnGroundManager.getInstance().save(_itm);
 			}
 			_itm.setDropperObjectId(0); // Set the dropper Id back to 0 so it no longer shows the drop packet
@@ -1665,7 +1666,7 @@ public final class L2ItemInstance extends L2Object {
 	
 	@Override
 	public boolean decayMe() {
-		if (Config.SAVE_DROPPED_ITEM) {
+		if (general().saveDroppedItem()) {
 			ItemsOnGroundManager.getInstance().removeObject(this);
 		}
 		
@@ -1702,8 +1703,8 @@ public final class L2ItemInstance extends L2Object {
 			return enchant;
 		}
 		
-		if (player.isInOlympiadMode() && (Config.ALT_OLY_ENCHANT_LIMIT >= 0) && (enchant > Config.ALT_OLY_ENCHANT_LIMIT)) {
-			enchant = Config.ALT_OLY_ENCHANT_LIMIT;
+		if (player.isInOlympiadMode() && (olympiad().getEnchantLimit() >= 0) && (enchant > olympiad().getEnchantLimit())) {
+			enchant = olympiad().getEnchantLimit();
 		}
 		
 		return enchant;

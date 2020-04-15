@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
@@ -31,7 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
+import com.l2jserver.gameserver.config.Configuration;
 import com.l2jserver.gameserver.util.StringUtil;
 
 /**
@@ -108,14 +110,14 @@ public class ThreadPoolManager {
 	}
 	
 	protected ThreadPoolManager() {
-		_effectsScheduledThreadPool = new ScheduledThreadPoolExecutor(Config.THREAD_P_EFFECTS, new PriorityThreadFactory("EffectsSTPool", Thread.NORM_PRIORITY));
-		_generalScheduledThreadPool = new ScheduledThreadPoolExecutor(Config.THREAD_P_GENERAL, new PriorityThreadFactory("GeneralSTPool", Thread.NORM_PRIORITY));
-		_eventScheduledThreadPool = new ScheduledThreadPoolExecutor(Config.THREAD_E_EVENTS, new PriorityThreadFactory("EventSTPool", Thread.NORM_PRIORITY));
-		_ioPacketsThreadPool = new ThreadPoolExecutor(Config.IO_PACKET_THREAD_CORE_SIZE, Integer.MAX_VALUE, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new PriorityThreadFactory("I/O Packet Pool", Thread.NORM_PRIORITY + 1));
-		_generalPacketsThreadPool = new ThreadPoolExecutor(Config.GENERAL_PACKET_THREAD_CORE_SIZE, Config.GENERAL_PACKET_THREAD_CORE_SIZE + 2, 15L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new PriorityThreadFactory("Normal Packet Pool", Thread.NORM_PRIORITY + 1));
-		_generalThreadPool = new ThreadPoolExecutor(Config.GENERAL_THREAD_CORE_SIZE, Config.GENERAL_THREAD_CORE_SIZE + 2, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new PriorityThreadFactory("General Pool", Thread.NORM_PRIORITY));
-		_aiScheduledThreadPool = new ScheduledThreadPoolExecutor(Config.AI_MAX_THREAD, new PriorityThreadFactory("AISTPool", Thread.NORM_PRIORITY));
-		_eventThreadPool = new ThreadPoolExecutor(Config.EVENT_MAX_THREAD, Config.EVENT_MAX_THREAD + 2, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new PriorityThreadFactory("Event Pool", Thread.NORM_PRIORITY));
+		_effectsScheduledThreadPool = new ScheduledThreadPoolExecutor(general().getThreadPoolSizeEffects(), new PriorityThreadFactory("EffectsSTPool", Thread.NORM_PRIORITY));
+		_generalScheduledThreadPool = new ScheduledThreadPoolExecutor(general().getThreadPoolSizeGeneral(), new PriorityThreadFactory("GeneralSTPool", Thread.NORM_PRIORITY));
+		_eventScheduledThreadPool = new ScheduledThreadPoolExecutor(general().getThreadPoolSizeEvents(), new PriorityThreadFactory("EventSTPool", Thread.NORM_PRIORITY));
+		_ioPacketsThreadPool = new ThreadPoolExecutor(general().getUrgentPacketThreadCoreSize(), Integer.MAX_VALUE, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new PriorityThreadFactory("I/O Packet Pool", Thread.NORM_PRIORITY + 1));
+		_generalPacketsThreadPool = new ThreadPoolExecutor(general().getGeneralPacketThreadCoreSize(), general().getGeneralPacketThreadCoreSize() + 2, 15L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new PriorityThreadFactory("Normal Packet Pool", Thread.NORM_PRIORITY + 1));
+		_generalThreadPool = new ThreadPoolExecutor(general().getGeneralThreadCoreSize(), general().getGeneralThreadCoreSize() + 2, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new PriorityThreadFactory("General Pool", Thread.NORM_PRIORITY));
+		_aiScheduledThreadPool = new ScheduledThreadPoolExecutor(general().getAiMaxThread(), new PriorityThreadFactory("AISTPool", Thread.NORM_PRIORITY));
+		_eventThreadPool = new ThreadPoolExecutor(general().getEventsMaxThread(), general().getEventsMaxThread() + 2, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new PriorityThreadFactory("Event Pool", Thread.NORM_PRIORITY));
 		
 		scheduleGeneralAtFixedRate(new PurgeTask(_effectsScheduledThreadPool, _generalScheduledThreadPool, _aiScheduledThreadPool, _eventThreadPool), 10, 5, TimeUnit.MINUTES);
 	}
@@ -520,21 +522,22 @@ public class ThreadPoolManager {
 			int count = ptf.getGroup().activeCount();
 			Thread[] threads = new Thread[count + 2];
 			ptf.getGroup().enumerate(threads);
-			StringUtil.append(sb, "General Packet Thread Pool:" + Config.EOL + "Tasks in the queue: ", String.valueOf(_generalPacketsThreadPool.getQueue().size()), Config.EOL + "Showing threads stack trace:" + Config.EOL + "There should be ", String.valueOf(count), " Threads" + Config.EOL);
+			StringUtil.append(sb, "General Packet Thread Pool:" + Configuration.EOL + "Tasks in the queue: ", String.valueOf(_generalPacketsThreadPool.getQueue().size()), Configuration.EOL + "Showing threads stack trace:" + Configuration.EOL + "There should be ", String.valueOf(count), " Threads"
+				+ Configuration.EOL);
 			for (Thread t : threads) {
 				if (t == null) {
 					continue;
 				}
 				
-				StringUtil.append(sb, t.getName(), Config.EOL);
+				StringUtil.append(sb, t.getName(), Configuration.EOL);
 				for (StackTraceElement ste : t.getStackTrace()) {
-					StringUtil.append(sb, ste.toString(), Config.EOL);
+					StringUtil.append(sb, ste.toString(), Configuration.EOL);
 				}
 			}
 		}
 		
 		sb.append("Packet Tp stack traces printed.");
-		sb.append(Config.EOL);
+		sb.append(Configuration.EOL);
 		return sb.toString();
 	}
 	
@@ -547,23 +550,24 @@ public class ThreadPoolManager {
 			int count = ptf.getGroup().activeCount();
 			Thread[] threads = new Thread[count + 2];
 			ptf.getGroup().enumerate(threads);
-			StringUtil.append(sb, "I/O Packet Thread Pool:" + Config.EOL + "Tasks in the queue: ", String.valueOf(_ioPacketsThreadPool.getQueue().size()), Config.EOL + "Showing threads stack trace:" + Config.EOL + "There should be ", String.valueOf(count), " Threads" + Config.EOL);
+			StringUtil.append(sb, "I/O Packet Thread Pool:" + Configuration.EOL + "Tasks in the queue: ", String.valueOf(_ioPacketsThreadPool.getQueue().size()), Configuration.EOL + "Showing threads stack trace:" + Configuration.EOL + "There should be ", String.valueOf(count), " Threads"
+				+ Configuration.EOL);
 			
 			for (Thread t : threads) {
 				if (t == null) {
 					continue;
 				}
 				
-				StringUtil.append(sb, t.getName(), Config.EOL);
+				StringUtil.append(sb, t.getName(), Configuration.EOL);
 				
 				for (StackTraceElement ste : t.getStackTrace()) {
-					StringUtil.append(sb, ste.toString(), Config.EOL);
+					StringUtil.append(sb, ste.toString(), Configuration.EOL);
 				}
 			}
 		}
 		
 		sb.append("Packet Tp stack traces printed.");
-		sb.append(Config.EOL);
+		sb.append(Configuration.EOL);
 		return sb.toString();
 	}
 	
@@ -576,23 +580,24 @@ public class ThreadPoolManager {
 			int count = ptf.getGroup().activeCount();
 			Thread[] threads = new Thread[count + 2];
 			ptf.getGroup().enumerate(threads);
-			StringUtil.append(sb, "General Thread Pool:" + Config.EOL + "Tasks in the queue: ", String.valueOf(_generalThreadPool.getQueue().size()), Config.EOL + "Showing threads stack trace:" + Config.EOL + "There should be ", String.valueOf(count), " Threads" + Config.EOL);
+			StringUtil.append(sb, "General Thread Pool:" + Configuration.EOL + "Tasks in the queue: ", String.valueOf(_generalThreadPool.getQueue().size()), Configuration.EOL + "Showing threads stack trace:" + Configuration.EOL + "There should be ", String.valueOf(count), " Threads"
+				+ Configuration.EOL);
 			
 			for (Thread t : threads) {
 				if (t == null) {
 					continue;
 				}
 				
-				StringUtil.append(sb, t.getName(), Config.EOL);
+				StringUtil.append(sb, t.getName(), Configuration.EOL);
 				
 				for (StackTraceElement ste : t.getStackTrace()) {
-					StringUtil.append(sb, ste.toString(), Config.EOL);
+					StringUtil.append(sb, ste.toString(), Configuration.EOL);
 				}
 			}
 		}
 		
 		sb.append("Packet Tp stack traces printed.");
-		sb.append(Config.EOL);
+		sb.append(Configuration.EOL);
 		return sb.toString();
 	}
 	

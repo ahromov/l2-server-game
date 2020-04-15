@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,13 +18,14 @@
  */
 package com.l2jserver.gameserver.model.itemcontainer;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.ArmorSetsData;
 import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.enums.ItemLocation;
@@ -59,8 +60,6 @@ public abstract class Inventory extends ItemContainer {
 	// Common Items
 	public static final int ADENA_ID = 57;
 	public static final int ANCIENT_ADENA_ID = 5575;
-	
-	public static final long MAX_ADENA = Config.MAX_ADENA;
 	
 	public static final int PAPERDOLL_UNDER = 0;
 	public static final int PAPERDOLL_HEAD = 1;
@@ -1059,7 +1058,7 @@ public abstract class Inventory extends ItemContainer {
 	 * @return {@link L2ItemInstance} designating the item placed in the slot
 	 */
 	public L2ItemInstance unEquipItemInBodySlot(int slot) {
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			_log.info(Inventory.class.getSimpleName() + ": Unequip body slot:" + slot);
 		}
 		

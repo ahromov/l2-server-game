@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,9 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import com.l2jserver.gameserver.data.xml.impl.AdminData;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
 import com.l2jserver.gameserver.model.PcCondOverride;
@@ -69,12 +71,12 @@ public final class RequestDropItem extends L2GameClientPacket {
 		
 		L2ItemInstance item = activeChar.getInventory().getItemByObjectId(_objectId);
 		
-		if ((item == null) || (_count == 0) || !activeChar.validateItemManipulation(_objectId, "drop") || (!Config.ALLOW_DISCARDITEM && !activeChar.canOverrideCond(PcCondOverride.DROP_ALL_ITEMS))
-			|| (!item.isDropable() && !(activeChar.canOverrideCond(PcCondOverride.DROP_ALL_ITEMS) && Config.GM_TRADE_RESTRICTED_ITEMS)) || ((item.getItemType() == EtcItemType.PET_COLLAR) && activeChar.havePetInvItems()) || activeChar.isInsideZone(ZoneId.NO_ITEM_DROP)) {
+		if ((item == null) || (_count == 0) || !activeChar.validateItemManipulation(_objectId, "drop") || (!general().allowDiscardItem() && !activeChar.canOverrideCond(PcCondOverride.DROP_ALL_ITEMS))
+			|| (!item.isDropable() && !(activeChar.canOverrideCond(PcCondOverride.DROP_ALL_ITEMS) && general().gmTradeRestrictedItems())) || ((item.getItemType() == EtcItemType.PET_COLLAR) && activeChar.havePetInvItems()) || activeChar.isInsideZone(ZoneId.NO_ITEM_DROP)) {
 			activeChar.sendPacket(SystemMessageId.CANNOT_DISCARD_THIS_ITEM);
 			return;
 		}
-		if (item.isQuestItem() && !(activeChar.canOverrideCond(PcCondOverride.DROP_ALL_ITEMS) && Config.GM_TRADE_RESTRICTED_ITEMS)) {
+		if (item.isQuestItem() && !(activeChar.canOverrideCond(PcCondOverride.DROP_ALL_ITEMS) && general().gmTradeRestrictedItems())) {
 			return;
 		}
 		
@@ -83,22 +85,22 @@ public final class RequestDropItem extends L2GameClientPacket {
 			return;
 		}
 		
-		if ((Config.PLAYER_SPAWN_PROTECTION > 0) && activeChar.isInvul() && !activeChar.isGM()) {
+		if ((character().getPlayerSpawnProtection() > 0) && activeChar.isInvul() && !activeChar.isGM()) {
 			activeChar.sendPacket(SystemMessageId.CANNOT_DISCARD_THIS_ITEM);
 			return;
 		}
 		
 		if (_count < 0) {
-			Util.handleIllegalPlayerAction(activeChar, "[RequestDropItem] Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " tried to drop item with oid " + _objectId + " but has count < 0!", Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(activeChar, "[RequestDropItem] Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " tried to drop item with oid " + _objectId + " but has count < 0!");
 			return;
 		}
 		
 		if (!item.isStackable() && (_count > 1)) {
-			Util.handleIllegalPlayerAction(activeChar, "[RequestDropItem] Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " tried to drop non-stackable item with oid " + _objectId + " but has count > 1!", Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(activeChar, "[RequestDropItem] Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " tried to drop non-stackable item with oid " + _objectId + " but has count > 1!");
 			return;
 		}
 		
-		if (Config.JAIL_DISABLE_TRANSACTION && activeChar.isJailed()) {
+		if (general().jailDisableTransaction() && activeChar.isJailed()) {
 			activeChar.sendMessage("You cannot drop items in Jail.");
 			return;
 		}
@@ -139,7 +141,7 @@ public final class RequestDropItem extends L2GameClientPacket {
 		}
 		
 		if ((ItemType2.QUEST == item.getItem().getType2()) && !activeChar.canOverrideCond(PcCondOverride.DROP_ALL_ITEMS)) {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.finest(activeChar.getObjectId() + ":player tried to drop quest item");
 			}
 			activeChar.sendPacket(SystemMessageId.CANNOT_DISCARD_EXCHANGE_ITEM);
@@ -147,7 +149,7 @@ public final class RequestDropItem extends L2GameClientPacket {
 		}
 		
 		if (!activeChar.isInsideRadius(_x, _y, 0, 150, false, false) || (Math.abs(_z - activeChar.getZ()) > 50)) {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.finest(activeChar.getObjectId() + ": trying to drop too far away");
 			}
 			activeChar.sendPacket(SystemMessageId.CANNOT_DISCARD_DISTANCE_TOO_FAR);
@@ -159,7 +161,7 @@ public final class RequestDropItem extends L2GameClientPacket {
 			return;
 		}
 		
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			_log.fine("requested drop item " + _objectId + "(" + item.getCount() + ") at " + _x + "/" + _y + "/" + _z);
 		}
 		
@@ -179,7 +181,7 @@ public final class RequestDropItem extends L2GameClientPacket {
 		
 		L2ItemInstance dropedItem = activeChar.dropItem("Drop", _objectId, _count, _x, _y, _z, null, false, false);
 		
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			_log.fine("dropping " + _objectId + " item(" + _count + ") at: " + _x + " " + _y + " " + _z);
 		}
 		

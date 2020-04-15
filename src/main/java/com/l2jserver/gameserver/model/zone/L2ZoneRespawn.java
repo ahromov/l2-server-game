@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,12 @@
  */
 package com.l2jserver.gameserver.model.zone;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import com.l2jserver.commons.util.Rnd;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.Location;
 
 /**
@@ -96,7 +97,7 @@ public abstract class L2ZoneRespawn extends L2ZoneType {
 	}
 	
 	public final Location getSpawnLoc() {
-		if (Config.RANDOM_RESPAWN_IN_TOWN_ENABLED) {
+		if (character().randomRespawnInTown()) {
 			return _spawnLocs.get(Rnd.get(_spawnLocs.size()));
 		}
 		return _spawnLocs.get(0);
@@ -104,7 +105,7 @@ public abstract class L2ZoneRespawn extends L2ZoneType {
 	
 	public final Location getOtherSpawnLoc() {
 		if (_otherSpawnLocs != null) {
-			if (Config.RANDOM_RESPAWN_IN_TOWN_ENABLED) {
+			if (character().randomRespawnInTown()) {
 				return _otherSpawnLocs.get(Rnd.get(_otherSpawnLocs.size()));
 			}
 			return _otherSpawnLocs.get(0);
@@ -114,7 +115,7 @@ public abstract class L2ZoneRespawn extends L2ZoneType {
 	
 	public final Location getChaoticSpawnLoc() {
 		if (_chaoticSpawnLocs != null) {
-			if (Config.RANDOM_RESPAWN_IN_TOWN_ENABLED) {
+			if (character().randomRespawnInTown()) {
 				return _chaoticSpawnLocs.get(Rnd.get(_chaoticSpawnLocs.size()));
 			}
 			return _chaoticSpawnLocs.get(0);
@@ -124,7 +125,7 @@ public abstract class L2ZoneRespawn extends L2ZoneType {
 	
 	public final Location getBanishSpawnLoc() {
 		if (_banishSpawnLocs != null) {
-			if (Config.RANDOM_RESPAWN_IN_TOWN_ENABLED) {
+			if (character().randomRespawnInTown()) {
 				return _banishSpawnLocs.get(Rnd.get(_banishSpawnLocs.size()));
 			}
 			return _banishSpawnLocs.get(0);

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.data.sql.impl;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -30,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.ThreadPoolManager;
 import com.l2jserver.gameserver.communitybbs.Manager.ForumsBBSManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.idfactory.IdFactory;
 import com.l2jserver.gameserver.instancemanager.AuctionManager;
 import com.l2jserver.gameserver.instancemanager.ClanHallSiegeManager;
@@ -73,7 +74,7 @@ public class ClanTable {
 	
 	protected ClanTable() {
 		// forums has to be loaded before clan data, because of last forum id used should have also memo included
-		if (Config.ENABLE_COMMUNITY_BOARD) {
+		if (general().enableCommunityBoard()) {
 			ForumsBBSManager.getInstance().initRoot();
 		}
 		
@@ -135,7 +136,7 @@ public class ClanTable {
 			return null;
 		}
 		
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			LOG.info("{} requested a clan creation.", player);
 		}
 		

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.data.sql.impl;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.L2TeleportLocation;
 
 public class TeleportLocationTable {
@@ -62,7 +63,7 @@ public class TeleportLocationTable {
 			LOG.error("There has been an error loading teleport table.", ex);
 		}
 		
-		if (Config.CUSTOM_TELEPORT_TABLE) {
+		if (general().customTeleportTable()) {
 			int _cTeleCount = _teleports.size();
 			try (var con = ConnectionFactory.getInstance().getConnection();
 				var s = con.createStatement();

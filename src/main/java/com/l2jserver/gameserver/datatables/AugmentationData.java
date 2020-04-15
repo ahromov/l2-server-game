@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,10 @@
  */
 package com.l2jserver.gameserver.datatables;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +37,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import com.l2jserver.commons.util.Rnd;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.OptionData;
 import com.l2jserver.gameserver.model.L2Augmentation;
 import com.l2jserver.gameserver.model.holders.SkillHolder;
@@ -101,7 +104,7 @@ public class AugmentationData {
 		
 		load();
 		
-		if (!Config.RETAIL_LIKE_AUGMENTATION) {
+		if (!character().retailLikeAugmentation()) {
 			for (int i = 0; i < 10; i++) {
 				LOG.info("Loaded {} blue, {} purple and {} red skills for life stone level {}.", _blueSkills.get(i).size(), _purpleSkills.get(i).size(), _redSkills.get(i).size(), i);
 			}
@@ -205,14 +208,14 @@ public class AugmentationData {
 		// Note: the skillmap data is only used when generating new augmentations
 		// the client expects a different id in order to display the skill in the
 		// items description...
-		if (!Config.RETAIL_LIKE_AUGMENTATION) {
+		if (!character().retailLikeAugmentation()) {
 			try {
 				int badAugmantData = 0;
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				factory.setValidating(false);
 				factory.setIgnoringComments(true);
 				
-				File file = new File(Config.DATAPACK_ROOT + "/data/stats/augmentation/augmentation_skillmap.xml");
+				File file = new File(server().getDatapackRoot(), "data/stats/augmentation/augmentation_skillmap.xml");
 				if (!file.exists()) {
 					LOG.warn("The augmentation skillmap file is missing!");
 					return;
@@ -275,7 +278,7 @@ public class AugmentationData {
 			factory.setValidating(false);
 			factory.setIgnoringComments(true);
 			
-			File aFile = new File(Config.DATAPACK_ROOT + "/data/stats/augmentation/retailchances.xml");
+			File aFile = new File(server().getDatapackRoot(), "data/stats/augmentation/retailchances.xml");
 			if (aFile.exists()) {
 				Document aDoc = null;
 				
@@ -346,12 +349,12 @@ public class AugmentationData {
 			}
 		}
 		
-		if (Config.RETAIL_LIKE_AUGMENTATION_ACCESSORY) {
+		if (character().retailLikeAugmentationAccessory()) {
 			DocumentBuilderFactory factory3 = DocumentBuilderFactory.newInstance();
 			factory3.setValidating(false);
 			factory3.setIgnoringComments(true);
 			
-			File aFile3 = new File(Config.DATAPACK_ROOT + "/data/stats/augmentation/retailchances_accessory.xml");
+			File aFile3 = new File(server().getDatapackRoot(), "data/stats/augmentation/retailchances_accessory.xml");
 			if (aFile3.exists()) {
 				Document aDoc = null;
 				
@@ -445,7 +448,7 @@ public class AugmentationData {
 	private L2Augmentation generateRandomWeaponAugmentation(int lifeStoneLevel, int lifeStoneGrade, int lifeStoneId, L2ItemInstance item) {
 		int stat12 = 0;
 		int stat34 = 0;
-		if (Config.RETAIL_LIKE_AUGMENTATION) {
+		if (character().retailLikeAugmentation()) {
 			if (item.getItem().isMagicWeapon()) {
 				List<AugmentationChance> _selectedChances12 = new ArrayList<>();
 				List<AugmentationChance> _selectedChances34 = new ArrayList<>();
@@ -466,30 +469,30 @@ public class AugmentationData {
 						stat12 = ac.getAugmentId();
 					}
 				}
-				int[] gradeChance = null;
+				List<Integer> gradeChance = null;
 				switch (lifeStoneGrade) {
 					case AbstractRefinePacket.GRADE_NONE:
-						gradeChance = Config.RETAIL_LIKE_AUGMENTATION_NG_CHANCE;
+						gradeChance = character().getRetailLikeAugmentationNoGradeChance();
 						break;
 					case AbstractRefinePacket.GRADE_MID:
-						gradeChance = Config.RETAIL_LIKE_AUGMENTATION_MID_CHANCE;
+						gradeChance = character().getRetailLikeAugmentationMidGradeChance();
 						break;
 					case AbstractRefinePacket.GRADE_HIGH:
-						gradeChance = Config.RETAIL_LIKE_AUGMENTATION_HIGH_CHANCE;
+						gradeChance = character().getRetailLikeAugmentationHighGradeChance();
 						break;
 					case AbstractRefinePacket.GRADE_TOP:
-						gradeChance = Config.RETAIL_LIKE_AUGMENTATION_TOP_CHANCE;
+						gradeChance = character().getRetailLikeAugmentationTopGradeChance();
 						break;
 					default:
-						gradeChance = Config.RETAIL_LIKE_AUGMENTATION_NG_CHANCE;
+						gradeChance = character().getRetailLikeAugmentationNoGradeChance();
 				}
 				
 				int c = Rnd.get(100);
-				if (c < gradeChance[0]) {
+				if (c < gradeChance.get(0)) {
 					c = 55;
-				} else if (c < (gradeChance[0] + gradeChance[1])) {
+				} else if (c < (gradeChance.get(0) + gradeChance.get(1))) {
 					c = 35;
-				} else if (c < (gradeChance[0] + gradeChance[1] + gradeChance[2])) {
+				} else if (c < (gradeChance.get(0) + gradeChance.get(1) + gradeChance.get(2))) {
 					c = 7;
 				} else {
 					c = 3;
@@ -530,30 +533,30 @@ public class AugmentationData {
 						stat12 = ac.getAugmentId();
 					}
 				}
-				int[] gradeChance = null;
+				List<Integer> gradeChance = null;
 				switch (lifeStoneGrade) {
 					case AbstractRefinePacket.GRADE_NONE:
-						gradeChance = Config.RETAIL_LIKE_AUGMENTATION_NG_CHANCE;
+						gradeChance = character().getRetailLikeAugmentationNoGradeChance();
 						break;
 					case AbstractRefinePacket.GRADE_MID:
-						gradeChance = Config.RETAIL_LIKE_AUGMENTATION_MID_CHANCE;
+						gradeChance = character().getRetailLikeAugmentationMidGradeChance();
 						break;
 					case AbstractRefinePacket.GRADE_HIGH:
-						gradeChance = Config.RETAIL_LIKE_AUGMENTATION_HIGH_CHANCE;
+						gradeChance = character().getRetailLikeAugmentationHighGradeChance();
 						break;
 					case AbstractRefinePacket.GRADE_TOP:
-						gradeChance = Config.RETAIL_LIKE_AUGMENTATION_TOP_CHANCE;
+						gradeChance = character().getRetailLikeAugmentationTopGradeChance();
 						break;
 					default:
-						gradeChance = Config.RETAIL_LIKE_AUGMENTATION_NG_CHANCE;
+						gradeChance = character().getRetailLikeAugmentationNoGradeChance();
 				}
 				
 				int c = Rnd.get(100);
-				if (c < gradeChance[0]) {
+				if (c < gradeChance.get(0)) {
 					c = 55;
-				} else if (c < (gradeChance[0] + gradeChance[1])) {
+				} else if (c < (gradeChance.get(0) + gradeChance.get(1))) {
 					c = 35;
-				} else if (c < (gradeChance[0] + gradeChance[1] + gradeChance[2])) {
+				} else if (c < (gradeChance.get(0) + gradeChance.get(1) + gradeChance.get(2))) {
 					c = 7;
 				} else {
 					c = 3;
@@ -583,44 +586,44 @@ public class AugmentationData {
 		
 		switch (lifeStoneGrade) {
 			case AbstractRefinePacket.GRADE_NONE:
-				if (Rnd.get(1, 100) <= Config.AUGMENTATION_NG_SKILL_CHANCE) {
+				if (Rnd.get(1, 100) <= character().getAugmentationNGSkillChance()) {
 					generateSkill = true;
 				}
-				if (Rnd.get(1, 100) <= Config.AUGMENTATION_NG_GLOW_CHANCE) {
+				if (Rnd.get(1, 100) <= character().getAugmentationNGGlowChance()) {
 					generateGlow = true;
 				}
 				break;
 			case AbstractRefinePacket.GRADE_MID:
-				if (Rnd.get(1, 100) <= Config.AUGMENTATION_MID_SKILL_CHANCE) {
+				if (Rnd.get(1, 100) <= character().getAugmentationMidSkillChance()) {
 					generateSkill = true;
 				}
-				if (Rnd.get(1, 100) <= Config.AUGMENTATION_MID_GLOW_CHANCE) {
+				if (Rnd.get(1, 100) <= character().getAugmentationMidGlowChance()) {
 					generateGlow = true;
 				}
 				break;
 			case AbstractRefinePacket.GRADE_HIGH:
-				if (Rnd.get(1, 100) <= Config.AUGMENTATION_HIGH_SKILL_CHANCE) {
+				if (Rnd.get(1, 100) <= character().getAugmentationHighSkillChance()) {
 					generateSkill = true;
 				}
-				if (Rnd.get(1, 100) <= Config.AUGMENTATION_HIGH_GLOW_CHANCE) {
+				if (Rnd.get(1, 100) <= character().getAugmentationHighGlowChance()) {
 					generateGlow = true;
 				}
 				break;
 			case AbstractRefinePacket.GRADE_TOP:
-				if (Rnd.get(1, 100) <= Config.AUGMENTATION_TOP_SKILL_CHANCE) {
+				if (Rnd.get(1, 100) <= character().getAugmentationTopSkillChance()) {
 					generateSkill = true;
 				}
-				if (Rnd.get(1, 100) <= Config.AUGMENTATION_TOP_GLOW_CHANCE) {
+				if (Rnd.get(1, 100) <= character().getAugmentationTopGlowChance()) {
 					generateGlow = true;
 				}
 				break;
 			case AbstractRefinePacket.GRADE_ACC:
-				if (Rnd.get(1, 100) <= Config.AUGMENTATION_ACC_SKILL_CHANCE) {
+				if (Rnd.get(1, 100) <= character().getAugmentationAccSkillChance()) {
 					generateSkill = true;
 				}
 		}
 		
-		if (!generateSkill && (Rnd.get(1, 100) <= Config.AUGMENTATION_BASESTAT_CHANCE)) {
+		if (!generateSkill && (Rnd.get(1, 100) <= character().getAugmentationBaseStatChance())) {
 			stat34 = Rnd.get(BASESTAT_STR, BASESTAT_MEN);
 		}
 		
@@ -703,7 +706,7 @@ public class AugmentationData {
 		}
 		stat12 = Rnd.get(offset, (offset + STAT_SUBBLOCKSIZE) - 1);
 		
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			LOG.info("Augmentation success: stat12={}; stat34={}; resultColor={}; level={}; grade={}", stat12, stat34, resultColor, lifeStoneLevel, lifeStoneGrade);
 		}
 		return new L2Augmentation(((stat34 << 16) + stat12));
@@ -712,7 +715,7 @@ public class AugmentationData {
 	private L2Augmentation generateRandomAccessoryAugmentation(int lifeStoneLevel, int bodyPart, int lifeStoneId) {
 		int stat12 = 0;
 		int stat34 = 0;
-		if (Config.RETAIL_LIKE_AUGMENTATION_ACCESSORY) {
+		if (character().retailLikeAugmentationAccessory()) {
 			List<augmentationChanceAcc> _selectedChances12 = new ArrayList<>();
 			List<augmentationChanceAcc> _selectedChances34 = new ArrayList<>();
 			for (augmentationChanceAcc ac : _augmentationChancesAcc) {
@@ -785,7 +788,7 @@ public class AugmentationData {
 		// first augmentation (stats only)
 		stat12 = Rnd.get(ACC_STAT_SUBBLOCKSIZE);
 		Options op = null;
-		if (Rnd.get(1, 100) <= Config.AUGMENTATION_ACC_SKILL_CHANCE) {
+		if (Rnd.get(1, 100) <= character().getAugmentationAccSkillChance()) {
 			// second augmentation (skill)
 			stat34 = base + Rnd.get(skillsLength);
 			op = OptionData.getInstance().getOptions(stat34);
@@ -803,7 +806,7 @@ public class AugmentationData {
 		// stat12 has stats only
 		stat12 = base + skillsLength + (ACC_STAT_SUBBLOCKSIZE * resultColor) + stat12;
 		
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			LOG.info("Accessory augmentation success: stat12={}; stat34={}; level={}", stat12, stat34, lifeStoneLevel);
 		}
 		return new L2Augmentation(((stat34 << 16) + stat12));

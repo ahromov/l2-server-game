@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  *
  * This file is part of L2J Server.
  *
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.model.conditions;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import com.l2jserver.gameserver.data.sql.impl.CharSummonTable;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -45,10 +46,10 @@ public class ConditionPlayerCanSummon extends Condition {
 		}
 		
 		boolean canSummon = true;
-		if (Config.RESTORE_SERVITOR_ON_RECONNECT && CharSummonTable.getInstance().getServitors().containsKey(player.getObjectId())) {
+		if (character().restoreServitorOnReconnect() && CharSummonTable.getInstance().getServitors().containsKey(player.getObjectId())) {
 			player.sendPacket(SystemMessageId.SUMMON_ONLY_ONE);
 			canSummon = false;
-		} else if (Config.RESTORE_PET_ON_RECONNECT && CharSummonTable.getInstance().getPets().containsKey(player.getObjectId())) {
+		} else if (character().restorePetOnReconnect() && CharSummonTable.getInstance().getPets().containsKey(player.getObjectId())) {
 			player.sendPacket(SystemMessageId.SUMMON_ONLY_ONE);
 			canSummon = false;
 		} else if (player.hasSummon()) {

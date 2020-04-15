@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.model.actor.tasks.player;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.vitality;
+
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.actor.stat.PcStat;
 import com.l2jserver.gameserver.model.zone.ZoneId;
@@ -45,7 +46,7 @@ public class VitalityTask implements Runnable {
 			return;
 		}
 		
-		_player.updateVitalityPoints(Config.RATE_RECOVERY_VITALITY_PEACE_ZONE, false, false);
+		_player.updateVitalityPoints(vitality().getRateRecoveryPeaceZone(), false, false);
 		_player.sendPacket(new ExVitalityPointInfo(_player.getVitalityPoints()));
 	}
 }

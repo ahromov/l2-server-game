@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,12 +18,13 @@
  */
 package com.l2jserver.gameserver.taskmanager.tasks;
 
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.io.File;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.scripting.ScriptEngineManager;
 import com.l2jserver.gameserver.taskmanager.Task;
 import com.l2jserver.gameserver.taskmanager.TaskManager.ExecutedTask;
@@ -44,7 +45,7 @@ public class TaskScript extends Task {
 	
 	@Override
 	public void onTimeElapsed(ExecutedTask task) {
-		final File file = new File(Config.SCRIPT_ROOT, "com/l2jserver/datapack/cron/" + task.getParams()[2]);
+		final File file = new File(server().getScriptRoot(), "com/l2jserver/datapack/cron/" + task.getParams()[2]);
 		if (!file.isFile()) {
 			LOG.warn("File not found {}!", task.getParams()[2]);
 			return;

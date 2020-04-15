@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.script.faenor;
 
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.script.Parser;
 import com.l2jserver.gameserver.script.ParserNotCreatedException;
 import com.l2jserver.gameserver.script.ScriptDocument;
@@ -46,7 +47,7 @@ public class FaenorScriptEngine extends ScriptEngine {
 	public static final String PACKAGE_DIRECTORY = "data/faenor/";
 	
 	protected FaenorScriptEngine() {
-		final File packDirectory = new File(Config.DATAPACK_ROOT, PACKAGE_DIRECTORY);
+		final File packDirectory = new File(server().getDatapackRoot(), PACKAGE_DIRECTORY);
 		final File[] files = packDirectory.listFiles(new XMLFilter());
 		if (files != null) {
 			for (File file : files) {

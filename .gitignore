@@ -4,4 +4,6 @@
 /.idea/
 /target/
 logs/
+log/
+test-output/
 hexid.txt

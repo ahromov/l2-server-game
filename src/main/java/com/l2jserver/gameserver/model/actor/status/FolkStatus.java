@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.model.actor.status;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.clanhall;
+
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.L2Npc;
 import com.l2jserver.gameserver.model.actor.instance.L2ClanHallManagerInstance;
@@ -41,7 +42,7 @@ public class FolkStatus extends NpcStatus {
 	@Override
 	public final void reduceMp(double value) {
 		// If Clan Hall buff are free and it's a Clan Hall Manager MP won't get reduced.
-		if (Config.CH_BUFF_FREE && (getActiveChar() instanceof L2ClanHallManagerInstance)) {
+		if (clanhall().mpBuffFree() && (getActiveChar() instanceof L2ClanHallManagerInstance)) {
 			return;
 		}
 		super.reduceMp(value);

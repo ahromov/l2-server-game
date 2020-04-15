@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,12 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.handler.ChatHandler;
 import com.l2jserver.gameserver.handler.IChatHandler;
 import com.l2jserver.gameserver.model.L2Object;
@@ -143,7 +145,7 @@ public final class Say2 extends L2GameClientPacket {
 	
 	@Override
 	protected void runImpl() {
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			_log.info("Say2: Msg Type = '" + _type + "' Text = '" + _text + "'.");
 		}
 		
@@ -174,8 +176,8 @@ public final class Say2 extends L2GameClientPacket {
 			return;
 		}
 		
-		if (Config.L2WALKER_PROTECTION && (_type == TELL) && checkBot(_text)) {
-			Util.handleIllegalPlayerAction(activeChar, "Client Emulator Detect: Player " + activeChar.getName() + " using l2walker.", Config.DEFAULT_PUNISH);
+		if (customs().l2WalkerProtection() && (_type == TELL) && checkBot(_text)) {
+			Util.handleIllegalPlayerAction(activeChar, "Client Emulator Detect: Player " + activeChar.getName() + " using l2walker.");
 			return;
 		}
 		
@@ -188,16 +190,14 @@ public final class Say2 extends L2GameClientPacket {
 			if (activeChar.getEffectList().getFirstEffect(L2EffectType.CHAT_BLOCK) != null) {
 				activeChar.sendPacket(SystemMessageId.YOU_HAVE_BEEN_REPORTED_SO_CHATTING_NOT_ALLOWED);
 			} else {
-				for (int chatId : Config.BAN_CHAT_CHANNELS) {
-					if (_type == chatId) {
-						activeChar.sendPacket(SystemMessageId.CHATTING_IS_CURRENTLY_PROHIBITED);
-					}
+				if (general().getBanChatChannels().contains(_type)) {
+					activeChar.sendPacket(SystemMessageId.CHATTING_IS_CURRENTLY_PROHIBITED);
 				}
 			}
 			return;
 		}
 		
-		if (activeChar.isJailed() && Config.JAIL_DISABLE_CHAT) {
+		if (activeChar.isJailed() && general().jailDisableChat()) {
 			if ((_type == TELL) || (_type == SHOUT) || (_type == TRADE) || (_type == HERO_VOICE)) {
 				activeChar.sendMessage("You can not chat with players outside of the jail.");
 				return;
@@ -208,7 +208,7 @@ public final class Say2 extends L2GameClientPacket {
 			_type = PETITION_GM;
 		}
 		
-		if (Config.LOG_CHAT) {
+		if (general().logChat()) {
 			if (_type == TELL) {
 				LOG_CHAT.info("{} {} says [{}] to {}.", CHAT_NAMES[_type], activeChar.getName(), _text, _target);
 			} else {
@@ -228,7 +228,7 @@ public final class Say2 extends L2GameClientPacket {
 		}
 		
 		// Say Filter implementation
-		if (Config.USE_SAY_FILTER) {
+		if (general().useChatFilter()) {
 			checkText();
 		}
 		
@@ -251,8 +251,8 @@ public final class Say2 extends L2GameClientPacket {
 	
 	private void checkText() {
 		String filteredText = _text;
-		for (String pattern : Config.FILTER_LIST) {
-			filteredText = filteredText.replaceAll("(?i)" + pattern, Config.CHAT_FILTER_CHARS);
+		for (String pattern : general().getChatFilter()) {
+			filteredText = filteredText.replaceAll("(?i)" + pattern, general().getChatFilterChars());
 		}
 		_text = filteredText;
 	}

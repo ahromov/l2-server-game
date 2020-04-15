@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,8 +18,9 @@
  */
 package com.l2jserver.gameserver.model.stats.functions.formulas;
 
+import static com.l2jserver.gameserver.config.Configuration.sevenSings;
+
 import com.l2jserver.gameserver.SevenSigns;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.skills.Skill;
 import com.l2jserver.gameserver.model.stats.Stats;
@@ -42,9 +43,9 @@ public class FuncGatesPDefMod extends AbstractFunction {
 	@Override
 	public double calc(L2Character effector, L2Character effected, Skill skill, double initVal) {
 		if (SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DAWN) {
-			return initVal * Config.ALT_SIEGE_DAWN_GATES_PDEF_MULT;
+			return initVal * sevenSings().getDawnGatesPdefMult();
 		} else if (SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DUSK) {
-			return initVal * Config.ALT_SIEGE_DUSK_GATES_PDEF_MULT;
+			return initVal * sevenSings().getDuskGatesPdefMult();
 		}
 		return initVal;
 	}

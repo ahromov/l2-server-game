@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver;
 
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -25,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.UPnPService;
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.ClanTable;
 import com.l2jserver.gameserver.data.sql.impl.OfflineTradersTable;
 import com.l2jserver.gameserver.datatables.BotReportTable;
@@ -180,7 +182,7 @@ public class Shutdown extends Thread {
 			}
 			
 			try {
-				if ((Config.OFFLINE_TRADE_ENABLE || Config.OFFLINE_CRAFT_ENABLE) && Config.RESTORE_OFFLINERS) {
+				if ((customs().offlineTradeEnable() || customs().offlineCraftEnable()) && customs().restoreOffliners()) {
 					OfflineTradersTable.getInstance().storeOffliners();
 					LOG.info("Offline Traders Table: Offline shops stored({}ms).", tc.getEstimatedTimeAndRestartCounter());
 				}
@@ -459,7 +461,7 @@ public class Shutdown extends Thread {
 		LOG.info("Cursed Weapons Manager: Data saved({}ms).", tc.getEstimatedTimeAndRestartCounter());
 		
 		// Save all manor data
-		if (!Config.ALT_MANOR_SAVE_ALL_ACTIONS) {
+		if (!general().manorSaveAllActions()) {
 			CastleManorManager.getInstance().storeMe();
 			LOG.info("Castle Manor Manager: Data saved({}ms).", tc.getEstimatedTimeAndRestartCounter());
 		}
@@ -476,7 +478,7 @@ public class Shutdown extends Thread {
 		LOG.info("Global Variables Manager: Variables saved({}ms).", tc.getEstimatedTimeAndRestartCounter());
 		
 		// Save items on ground before closing
-		if (Config.SAVE_DROPPED_ITEM) {
+		if (general().saveDroppedItem()) {
 			ItemsOnGroundManager.getInstance().saveInDb();
 			LOG.info("Items On Ground Manager: Data saved({}ms).", tc.getEstimatedTimeAndRestartCounter());
 			ItemsOnGroundManager.getInstance().cleanUp();
@@ -484,7 +486,7 @@ public class Shutdown extends Thread {
 		}
 		
 		// Save bot reports to database
-		if (Config.BOTREPORT_ENABLE) {
+		if (general().enableBotReportButton()) {
 			BotReportTable.getInstance().saveReportedCharData();
 			LOG.info("Bot Report Table: Successfully saved reports to database!");
 		}

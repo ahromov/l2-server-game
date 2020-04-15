@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.model.actor.stat;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import com.l2jserver.gameserver.data.xml.impl.PetDataTable;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.instance.L2PetInstance;
@@ -83,12 +84,12 @@ public class PetStat extends SummonStat {
 	
 	@Override
 	public int getMaxLevel() {
-		return Config.MAX_PET_LEVEL;
+		return character().getMaxPetLevel();
 	}
 	
 	@Override
 	public int getMaxExpLevel() {
-		return Config.MAX_PET_LEVEL + 1;
+		return character().getMaxPetLevel() + 1;
 	}
 	
 	@Override

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,7 @@
  */
 package com.l2jserver.gameserver.data.sql.impl;
 
+import static com.l2jserver.gameserver.config.Configuration.customs;
 import static com.l2jserver.gameserver.enums.PrivateStoreType.NONE;
 
 import java.util.Calendar;
@@ -27,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.LoginServerThread;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
 import com.l2jserver.gameserver.model.L2ManufactureItem;
 import com.l2jserver.gameserver.model.L2World;
@@ -72,7 +72,7 @@ public class OfflineTradersTable {
 						
 						switch (pc.getPrivateStoreType()) {
 							case BUY:
-								if (!Config.OFFLINE_TRADE_ENABLE) {
+								if (!customs().offlineTradeEnable()) {
 									continue;
 								}
 								title = pc.getBuyList().getTitle();
@@ -87,7 +87,7 @@ public class OfflineTradersTable {
 								break;
 							case SELL:
 							case PACKAGE_SELL:
-								if (!Config.OFFLINE_TRADE_ENABLE) {
+								if (!customs().offlineTradeEnable()) {
 									continue;
 								}
 								title = pc.getSellList().getTitle();
@@ -101,7 +101,7 @@ public class OfflineTradersTable {
 								}
 								break;
 							case MANUFACTURE:
-								if (!Config.OFFLINE_CRAFT_ENABLE) {
+								if (!customs().offlineCraftEnable()) {
 									continue;
 								}
 								title = pc.getStoreName();
@@ -137,10 +137,10 @@ public class OfflineTradersTable {
 			var rs = stm.executeQuery(LOAD_OFFLINE_STATUS)) {
 			while (rs.next()) {
 				long time = rs.getLong("time");
-				if (Config.OFFLINE_MAX_DAYS > 0) {
+				if (customs().getOfflineMaxDays() > 0) {
 					Calendar cal = Calendar.getInstance();
 					cal.setTimeInMillis(time);
-					cal.add(Calendar.DAY_OF_YEAR, Config.OFFLINE_MAX_DAYS);
+					cal.add(Calendar.DAY_OF_YEAR, customs().getOfflineMaxDays());
 					if (cal.getTimeInMillis() <= System.currentTimeMillis()) {
 						continue;
 					}
@@ -203,8 +203,8 @@ public class OfflineTradersTable {
 						}
 					}
 					player.sitDown();
-					if (Config.OFFLINE_SET_NAME_COLOR) {
-						player.getAppearance().setNameColor(Config.OFFLINE_NAME_COLOR);
+					if (customs().offlineSetNameColor()) {
+						player.getAppearance().setNameColor(customs().getOfflineNameColor());
 					}
 					player.setPrivateStoreType(type);
 					player.setOnlineStatus(true, true);

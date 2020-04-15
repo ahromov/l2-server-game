@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,13 +18,14 @@
  */
 package com.l2jserver.gameserver.model.actor.instance;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.SkillTreesData;
 import com.l2jserver.gameserver.datatables.SkillData;
 import com.l2jserver.gameserver.enums.InstanceType;
@@ -75,7 +76,7 @@ public class L2NpcInstance extends L2Npc {
 	 * @param classId player's active class id.
 	 */
 	public static void showSkillList(L2PcInstance player, L2Npc npc, ClassId classId) {
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			LOG.debug("SkillList activated on: {}", npc.getObjectId());
 		}
 		

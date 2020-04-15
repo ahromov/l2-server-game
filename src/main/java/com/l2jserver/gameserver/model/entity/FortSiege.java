@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,10 @@
  */
 package com.l2jserver.gameserver.model.entity;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.fortSiege;
+import static java.util.concurrent.TimeUnit.MINUTES;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,7 +35,6 @@ import java.util.logging.Logger;
 
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.ClanTable;
 import com.l2jserver.gameserver.enums.FortTeleportWhoType;
 import com.l2jserver.gameserver.instancemanager.FortManager;
@@ -239,7 +242,8 @@ public class FortSiege implements Siegable {
 			getSiegeGuardManager().unspawnSiegeGuard(); // Remove all spawned siege guard from this fort
 			getFort().resetDoors(); // Respawn door to fort
 			
-			ThreadPoolManager.getInstance().scheduleGeneral(new ScheduleSuspiciousMerchantSpawn(), FortSiegeManager.getInstance().getSuspiciousMerchantRespawnDelay() * 60 * 1000L); // Prepare 3hr task for suspicious merchant respawn
+			// Prepare 3hr task for suspicious merchant respawn
+			ThreadPoolManager.getInstance().scheduleGeneral(new ScheduleSuspiciousMerchantSpawn(), MINUTES.toMillis(fortSiege().getSuspiciousMerchantRespawnDelay()));
 			setSiegeDateTime(true); // store suspicious merchant spawn in DB
 			
 			if (_siegeEnd != null) {
@@ -295,7 +299,7 @@ public class FortSiege implements Siegable {
 			getFort().getZone().updateZoneStatusForCharactersInside();
 			
 			// Schedule a task to prepare auto siege end
-			_siegeEnd = ThreadPoolManager.getInstance().scheduleGeneral(new ScheduleEndSiegeTask(), FortSiegeManager.getInstance().getSiegeLength() * 60 * 1000L); // Prepare auto end task
+			_siegeEnd = ThreadPoolManager.getInstance().scheduleGeneral(new ScheduleEndSiegeTask(), MINUTES.toMillis(fortSiege().getSiegeLength())); // Prepare auto end task
 			
 			final SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.THE_FORTRESS_BATTLE_S1_HAS_BEGUN);
 			sm.addCastleId(getFort().getResidenceId());
@@ -352,7 +356,7 @@ public class FortSiege implements Siegable {
 					member.setSiegeSide(getFort().getResidenceId());
 					if (checkIfInZone(member)) {
 						member.setIsInSiege(true);
-						member.startFameTask(Config.FORTRESS_ZONE_FAME_TASK_FREQUENCY * 1000, Config.FORTRESS_ZONE_FAME_AQUIRE_POINTS);
+						member.startFameTask(character().getFortressZoneFameTaskFrequency(), character().getFortressZoneFameAquirePoints());
 					}
 				}
 				member.broadcastUserInfo();
@@ -375,7 +379,7 @@ public class FortSiege implements Siegable {
 					member.setSiegeSide(getFort().getResidenceId());
 					if (checkIfInZone(member)) {
 						member.setIsInSiege(true);
-						member.startFameTask(Config.FORTRESS_ZONE_FAME_TASK_FREQUENCY * 1000, Config.FORTRESS_ZONE_FAME_AQUIRE_POINTS);
+						member.startFameTask(character().getFortressZoneFameTaskFrequency(), character().getFortressZoneFameAquirePoints());
 					}
 				}
 				member.broadcastUserInfo();
@@ -557,7 +561,7 @@ public class FortSiege implements Siegable {
 				// schedule restoring doors/commanders respawn
 				else if (_siegeRestore == null) {
 					getFort().getSiege().announceToPlayer(SystemMessage.getSystemMessage(SystemMessageId.SEIZED_BARRACKS));
-					_siegeRestore = ThreadPoolManager.getInstance().scheduleGeneral(new ScheduleSiegeRestore(), FortSiegeManager.getInstance().getCountDownLength() * 60 * 1000L);
+					_siegeRestore = ThreadPoolManager.getInstance().scheduleGeneral(new ScheduleSiegeRestore(), MINUTES.toMillis(fortSiege().getCountDownLength()));
 				} else {
 					getFort().getSiege().announceToPlayer(SystemMessage.getSystemMessage(SystemMessageId.SEIZED_BARRACKS));
 				}
@@ -804,7 +808,7 @@ public class FortSiege implements Siegable {
 	private void setSiegeDateTime(boolean merchant) {
 		Calendar newDate = Calendar.getInstance();
 		if (merchant) {
-			newDate.add(Calendar.MINUTE, FortSiegeManager.getInstance().getSuspiciousMerchantRespawnDelay());
+			newDate.add(Calendar.MINUTE, fortSiege().getSuspiciousMerchantRespawnDelay());
 		} else {
 			newDate.add(Calendar.MINUTE, 60);
 		}
@@ -876,7 +880,7 @@ public class FortSiege implements Siegable {
 	 * @param clan
 	 */
 	private void saveSiegeClan(L2Clan clan) {
-		if (getAttackerClans().size() >= FortSiegeManager.getInstance().getAttackerMaxClans()) {
+		if (getAttackerClans().size() >= fortSiege().getAttackerMaxClans()) {
 			return;
 		}
 		
@@ -1029,12 +1033,12 @@ public class FortSiege implements Siegable {
 	
 	@Override
 	public int getFameFrequency() {
-		return Config.FORTRESS_ZONE_FAME_TASK_FREQUENCY;
+		return character().getFortressZoneFameTaskFrequency();
 	}
 	
 	@Override
 	public int getFameAmount() {
-		return Config.FORTRESS_ZONE_FAME_AQUIRE_POINTS;
+		return character().getFortressZoneFameAquirePoints();
 	}
 	
 	@Override

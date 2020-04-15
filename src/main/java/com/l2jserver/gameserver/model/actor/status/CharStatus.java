@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model.actor.status;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
@@ -26,7 +28,6 @@ import java.util.logging.Logger;
 
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.stats.Formulas;
@@ -155,7 +156,7 @@ public class CharStatus {
 			getActiveChar().abortAttack();
 			getActiveChar().abortCast();
 			
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.fine("char is dead.");
 			}
 			
@@ -177,7 +178,7 @@ public class CharStatus {
 	 */
 	public final synchronized void startHpMpRegeneration() {
 		if ((_regTask == null) && !getActiveChar().isDead()) {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.fine("HP/MP regen started");
 			}
 			
@@ -199,7 +200,7 @@ public class CharStatus {
 	 */
 	public final synchronized void stopHpMpRegeneration() {
 		if (_regTask != null) {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.fine("HP/MP regen stop");
 			}
 			

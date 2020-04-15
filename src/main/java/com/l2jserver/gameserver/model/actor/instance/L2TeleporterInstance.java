@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model.actor.instance;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import java.util.Calendar;
 import java.util.StringTokenizer;
 
@@ -25,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.gameserver.cache.HtmCache;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.TeleportLocationTable;
 import com.l2jserver.gameserver.enums.InstanceType;
 import com.l2jserver.gameserver.instancemanager.CastleManager;
@@ -217,8 +218,7 @@ public final class L2TeleporterInstance extends L2Npc {
 			} else if (TownManager.townHasCastleInSiege(list.getLocX(), list.getLocY()) && isInsideZone(ZoneId.TOWN)) {
 				player.sendPacket(SystemMessageId.NO_PORT_THAT_IS_IN_SIGE);
 				return;
-			} else if (!Config.ALT_GAME_KARMA_PLAYER_CAN_USE_GK && (player.getKarma() > 0)) // karma
-			{
+			} else if (!character().karmaPlayerCanUseGK() && (player.getKarma() > 0)) {
 				player.sendMessage("Go away, you're not welcome here.");
 				return;
 			} else if (player.isCombatFlagEquipped()) {
@@ -246,7 +246,7 @@ public final class L2TeleporterInstance extends L2Npc {
 				}
 			}
 			
-			if (Config.ALT_GAME_FREE_TELEPORT || player.destroyItemByItemId("Teleport " + (list.getIsForNoble() ? " nobless" : ""), list.getItemId(), price, this, true)) {
+			if (character().freeTeleporting() || player.destroyItemByItemId("Teleport " + (list.getIsForNoble() ? " nobless" : ""), list.getItemId(), price, this, true)) {
 				LOG.debug("Teleporting {} to new location: {}, {}, {}", player, list.getLocX(), list.getLocY(), list.getLocZ());
 				
 				player.teleToLocation(list.getLocX(), list.getLocY(), list.getLocZ(), player.getHeading(), -1);

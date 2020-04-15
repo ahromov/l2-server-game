@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.instancemanager.games;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +27,6 @@ import java.util.logging.Logger;
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
 import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
@@ -59,12 +60,12 @@ public class Lottery {
 	
 	protected Lottery() {
 		_number = 1;
-		_prize = Config.ALT_LOTTERY_PRIZE;
+		_prize = general().getLotteryPrize();
 		_isSellingTickets = false;
 		_isStarted = false;
 		_enddate = System.currentTimeMillis();
 		
-		if (Config.ALLOW_LOTTERY) {
+		if (general().allowLottery()) {
 			(new startLottery()).run();
 		}
 	}
@@ -148,7 +149,7 @@ public class Lottery {
 				_log.log(Level.WARNING, "Lottery: Could not restore lottery data: " + e.getMessage(), e);
 			}
 			
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.info("Lottery: Starting ticket sell for lottery #" + getId() + ".");
 			}
 			_isSellingTickets = true;
@@ -194,7 +195,7 @@ public class Lottery {
 		
 		@Override
 		public void run() {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.info("Lottery: Stopping ticket sell for lottery #" + getId() + ".");
 			}
 			_isSellingTickets = false;
@@ -210,7 +211,7 @@ public class Lottery {
 		
 		@Override
 		public void run() {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.info("Lottery: Ending lottery #" + getId() + ".");
 			}
 			
@@ -234,7 +235,7 @@ public class Lottery {
 				luckynums[i] = luckynum;
 			}
 			
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.info("Lottery: The lucky numbers are " + luckynums[0] + ", " + luckynums[1] + ", " + luckynums[2] + ", " + luckynums[3] + ", " + luckynums[4] + ".");
 			}
 			
@@ -249,7 +250,7 @@ public class Lottery {
 				}
 			}
 			
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.info("Lottery: Encoded lucky numbers are " + enchant + ", " + type2);
 			}
 			
@@ -304,24 +305,24 @@ public class Lottery {
 				_log.log(Level.WARNING, "Lottery: Could restore lottery data: " + e.getMessage(), e);
 			}
 			
-			long prize4 = count4 * Config.ALT_LOTTERY_2_AND_1_NUMBER_PRIZE;
+			long prize4 = count4 * general().getLottery2and1NumberPrize();
 			long prize1 = 0;
 			long prize2 = 0;
 			long prize3 = 0;
 			
 			if (count1 > 0) {
-				prize1 = (long) (((getPrize() - prize4) * Config.ALT_LOTTERY_5_NUMBER_RATE) / count1);
+				prize1 = (long) (((getPrize() - prize4) * general().getLottery5NumberRate()) / count1);
 			}
 			
 			if (count2 > 0) {
-				prize2 = (long) (((getPrize() - prize4) * Config.ALT_LOTTERY_4_NUMBER_RATE) / count2);
+				prize2 = (long) (((getPrize() - prize4) * general().getLottery4NumberRate()) / count2);
 			}
 			
 			if (count3 > 0) {
-				prize3 = (long) (((getPrize() - prize4) * Config.ALT_LOTTERY_3_NUMBER_RATE) / count3);
+				prize3 = (long) (((getPrize() - prize4) * general().getLottery3NumberRate()) / count3);
 			}
 			
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.info("Lottery: " + count1 + " players with all FIVE numbers each win " + prize1 + ".");
 				_log.info("Lottery: " + count2 + " players with FOUR numbers each win " + prize2 + ".");
 				_log.info("Lottery: " + count3 + " players with THREE numbers each win " + prize3 + ".");
@@ -329,7 +330,7 @@ public class Lottery {
 			}
 			
 			long newprize = getPrize() - (prize1 + prize2 + prize3 + prize4);
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.info("Lottery: Jackpot for next lottery is " + newprize + ".");
 			}
 			
@@ -452,10 +453,10 @@ public class Lottery {
 							break;
 						default:
 							res[0] = 4;
-							res[1] = Config.ALT_LOTTERY_2_AND_1_NUMBER_PRIZE;
+							res[1] = general().getLottery2and1NumberPrize();
 					}
 					
-					if (Config.DEBUG) {
+					if (general().debug()) {
 						_log.warning("count: " + count + ", id: " + id + ", enchant: " + enchant + ", type2: " + type2);
 					}
 				}

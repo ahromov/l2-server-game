@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +28,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import com.l2jserver.commons.util.Rnd;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.RecipeData;
 import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.enums.StatType;
@@ -85,19 +86,19 @@ public class RecipeController {
 		List<L2RecipeList> commonRecipes = Arrays.asList(manufacturer.getCommonRecipeBook());
 		
 		if (!dwarfRecipes.contains(recipeList) && !commonRecipes.contains(recipeList)) {
-			Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " sent a false recipe id.", Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " sent a false recipe id.");
 			return;
 		}
 		
 		// Check if manufacturer is under manufacturing store or private store.
-		if (Config.ALT_GAME_CREATION && _activeMakers.containsKey(manufacturer.getObjectId())) {
+		if (character().alternativeCrafting() && _activeMakers.containsKey(manufacturer.getObjectId())) {
 			player.sendPacket(SystemMessageId.CLOSE_STORE_WINDOW_AND_TRY_AGAIN);
 			return;
 		}
 		
 		final RecipeItemMaker maker = new RecipeItemMaker(manufacturer, recipeList, player);
 		if (maker._isValid) {
-			if (Config.ALT_GAME_CREATION) {
+			if (character().alternativeCrafting()) {
 				_activeMakers.put(manufacturer.getObjectId(), maker);
 				ThreadPoolManager.getInstance().scheduleGeneral(maker, 100);
 			} else {
@@ -122,12 +123,12 @@ public class RecipeController {
 		List<L2RecipeList> commonRecipes = Arrays.asList(player.getCommonRecipeBook());
 		
 		if (!dwarfRecipes.contains(recipeList) && !commonRecipes.contains(recipeList)) {
-			Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " sent a false recipe id.", Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " sent a false recipe id.");
 			return;
 		}
 		
 		// Check if player is busy (possible if alt game creation is enabled)
-		if (Config.ALT_GAME_CREATION && _activeMakers.containsKey(player.getObjectId())) {
+		if (character().alternativeCrafting() && _activeMakers.containsKey(player.getObjectId())) {
 			SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.S2_S1);
 			sm.addItemName(recipeList.getItemId());
 			sm.addString("You are busy creating.");
@@ -137,7 +138,7 @@ public class RecipeController {
 		
 		final RecipeItemMaker maker = new RecipeItemMaker(player, recipeList, player);
 		if (maker._isValid) {
-			if (Config.ALT_GAME_CREATION) {
+			if (character().alternativeCrafting()) {
 				_activeMakers.put(player.getObjectId(), maker);
 				ThreadPoolManager.getInstance().scheduleGeneral(maker, 100);
 			} else {
@@ -246,7 +247,7 @@ public class RecipeController {
 			}
 			
 			// initial AltStatChange checks
-			if (Config.ALT_GAME_CREATION) {
+			if (character().alternativeCrafting()) {
 				calculateAltStatChange();
 			}
 			
@@ -260,7 +261,7 @@ public class RecipeController {
 		
 		@Override
 		public void run() {
-			if (!Config.IS_CRAFTING_ENABLED) {
+			if (!character().crafting()) {
 				_target.sendMessage("Item creation is currently disabled.");
 				abort();
 				return;
@@ -278,7 +279,7 @@ public class RecipeController {
 				return;
 			}
 			
-			if (Config.ALT_GAME_CREATION && !_activeMakers.containsKey(_player.getObjectId())) {
+			if (character().alternativeCrafting() && !_activeMakers.containsKey(_player.getObjectId())) {
 				if (_target != _player) {
 					_target.sendMessage("Manufacture aborted");
 					_player.sendMessage("Manufacture aborted");
@@ -290,7 +291,7 @@ public class RecipeController {
 				return;
 			}
 			
-			if (Config.ALT_GAME_CREATION && !_items.isEmpty()) {
+			if (character().alternativeCrafting() && !_items.isEmpty()) {
 				
 				if (!calculateStatUse(true, true)) {
 					return; // check stat use
@@ -301,7 +302,7 @@ public class RecipeController {
 				
 				// if still not empty, schedule another pass
 				if (!_items.isEmpty()) {
-					_delay = (int) (Config.ALT_GAME_CREATION_SPEED * _player.getMReuseRate(_skill) * GameTimeController.TICKS_PER_SECOND * GameTimeController.MILLIS_IN_TICK);
+					_delay = (int) (character().getCraftingSpeed() * _player.getMReuseRate(_skill) * GameTimeController.TICKS_PER_SECOND * GameTimeController.MILLIS_IN_TICK);
 					
 					// FIXME: please fix this packet to show crafting animation (somebody)
 					MagicSkillUse msk = new MagicSkillUse(_player, _skillId, _skillLevel, _delay, 0);
@@ -327,7 +328,7 @@ public class RecipeController {
 		}
 		
 		private void finishCrafting() {
-			if (!Config.ALT_GAME_CREATION) {
+			if (!character().alternativeCrafting()) {
 				calculateStatUse(false, true);
 			}
 			
@@ -456,7 +457,7 @@ public class RecipeController {
 					// we do not want to kill the player, so its CurrentHP must be greater than the reduce value
 					if (_player.getCurrentHp() <= modifiedValue) {
 						// rest (wait for HP)
-						if (Config.ALT_GAME_CREATION && isWait) {
+						if (character().alternativeCrafting() && isWait) {
 							_player.sendPacket(new SetupGauge(0, _delay));
 							ThreadPoolManager.getInstance().scheduleGeneral(this, 100 + _delay);
 						} else {
@@ -470,7 +471,7 @@ public class RecipeController {
 				} else if (statUse.getType() == StatType.MP) {
 					if (_player.getCurrentMp() < modifiedValue) {
 						// rest (wait for MP)
-						if (Config.ALT_GAME_CREATION && isWait) {
+						if (character().alternativeCrafting() && isWait) {
 							_player.sendPacket(new SetupGauge(0, _delay));
 							ThreadPoolManager.getInstance().scheduleGeneral(this, 100 + _delay);
 						} else {
@@ -550,7 +551,7 @@ public class RecipeController {
 			L2Item template = ItemTable.getInstance().getTemplate(itemId);
 			
 			// check that the current recipe has a rare production or not
-			if ((rareProdId != -1) && ((rareProdId == itemId) || Config.CRAFT_MASTERWORK)) {
+			if ((rareProdId != -1) && ((rareProdId == itemId) || character().craftMasterwork())) {
 				if (Rnd.get(100) < _recipeList.getRarity()) {
 					itemId = rareProdId;
 					itemCount = _recipeList.getRareCount();
@@ -603,7 +604,7 @@ public class RecipeController {
 				_target.sendPacket(sm);
 			}
 			
-			if (Config.ALT_GAME_CREATION) {
+			if (character().alternativeCrafting()) {
 				int recipeLevel = _recipeList.getLevel();
 				if (_exp < 0) {
 					_exp = template.getReferencePrice() * itemCount;
@@ -613,8 +614,8 @@ public class RecipeController {
 					_sp = _exp / 10;
 				}
 				if (itemId == rareProdId) {
-					_exp *= Config.ALT_GAME_CREATION_RARE_XPSP_RATE;
-					_sp *= Config.ALT_GAME_CREATION_RARE_XPSP_RATE;
+					_exp *= character().getCraftingRareXpRate();
+					_sp *= character().getCraftingRareSpRate();
 				}
 				
 				if (_exp < 0) {
@@ -631,7 +632,8 @@ public class RecipeController {
 				
 				// Added multiplication of Creation speed with XP/SP gain slower crafting -> more XP,
 				// faster crafting -> less XP you can use ALT_GAME_CREATION_XP_RATE/SP to modify XP/SP gained (default = 1)
-				_player.addExpAndSp((long) (_exp * Config.ALT_GAME_CREATION_XP_RATE * Config.ALT_GAME_CREATION_SPEED), (int) (_sp * Config.ALT_GAME_CREATION_SP_RATE * Config.ALT_GAME_CREATION_SPEED));
+				_player.addExpAndSp((long) (_exp * character().getCraftingXpRate() * character().getCraftingSpeed()), //
+					(int) (_sp * character().getCraftingSpRate() * character().getCraftingSpeed()));
 			}
 			updateMakeInfo(true); // success
 		}

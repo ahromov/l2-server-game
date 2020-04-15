@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,12 +18,13 @@
  */
 package com.l2jserver.gameserver.model.actor.instance;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.ai.CtrlIntention;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.InstanceType;
 import com.l2jserver.gameserver.model.L2World;
 import com.l2jserver.gameserver.model.L2WorldRegion;
@@ -139,7 +140,7 @@ public class L2GuardInstance extends L2Attackable {
 		} else if (interact) {
 			// Check if the L2PcInstance is in the _aggroList of the L2GuardInstance
 			if (isInAggroList(player)) {
-				if (Config.DEBUG) {
+				if (general().debug()) {
 					LOG.debug("{}: Attacked guard {}", player.getObjectId(), getObjectId());
 				}
 				

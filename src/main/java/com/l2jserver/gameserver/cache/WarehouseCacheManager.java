@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,19 +18,20 @@
  */
 package com.l2jserver.gameserver.cache;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 /**
  * @author -Nemesiss-
  */
 public class WarehouseCacheManager {
+	
 	protected final Map<L2PcInstance, Long> _cachedWh = new ConcurrentHashMap<>();
-	protected final long _cacheTime = Config.WAREHOUSE_CACHE_TIME * 60000L;
 	
 	protected WarehouseCacheManager() {
 		ThreadPoolManager.getInstance().scheduleAiAtFixedRate(new CacheScheduler(), 120000, 60000);
@@ -49,7 +50,7 @@ public class WarehouseCacheManager {
 		public void run() {
 			long cTime = System.currentTimeMillis();
 			for (L2PcInstance pc : _cachedWh.keySet()) {
-				if ((cTime - _cachedWh.get(pc)) > _cacheTime) {
+				if ((cTime - _cachedWh.get(pc)) > general().getWarehouseCacheTime()) {
 					pc.clearWarehouse();
 					_cachedWh.remove(pc);
 				}

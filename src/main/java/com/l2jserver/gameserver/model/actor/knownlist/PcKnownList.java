@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.model.actor.knownlist;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import com.l2jserver.gameserver.model.L2Object;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.L2Npc;
@@ -113,7 +114,7 @@ public class PcKnownList extends PlayableKnownList {
 		// Send Server-Client Packet DeleteObject to the L2PcInstance
 		getActiveChar().sendPacket(new DeleteObject(object));
 		
-		if (Config.CHECK_KNOWN && (object instanceof L2Npc) && getActiveChar().isGM()) {
+		if (general().checkKnownList() && (object instanceof L2Npc) && getActiveChar().isGM()) {
 			getActiveChar().sendMessage("Removed NPC: " + object.getName());
 		}
 		

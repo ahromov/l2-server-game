@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,13 @@
  */
 package com.l2jserver.gameserver.instancemanager;
 
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.L2GameClient;
@@ -54,7 +56,7 @@ public final class AntiFeedManager {
 	 * @return True if kill is non-feeded.
 	 */
 	public final boolean check(L2Character attacker, L2Character target) {
-		if (!Config.L2JMOD_ANTIFEED_ENABLE) {
+		if (!customs().antiFeedEnable()) {
 			return true;
 		}
 		
@@ -67,13 +69,13 @@ public final class AntiFeedManager {
 			return false;
 		}
 		
-		if ((Config.L2JMOD_ANTIFEED_INTERVAL > 0) && _lastDeathTimes.containsKey(targetPlayer.getObjectId())) {
-			if ((System.currentTimeMillis() - _lastDeathTimes.get(targetPlayer.getObjectId())) < Config.L2JMOD_ANTIFEED_INTERVAL) {
+		if ((customs().getAntiFeedInterval() > 0) && _lastDeathTimes.containsKey(targetPlayer.getObjectId())) {
+			if ((System.currentTimeMillis() - _lastDeathTimes.get(targetPlayer.getObjectId())) < SECONDS.toMillis(customs().getAntiFeedInterval())) {
 				return false;
 			}
 		}
 		
-		if (Config.L2JMOD_ANTIFEED_DUALBOX && (attacker != null)) {
+		if (customs().antiFeedDualbox() && (attacker != null)) {
 			final L2PcInstance attackerPlayer = attacker.getActingPlayer();
 			if (attackerPlayer == null) {
 				return false;
@@ -83,7 +85,7 @@ public final class AntiFeedManager {
 			final L2GameClient attackerClient = attackerPlayer.getClient();
 			if ((targetClient == null) || (attackerClient == null) || targetClient.isDetached() || attackerClient.isDetached()) {
 				// unable to check ip address
-				return !Config.L2JMOD_ANTIFEED_DISCONNECTED_AS_DUALBOX;
+				return !customs().antiFeedDisconnectedAsDualbox();
 			}
 			
 			return !targetClient.getConnectionAddress().equals(attackerClient.getConnectionAddress());
@@ -136,9 +138,8 @@ public final class AntiFeedManager {
 		}
 		
 		final Integer addrHash = Integer.valueOf(client.getConnectionAddress().hashCode());
-		
 		final AtomicInteger connectionCount = event.computeIfAbsent(addrHash, k -> new AtomicInteger());
-		int whiteListCount = Config.L2JMOD_DUALBOX_CHECK_WHITELIST.getOrDefault(addrHash, 0);
+		int whiteListCount = customs().getDualboxCheckWhitelist().getOrDefault(addrHash, 0);
 		if ((whiteListCount < 0) || ((connectionCount.get() + 1) <= (max + whiteListCount))) {
 			connectionCount.incrementAndGet();
 			return true;
@@ -228,8 +229,8 @@ public final class AntiFeedManager {
 		
 		final Integer addrHash = Integer.valueOf(client.getConnectionAddress().hashCode());
 		int limit = max;
-		if (Config.L2JMOD_DUALBOX_CHECK_WHITELIST.containsKey(addrHash)) {
-			limit += Config.L2JMOD_DUALBOX_CHECK_WHITELIST.get(addrHash);
+		if (customs().getDualboxCheckWhitelist().containsKey(addrHash)) {
+			limit += customs().getDualboxCheckWhitelist().get(addrHash);
 		}
 		return limit;
 	}

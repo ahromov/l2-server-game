@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,25 +18,25 @@
  */
 package com.l2jserver.gameserver.model.entity;
 
+import static com.l2jserver.gameserver.config.Configuration.tvt;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.cache.HtmCache;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.DoorData;
 import com.l2jserver.gameserver.datatables.ItemTable;
-import com.l2jserver.gameserver.datatables.SkillData;
 import com.l2jserver.gameserver.datatables.SpawnTable;
 import com.l2jserver.gameserver.instancemanager.AntiFeedManager;
 import com.l2jserver.gameserver.instancemanager.InstanceManager;
 import com.l2jserver.gameserver.model.L2Spawn;
 import com.l2jserver.gameserver.model.L2World;
+import com.l2jserver.gameserver.model.Location;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.L2Npc;
 import com.l2jserver.gameserver.model.actor.L2Summon;
@@ -49,18 +49,17 @@ import com.l2jserver.gameserver.model.events.impl.events.OnTvTEventFinish;
 import com.l2jserver.gameserver.model.events.impl.events.OnTvTEventKill;
 import com.l2jserver.gameserver.model.events.impl.events.OnTvTEventRegistrationStart;
 import com.l2jserver.gameserver.model.events.impl.events.OnTvTEventStart;
-import com.l2jserver.gameserver.model.itemcontainer.PcInventory;
+import com.l2jserver.gameserver.model.holders.ItemHolder;
+import com.l2jserver.gameserver.model.holders.SkillHolder;
 import com.l2jserver.gameserver.model.skills.Skill;
-import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.network.clientpackets.Say2;
 import com.l2jserver.gameserver.network.serverpackets.CreatureSay;
 import com.l2jserver.gameserver.network.serverpackets.MagicSkillUse;
 import com.l2jserver.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2jserver.gameserver.network.serverpackets.StatusUpdate;
-import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 import com.l2jserver.gameserver.util.StringUtil;
 
 /**
+ * TvT Event.
  * @author HorridoJoho
  */
 public class TvTEvent {
@@ -75,7 +74,7 @@ public class TvTEvent {
 	
 	protected static final Logger _log = Logger.getLogger(TvTEvent.class.getName());
 	/** html path **/
-	private static final String HTML_PATH = "data/scripts/custom/events/TvT/TvTManager/";
+	private static final String HTML_PATH = "com/l2jserver/datapack/custom/events/TvT/TvTManager/";
 	/** The teams of the TvTEvent. */
 	private static TvTEventTeam[] _teams = new TvTEventTeam[2];
 	/** The state of the TvTEvent. */
@@ -94,25 +93,21 @@ public class TvTEvent {
 	/** Teams initializing. */
 	public static void init() {
 		AntiFeedManager.getInstance().registerEvent(AntiFeedManager.TVT_ID);
-		_teams[0] = new TvTEventTeam(Config.TVT_EVENT_TEAM_1_NAME, Config.TVT_EVENT_TEAM_1_COORDINATES);
-		_teams[1] = new TvTEventTeam(Config.TVT_EVENT_TEAM_2_NAME, Config.TVT_EVENT_TEAM_2_COORDINATES);
+		_teams[0] = new TvTEventTeam(tvt().getTeam1Name(), tvt().getTeam1Loc());
+		_teams[1] = new TvTEventTeam(tvt().getTeam2Name(), tvt().getTeam2Loc());
 	}
 	
 	/**
 	 * Starts the participation of the TvTEvent<br>
-	 * 1. Get L2NpcTemplate by Config.TVT_EVENT_PARTICIPATION_NPC_ID<br>
+	 * 1. Get L2NpcTemplate by ParticipationNpcId<br>
 	 * 2. Try to spawn a new npc of it
 	 * @return true if success, otherwise false
 	 */
 	public static boolean startParticipation() {
 		try {
-			_npcSpawn = new L2Spawn(Config.TVT_EVENT_PARTICIPATION_NPC_ID);
-			
-			_npcSpawn.setX(Config.TVT_EVENT_PARTICIPATION_NPC_COORDINATES[0]);
-			_npcSpawn.setY(Config.TVT_EVENT_PARTICIPATION_NPC_COORDINATES[1]);
-			_npcSpawn.setZ(Config.TVT_EVENT_PARTICIPATION_NPC_COORDINATES[2]);
+			_npcSpawn = new L2Spawn(tvt().getParticipationNpcId());
+			_npcSpawn.setLocation(tvt().getParticipationNpcLoc());
 			_npcSpawn.setAmount(1);
-			_npcSpawn.setHeading(Config.TVT_EVENT_PARTICIPATION_NPC_COORDINATES[3]);
 			_npcSpawn.setRespawnDelay(1);
 			// later no need to delete spawn from db, we don't store it (false)
 			SpawnTable.getInstance().addNewSpawn(_npcSpawn, false);
@@ -206,8 +201,8 @@ public class TvTEvent {
 			priority = balance[0] > balance[1] ? 1 : 0;
 		}
 		
-		// Check for enought participants
-		if ((_teams[0].getParticipatedPlayerCount() < Config.TVT_EVENT_MIN_PLAYERS_IN_TEAMS) || (_teams[1].getParticipatedPlayerCount() < Config.TVT_EVENT_MIN_PLAYERS_IN_TEAMS)) {
+		// Check for enough participants
+		if ((_teams[0].getParticipatedPlayerCount() < tvt().getMinPlayersInTeams()) || (_teams[1].getParticipatedPlayerCount() < tvt().getMinPlayersInTeams())) {
 			// Set state INACTIVE
 			setState(EventState.INACTIVE);
 			// Cleanup of teams
@@ -236,22 +231,22 @@ public class TvTEvent {
 			}
 		}
 		
-		if (Config.TVT_EVENT_IN_INSTANCE) {
+		if (tvt().instanced()) {
 			try {
-				_TvTEventInstance = InstanceManager.getInstance().createDynamicInstance(Config.TVT_EVENT_INSTANCE_FILE);
+				_TvTEventInstance = InstanceManager.getInstance().createDynamicInstance(tvt().getInstanceFile());
 				InstanceManager.getInstance().getInstance(_TvTEventInstance).setAllowSummon(false);
 				InstanceManager.getInstance().getInstance(_TvTEventInstance).setPvPInstance(true);
-				InstanceManager.getInstance().getInstance(_TvTEventInstance).setEmptyDestroyTime((Config.TVT_EVENT_START_LEAVE_TELEPORT_DELAY * 1000) + 60000L);
+				InstanceManager.getInstance().getInstance(_TvTEventInstance).setEmptyDestroyTime(tvt().getStartLeaveTeleportDelay() + 60000L);
 			} catch (Exception e) {
 				_TvTEventInstance = 0;
 				_log.log(Level.WARNING, "TvTEventEngine[TvTEvent.createDynamicInstance]: exception: " + e.getMessage(), e);
 			}
 		}
 		
-		// Opens all doors specified in configs for tvt
-		openDoors(Config.TVT_DOORS_IDS_TO_OPEN);
-		// Closes all doors specified in configs for tvt
-		closeDoors(Config.TVT_DOORS_IDS_TO_CLOSE);
+		// Opens all doors
+		openDoors(tvt().getDoorsToOpen());
+		// Closes all doors
+		closeDoors(tvt().getDoorsToClose());
 		// Set state STARTED
 		setState(EventState.STARTED);
 		
@@ -263,7 +258,7 @@ public class TvTEvent {
 					// Disable player revival.
 					playerInstance.setCanRevive(false);
 					// Teleporter implements Runnable and starts itself
-					new TvTEventTeleporter(playerInstance, team.getCoordinates(), false, false);
+					new TvTEventTeleporter(playerInstance, team.getLocation(), false, false);
 				}
 			}
 		}
@@ -294,7 +289,7 @@ public class TvTEvent {
 			
 			// Both teams have equals points
 			sysMsgToAllParticipants("TvT Event: Event has ended, both teams have tied.");
-			if (Config.TVT_REWARD_TEAM_TIE) {
+			if (tvt().rewardTeamTie()) {
 				rewardTeam(_teams[0]);
 				rewardTeam(_teams[1]);
 				return "TvT Event: Event has ended with both teams tying.";
@@ -315,50 +310,18 @@ public class TvTEvent {
 	}
 	
 	private static void rewardTeam(TvTEventTeam team) {
-		// Iterate over all participated player instances of the winning team
-		for (L2PcInstance playerInstance : team.getParticipatedPlayers().values()) {
-			// Check for nullpointer
-			if (playerInstance == null) {
+		for (L2PcInstance player : team.getParticipatedPlayers().values()) {
+			if (player == null) {
 				continue;
 			}
 			
-			SystemMessage systemMessage = null;
-			
-			// Iterate over all tvt event rewards
-			for (int[] reward : Config.TVT_EVENT_REWARDS) {
-				PcInventory inv = playerInstance.getInventory();
-				
-				// Check for stackable item, non stackabe items need to be added one by one
-				if (ItemTable.getInstance().getTemplate(reward[0]).isStackable()) {
-					inv.addItem("TvT Event", reward[0], reward[1], playerInstance, playerInstance);
-					
-					if (reward[1] > 1) {
-						systemMessage = SystemMessage.getSystemMessage(SystemMessageId.EARNED_S2_S1_S);
-						systemMessage.addItemName(reward[0]);
-						systemMessage.addLong(reward[1]);
-					} else {
-						systemMessage = SystemMessage.getSystemMessage(SystemMessageId.EARNED_ITEM_S1);
-						systemMessage.addItemName(reward[0]);
-					}
-					
-					playerInstance.sendPacket(systemMessage);
-				} else {
-					for (int i = 0; i < reward[1]; ++i) {
-						inv.addItem("TvT Event", reward[0], 1, playerInstance, playerInstance);
-						systemMessage = SystemMessage.getSystemMessage(SystemMessageId.EARNED_ITEM_S1);
-						systemMessage.addItemName(reward[0]);
-						playerInstance.sendPacket(systemMessage);
-					}
-				}
+			for (ItemHolder item : tvt().getReward()) {
+				player.addItem("TvT Reward", item, null, true);
 			}
 			
-			StatusUpdate statusUpdate = new StatusUpdate(playerInstance);
 			final NpcHtmlMessage npcHtmlMessage = new NpcHtmlMessage();
-			
-			statusUpdate.addAttribute(StatusUpdate.CUR_LOAD, playerInstance.getCurrentLoad());
-			npcHtmlMessage.setHtml(HtmCache.getInstance().getHtm(playerInstance.getHtmlPrefix(), HTML_PATH + "Reward.html"));
-			playerInstance.sendPacket(statusUpdate);
-			playerInstance.sendPacket(npcHtmlMessage);
+			npcHtmlMessage.setHtml(HtmCache.getInstance().getHtm(player.getHtmlPrefix(), HTML_PATH + "Reward.html"));
+			player.sendPacket(npcHtmlMessage);
 		}
 	}
 	
@@ -376,21 +339,21 @@ public class TvTEvent {
 		setState(EventState.INACTIVATING);
 		// Unspawn event npc
 		unSpawnNpc();
-		// Opens all doors specified in configs for tvt
-		openDoors(Config.TVT_DOORS_IDS_TO_CLOSE);
-		// Closes all doors specified in Configs for tvt
-		closeDoors(Config.TVT_DOORS_IDS_TO_OPEN);
+		// Opens all doors
+		openDoors(tvt().getDoorsToClose());
+		// Closes all doors
+		closeDoors(tvt().getDoorsToOpen());
 		
-		// Iterate over all teams
 		for (TvTEventTeam team : _teams) {
-			for (L2PcInstance playerInstance : team.getParticipatedPlayers().values()) {
-				// Check for nullpointer
-				if (playerInstance != null) {
-					// Enable player revival.
-					playerInstance.setCanRevive(true);
-					// Teleport back.
-					new TvTEventTeleporter(playerInstance, Config.TVT_EVENT_PARTICIPATION_NPC_COORDINATES, false, false);
+			for (L2PcInstance player : team.getParticipatedPlayers().values()) {
+				if (player == null) {
+					continue;
 				}
+				
+				// Enable player revival.
+				player.setCanRevive(true);
+				// Teleport back.
+				new TvTEventTeleporter(player, tvt().getParticipationNpcLoc(), false, false);
 			}
 		}
 		
@@ -453,20 +416,20 @@ public class TvTEvent {
 	}
 	
 	public static boolean needParticipationFee() {
-		return (Config.TVT_EVENT_PARTICIPATION_FEE[0] != 0) && (Config.TVT_EVENT_PARTICIPATION_FEE[1] != 0);
+		return (tvt().getParticipationFee() != null) && (tvt().getParticipationFee().getId() > 0);
 	}
 	
-	public static boolean hasParticipationFee(L2PcInstance playerInstance) {
-		return playerInstance.getInventory().getInventoryItemCount(Config.TVT_EVENT_PARTICIPATION_FEE[0], -1) >= Config.TVT_EVENT_PARTICIPATION_FEE[1];
+	public static boolean hasParticipationFee(L2PcInstance player) {
+		return player.getInventory().getInventoryItemCount(tvt().getParticipationFee().getId(), -1) >= tvt().getParticipationFee().getCount();
 	}
 	
 	public static boolean payParticipationFee(L2PcInstance playerInstance) {
-		return playerInstance.destroyItemByItemId("TvT Participation Fee", Config.TVT_EVENT_PARTICIPATION_FEE[0], Config.TVT_EVENT_PARTICIPATION_FEE[1], _lastNpcSpawn, true);
+		return playerInstance.destroyItemByItemId("TvT Participation Fee", tvt().getParticipationFee().getId(), tvt().getParticipationFee().getCount(), _lastNpcSpawn, true);
 	}
 	
 	public static String getParticipationFee() {
-		int itemId = Config.TVT_EVENT_PARTICIPATION_FEE[0];
-		int itemNum = Config.TVT_EVENT_PARTICIPATION_FEE[1];
+		int itemId = tvt().getParticipationFee().getId();
+		long itemNum = tvt().getParticipationFee().getCount();
 		
 		if ((itemId == 0) || (itemNum == 0)) {
 			return "-";
@@ -563,7 +526,7 @@ public class TvTEvent {
 		}
 		
 		_teams[teamId].addPlayer(playerInstance);
-		new TvTEventTeleporter(playerInstance, _teams[teamId].getCoordinates(), true, false);
+		new TvTEventTeleporter(playerInstance, _teams[teamId].getLocation(), true, false);
 	}
 	
 	/**
@@ -573,7 +536,8 @@ public class TvTEvent {
 	public static void onLogout(L2PcInstance playerInstance) {
 		if ((playerInstance != null) && (isStarting() || isStarted() || isParticipating())) {
 			if (removeParticipant(playerInstance.getObjectId())) {
-				playerInstance.setXYZInvisible((Config.TVT_EVENT_PARTICIPATION_NPC_COORDINATES[0] + Rnd.get(101)) - 50, (Config.TVT_EVENT_PARTICIPATION_NPC_COORDINATES[1] + Rnd.get(101)) - 50, Config.TVT_EVENT_PARTICIPATION_NPC_COORDINATES[2]);
+				final var loc = tvt().getParticipationNpcLoc();
+				playerInstance.setXYZInvisible((loc.getX() + Rnd.get(101)) - 50, (loc.getY() + Rnd.get(101)) - 50, loc.getZ());
 			}
 		}
 	}
@@ -600,10 +564,10 @@ public class TvTEvent {
 			return false;
 		}
 		
-		if ((playerTeamId != -1) && (targetedPlayerTeamId != -1) && (playerTeamId == targetedPlayerTeamId) && (playerInstance.getObjectId() != targetedPlayerObjectId) && !Config.TVT_EVENT_TARGET_TEAM_MEMBERS_ALLOWED) {
+		if ((playerTeamId != -1) && (targetedPlayerTeamId != -1) && (playerTeamId == targetedPlayerTeamId) && //
+			(playerInstance.getObjectId() != targetedPlayerObjectId) && !tvt().allowTargetTeamMember()) {
 			return false;
 		}
-		
 		return true;
 	}
 	
@@ -617,7 +581,7 @@ public class TvTEvent {
 			return true;
 		}
 		
-		if (isPlayerParticipant(playerObjectId) && !Config.TVT_EVENT_SCROLL_ALLOWED) {
+		if (isPlayerParticipant(playerObjectId) && !tvt().allowScroll()) {
 			return false;
 		}
 		
@@ -634,7 +598,7 @@ public class TvTEvent {
 			return true;
 		}
 		
-		if (isPlayerParticipant(playerObjectId) && !Config.TVT_EVENT_POTIONS_ALLOWED) {
+		if (isPlayerParticipant(playerObjectId) && !tvt().allowPotion()) {
 			return false;
 		}
 		
@@ -668,7 +632,7 @@ public class TvTEvent {
 			return true;
 		}
 		
-		if (isPlayerParticipant(playerObjectId) && !Config.TVT_EVENT_SUMMON_BY_ITEM_ALLOWED) {
+		if (isPlayerParticipant(playerObjectId) && !tvt().allowTargetTeamMember()) {
 			return false;
 		}
 		
@@ -691,7 +655,7 @@ public class TvTEvent {
 			return;
 		}
 		
-		new TvTEventTeleporter(killedPlayerInstance, _teams[killedTeamId].getCoordinates(), false, false);
+		new TvTEventTeleporter(killedPlayerInstance, _teams[killedTeamId].getLocation(), false, false);
 		
 		if (killerCharacter == null) {
 			return;
@@ -741,21 +705,17 @@ public class TvTEvent {
 		}
 		
 		if (playerInstance.isMageClass()) {
-			if ((Config.TVT_EVENT_MAGE_BUFFS != null) && !Config.TVT_EVENT_MAGE_BUFFS.isEmpty()) {
-				for (Entry<Integer, Integer> e : Config.TVT_EVENT_MAGE_BUFFS.entrySet()) {
-					Skill skill = SkillData.getInstance().getSkill(e.getKey(), e.getValue());
-					if (skill != null) {
-						skill.applyEffects(playerInstance, playerInstance);
-					}
+			for (SkillHolder skillHolder : tvt().getMageBuffs()) {
+				Skill skill = skillHolder.getSkill();
+				if (skill != null) {
+					skill.applyEffects(playerInstance, playerInstance);
 				}
 			}
 		} else {
-			if ((Config.TVT_EVENT_FIGHTER_BUFFS != null) && !Config.TVT_EVENT_FIGHTER_BUFFS.isEmpty()) {
-				for (Entry<Integer, Integer> e : Config.TVT_EVENT_FIGHTER_BUFFS.entrySet()) {
-					Skill skill = SkillData.getInstance().getSkill(e.getKey(), e.getValue());
-					if (skill != null) {
-						skill.applyEffects(playerInstance, playerInstance);
-					}
+			for (SkillHolder skillHolder : tvt().getFighterBuffs()) {
+				Skill skill = skillHolder.getSkill();
+				if (skill != null) {
+					skill.applyEffects(playerInstance, playerInstance);
 				}
 			}
 		}
@@ -920,8 +880,8 @@ public class TvTEvent {
 	 * @param playerObjectId
 	 * @return coordinates of teams, 2 elements, index 0 for team 1 and index 1 for team 2
 	 */
-	public static int[] getParticipantTeamCoordinates(int playerObjectId) {
-		return _teams[0].containsPlayer(playerObjectId) ? _teams[0].getCoordinates() : (_teams[1].containsPlayer(playerObjectId) ? _teams[1].getCoordinates() : null);
+	public static Location getParticipantTeamCoordinates(int playerObjectId) {
+		return _teams[0].containsPlayer(playerObjectId) ? _teams[0].getLocation() : (_teams[1].containsPlayer(playerObjectId) ? _teams[1].getLocation() : null);
 	}
 	
 	/**

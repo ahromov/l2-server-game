@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.util;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.lang.management.LockInfo;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MonitorInfo;
@@ -27,7 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.l2jserver.gameserver.Shutdown;
-import com.l2jserver.gameserver.config.Config;
+import com.l2jserver.gameserver.config.Configuration;
 
 /**
  * Thread to check for deadlocked threads.
@@ -35,9 +37,6 @@ import com.l2jserver.gameserver.config.Config;
  */
 public class DeadLockDetector extends Thread {
 	private static Logger _log = Logger.getLogger(DeadLockDetector.class.getName());
-	
-	/** Interval to check for deadlocked threads */
-	private static final int _sleepTime = Config.DEADLOCK_CHECK_INTERVAL * 1000;
 	
 	private final ThreadMXBean tmx;
 	
@@ -58,7 +57,7 @@ public class DeadLockDetector extends Thread {
 					ThreadInfo[] tis = tmx.getThreadInfo(ids, true, true);
 					StringBuilder info = new StringBuilder();
 					info.append("DeadLock Found!");
-					info.append(Config.EOL);
+					info.append(Configuration.EOL);
 					for (ThreadInfo ti : tis) {
 						info.append(ti.toString());
 					}
@@ -72,14 +71,14 @@ public class DeadLockDetector extends Thread {
 						
 						ThreadInfo dl = ti;
 						info.append("Java-level deadlock:");
-						info.append(Config.EOL);
+						info.append(Configuration.EOL);
 						info.append('\t');
 						info.append(dl.getThreadName());
 						info.append(" is waiting to lock ");
 						info.append(dl.getLockInfo().toString());
 						info.append(" which is held by ");
 						info.append(dl.getLockOwnerName());
-						info.append(Config.EOL);
+						info.append(Configuration.EOL);
 						while ((dl = tmx.getThreadInfo(new long[] {
 							dl.getLockOwnerId()
 						}, true, true)[0]).getThreadId() != ti.getThreadId()) {
@@ -89,18 +88,18 @@ public class DeadLockDetector extends Thread {
 							info.append(dl.getLockInfo().toString());
 							info.append(" which is held by ");
 							info.append(dl.getLockOwnerName());
-							info.append(Config.EOL);
+							info.append(Configuration.EOL);
 						}
 					}
 					_log.warning(info.toString());
 					
-					if (Config.RESTART_ON_DEADLOCK) {
+					if (general().restartOnDeadlock()) {
 						Broadcast.toAllOnlinePlayers("Server has stability issues - restarting now.");
 						Shutdown.getInstance().startTelnetShutdown("DeadLockDetector - Auto Restart", 60, true);
 					}
 					
 				}
-				Thread.sleep(_sleepTime);
+				Thread.sleep(general().getDeadLockCheckInterval());
 			} catch (Exception e) {
 				_log.log(Level.WARNING, "DeadLockDetector: ", e);
 			}

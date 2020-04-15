@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,11 @@
  */
 package com.l2jserver.gameserver;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.ItemLocation;
 import com.l2jserver.gameserver.instancemanager.ItemsOnGroundManager;
 import com.l2jserver.gameserver.model.L2World;
@@ -58,27 +59,27 @@ public final class ItemsAutoDestroy {
 						L2World.getInstance().removeVisibleObject(item, item.getWorldRegion());
 						L2World.getInstance().removeObject(item);
 						_items.remove(item.getObjectId());
-						if (Config.SAVE_DROPPED_ITEM) {
+						if (general().saveDroppedItem()) {
 							ItemsOnGroundManager.getInstance().removeObject(item);
 						}
 					}
 				} else if (item.getItem().hasExImmediateEffect()) {
-					if ((curtime - item.getDropTime()) > Config.HERB_AUTO_DESTROY_TIME) {
+					if ((curtime - item.getDropTime()) > general().getAutoDestroyHerbTime()) {
 						L2World.getInstance().removeVisibleObject(item, item.getWorldRegion());
 						L2World.getInstance().removeObject(item);
 						_items.remove(item.getObjectId());
-						if (Config.SAVE_DROPPED_ITEM) {
+						if (general().saveDroppedItem()) {
 							ItemsOnGroundManager.getInstance().removeObject(item);
 						}
 					}
 				} else {
-					final long sleep = ((Config.AUTODESTROY_ITEM_AFTER == 0) ? 3600000 : Config.AUTODESTROY_ITEM_AFTER * 1000);
+					final long sleep = ((general().getAutoDestroyDroppedItemAfter() == 0) ? 3600000 : general().getAutoDestroyDroppedItemAfter() * 1000);
 					
 					if ((curtime - item.getDropTime()) > sleep) {
 						L2World.getInstance().removeVisibleObject(item, item.getWorldRegion());
 						L2World.getInstance().removeObject(item);
 						_items.remove(item.getObjectId());
-						if (Config.SAVE_DROPPED_ITEM) {
+						if (general().saveDroppedItem()) {
 							ItemsOnGroundManager.getInstance().removeObject(item);
 						}
 					}

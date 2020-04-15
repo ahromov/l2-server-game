@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,13 +18,14 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.rates;
 import static com.l2jserver.gameserver.model.actor.L2Npc.INTERACTION_DISTANCE;
-import static com.l2jserver.gameserver.model.itemcontainer.Inventory.MAX_ADENA;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.BuyListData;
 import com.l2jserver.gameserver.model.L2Object;
 import com.l2jserver.gameserver.model.actor.L2Character;
@@ -51,7 +52,7 @@ public final class RequestBuyItem extends L2GameClientPacket {
 	protected void readImpl() {
 		_listId = readD();
 		int size = readD();
-		if ((size <= 0) || (size > Config.MAX_ITEM_IN_PACKET) || ((size * BATCH_LENGTH) != _buf.remaining())) {
+		if ((size <= 0) || (size > MAX_ITEM_IN_PACKET) || ((size * BATCH_LENGTH) != _buf.remaining())) {
 			return;
 		}
 		
@@ -84,8 +85,8 @@ public final class RequestBuyItem extends L2GameClientPacket {
 			return;
 		}
 		
-		// Alt game - Karma punishment
-		if (!Config.ALT_GAME_KARMA_PLAYER_CAN_SHOP && (player.getKarma() > 0)) {
+		// Karma punishment
+		if (!character().karmaPlayerCanShop() && (player.getKarma() > 0)) {
 			sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
@@ -110,7 +111,7 @@ public final class RequestBuyItem extends L2GameClientPacket {
 		
 		final L2BuyList buyList = BuyListData.getInstance().getBuyList(_listId);
 		if (buyList == null) {
-			Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " sent a false BuyList list_id " + _listId, Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " sent a false BuyList list_id " + _listId);
 			return;
 		}
 		
@@ -138,19 +139,19 @@ public final class RequestBuyItem extends L2GameClientPacket {
 			
 			final Product product = buyList.getProductByItemId(i.getId());
 			if (product == null) {
-				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " sent a false BuyList list_id " + _listId + " and item_id " + i.getId(), Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " sent a false BuyList list_id " + _listId + " and item_id " + i.getId());
 				return;
 			}
 			
 			if (!product.getItem().isStackable() && (i.getCount() > 1)) {
-				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to purchase invalid quantity of items at the same time.", Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to purchase invalid quantity of items at the same time.");
 				sendPacket(SystemMessage.getSystemMessage(SystemMessageId.YOU_HAVE_EXCEEDED_QUANTITY_THAT_CAN_BE_INPUTTED));
 				return;
 			}
 			
 			price = product.getPrice();
 			if ((product.getItemId() >= 3960) && (product.getItemId() <= 4026)) {
-				price *= Config.RATE_SIEGE_GUARDS_PRICE;
+				price *= rates().getRateSiegeGuardsPrice();
 			}
 			
 			if (price < 0) {
@@ -159,9 +160,9 @@ public final class RequestBuyItem extends L2GameClientPacket {
 				return;
 			}
 			
-			if ((price == 0) && !player.isGM() && Config.ONLY_GM_ITEMS_FREE) {
-				player.sendMessage("Ohh Cheat dont work? You have a problem now!");
-				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried buy item for 0 adena.", Config.DEFAULT_PUNISH);
+			if ((price == 0) && !player.isGM() && general().onlyGMItemsFree()) {
+				player.sendMessage("Ohh... Cheat didn't work? You have a problem now!");
+				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried buy item for 0 adena.");
 				return;
 			}
 			
@@ -173,15 +174,15 @@ public final class RequestBuyItem extends L2GameClientPacket {
 				}
 			}
 			
-			if ((MAX_ADENA / i.getCount()) < price) {
-				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to purchase over " + MAX_ADENA + " adena worth of goods.", Config.DEFAULT_PUNISH);
+			if ((character().getMaxAdena() / i.getCount()) < price) {
+				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to purchase over " + character().getMaxAdena() + " adena worth of goods.");
 				return;
 			}
 			// first calculate price per item with tax, then multiply by count
 			price = (long) (price * (1 + castleTaxRate + baseTaxRate));
 			subTotal += i.getCount() * price;
-			if (subTotal > MAX_ADENA) {
-				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to purchase over " + MAX_ADENA + " adena worth of goods.", Config.DEFAULT_PUNISH);
+			if (subTotal > character().getMaxAdena()) {
+				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to purchase over " + character().getMaxAdena() + " adena worth of goods.");
 				return;
 			}
 			
@@ -214,7 +215,7 @@ public final class RequestBuyItem extends L2GameClientPacket {
 		for (ItemHolder i : _items) {
 			Product product = buyList.getProductByItemId(i.getId());
 			if (product == null) {
-				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " sent a false BuyList list_id " + _listId + " and item_id " + i.getId(), Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " sent a false BuyList list_id " + _listId + " and item_id " + i.getId());
 				continue;
 			}
 			

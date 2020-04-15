@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.model.skills;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,7 +34,6 @@ import java.util.logging.Logger;
 
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.GeoData;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.SkillTreesData;
 import com.l2jserver.gameserver.datatables.SkillData;
 import com.l2jserver.gameserver.enums.MountType;
@@ -218,11 +220,12 @@ public class Skill implements IIdentifiable {
 		_abnormalType = set.getEnum("abnormalType", AbnormalType.class, AbnormalType.NONE);
 		
 		int abnormalTime = set.getInt("abnormalTime", 0);
-		if (Config.ENABLE_MODIFY_SKILL_DURATION && Config.SKILL_DURATION_LIST.containsKey(getId())) {
+		final var skillDuration = character().getSkillDuration().get(_id);
+		if (character().modifySkillDuration() && (skillDuration != null)) {
 			if ((getLevel() < 100) || (getLevel() > 140)) {
-				abnormalTime = Config.SKILL_DURATION_LIST.get(getId());
+				abnormalTime = skillDuration;
 			} else if ((getLevel() >= 100) && (getLevel() < 140)) {
-				abnormalTime += Config.SKILL_DURATION_LIST.get(getId());
+				abnormalTime += skillDuration;
 			}
 		}
 		
@@ -239,11 +242,12 @@ public class Skill implements IIdentifiable {
 		_isRecoveryHerb = set.getBoolean("isRecoveryHerb", false);
 		_reuseHashCode = SkillData.getSkillHashCode(_id, _level);
 		
-		if (Config.ENABLE_MODIFY_SKILL_REUSE && Config.SKILL_REUSE_LIST.containsKey(_id)) {
-			if (Config.DEBUG) {
-				_log.info("*** Skill " + _name + " (" + _level + ") changed reuse from " + set.getInt("reuseDelay", 0) + " to " + Config.SKILL_REUSE_LIST.get(_id) + " seconds.");
+		final var skillReuse = character().getSkillReuse().get(_id);
+		if (character().modifySkillReuse() && (skillReuse != null)) {
+			if (general().debug()) {
+				_log.info("*** Skill " + _name + " (" + _level + ") changed reuse from " + set.getInt("reuseDelay", 0) + " to " + skillReuse + " seconds.");
 			}
-			_reuseDelay = Config.SKILL_REUSE_LIST.get(_id);
+			_reuseDelay = skillReuse;
 		} else {
 			_reuseDelay = set.getInt("reuseDelay", 0);
 		}
@@ -280,8 +284,8 @@ public class Skill implements IIdentifiable {
 		_magicLevel = set.getInt("magicLvl", 0);
 		_lvlBonusRate = set.getInt("lvlBonusRate", 0);
 		_activateRate = set.getInt("activateRate", -1);
-		_minChance = set.getInt("minChance", Config.MIN_ABNORMAL_STATE_SUCCESS_RATE);
-		_maxChance = set.getInt("maxChance", Config.MAX_ABNORMAL_STATE_SUCCESS_RATE);
+		_minChance = set.getInt("minChance", character().getMinAbnormalStateSuccessRate());
+		_maxChance = set.getInt("maxChance", character().getMaxAbnormalStateSuccessRate());
 		
 		_nextActionIsAttack = set.getBoolean("nextActionAttack", false);
 		
@@ -814,7 +818,7 @@ public class Skill implements IIdentifiable {
 	}
 	
 	public boolean checkCondition(L2Character activeChar, L2Object object, boolean itemOrWeapon) {
-		if (activeChar.canOverrideCond(PcCondOverride.SKILL_CONDITIONS) && !Config.GM_SKILL_RESTRICTION) {
+		if (activeChar.canOverrideCond(PcCondOverride.SKILL_CONDITIONS) && !general().gmSkillRestriction()) {
 			return true;
 		}
 		

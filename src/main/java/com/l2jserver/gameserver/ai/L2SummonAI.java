@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -21,13 +21,13 @@ package com.l2jserver.gameserver.ai;
 import static com.l2jserver.gameserver.ai.CtrlIntention.AI_INTENTION_ATTACK;
 import static com.l2jserver.gameserver.ai.CtrlIntention.AI_INTENTION_FOLLOW;
 import static com.l2jserver.gameserver.ai.CtrlIntention.AI_INTENTION_IDLE;
+import static com.l2jserver.gameserver.config.Configuration.geodata;
 
 import java.util.concurrent.Future;
 
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.GeoData;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.L2Object;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.L2Summon;
@@ -50,10 +50,10 @@ public class L2SummonAI extends L2PlayableAI implements Runnable {
 	
 	@Override
 	protected void onIntentionAttack(L2Character target) {
-		if ((Config.PATHFINDING > 0) && (PathFinding.getInstance().findPath(_actor.getX(), _actor.getY(), _actor.getZ(), target.getX(), target.getY(), target.getZ(), _actor.getInstanceId(), true) == null)) {
+		if ((geodata().getPathFinding() > 0) && //
+			(PathFinding.getInstance().findPath(_actor.getX(), _actor.getY(), _actor.getZ(), target.getX(), target.getY(), target.getZ(), _actor.getInstanceId(), true) == null)) {
 			return;
 		}
-		
 		super.onIntentionAttack(target);
 	}
 	

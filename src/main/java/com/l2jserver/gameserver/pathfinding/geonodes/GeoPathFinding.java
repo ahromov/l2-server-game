@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.pathfinding.geonodes;
 
+import static com.l2jserver.gameserver.config.Configuration.geodata;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -25,7 +28,6 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.l2jserver.gameserver.GeoData;
-import com.l2jserver.gameserver.config.Config;
+import com.l2jserver.gameserver.config.Configuration;
 import com.l2jserver.gameserver.model.L2World;
 import com.l2jserver.gameserver.model.Location;
 import com.l2jserver.gameserver.pathfinding.AbstractNode;
@@ -347,7 +349,7 @@ public class GeoPathFinding extends PathFinding {
 		try {
 			_log.info("Path Engine: - Loading Path Nodes...");
 			//@formatter:off
-			Files.lines(Paths.get(Config.PATHNODE_DIR.getPath(), "pn_index.txt"), StandardCharsets.UTF_8)
+			Files.lines(Paths.get(geodata().getPathnodePath().getPath(), "pn_index.txt"), UTF_8)
 				.map(String::trim)
 				.filter(l -> !l.isEmpty())
 				.forEach(line -> {
@@ -374,11 +376,11 @@ public class GeoPathFinding extends PathFinding {
 	
 	private void LoadPathNodeFile(byte rx, byte ry) {
 		if ((rx < L2World.TILE_X_MIN) || (rx > L2World.TILE_X_MAX) || (ry < L2World.TILE_Y_MIN) || (ry > L2World.TILE_Y_MAX)) {
-			_log.warning("Failed to Load PathNode File: invalid region " + rx + "," + ry + Config.EOL);
+			_log.warning("Failed to Load PathNode File: invalid region " + rx + "," + ry + Configuration.EOL);
 			return;
 		}
 		short regionoffset = getRegionOffset(rx, ry);
-		File file = new File(Config.PATHNODE_DIR, rx + "_" + ry + ".pn");
+		File file = new File(geodata().getPathnodePath(), rx + "_" + ry + ".pn");
 		_log.info("Path Engine: - Loading: " + file.getName() + " -> region offset: " + regionoffset + " X: " + rx + " Y: " + ry);
 		int node = 0, size, index = 0;
 		
@@ -387,7 +389,7 @@ public class GeoPathFinding extends PathFinding {
 			FileChannel roChannel = raf.getChannel()) {
 			size = (int) roChannel.size();
 			MappedByteBuffer nodes;
-			if (Config.FORCE_GEODATA) {
+			if (geodata().forceGeoData()) {
 				// it is not guarantee, because the underlying operating system may have paged out some of the buffer's data
 				nodes = roChannel.map(FileChannel.MapMode.READ_ONLY, 0, size).load();
 			} else {

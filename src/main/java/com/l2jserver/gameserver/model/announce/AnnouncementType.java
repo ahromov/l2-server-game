@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -30,6 +30,7 @@ public enum AnnouncementType {
 	EVENT,
 	AUTO_NORMAL,
 	AUTO_CRITICAL;
+	
 	private static final Logger _log = Logger.getLogger(AnnouncementType.class.getName());
 	
 	public static AnnouncementType findById(int id) {

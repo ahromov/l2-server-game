@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,12 @@
  */
 package com.l2jserver.gameserver.model.olympiad;
 
+import static com.l2jserver.gameserver.config.Configuration.olympiad;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.zone.type.L2OlympiadStadiumZone;
 import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
@@ -31,8 +32,10 @@ import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
  * @author DS
  */
 public final class OlympiadGameTask implements Runnable {
+	
 	protected static final Logger _log = Logger.getLogger(OlympiadGameTask.class.getName());
-	protected static final long BATTLE_PERIOD = Config.ALT_OLY_BATTLE; // 6 mins
+	
+	protected static final long BATTLE_PERIOD = olympiad().getBattlePeriod();
 	
 	private static final int[] TELEPORT_TO_ARENA_TIMES = {
 		120,
@@ -47,6 +50,7 @@ public final class OlympiadGameTask implements Runnable {
 		1,
 		0
 	};
+	
 	private static final int[] BATTLE_START_TIME_FIRST = {
 		60,
 		50,
@@ -56,6 +60,7 @@ public final class OlympiadGameTask implements Runnable {
 		10,
 		0
 	};
+	
 	private static final int[] BATTLE_START_TIME_SECOND = {
 		10,
 		5,
@@ -65,6 +70,7 @@ public final class OlympiadGameTask implements Runnable {
 		1,
 		0
 	};
+	
 	private static final int[] TELEPORT_TO_TOWN_TIMES = {
 		40,
 		30,
@@ -156,7 +162,7 @@ public final class OlympiadGameTask implements Runnable {
 				// Game created
 				case BEGIN: {
 					_state = GameState.TELEPORT_TO_ARENA;
-					_countDown = Config.ALT_OLY_WAIT_TIME;
+					_countDown = olympiad().getWaitTime();
 					break;
 				}
 				// Teleport to arena countdown
@@ -232,7 +238,7 @@ public final class OlympiadGameTask implements Runnable {
 				// Checks during battle
 				case BATTLE_IN_PROGRESS: {
 					_countDown += 1000;
-					if (checkBattle() || (_countDown > Config.ALT_OLY_BATTLE)) {
+					if (checkBattle() || (_countDown > olympiad().getBattlePeriod())) {
 						_state = GameState.GAME_STOPPED;
 					}
 					

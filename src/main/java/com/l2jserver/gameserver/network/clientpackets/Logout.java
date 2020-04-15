@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,12 +18,13 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import com.l2jserver.gameserver.SevenSignsFestival;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.entity.L2Event;
 import com.l2jserver.gameserver.network.SystemMessageId;
@@ -52,7 +53,7 @@ public final class Logout extends L2GameClientPacket {
 		}
 		
 		if ((player.getActiveEnchantItemId() != L2PcInstance.ID_NONE) || (player.getActiveEnchantAttrItemId() != L2PcInstance.ID_NONE)) {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.fine("Player " + player.getName() + " tried to logout while enchanting.");
 			}
 			player.sendPacket(ActionFailed.STATIC_PACKET);
@@ -67,11 +68,11 @@ public final class Logout extends L2GameClientPacket {
 		
 		// Don't allow leaving if player is fighting
 		if (AttackStanceTaskManager.getInstance().hasAttackStanceTask(player)) {
-			if (player.isGM() && Config.GM_RESTART_FIGHTING) {
+			if (player.isGM() && general().gmRestartFighting()) {
 				return;
 			}
 			
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.fine("Player " + player.getName() + " tried to logout while fighting.");
 			}
 			

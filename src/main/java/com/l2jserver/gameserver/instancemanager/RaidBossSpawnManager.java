@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.instancemanager;
 
+import static com.l2jserver.gameserver.config.Configuration.npc;
+
 import java.util.Calendar;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
+import com.l2jserver.gameserver.config.Configuration;
 import com.l2jserver.gameserver.datatables.SpawnTable;
 import com.l2jserver.gameserver.model.L2Spawn;
 import com.l2jserver.gameserver.model.StatsSet;
@@ -141,8 +143,8 @@ public class RaidBossSpawnManager {
 		if (isBossDead) {
 			boss.setRaidStatus(StatusEnum.DEAD);
 			
-			final int respawnMinDelay = (int) (boss.getSpawn().getRespawnMinDelay() * Config.RAID_MIN_RESPAWN_MULTIPLIER);
-			final int respawnMaxDelay = (int) (boss.getSpawn().getRespawnMaxDelay() * Config.RAID_MAX_RESPAWN_MULTIPLIER);
+			final int respawnMinDelay = (int) (boss.getSpawn().getRespawnMinDelay() * npc().getRaidMinRespawnMultiplier());
+			final int respawnMaxDelay = (int) (boss.getSpawn().getRespawnMaxDelay() * npc().getRaidMaxRespawnMultiplier());
 			final int respawnDelay = Rnd.get(respawnMinDelay, respawnMaxDelay);
 			final long respawnTime = Calendar.getInstance().getTimeInMillis() + respawnDelay;
 			
@@ -350,7 +352,7 @@ public class RaidBossSpawnManager {
 	 * @return the raid boss status
 	 */
 	public String getRaidBossStatus(int bossId) {
-		String msg = "RaidBoss Status..." + Config.EOL;
+		String msg = "RaidBoss Status..." + Configuration.EOL;
 		
 		if (_bosses == null) {
 			msg += "None";

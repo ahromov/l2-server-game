@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # exit codes of GameServer:
 #  0 normal shutdown

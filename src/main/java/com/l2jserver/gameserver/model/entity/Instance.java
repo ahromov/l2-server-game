@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -17,6 +17,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.l2jserver.gameserver.model.entity;
+
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.server;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +42,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.DoorData;
 import com.l2jserver.gameserver.enums.InstanceReenterType;
 import com.l2jserver.gameserver.enums.InstanceRemoveBuffType;
@@ -73,7 +75,7 @@ public final class Instance {
 	
 	private final int _id;
 	private String _name;
-	private int _ejectTime = Config.EJECT_DEAD_PLAYER_TIME;
+	private int _ejectTime = general().getEjectDeadPlayerTime();
 	/** Allow random walk for NPCs, global parameter. */
 	private boolean _allowRandomWalk = true;
 	private final List<Integer> _players = new CopyOnWriteArrayList<>();
@@ -180,7 +182,7 @@ public final class Instance {
 	 * Set the instance duration task
 	 * @param duration in milliseconds
 	 */
-	public void setDuration(int duration) {
+	public void setDuration(long duration) {
 		if (_checkTimeUpTask != null) {
 			_checkTimeUpTask.cancel(true);
 		}
@@ -389,7 +391,7 @@ public final class Instance {
 	
 	public void loadInstanceTemplate(String filename) {
 		Document doc = null;
-		File xml = new File(Config.DATAPACK_ROOT, "data/instances/" + filename);
+		File xml = new File(server().getDatapackRoot(), "data/instances/" + filename);
 		
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -655,9 +657,9 @@ public final class Instance {
 		}
 	}
 	
-	protected void doCheckTimeUp(int remaining) {
+	protected void doCheckTimeUp(long remaining) {
 		CreatureSay cs = null;
-		int timeLeft;
+		long timeLeft;
 		int interval;
 		
 		if (_players.isEmpty() && (_emptyDestroyTime == 0)) {
@@ -686,14 +688,14 @@ public final class Instance {
 			timeLeft = remaining / 60000;
 			interval = 300000;
 			SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.DUNGEON_EXPIRES_IN_S1_MINUTES);
-			sm.addString(Integer.toString(timeLeft));
+			sm.addString(Long.toString(timeLeft));
 			Broadcast.toPlayersInInstance(sm, getId());
 			remaining = remaining - 300000;
 		} else if (remaining > 60000) {
 			timeLeft = remaining / 60000;
 			interval = 60000;
 			SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.DUNGEON_EXPIRES_IN_S1_MINUTES);
-			sm.addString(Integer.toString(timeLeft));
+			sm.addString(Long.toString(timeLeft));
 			Broadcast.toPlayersInInstance(sm, getId());
 			remaining = remaining - 60000;
 		} else if (remaining > 30000) {
@@ -763,9 +765,9 @@ public final class Instance {
 	}
 	
 	public class CheckTimeUp implements Runnable {
-		private final int _remaining;
+		private final long _remaining;
 		
-		public CheckTimeUp(int remaining) {
+		public CheckTimeUp(long remaining) {
 			_remaining = remaining;
 		}
 		

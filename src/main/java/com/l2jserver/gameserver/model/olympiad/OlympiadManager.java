@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.model.olympiad;
 
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.olympiad;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +28,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.instancemanager.AntiFeedManager;
 import com.l2jserver.gameserver.model.L2Party;
 import com.l2jserver.gameserver.model.L2World;
@@ -68,7 +70,7 @@ public class OlympiadManager {
 	protected final List<List<Integer>> hasEnoughRegisteredClassed() {
 		List<List<Integer>> result = null;
 		for (Map.Entry<Integer, List<Integer>> classList : _classBasedRegisters.entrySet()) {
-			if ((classList.getValue() != null) && (classList.getValue().size() >= Config.ALT_OLY_CLASSED)) {
+			if ((classList.getValue() != null) && (classList.getValue().size() >= olympiad().getClassedParticipants())) {
 				if (result == null) {
 					result = new CopyOnWriteArrayList<>();
 				}
@@ -80,11 +82,11 @@ public class OlympiadManager {
 	}
 	
 	protected final boolean hasEnoughRegisteredNonClassed() {
-		return _nonClassBasedRegisters.size() >= Config.ALT_OLY_NONCLASSED;
+		return _nonClassBasedRegisters.size() >= olympiad().getNonClassedParticipants();
 	}
 	
 	protected final boolean hasEnoughRegisteredTeams() {
-		return _teamsBasedRegisters.size() >= Config.ALT_OLY_TEAMS;
+		return _teamsBasedRegisters.size() >= olympiad().getTeamsParticipants();
 	}
 	
 	protected final void clearRegistered() {
@@ -251,7 +253,7 @@ public class OlympiadManager {
 				for (L2PcInstance noble : party.getMembers()) {
 					if (!checkNoble(noble, player)) {
 						// remove previously registered party members
-						if (Config.L2JMOD_DUALBOX_CHECK_MAX_OLYMPIAD_PARTICIPANTS_PER_IP > 0) {
+						if (customs().getDualboxCheckMaxOlympiadParticipantsPerIP() > 0) {
 							for (L2PcInstance unreg : party.getMembers()) {
 								if (unreg == noble) {
 									break;
@@ -274,7 +276,7 @@ public class OlympiadManager {
 					// TODO: replace with retail message
 					player.sendMessage("Your team must have at least 10 points in total.");
 					// remove previously registered party members
-					if (Config.L2JMOD_DUALBOX_CHECK_MAX_OLYMPIAD_PARTICIPANTS_PER_IP > 0) {
+					if (customs().getDualboxCheckMaxOlympiadParticipantsPerIP() > 0) {
 						for (L2PcInstance unreg : party.getMembers()) {
 							AntiFeedManager.getInstance().removePlayer(AntiFeedManager.OLYMPIAD_ID, unreg);
 						}
@@ -314,7 +316,7 @@ public class OlympiadManager {
 		
 		Integer objId = Integer.valueOf(noble.getObjectId());
 		if (_nonClassBasedRegisters.remove(objId)) {
-			if (Config.L2JMOD_DUALBOX_CHECK_MAX_OLYMPIAD_PARTICIPANTS_PER_IP > 0) {
+			if (customs().getDualboxCheckMaxOlympiadParticipantsPerIP() > 0) {
 				AntiFeedManager.getInstance().removePlayer(AntiFeedManager.OLYMPIAD_ID, noble);
 			}
 			
@@ -326,7 +328,7 @@ public class OlympiadManager {
 		if ((classed != null) && classed.remove(objId)) {
 			_classBasedRegisters.put(noble.getBaseClass(), classed);
 			
-			if (Config.L2JMOD_DUALBOX_CHECK_MAX_OLYMPIAD_PARTICIPANTS_PER_IP > 0) {
+			if (customs().getDualboxCheckMaxOlympiadParticipantsPerIP() > 0) {
 				AntiFeedManager.getInstance().removePlayer(AntiFeedManager.OLYMPIAD_ID, noble);
 			}
 			
@@ -447,10 +449,10 @@ public class OlympiadManager {
 			return false;
 		}
 		
-		if ((Config.L2JMOD_DUALBOX_CHECK_MAX_OLYMPIAD_PARTICIPANTS_PER_IP > 0) && !AntiFeedManager.getInstance().tryAddPlayer(AntiFeedManager.OLYMPIAD_ID, noble, Config.L2JMOD_DUALBOX_CHECK_MAX_OLYMPIAD_PARTICIPANTS_PER_IP)) {
+		if ((customs().getDualboxCheckMaxOlympiadParticipantsPerIP() > 0) && !AntiFeedManager.getInstance().tryAddPlayer(AntiFeedManager.OLYMPIAD_ID, noble, customs().getDualboxCheckMaxOlympiadParticipantsPerIP())) {
 			final NpcHtmlMessage message = new NpcHtmlMessage(player.getLastHtmlActionOriginId());
 			message.setFile(player.getHtmlPrefix(), "data/html/mods/OlympiadIPRestriction.htm");
-			message.replace("%max%", String.valueOf(AntiFeedManager.getInstance().getLimit(player, Config.L2JMOD_DUALBOX_CHECK_MAX_OLYMPIAD_PARTICIPANTS_PER_IP)));
+			message.replace("%max%", String.valueOf(AntiFeedManager.getInstance().getLimit(player, customs().getDualboxCheckMaxOlympiadParticipantsPerIP())));
 			player.sendPacket(message);
 			return false;
 		}
@@ -472,7 +474,7 @@ public class OlympiadManager {
 				L2PcInstance teamMember = L2World.getInstance().getPlayer(objectId);
 				if (teamMember != null) {
 					teamMember.sendPacket(sm);
-					if (Config.L2JMOD_DUALBOX_CHECK_MAX_OLYMPIAD_PARTICIPANTS_PER_IP > 0) {
+					if (customs().getDualboxCheckMaxOlympiadParticipantsPerIP() > 0) {
 						AntiFeedManager.getInstance().removePlayer(AntiFeedManager.OLYMPIAD_ID, teamMember);
 					}
 				}

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import com.l2jserver.gameserver.enums.PrivateStoreType;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.actor.instance.L2PetInstance;
@@ -57,8 +58,9 @@ public final class RequestGiveItemToPet extends L2GameClientPacket {
 		if (player.getActiveEnchantItemId() != L2PcInstance.ID_NONE) {
 			return;
 		}
-		// Alt game - Karma punishment
-		if (!Config.ALT_GAME_KARMA_PLAYER_CAN_TRADE && (player.getKarma() > 0)) {
+		
+		// Karma punishment
+		if (!character().karmaPlayerCanTrade() && (player.getKarma() > 0)) {
 			return;
 		}
 		
@@ -74,7 +76,7 @@ public final class RequestGiveItemToPet extends L2GameClientPacket {
 		
 		if (_amount > item.getCount()) {
 			Util.handleIllegalPlayerAction(player, getClass().getSimpleName() + ": Character " + player.getName() + " of account " + player.getAccountName() + //
-				" tried to get item with oid " + _objectId + " from pet but has invalid count " + _amount + " item count: " + item.getCount(), Config.DEFAULT_PUNISH);
+				" tried to get item with oid " + _objectId + " from pet but has invalid count " + _amount + " item count: " + item.getCount());
 			return;
 		}
 		

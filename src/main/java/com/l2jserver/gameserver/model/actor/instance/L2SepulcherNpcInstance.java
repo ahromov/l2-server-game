@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model.actor.instance;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
@@ -26,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.ThreadPoolManager;
 import com.l2jserver.gameserver.ai.CtrlIntention;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.DoorData;
 import com.l2jserver.gameserver.enums.InstanceType;
 import com.l2jserver.gameserver.instancemanager.FourSepulchersManager;
@@ -111,7 +112,7 @@ public class L2SepulcherNpcInstance extends L2Npc {
 		
 		// Check if the L2PcInstance already target the L2NpcInstance
 		if (this != player.getTarget()) {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				LOG.debug("new target selected: {}", getObjectId());
 			}
 			

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,17 +18,19 @@
  */
 package com.l2jserver.gameserver.model.olympiad;
 
+import static com.l2jserver.gameserver.config.Configuration.olympiad;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
 import com.l2jserver.commons.util.Rnd;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.idfactory.IdFactory;
 import com.l2jserver.gameserver.model.L2World;
 import com.l2jserver.gameserver.model.Location;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
+import com.l2jserver.gameserver.model.holders.ItemHolder;
 import com.l2jserver.gameserver.model.zone.type.L2OlympiadStadiumZone;
 import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.network.serverpackets.ExOlympiadMatchResult;
@@ -176,8 +178,8 @@ public class OlympiadGameTeams extends AbstractOlympiadGame {
 	}
 	
 	@Override
-	protected int[][] getReward() {
-		return Config.ALT_OLY_TEAM_REWARD;
+	protected List<ItemHolder> getReward() {
+		return olympiad().getTeamReward();
 	}
 	
 	@Override
@@ -478,7 +480,7 @@ public class OlympiadGameTeams extends AbstractOlympiadGame {
 					for (int i = _teamOneSize; --i >= 0;) {
 						par = _teamOne[i];
 						points = par.getStats().getInt(POINTS) / getDivider();
-						int val = Math.min(par.getStats().getInt(POINTS) / 3, Config.ALT_OLY_MAX_POINTS);
+						int val = Math.min(par.getStats().getInt(POINTS) / 3, olympiad().getMaxPoints());
 						removePointsFromParticipant(par, val);
 						list1.add(new OlympiadInfo(par.getName(), par.getClanName(), par.getClanId(), par.getBaseClass(), _damageT1, points - val, -val));
 					}
@@ -488,7 +490,7 @@ public class OlympiadGameTeams extends AbstractOlympiadGame {
 					for (int i = _teamTwoSize; --i >= 0;) {
 						par = _teamTwo[i];
 						points = par.getStats().getInt(POINTS) / getDivider();
-						int val = Math.min(par.getStats().getInt(POINTS) / 3, Config.ALT_OLY_MAX_POINTS);
+						int val = Math.min(par.getStats().getInt(POINTS) / 3, olympiad().getMaxPoints());
 						removePointsFromParticipant(par, val);
 						list2.add(new OlympiadInfo(par.getName(), par.getClanName(), par.getClanId(), par.getBaseClass(), _damageT2, points - val, -val));
 					}
@@ -521,8 +523,8 @@ public class OlympiadGameTeams extends AbstractOlympiadGame {
 			points = _teamOne[i].getStats().getInt(POINTS) / getDivider();
 			if (points <= 0) {
 				points = 1;
-			} else if (points > Config.ALT_OLY_MAX_POINTS) {
-				points = Config.ALT_OLY_MAX_POINTS;
+			} else if (points > olympiad().getMaxPoints()) {
+				points = olympiad().getMaxPoints();
 			}
 			
 			totalPointsTeamOne += points;
@@ -534,8 +536,8 @@ public class OlympiadGameTeams extends AbstractOlympiadGame {
 			points = _teamTwo[i].getStats().getInt(POINTS) / getDivider();
 			if (points <= 0) {
 				points = 1;
-			} else if (points > Config.ALT_OLY_MAX_POINTS) {
-				points = Config.ALT_OLY_MAX_POINTS;
+			} else if (points > olympiad().getMaxPoints()) {
+				points = olympiad().getMaxPoints();
 			}
 			
 			totalPointsTeamTwo += points;
@@ -769,7 +771,7 @@ public class OlympiadGameTeams extends AbstractOlympiadGame {
 				for (int i = 0; i < _teamOneSize; i++) {
 					par = _teamOne[i];
 					par.updateStat(COMP_DRAWN, 1);
-					points = Math.min(par.getStats().getInt(POINTS) / getDivider(), Config.ALT_OLY_MAX_POINTS);
+					points = Math.min(par.getStats().getInt(POINTS) / getDivider(), olympiad().getMaxPoints());
 					removePointsFromParticipant(par, points);
 					list1.add(new OlympiadInfo(par.getName(), par.getClanName(), par.getClanId(), par.getBaseClass(), _damageT1, par.getStats().getInt(POINTS) - points, -points));
 				}
@@ -777,7 +779,7 @@ public class OlympiadGameTeams extends AbstractOlympiadGame {
 				for (int i = 0; i < _teamTwoSize; i++) {
 					par = _teamTwo[i];
 					par.updateStat(COMP_DRAWN, 1);
-					points = Math.min(par.getStats().getInt(POINTS) / getDivider(), Config.ALT_OLY_MAX_POINTS);
+					points = Math.min(par.getStats().getInt(POINTS) / getDivider(), olympiad().getMaxPoints());
 					removePointsFromParticipant(par, points);
 					list2.add(new OlympiadInfo(par.getName(), par.getClanName(), par.getClanId(), par.getBaseClass(), _damageT2, par.getStats().getInt(POINTS) - points, -points));
 				}

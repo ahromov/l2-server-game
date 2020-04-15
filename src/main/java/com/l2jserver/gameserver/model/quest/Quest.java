@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model.quest;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -35,7 +37,6 @@ import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.commons.util.Util;
 import com.l2jserver.gameserver.cache.HtmCache;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.CategoryType;
 import com.l2jserver.gameserver.enums.Race;
 import com.l2jserver.gameserver.enums.TrapAction;
@@ -1249,7 +1250,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 	 * @return {@code false}
 	 */
 	public boolean showError(L2PcInstance player, Throwable t) {
-		_log.log(Level.WARNING, getScriptFile().getAbsolutePath(), t);
+		_log.log(Level.WARNING, getClass().getSimpleName(), t);
 		if (t.getMessage() == null) {
 			_log.warning(getClass().getSimpleName() + ": " + t.getMessage());
 		}
@@ -1325,7 +1326,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 					Quest q = QuestManager.getInstance().getQuest(questId);
 					if (q == null) {
 						_log.finer("Unknown quest " + questId + " for player " + player.getName());
-						if (Config.AUTODELETE_INVALID_QUEST_DATA) {
+						if (general().autoDeleteInvalidQuestData()) {
 							invalidQuestData.setInt(1, player.getObjectId());
 							invalidQuestData.setString(2, questId);
 							invalidQuestData.executeUpdate();
@@ -1351,7 +1352,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 						QuestState qs = player.getQuestState(questId);
 						if (qs == null) {
 							_log.finer("Lost variable " + var + " in quest " + questId + " for player " + player.getName());
-							if (Config.AUTODELETE_INVALID_QUEST_DATA) {
+							if (general().autoDeleteInvalidQuestData()) {
 								invalidQuestDataVar.setInt(1, player.getObjectId());
 								invalidQuestDataVar.setString(2, questId);
 								invalidQuestDataVar.setString(3, var);
@@ -2366,13 +2367,15 @@ public class Quest extends AbstractScript implements IIdentifiable {
 	
 	@Override
 	public void setActive(boolean status) {
-		// TODO: Implement me.
+		// TODO: Implement.
 	}
 	
 	@Override
 	public boolean reload() {
 		unload();
-		return super.reload();
+		
+		// TODO(Zoey76): Implement.
+		return false;
 	}
 	
 	@Override
@@ -2380,10 +2383,6 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		return unload(true);
 	}
 	
-	/**
-	 * @param removeFromList
-	 * @return
-	 */
 	public boolean unload(boolean removeFromList) {
 		saveGlobalData();
 		// cancel all pending timers before reloading.

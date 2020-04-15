@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -21,24 +21,26 @@ package com.l2jserver.gameserver.model.entity;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.l2jserver.gameserver.model.Location;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 /**
+ * TvT event team.
  * @author HorridoJoho
  */
 public class TvTEventTeam {
 	/** The name of the team. */
 	private final String _name;
-	/** The team spot coordinated. */
-	private int[] _coordinates = new int[3];
+	/** The team spot coordinates. */
+	private final Location _loc;
 	/** The points of the team. */
 	private short _points;
 	/** Name and instance of all participated players in map. */
 	private final Map<Integer, L2PcInstance> _participatedPlayers = new ConcurrentHashMap<>();
 	
-	public TvTEventTeam(String name, int[] coordinates) {
+	public TvTEventTeam(String name, Location loc) {
 		_name = name;
-		_coordinates = coordinates;
+		_loc = loc;
 		_points = 0;
 	}
 	
@@ -101,8 +103,8 @@ public class TvTEventTeam {
 	 * Returns the coordinates of the team spot.
 	 * @return team coordinates
 	 */
-	public int[] getCoordinates() {
-		return _coordinates;
+	public Location getLocation() {
+		return _loc;
 	}
 	
 	/**

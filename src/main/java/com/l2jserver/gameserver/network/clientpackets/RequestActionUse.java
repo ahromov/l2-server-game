@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.Arrays;
 
 import com.l2jserver.commons.util.Rnd;
@@ -25,7 +27,6 @@ import com.l2jserver.gameserver.ai.CtrlEvent;
 import com.l2jserver.gameserver.ai.CtrlIntention;
 import com.l2jserver.gameserver.ai.L2SummonAI;
 import com.l2jserver.gameserver.ai.NextAction;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.SummonSkillsTable;
 import com.l2jserver.gameserver.data.xml.impl.PetDataTable;
 import com.l2jserver.gameserver.datatables.BotReportTable;
@@ -91,7 +92,7 @@ public final class RequestActionUse extends L2GameClientPacket {
 			return;
 		}
 		
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			_log.info(getType() + ": " + activeChar + " requested action use ID: " + _actionId + " Ctrl pressed:" + _ctrlPressed + " Shift pressed:" + _shiftPressed);
 		}
 		
@@ -313,7 +314,7 @@ public final class RequestActionUse extends L2GameClientPacket {
 				activeChar.tryOpenPrivateSellStore(true);
 				break;
 			case 65: // Bot Report Button
-				if (Config.BOTREPORT_ENABLE) {
+				if (general().enableBotReportButton()) {
 					BotReportTable.getInstance().reportBot(activeChar);
 				} else {
 					activeChar.sendMessage("This feature is disabled.");

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -27,14 +27,5 @@ public enum IllegalActionPunishmentType {
 	BROADCAST,
 	KICK,
 	KICKBAN,
-	JAIL;
-	
-	public static final IllegalActionPunishmentType findByName(String name) {
-		for (IllegalActionPunishmentType type : values()) {
-			if (type.name().toLowerCase().equals(name.toLowerCase())) {
-				return type;
-			}
-		}
-		return NONE;
-	}
+	JAIL
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,9 @@
  */
 package com.l2jserver.gameserver.network.serverpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import com.l2jserver.gameserver.data.xml.impl.EnchantSkillGroupsData;
 import com.l2jserver.gameserver.model.L2EnchantSkillGroup.EnchantSkillHolder;
 import com.l2jserver.gameserver.model.L2EnchantSkillLearn;
@@ -62,9 +64,9 @@ public class ExEnchantSkillInfoDetail extends L2GameServerPacket {
 		}
 		
 		if (type == 0) {
-			multi = EnchantSkillGroupsData.NORMAL_ENCHANT_COST_MULTIPLIER;
+			multi = general().getNormalEnchantCostMultipiler();
 		} else if (type == 1) {
-			multi = EnchantSkillGroupsData.SAFE_ENCHANT_COST_MULTIPLIER;
+			multi = general().getSafeEnchantCostMultipiler();
 		}
 		_chance = esd.getRate(ply);
 		_sp = esd.getSpCost();
@@ -97,7 +99,7 @@ public class ExEnchantSkillInfoDetail extends L2GameServerPacket {
 				return;
 		}
 		
-		if ((type != TYPE_SAFE_ENCHANT) && !Config.ES_SP_BOOK_NEEDED) {
+		if ((type != TYPE_SAFE_ENCHANT) && !character().enchantSkillSpBookNeeded()) {
 			reqCount = 0;
 		}
 	}

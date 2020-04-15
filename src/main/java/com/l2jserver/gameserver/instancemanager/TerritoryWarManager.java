@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,10 @@
  */
 package com.l2jserver.gameserver.instancemanager;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.territoryWar;
+import static java.util.concurrent.TimeUnit.MINUTES;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -31,8 +35,6 @@ import java.util.logging.Logger;
 
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
-import com.l2jserver.gameserver.config.PropertiesParser;
 import com.l2jserver.gameserver.data.sql.impl.ClanTable;
 import com.l2jserver.gameserver.data.xml.impl.SkillTreesData;
 import com.l2jserver.gameserver.datatables.SkillData;
@@ -70,18 +72,8 @@ public final class TerritoryWarManager implements Siegable {
 	public static final Map<Integer, Integer> TERRITORY_ITEM_IDS = new HashMap<>();
 	
 	public static String qn = "TerritoryWarSuperClass";
+	
 	public static String GLOBAL_VARIABLE = "nextTWStartDate";
-	public static int DEFENDERMAXCLANS; // Max number of clans
-	public static int DEFENDERMAXPLAYERS; // Max number of individual player
-	public static int CLANMINLEVEL;
-	public static int PLAYERMINLEVEL;
-	public static int MINTWBADGEFORNOBLESS;
-	public static int MINTWBADGEFORSTRIDERS;
-	public static int MINTWBADGEFORBIGSTRIDER;
-	public static Long WARLENGTH;
-	public static boolean PLAYER_WITH_WARD_CAN_BE_KILLED_IN_PEACEZONE;
-	public static boolean SPAWN_WARDS_WHEN_TW_IS_NOT_IN_PROGRESS;
-	public static boolean RETURN_WARDS_WHEN_TW_STARTS;
 	
 	// Territory War settings
 	private final Map<Integer, List<L2Clan>> _registeredClans = new ConcurrentHashMap<>();
@@ -116,7 +108,7 @@ public final class TerritoryWarManager implements Siegable {
 	}
 	
 	public int getRegisteredTerritoryId(L2PcInstance player) {
-		if ((player == null) || !_isTWChannelOpen || (player.getLevel() < PLAYERMINLEVEL)) {
+		if ((player == null) || !_isTWChannelOpen || (player.getLevel() < territoryWar().getPlayerMinLevel())) {
 			return 0;
 		}
 		if (player.getClan() != null) {
@@ -259,7 +251,7 @@ public final class TerritoryWarManager implements Siegable {
 	}
 	
 	public void registerMerc(int castleId, L2PcInstance player) {
-		if ((player == null) || (player.getLevel() < PLAYERMINLEVEL) || ((_registeredMercenaries.get(castleId) != null) && _registeredMercenaries.get(castleId).contains(player.getObjectId()))) {
+		if ((player == null) || (player.getLevel() < territoryWar().getPlayerMinLevel()) || ((_registeredMercenaries.get(castleId) != null) && _registeredMercenaries.get(castleId).contains(player.getObjectId()))) {
 			return;
 		}
 		
@@ -312,7 +304,7 @@ public final class TerritoryWarManager implements Siegable {
 				ward._npcId = territoryId;
 				ret = spawnNPC(36491 + territoryId, ward.getLocation());
 				ward.setNPC(ret);
-				if (!isTWInProgress() && !SPAWN_WARDS_WHEN_TW_IS_NOT_IN_PROGRESS) {
+				if (!isTWInProgress() && !territoryWar().spawnWardsWhenTWIsNotInProgress()) {
 					ret.decayMe();
 				}
 				if ((terNew.getOwnerClan() != null) && terNew.getOwnedWardIds().contains(newOwnerId + 80)) {
@@ -630,21 +622,6 @@ public final class TerritoryWarManager implements Siegable {
 	}
 	
 	private final void load() {
-		// TODO(Zoey76): Move this to Config.
-		
-		final PropertiesParser territoryWarSettings = new PropertiesParser(Config.TW_CONFIGURATION_FILE);
-		DEFENDERMAXCLANS = territoryWarSettings.getInt("DefenderMaxClans", 500);
-		DEFENDERMAXPLAYERS = territoryWarSettings.getInt("DefenderMaxPlayers", 500);
-		CLANMINLEVEL = territoryWarSettings.getInt("ClanMinLevel", 0);
-		PLAYERMINLEVEL = territoryWarSettings.getInt("PlayerMinLevel", 40);
-		WARLENGTH = territoryWarSettings.getLong("WarLength", 120) * 60000;
-		PLAYER_WITH_WARD_CAN_BE_KILLED_IN_PEACEZONE = territoryWarSettings.getBoolean("PlayerWithWardCanBeKilledInPeaceZone", false);
-		SPAWN_WARDS_WHEN_TW_IS_NOT_IN_PROGRESS = territoryWarSettings.getBoolean("SpawnWardsWhenTWIsNotInProgress", false);
-		RETURN_WARDS_WHEN_TW_STARTS = territoryWarSettings.getBoolean("ReturnWardsWhenTWStarts", false);
-		MINTWBADGEFORNOBLESS = territoryWarSettings.getInt("MinTerritoryBadgeForNobless", 100);
-		MINTWBADGEFORSTRIDERS = territoryWarSettings.getInt("MinTerritoryBadgeForStriders", 50);
-		MINTWBADGEFORBIGSTRIDER = territoryWarSettings.getInt("MinTerritoryBadgeForBigStrider", 80);
-		
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var s = con.createStatement();
 			var rs = s.executeQuery("SELECT * FROM territory_spawnlist")) {
@@ -787,7 +764,7 @@ public final class TerritoryWarManager implements Siegable {
 		}
 		_participantPoints.clear();
 		
-		if (RETURN_WARDS_WHEN_TW_STARTS) {
+		if (territoryWar().returnWardsWhenTWStarts()) {
 			for (TerritoryWard ward : _territoryWards) {
 				if (ward.getOwnerCastleId() != (ward.getTerritoryId() - 80)) {
 					ward.unSpawnMe();
@@ -862,9 +839,9 @@ public final class TerritoryWarManager implements Siegable {
 			
 			for (TerritoryNPCSpawn ward : t.getOwnedWard()) {
 				if (ward.getNpc() != null) {
-					if (!ward.getNpc().isVisible() && SPAWN_WARDS_WHEN_TW_IS_NOT_IN_PROGRESS) {
+					if (!ward.getNpc().isVisible() && territoryWar().spawnWardsWhenTWIsNotInProgress()) {
 						ward.setNPC(ward.getNpc().getSpawn().doSpawn());
-					} else if (ward.getNpc().isVisible() && !SPAWN_WARDS_WHEN_TW_IS_NOT_IN_PROGRESS) {
+					} else if (ward.getNpc().isVisible() && !territoryWar().spawnWardsWhenTWIsNotInProgress()) {
 						ward.getNpc().decayMe();
 					}
 				}
@@ -905,7 +882,7 @@ public final class TerritoryWarManager implements Siegable {
 							player.setSiegeSide(0);
 						}
 					} else {
-						if ((player.getLevel() < PLAYERMINLEVEL) || (player.getClassId().level() < 2)) {
+						if ((player.getLevel() < territoryWar().getPlayerMinLevel()) || (player.getClassId().level() < 2)) {
 							continue;
 						}
 						if (_isTWInProgress) {
@@ -949,7 +926,7 @@ public final class TerritoryWarManager implements Siegable {
 							player.setSiegeSide(0);
 						}
 					} else {
-						if ((player.getLevel() < PLAYERMINLEVEL) || (player.getClassId().level() < 2)) {
+						if ((player.getLevel() < territoryWar().getPlayerMinLevel()) || (player.getClassId().level() < 2)) {
 							continue;
 						}
 						if (_isTWInProgress) {
@@ -1024,7 +1001,7 @@ public final class TerritoryWarManager implements Siegable {
 					_isRegistrationOver = true;
 					updatePlayerTWStateFlags(false);
 					_scheduledStartTWTask = ThreadPoolManager.getInstance().scheduleGeneral(new ScheduleStartTWTask(), timeRemaining); // Prepare task for TW start.
-				} else if ((timeRemaining + WARLENGTH) > 0) {
+				} else if ((timeRemaining + MINUTES.toMillis(territoryWar().getWarLength())) > 0) {
 					_isTWChannelOpen = true;
 					_isRegistrationOver = true;
 					startTerritoryWar();
@@ -1047,7 +1024,7 @@ public final class TerritoryWarManager implements Siegable {
 		public void run() {
 			try {
 				_scheduledEndTWTask.cancel(false);
-				long timeRemaining = (_startTWDate.getTimeInMillis() + WARLENGTH) - Calendar.getInstance().getTimeInMillis();
+				long timeRemaining = (_startTWDate.getTimeInMillis() + MINUTES.toMillis(territoryWar().getWarLength())) - Calendar.getInstance().getTimeInMillis();
 				if (timeRemaining > 3600000) {
 					SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.THE_TERRITORY_WAR_WILL_END_IN_S1_HOURS);
 					sm.addInt(2);
@@ -1392,12 +1369,12 @@ public final class TerritoryWarManager implements Siegable {
 	
 	@Override
 	public int getFameFrequency() {
-		return Config.CASTLE_ZONE_FAME_TASK_FREQUENCY;
+		return character().getCastleZoneFameTaskFrequency();
 	}
 	
 	@Override
 	public int getFameAmount() {
-		return Config.CASTLE_ZONE_FAME_AQUIRE_POINTS;
+		return character().getCastleZoneFameAquirePoints();
 	}
 	
 	@Override

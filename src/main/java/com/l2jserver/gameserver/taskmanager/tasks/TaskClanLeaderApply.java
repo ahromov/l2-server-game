@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,19 +18,21 @@
  */
 package com.l2jserver.gameserver.taskmanager.tasks;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.taskmanager.TaskTypes.TYPE_GLOBAL_TASK;
+import static java.util.Calendar.DAY_OF_WEEK;
+
 import java.util.Calendar;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.ClanTable;
 import com.l2jserver.gameserver.model.L2Clan;
 import com.l2jserver.gameserver.model.L2ClanMember;
 import com.l2jserver.gameserver.taskmanager.Task;
 import com.l2jserver.gameserver.taskmanager.TaskManager;
 import com.l2jserver.gameserver.taskmanager.TaskManager.ExecutedTask;
-import com.l2jserver.gameserver.taskmanager.TaskTypes;
 
 /**
  * @author UnAfraid
@@ -49,7 +51,7 @@ public class TaskClanLeaderApply extends Task {
 	@Override
 	public void onTimeElapsed(ExecutedTask task) {
 		Calendar cal = Calendar.getInstance();
-		if (cal.get(Calendar.DAY_OF_WEEK) == Config.ALT_CLAN_LEADER_DATE_CHANGE) {
+		if (cal.get(DAY_OF_WEEK) == character().getClanLeaderDateChange()) {
 			for (L2Clan clan : ClanTable.getInstance().getClans()) {
 				if (clan.getNewLeaderId() != 0) {
 					final L2ClanMember member = clan.getClanMember(clan.getNewLeaderId());
@@ -66,6 +68,6 @@ public class TaskClanLeaderApply extends Task {
 	
 	@Override
 	public void initializate() {
-		TaskManager.addUniqueTask(NAME, TaskTypes.TYPE_GLOBAL_TASK, "1", Config.ALT_CLAN_LEADER_HOUR_CHANGE, "");
+		TaskManager.addUniqueTask(NAME, TYPE_GLOBAL_TASK, "1", character().getClanLeaderHourChange(), "");
 	}
 }

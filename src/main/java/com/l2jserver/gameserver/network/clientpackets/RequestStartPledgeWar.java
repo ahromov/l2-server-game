@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import com.l2jserver.gameserver.data.sql.impl.ClanTable;
 import com.l2jserver.gameserver.model.ClanPrivilege;
 import com.l2jserver.gameserver.model.L2Clan;
@@ -49,7 +50,7 @@ public final class RequestStartPledgeWar extends L2GameClientPacket {
 			return;
 		}
 		
-		if ((_clan.getLevel() < 3) || (_clan.getMembersCount() < Config.ALT_CLAN_MEMBERS_FOR_WAR)) {
+		if ((_clan.getLevel() < 3) || (_clan.getMembersCount() < character().getClanMembersForWar())) {
 			player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.CLAN_WAR_DECLARED_IF_CLAN_LVL3_OR_15_MEMBER));
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
@@ -68,7 +69,7 @@ public final class RequestStartPledgeWar extends L2GameClientPacket {
 			player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.CLAN_WAR_AGAINST_A_ALLIED_CLAN_NOT_WORK));
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
-		} else if ((clan.getLevel() < 3) || (clan.getMembersCount() < Config.ALT_CLAN_MEMBERS_FOR_WAR)) {
+		} else if ((clan.getLevel() < 3) || (clan.getMembersCount() < character().getClanMembersForWar())) {
 			player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.CLAN_WAR_DECLARED_IF_CLAN_LVL3_OR_15_MEMBER));
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;

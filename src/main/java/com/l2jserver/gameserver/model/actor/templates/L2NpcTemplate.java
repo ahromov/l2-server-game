@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model.actor.templates;
 
+import static com.l2jserver.gameserver.config.Configuration.npc;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.NpcData;
 import com.l2jserver.gameserver.enums.AISkillScope;
 import com.l2jserver.gameserver.enums.AIType;
@@ -140,7 +141,7 @@ public final class L2NpcTemplate extends L2CharTemplate implements IIdentifiable
 		_hasSummoner = set.getBoolean("hasSummoner", false);
 		_canBeSown = set.getBoolean("canBeSown", false);
 		
-		_corpseTime = set.getInt("corpseTime", Config.DEFAULT_CORPSE_TIME);
+		_corpseTime = set.getInt("corpseTime", npc().getDefaultCorpseTime());
 		
 		_aiType = set.getEnum("aiType", AIType.class, AIType.FIGHTER);
 		_aggroRange = set.getInt("aggroRange", 0);

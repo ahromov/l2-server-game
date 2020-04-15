@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,8 +18,9 @@
  */
 package com.l2jserver.gameserver.model.zone.type;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.Location;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -45,11 +46,11 @@ public class L2JailZone extends L2ZoneType {
 		if (character.isPlayer()) {
 			character.setInsideZone(ZoneId.JAIL, true);
 			character.setInsideZone(ZoneId.NO_SUMMON_FRIEND, true);
-			if (Config.JAIL_IS_PVP) {
+			if (general().jailIsPvp()) {
 				character.setInsideZone(ZoneId.PVP, true);
 				character.sendPacket(SystemMessageId.ENTERED_COMBAT_ZONE);
 			}
-			if (Config.JAIL_DISABLE_TRANSACTION) {
+			if (general().jailDisableTransaction()) {
 				character.setInsideZone(ZoneId.NO_STORE, true);
 			}
 		}
@@ -62,7 +63,7 @@ public class L2JailZone extends L2ZoneType {
 			player.setInsideZone(ZoneId.JAIL, false);
 			player.setInsideZone(ZoneId.NO_SUMMON_FRIEND, false);
 			
-			if (Config.JAIL_IS_PVP) {
+			if (general().jailIsPvp()) {
 				character.setInsideZone(ZoneId.PVP, false);
 				character.sendPacket(SystemMessageId.LEFT_COMBAT_ZONE);
 			}
@@ -72,7 +73,7 @@ public class L2JailZone extends L2ZoneType {
 				ThreadPoolManager.getInstance().scheduleGeneral(new TeleportTask(player, JAIL_IN_LOC), 2000);
 				character.sendMessage("You cannot cheat your way out of here. You must wait until your jail time is over.");
 			}
-			if (Config.JAIL_DISABLE_TRANSACTION) {
+			if (general().jailDisableTransaction()) {
 				character.setInsideZone(ZoneId.NO_STORE, false);
 			}
 		}

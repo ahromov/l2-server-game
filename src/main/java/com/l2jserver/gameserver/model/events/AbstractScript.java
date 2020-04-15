@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,10 @@
  */
 package com.l2jserver.gameserver.model.events;
 
-import java.io.File;
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.rates;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -43,7 +46,6 @@ import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.commons.util.Util;
 import com.l2jserver.gameserver.GameTimeController;
 import com.l2jserver.gameserver.ai.CtrlIntention;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.DoorData;
 import com.l2jserver.gameserver.data.xml.impl.NpcData;
 import com.l2jserver.gameserver.datatables.ItemTable;
@@ -144,7 +146,6 @@ import com.l2jserver.gameserver.network.serverpackets.InventoryUpdate;
 import com.l2jserver.gameserver.network.serverpackets.SpecialCamera;
 import com.l2jserver.gameserver.network.serverpackets.StatusUpdate;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
-import com.l2jserver.gameserver.scripting.ScriptEngineManager;
 import com.l2jserver.gameserver.scripting.ScriptManager;
 import com.l2jserver.gameserver.util.MinionList;
 
@@ -153,14 +154,16 @@ import com.l2jserver.gameserver.util.MinionList;
  * @author KenM, UnAfraid, Zoey76
  */
 public abstract class AbstractScript implements INamable {
+	
 	public static final Logger _log = Logger.getLogger(AbstractScript.class.getName());
+	
 	private final Map<ListenerRegisterType, Set<Integer>> _registeredIds = new ConcurrentHashMap<>();
+	
 	private final List<AbstractEventListener> _listeners = new CopyOnWriteArrayList<>();
-	private final File _scriptFile;
+	
 	private boolean _isActive;
 	
 	public AbstractScript() {
-		_scriptFile = ScriptEngineManager.getInstance().getCurrentLoadingScript();
 		initializeAnnotationListeners();
 	}
 	
@@ -281,18 +284,7 @@ public abstract class AbstractScript implements INamable {
 		return _isActive;
 	}
 	
-	public File getScriptFile() {
-		return _scriptFile;
-	}
-	
-	public boolean reload() {
-		try {
-			ScriptEngineManager.getInstance().executeScript(getScriptFile());
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
+	public abstract boolean reload();
 	
 	/**
 	 * Unloads all listeners registered by this class.
@@ -1858,30 +1850,30 @@ public abstract class AbstractScript implements INamable {
 		
 		try {
 			if (itemId == Inventory.ADENA_ID) {
-				count *= Config.RATE_QUEST_REWARD_ADENA;
-			} else if (Config.RATE_QUEST_REWARD_USE_MULTIPLIERS) {
+				count *= rates().getRateQuestRewardAdena();
+			} else if (rates().useQuestRewardMultipliers()) {
 				if (item instanceof L2EtcItem) {
 					switch (((L2EtcItem) item).getItemType()) {
 						case POTION:
-							count *= Config.RATE_QUEST_REWARD_POTION;
+							count *= rates().getRateQuestRewardPotion();
 							break;
 						case SCRL_ENCHANT_WP:
 						case SCRL_ENCHANT_AM:
 						case SCROLL:
-							count *= Config.RATE_QUEST_REWARD_SCROLL;
+							count *= rates().getRateQuestRewardScroll();
 							break;
 						case RECIPE:
-							count *= Config.RATE_QUEST_REWARD_RECIPE;
+							count *= rates().getRateQuestRewardRecipe();
 							break;
 						case MATERIAL:
-							count *= Config.RATE_QUEST_REWARD_MATERIAL;
+							count *= rates().getRateQuestRewardMaterial();
 							break;
 						default:
-							count *= Config.RATE_QUEST_REWARD;
+							count *= rates().getRateQuestReward();
 					}
 				}
 			} else {
-				count *= Config.RATE_QUEST_REWARD;
+				count *= rates().getRateQuestReward();
 			}
 		} catch (Exception e) {
 			count = Long.MAX_VALUE;
@@ -2056,18 +2048,18 @@ public abstract class AbstractScript implements INamable {
 			return true;
 		}
 		
-		minAmount *= Config.RATE_QUEST_DROP;
-		maxAmount *= Config.RATE_QUEST_DROP;
-		dropChance *= Config.RATE_QUEST_DROP; // TODO separate configs for rate and amount
-		if ((npc != null) && Config.L2JMOD_CHAMPION_ENABLE && npc.isChampion()) {
+		minAmount *= rates().getRateQuestDrop();
+		maxAmount *= rates().getRateQuestDrop();
+		dropChance *= rates().getRateQuestDrop(); // TODO separate configs for rate and amount
+		if ((npc != null) && customs().championEnable() && npc.isChampion()) {
 			if ((itemId == Inventory.ADENA_ID) || (itemId == Inventory.ANCIENT_ADENA_ID)) {
-				dropChance *= Config.L2JMOD_CHAMPION_ADENAS_REWARDS_CHANCE;
-				minAmount *= Config.L2JMOD_CHAMPION_ADENAS_REWARDS_AMOUNT;
-				maxAmount *= Config.L2JMOD_CHAMPION_ADENAS_REWARDS_AMOUNT;
+				dropChance *= customs().getChampionAdenasRewardsChance();
+				minAmount *= customs().getChampionAdenasRewardsAmount();
+				maxAmount *= customs().getChampionAdenasRewardsAmount();
 			} else {
-				dropChance *= Config.L2JMOD_CHAMPION_REWARDS_CHANCE;
-				minAmount *= Config.L2JMOD_CHAMPION_REWARDS_AMOUNT;
-				maxAmount *= Config.L2JMOD_CHAMPION_REWARDS_AMOUNT;
+				dropChance *= customs().getChampionRewardsChance();
+				minAmount *= customs().getChampionRewardsAmount();
+				maxAmount *= customs().getChampionRewardsAmount();
 			}
 		}
 		
@@ -2644,7 +2636,7 @@ public abstract class AbstractScript implements INamable {
 	 * @param sp the amount of SP to give to the player
 	 */
 	public static void addExpAndSp(L2PcInstance player, long exp, int sp) {
-		player.addExpAndSpQuest((long) (exp * Config.RATE_QUEST_REWARD_XP), (int) (sp * Config.RATE_QUEST_REWARD_SP));
+		player.addExpAndSpQuest((long) (exp * rates().getRateQuestRewardXP()), (int) (sp * rates().getRateQuestRewardSP()));
 	}
 	
 	public static double getRandom() {
@@ -2797,10 +2789,10 @@ public abstract class AbstractScript implements INamable {
 	 * @param player the player to teleport
 	 * @param loc the {@link Location} object containing the destination coordinates
 	 * @param instanceId the ID of the instance to teleport the player to (0 to teleport out of an instance)
-	 * @param allowRandomOffset if {@code true}, will randomize the teleport coordinates by +/-Config.MAX_OFFSET_ON_TELEPORT
+	 * @param allowRandomOffset if {@code true}, will randomize the teleport coordinates by +/- MaxOffsetOnTeleport
 	 */
 	public void teleportPlayer(L2PcInstance player, Location loc, int instanceId, boolean allowRandomOffset) {
-		player.teleToLocation(loc, instanceId, allowRandomOffset ? Config.MAX_OFFSET_ON_TELEPORT : 0);
+		player.teleToLocation(loc, instanceId, allowRandomOffset ? character().getMaxOffsetOnTeleport() : 0);
 	}
 	
 	/**

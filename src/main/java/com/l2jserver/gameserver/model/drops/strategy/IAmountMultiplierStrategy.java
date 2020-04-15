@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,9 @@
  */
 package com.l2jserver.gameserver.model.drops.strategy;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.rates;
+
 import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.drops.GeneralDropItem;
@@ -28,23 +30,24 @@ import com.l2jserver.gameserver.model.itemcontainer.Inventory;
  * @author Battlecruiser
  */
 public interface IAmountMultiplierStrategy {
-	public static final IAmountMultiplierStrategy DROP = DEFAULT_STRATEGY(Config.RATE_DEATH_DROP_AMOUNT_MULTIPLIER);
-	public static final IAmountMultiplierStrategy SPOIL = DEFAULT_STRATEGY(Config.RATE_CORPSE_DROP_AMOUNT_MULTIPLIER);
+	public static final IAmountMultiplierStrategy DROP = DEFAULT_STRATEGY(rates().getDeathDropAmountMultiplier());
+	public static final IAmountMultiplierStrategy SPOIL = DEFAULT_STRATEGY(rates().getCorpseDropAmountMultiplier());
 	public static final IAmountMultiplierStrategy STATIC = (item, victim) -> 1;
 	
 	public static IAmountMultiplierStrategy DEFAULT_STRATEGY(final double defaultMultiplier) {
 		return (item, victim) -> {
 			double multiplier = 1;
 			if (victim.isChampion()) {
-				multiplier *= item.getItemId() != Inventory.ADENA_ID ? Config.L2JMOD_CHAMPION_REWARDS_AMOUNT : Config.L2JMOD_CHAMPION_ADENAS_REWARDS_AMOUNT;
+				multiplier *= item.getItemId() != Inventory.ADENA_ID ? customs().getChampionRewardsAmount() : customs().getChampionAdenasRewardsAmount();
 			}
-			Float dropAmountMultiplier = Config.RATE_DROP_AMOUNT_MULTIPLIER.get(item.getItemId());
+			
+			Float dropAmountMultiplier = rates().getDropAmountMultiplierByItemId().get(item.getItemId());
 			if (dropAmountMultiplier != null) {
 				multiplier *= dropAmountMultiplier;
 			} else if (ItemTable.getInstance().getTemplate(item.getItemId()).hasExImmediateEffect()) {
-				multiplier *= Config.RATE_HERB_DROP_AMOUNT_MULTIPLIER;
+				multiplier *= rates().getHerbDropAmountMultiplier();
 			} else if (victim.isRaid()) {
-				multiplier *= Config.RATE_RAID_DROP_AMOUNT_MULTIPLIER;
+				multiplier *= rates().getRaidDropAmountMultiplier();
 			} else {
 				multiplier *= defaultMultiplier;
 			}

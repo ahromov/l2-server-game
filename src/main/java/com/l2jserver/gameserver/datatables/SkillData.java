@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.datatables;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -26,7 +28,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.SkillTreesData;
 import com.l2jserver.gameserver.engines.DocumentEngine;
 import com.l2jserver.gameserver.model.skills.Skill;
@@ -108,7 +109,7 @@ public final class SkillData {
 		final int maxLvl = getMaxLevel(skillId);
 		// requested level too high
 		if ((maxLvl > 0) && (level > maxLvl)) {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				LOG.warn("Call to unexisting skill level Id {} requested level {} max level {}!", skillId, level, maxLvl);
 			}
 			return _skills.get(getSkillHashCode(skillId, maxLvl));

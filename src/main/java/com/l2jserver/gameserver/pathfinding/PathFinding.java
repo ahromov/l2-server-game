@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,9 +18,10 @@
  */
 package com.l2jserver.gameserver.pathfinding;
 
+import static com.l2jserver.gameserver.config.Configuration.geodata;
+
 import java.util.List;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.L2World;
 import com.l2jserver.gameserver.pathfinding.cellnodes.CellPathFinding;
 import com.l2jserver.gameserver.pathfinding.geonodes.GeoPathFinding;
@@ -30,7 +31,7 @@ import com.l2jserver.gameserver.pathfinding.geonodes.GeoPathFinding;
  */
 public abstract class PathFinding {
 	public static PathFinding getInstance() {
-		if (Config.PATHFINDING == 1) {
+		if (geodata().getPathFinding() == 1) {
 			// Higher Memory Usage, Smaller Cpu Usage
 			return GeoPathFinding.getInstance();
 		}

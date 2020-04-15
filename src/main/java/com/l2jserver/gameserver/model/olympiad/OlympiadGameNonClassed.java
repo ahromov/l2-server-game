@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,9 +18,11 @@
  */
 package com.l2jserver.gameserver.model.olympiad;
 
+import static com.l2jserver.gameserver.config.Configuration.olympiad;
+
 import java.util.List;
 
-import com.l2jserver.gameserver.config.Config;
+import com.l2jserver.gameserver.model.holders.ItemHolder;
 
 /**
  * @author DS
@@ -37,12 +39,12 @@ public class OlympiadGameNonClassed extends OlympiadGameNormal {
 	
 	@Override
 	protected final int getDivider() {
-		return Config.ALT_OLY_DIVIDER_NON_CLASSED;
+		return olympiad().getDividerNonClassed();
 	}
 	
 	@Override
-	protected final int[][] getReward() {
-		return Config.ALT_OLY_NONCLASSED_REWARD;
+	protected final List<ItemHolder> getReward() {
+		return olympiad().getNonClassedReward();
 	}
 	
 	@Override

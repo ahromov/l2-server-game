@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,12 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.EnchantSkillGroupsData;
 import com.l2jserver.gameserver.datatables.SkillData;
 import com.l2jserver.gameserver.model.L2EnchantSkillGroup.EnchantSkillHolder;
@@ -112,7 +114,7 @@ public final class RequestExEnchantSkillUntrain extends L2GameClientPacket {
 		int requireditems = esd.getAdenaCost();
 		
 		L2ItemInstance spb = player.getInventory().getItemByItemId(reqItemId);
-		if (Config.ES_SP_BOOK_NEEDED) {
+		if (character().enchantSkillSpBookNeeded()) {
 			if (spb == null) // Haven't spellbook
 			{
 				player.sendPacket(SystemMessageId.YOU_DONT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL);
@@ -126,7 +128,7 @@ public final class RequestExEnchantSkillUntrain extends L2GameClientPacket {
 		}
 		
 		boolean check = true;
-		if (Config.ES_SP_BOOK_NEEDED) {
+		if (character().enchantSkillSpBookNeeded()) {
 			check &= player.destroyItem("Consume", spb.getObjectId(), 1, player, true);
 		}
 		
@@ -139,14 +141,14 @@ public final class RequestExEnchantSkillUntrain extends L2GameClientPacket {
 		
 		player.addSp((int) (requiredSp * 0.8));
 		
-		if (Config.LOG_SKILL_ENCHANTS) {
+		if (general().logSkillEnchants()) {
 			LOG_ENCHANT_SKILL.info("UNTRAINED {} using {} by {}.", skill, spb, player);
 		}
 		
 		player.addSkill(skill, true);
 		player.sendPacket(ExEnchantSkillResult.valueOf(true));
 		
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			_log.fine("Learned skill ID: " + _skillId + " Level: " + _skillLvl + " for " + requiredSp + " SP, " + requireditems + " Adena.");
 		}
 		

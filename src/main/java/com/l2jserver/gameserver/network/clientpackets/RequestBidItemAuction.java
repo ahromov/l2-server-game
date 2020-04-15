@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,12 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import com.l2jserver.gameserver.instancemanager.ItemAuctionManager;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.itemauction.ItemAuction;
 import com.l2jserver.gameserver.model.itemauction.ItemAuctionInstance;
-import com.l2jserver.gameserver.model.itemcontainer.Inventory;
 
 /**
  * @author Forsaiken
@@ -52,7 +53,7 @@ public final class RequestBidItemAuction extends L2GameClientPacket {
 			return;
 		}
 		
-		if ((_bid < 0) || (_bid > Inventory.MAX_ADENA)) {
+		if ((_bid < 0) || (_bid > character().getMaxAdena())) {
 			return;
 		}
 		

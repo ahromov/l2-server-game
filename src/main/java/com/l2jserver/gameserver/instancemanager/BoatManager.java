@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,11 @@
  */
 package com.l2jserver.gameserver.instancemanager;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.L2World;
 import com.l2jserver.gameserver.model.StatsSet;
 import com.l2jserver.gameserver.model.VehiclePathPoint;
@@ -49,7 +50,7 @@ public class BoatManager {
 	}
 	
 	public L2BoatInstance getNewBoat(int boatId, int x, int y, int z, int heading) {
-		if (!Config.ALLOW_BOAT) {
+		if (!general().allowBoat()) {
 			return null;
 		}
 		
@@ -161,12 +162,12 @@ public class BoatManager {
 	
 	private void broadcastPacketsToPlayers(VehiclePathPoint point1, VehiclePathPoint point2, L2GameServerPacket... packets) {
 		for (L2PcInstance player : L2World.getInstance().getPlayers()) {
-			if (Math.hypot(player.getX() - point1.getX(), player.getY() - point1.getY()) < Config.BOAT_BROADCAST_RADIUS) {
+			if (Math.hypot(player.getX() - point1.getX(), player.getY() - point1.getY()) < general().getBoatBroadcastRadius()) {
 				for (L2GameServerPacket p : packets) {
 					player.sendPacket(p);
 				}
 			} else {
-				if (Math.hypot(player.getX() - point2.getX(), player.getY() - point2.getY()) < Config.BOAT_BROADCAST_RADIUS) {
+				if (Math.hypot(player.getX() - point2.getX(), player.getY() - point2.getY()) < general().getBoatBroadcastRadius()) {
 					for (L2GameServerPacket p : packets) {
 						player.sendPacket(p);
 					}

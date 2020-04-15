@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,11 @@
  */
 package com.l2jserver.gameserver;
 
+import static com.l2jserver.gameserver.config.Configuration.fortress;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.L2Clan;
 import com.l2jserver.gameserver.model.entity.Fort;
 import com.l2jserver.gameserver.model.itemcontainer.Inventory;
@@ -63,9 +64,9 @@ public class FortUpdater implements Runnable {
 					_fort.getOwnerClan().increaseBloodOathCount();
 					
 					if (_fort.getFortState() == 2) {
-						if (_clan.getWarehouse().getAdena() >= Config.FS_FEE_FOR_CASTLE) {
-							_clan.getWarehouse().destroyItemByItemId("FS_fee_for_Castle", Inventory.ADENA_ID, Config.FS_FEE_FOR_CASTLE, null, null);
-							_fort.getContractedCastle().addToTreasuryNoTax(Config.FS_FEE_FOR_CASTLE);
+						if (_clan.getWarehouse().getAdena() >= fortress().getFeeForCastle()) {
+							_clan.getWarehouse().destroyItemByItemId("FS_fee_for_Castle", Inventory.ADENA_ID, fortress().getFeeForCastle(), null, null);
+							_fort.getContractedCastle().addToTreasuryNoTax(fortress().getFeeForCastle());
 							_fort.raiseSupplyLvL();
 						} else {
 							_fort.setFortState(1, 0);
@@ -78,7 +79,7 @@ public class FortUpdater implements Runnable {
 					if ((_fort.getOwnerClan() == null) || (_fort.getOwnerClan() != _clan)) {
 						return;
 					}
-					if (_fort.getOwnedTime() > (Config.FS_MAX_OWN_TIME * 3600)) {
+					if (_fort.getOwnedTime() > (fortress().getMaxKeepTime() * 3600)) {
 						_fort.removeOwner(true);
 						_fort.setFortState(0, 0);
 					}

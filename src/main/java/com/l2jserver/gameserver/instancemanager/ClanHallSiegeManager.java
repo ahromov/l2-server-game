@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.instancemanager;
 
+import static com.l2jserver.gameserver.config.Configuration.clanhall;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.L2Clan;
 import com.l2jserver.gameserver.model.StatsSet;
 import com.l2jserver.gameserver.model.actor.L2Character;
@@ -114,8 +115,8 @@ public final class ClanHallSiegeManager {
 	}
 	
 	public final void registerClan(L2Clan clan, SiegableHall hall, L2PcInstance player) {
-		if (clan.getLevel() < Config.CHS_CLAN_MINLEVEL) {
-			player.sendMessage("Only clans of level " + Config.CHS_CLAN_MINLEVEL + " or higher may register for a castle siege");
+		if (clan.getLevel() < clanhall().getMinClanLevel()) {
+			player.sendMessage("Only clans of level " + clanhall().getMinClanLevel() + " or higher may register for a castle siege");
 		} else if (hall.isWaitingBattle()) {
 			SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.DEADLINE_FOR_SIEGE_S1_PASSED);
 			sm.addString(hall.getName());
@@ -130,7 +131,7 @@ public final class ClanHallSiegeManager {
 			player.sendPacket(SystemMessageId.ALREADY_REQUESTED_SIEGE_BATTLE);
 		} else if (isClanParticipating(clan)) {
 			player.sendPacket(SystemMessageId.APPLICATION_DENIED_BECAUSE_ALREADY_SUBMITTED_A_REQUEST_FOR_ANOTHER_SIEGE_BATTLE);
-		} else if (hall.getSiege().getAttackers().size() >= Config.CHS_MAX_ATTACKERS) {
+		} else if (hall.getSiege().getAttackers().size() >= clanhall().getMaxAttackers()) {
 			player.sendPacket(SystemMessageId.ATTACKER_SIDE_FULL);
 		} else {
 			hall.addAttacker(clan);

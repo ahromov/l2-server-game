@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,11 @@
  */
 package com.l2jserver.gameserver.instancemanager.tasks;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.Calendar;
 
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.instancemanager.FourSepulchersManager;
 
 /**
@@ -34,7 +35,7 @@ public final class FourSepulchersManagerSayTask implements Runnable {
 		if (FourSepulchersManager.getInstance().isAttackTime()) {
 			final Calendar tmp = Calendar.getInstance();
 			tmp.setTimeInMillis(Calendar.getInstance().getTimeInMillis() - FourSepulchersManager.getInstance().getWarmUpTimeEnd());
-			if ((tmp.get(Calendar.MINUTE) + 5) < Config.FS_TIME_ATTACK) {
+			if ((tmp.get(Calendar.MINUTE) + 5) < general().getTimeOfAttack()) {
 				FourSepulchersManager.getInstance().managerSay((byte) tmp.get(Calendar.MINUTE)); // byte
 				// because
 				// minute
@@ -44,7 +45,7 @@ public final class FourSepulchersManagerSayTask implements Runnable {
 				ThreadPoolManager.getInstance().scheduleGeneral(new FourSepulchersManagerSayTask(), 5 * 60000);
 			}
 			// attack time ending chat
-			else if ((tmp.get(Calendar.MINUTE) + 5) >= Config.FS_TIME_ATTACK) {
+			else if ((tmp.get(Calendar.MINUTE) + 5) >= general().getTimeOfAttack()) {
 				FourSepulchersManager.getInstance().managerSay((byte) 90); // sending a unique id :D
 			}
 		} else if (FourSepulchersManager.getInstance().isEntryTime()) {

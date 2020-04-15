@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,9 @@
  */
 package com.l2jserver.gameserver.network.serverpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.npc;
+
 import com.l2jserver.gameserver.data.sql.impl.ClanTable;
 import com.l2jserver.gameserver.instancemanager.TownManager;
 import com.l2jserver.gameserver.model.L2Clan;
@@ -92,15 +94,15 @@ public abstract class AbstractNpcInfo extends L2GameServerPacket {
 			
 			if (_npc.isInvisible()) {
 				_title = "Invisible";
-			} else if (Config.L2JMOD_CHAMPION_ENABLE && cha.isChampion()) {
-				_title = (Config.L2JMOD_CHAMP_TITLE); // On every subclass
+			} else if (customs().championEnable() && cha.isChampion()) {
+				_title = customs().getChampionTitle(); // On every subclass
 			} else if (cha.getTemplate().isUsingServerSideTitle()) {
 				_title = cha.getTemplate().getTitle(); // On every subclass
 			} else {
 				_title = cha.getTitle(); // On every subclass
 			}
 			
-			if (Config.SHOW_NPC_LVL && (_npc instanceof L2MonsterInstance)) {
+			if (npc().showNpcLevel() && (_npc instanceof L2MonsterInstance)) {
 				String t = "Lv " + cha.getLevel() + (cha.isAggressive() ? "*" : "");
 				if (_title != null) {
 					t += " " + _title;
@@ -110,7 +112,7 @@ public abstract class AbstractNpcInfo extends L2GameServerPacket {
 			}
 			
 			// npc crest of owning clan/ally of castle
-			if ((cha instanceof L2NpcInstance) && cha.isInsideZone(ZoneId.TOWN) && (Config.SHOW_CREST_WITHOUT_QUEST || cha.getCastle().getShowNpcCrest()) && (cha.getCastle().getOwnerId() != 0)) {
+			if ((cha instanceof L2NpcInstance) && cha.isInsideZone(ZoneId.TOWN) && (npc().showCrestWithoutQuest() || cha.getCastle().getShowNpcCrest()) && (cha.getCastle().getOwnerId() != 0)) {
 				int townId = TownManager.getTown(_x, _y, _z).getTownId();
 				if ((townId != 33) && (townId != 22)) {
 					L2Clan clan = ClanTable.getInstance().getClan(cha.getCastle().getOwnerId());

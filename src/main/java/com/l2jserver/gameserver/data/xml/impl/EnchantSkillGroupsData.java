@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -27,7 +27,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.L2EnchantSkillGroup;
 import com.l2jserver.gameserver.model.L2EnchantSkillGroup.EnchantSkillHolder;
 import com.l2jserver.gameserver.model.L2EnchantSkillLearn;
@@ -43,10 +42,6 @@ import com.l2jserver.gameserver.util.IXmlReader;
 public class EnchantSkillGroupsData implements IXmlReader {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(EnchantSkillGroupsData.class);
-	
-	public static final int NORMAL_ENCHANT_COST_MULTIPLIER = Config.NORMAL_ENCHANT_COST_MULTIPLIER;
-	
-	public static final int SAFE_ENCHANT_COST_MULTIPLIER = Config.SAFE_ENCHANT_COST_MULTIPLIER;
 	
 	public static final int NORMAL_ENCHANT_BOOK = 6622;
 	

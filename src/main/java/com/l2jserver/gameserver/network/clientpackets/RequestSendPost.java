@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,10 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
 import static com.l2jserver.gameserver.model.itemcontainer.Inventory.ADENA_ID;
-import static com.l2jserver.gameserver.model.itemcontainer.Inventory.MAX_ADENA;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.CharNameTable;
 import com.l2jserver.gameserver.data.xml.impl.AdminData;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
@@ -77,7 +77,7 @@ public final class RequestSendPost extends L2GameClientPacket {
 		_text = readS();
 		
 		int attachCount = readD();
-		if ((attachCount < 0) || (attachCount > Config.MAX_ITEM_IN_PACKET) || (((attachCount * BATCH_LENGTH) + 8) != _buf.remaining())) {
+		if ((attachCount < 0) || (attachCount > MAX_ITEM_IN_PACKET) || (((attachCount * BATCH_LENGTH) + 8) != _buf.remaining())) {
 			return;
 		}
 		
@@ -99,7 +99,7 @@ public final class RequestSendPost extends L2GameClientPacket {
 	
 	@Override
 	public void runImpl() {
-		if (!Config.ALLOW_MAIL) {
+		if (!general().allowMail()) {
 			return;
 		}
 		
@@ -108,7 +108,7 @@ public final class RequestSendPost extends L2GameClientPacket {
 			return;
 		}
 		
-		if (!Config.ALLOW_ATTACHMENTS) {
+		if (!general().allowAttachments()) {
 			_items = null;
 			_isCod = false;
 			_reqAdena = 0;
@@ -160,7 +160,7 @@ public final class RequestSendPost extends L2GameClientPacket {
 			return;
 		}
 		
-		if ((_reqAdena < 0) || (_reqAdena > MAX_ADENA)) {
+		if ((_reqAdena < 0) || (_reqAdena > character().getMaxAdena())) {
 			return;
 		}
 		
@@ -196,7 +196,7 @@ public final class RequestSendPost extends L2GameClientPacket {
 			return;
 		}
 		
-		if (activeChar.isJailed() && ((Config.JAIL_DISABLE_TRANSACTION && (_items != null)) || Config.JAIL_DISABLE_CHAT)) {
+		if (activeChar.isJailed() && ((general().jailDisableTransaction() && (_items != null)) || general().jailDisableChat())) {
 			activeChar.sendPacket(SystemMessageId.CANT_FORWARD_NOT_IN_PEACE_ZONE);
 			return;
 		}
@@ -274,7 +274,7 @@ public final class RequestSendPost extends L2GameClientPacket {
 		final String receiver = recv.toString();
 		
 		// Proceed to the transfer
-		InventoryUpdate playerIU = Config.FORCE_INVENTORY_UPDATE ? null : new InventoryUpdate();
+		InventoryUpdate playerIU = general().forceInventoryUpdate() ? null : new InventoryUpdate();
 		for (AttachmentItem i : _items) {
 			// Check validity of requested item
 			L2ItemInstance oldItem = player.checkItemManipulation(i.getObjectId(), i.getCount(), "attach");

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,9 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import com.l2jserver.gameserver.data.xml.impl.AdminData;
 import com.l2jserver.gameserver.enums.PlayerAction;
 import com.l2jserver.gameserver.handler.AdminCommandHandler;
@@ -63,7 +65,7 @@ public final class DlgAnswer extends L2GameClientPacket {
 		
 		if (_messageId == SystemMessageId.S1.getId()) {
 			if (activeChar.removeAction(PlayerAction.USER_ENGAGE)) {
-				if (Config.L2JMOD_ALLOW_WEDDING) {
+				if (customs().allowWedding()) {
 					activeChar.engageAnswer(_answer);
 				}
 			} else if (activeChar.removeAction(PlayerAction.ADMIN_COMMAND)) {
@@ -75,7 +77,7 @@ public final class DlgAnswer extends L2GameClientPacket {
 				String command = cmd.split(" ")[0];
 				IAdminCommandHandler ach = AdminCommandHandler.getInstance().getHandler(command);
 				if (AdminData.getInstance().hasAccess(command, activeChar.getAccessLevel())) {
-					if (Config.GMAUDIT) {
+					if (general().gmAudit()) {
 						GMAudit.auditGMAction(activeChar.getName() + " [" + activeChar.getObjectId() + "]", cmd, (activeChar.getTarget() != null ? activeChar.getTarget().getName() : "no-target"));
 					}
 					ach.useAdminCommand(cmd, activeChar);

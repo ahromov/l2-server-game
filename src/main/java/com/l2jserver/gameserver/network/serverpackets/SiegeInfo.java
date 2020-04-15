@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,9 +18,10 @@
  */
 package com.l2jserver.gameserver.network.serverpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.castle;
+
 import java.util.Calendar;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.ClanTable;
 import com.l2jserver.gameserver.instancemanager.ClanHallSiegeManager;
 import com.l2jserver.gameserver.model.L2Clan;
@@ -96,8 +97,8 @@ public class SiegeInfo extends L2GameServerPacket {
 				cal.set(Calendar.SECOND, 0);
 				
 				writeD(0x00);
-				writeD(Config.SIEGE_HOUR_LIST.size());
-				for (int hour : Config.SIEGE_HOUR_LIST) {
+				writeD(castle().getSiegeHourList().size());
+				for (int hour : castle().getSiegeHourList()) {
 					cal.set(Calendar.HOUR_OF_DAY, hour);
 					writeD((int) (cal.getTimeInMillis() / 1000));
 				}

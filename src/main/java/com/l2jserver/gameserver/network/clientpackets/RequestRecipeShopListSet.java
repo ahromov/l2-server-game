@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,12 +18,11 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import static com.l2jserver.gameserver.model.itemcontainer.Inventory.MAX_ADENA;
+import static com.l2jserver.gameserver.config.Configuration.character;
 
 import java.util.Arrays;
 import java.util.List;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.RecipeData;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
 import com.l2jserver.gameserver.model.L2ManufactureItem;
@@ -50,7 +49,7 @@ public final class RequestRecipeShopListSet extends L2GameClientPacket {
 	@Override
 	protected void readImpl() {
 		int count = readD();
-		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != _buf.remaining())) {
+		if ((count <= 0) || (count > MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != _buf.remaining())) {
 			return;
 		}
 		
@@ -99,12 +98,12 @@ public final class RequestRecipeShopListSet extends L2GameClientPacket {
 		for (L2ManufactureItem i : _items) {
 			final L2RecipeList list = RecipeData.getInstance().getRecipeList(i.getRecipeId());
 			if (!dwarfRecipes.contains(list) && !commonRecipes.contains(list)) {
-				Util.handleIllegalPlayerAction(player, "Warning!! Player " + player.getName() + " of account " + player.getAccountName() + " tried to set recipe which he dont have.", Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(player, "Warning!! Player " + player.getName() + " of account " + player.getAccountName() + " tried to set recipe which he dont have.");
 				return;
 			}
 			
-			if (i.getCost() > MAX_ADENA) {
-				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to set price more than " + MAX_ADENA + " adena in Private Manufacture.", Config.DEFAULT_PUNISH);
+			if (i.getCost() > character().getMaxAdena()) {
+				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to set price more than " + character().getMaxAdena() + " adena in Private Manufacture.");
 				return;
 			}
 			

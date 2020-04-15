@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,12 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 import com.l2jserver.gameserver.ai.CtrlIntention;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.AdminData;
 import com.l2jserver.gameserver.enums.InstanceType;
 import com.l2jserver.gameserver.enums.PlayerAction;
@@ -140,7 +141,7 @@ public final class RequestBypassToServer extends L2GameClientPacket {
 					activeChar.addAction(PlayerAction.ADMIN_COMMAND);
 					activeChar.sendPacket(dlg);
 				} else {
-					if (Config.GMAUDIT) {
+					if (general().gmAudit()) {
 						GMAudit.auditGMAction(activeChar.getName() + " [" + activeChar.getObjectId() + "]", _command, (activeChar.getTarget() != null ? activeChar.getTarget().getName() : "no-target"));
 					}
 					
@@ -211,7 +212,7 @@ public final class RequestBypassToServer extends L2GameClientPacket {
 				}
 			} else if (_command.startsWith("manor_menu_select")) {
 				final L2Npc lastNpc = activeChar.getLastFolkNPC();
-				if (Config.ALLOW_MANOR && (lastNpc != null) && lastNpc.canInteract(activeChar)) {
+				if (general().allowManor() && (lastNpc != null) && lastNpc.canInteract(activeChar)) {
 					final String[] split = _command.substring(_command.indexOf("?") + 1).split("&");
 					final int ask = Integer.parseInt(split[0].split("=")[1]);
 					final int state = Integer.parseInt(split[1].split("=")[1]);

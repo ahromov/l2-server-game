@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,9 +18,11 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.logging.Level;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.actor.L2Npc;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.holders.ItemHolder;
@@ -50,7 +52,7 @@ public class RequestPackageSend extends L2GameClientPacket {
 		_objectId = readD();
 		
 		int count = readD();
-		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != _buf.remaining())) {
+		if ((count <= 0) || (count > MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != _buf.remaining())) {
 			return;
 		}
 		
@@ -85,7 +87,7 @@ public class RequestPackageSend extends L2GameClientPacket {
 		}
 		
 		if (player.getActiveEnchantItemId() != L2PcInstance.ID_NONE) {
-			Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to use enchant Exploit!", Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to use enchant Exploit!");
 			return;
 		}
 		
@@ -94,13 +96,13 @@ public class RequestPackageSend extends L2GameClientPacket {
 			return;
 		}
 		
-		// Alt game - Karma punishment
-		if (!Config.ALT_GAME_KARMA_PLAYER_CAN_USE_WAREHOUSE && (player.getKarma() > 0)) {
+		// Karma punishment
+		if (!character().karmaPlayerCanUseWareHouse() && (player.getKarma() > 0)) {
 			return;
 		}
 		
 		// Freight price from config per item slot.
-		final int fee = _items.length * Config.ALT_FREIGHT_PRICE;
+		final int fee = _items.length * character().getFreightPrice();
 		long currentAdena = player.getAdena();
 		int slots = 0;
 		
@@ -142,7 +144,7 @@ public class RequestPackageSend extends L2GameClientPacket {
 		}
 		
 		// Proceed to the transfer
-		final InventoryUpdate playerIU = Config.FORCE_INVENTORY_UPDATE ? null : new InventoryUpdate();
+		final InventoryUpdate playerIU = general().forceInventoryUpdate() ? null : new InventoryUpdate();
 		for (ItemHolder i : _items) {
 			// Check validity of requested item
 			final L2ItemInstance oldItem = player.checkItemManipulation(i.getId(), i.getCount(), "deposit");

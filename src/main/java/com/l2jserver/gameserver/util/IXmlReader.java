@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.util;
 
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.io.File;
 import java.io.FileFilter;
 
@@ -32,7 +34,6 @@ import org.w3c.dom.Node;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.util.file.filter.XMLFilter;
 
 /**
@@ -61,7 +62,7 @@ public interface IXmlReader {
 	 * @param path the relative path to the datapack root of the XML file to parse.
 	 */
 	default void parseDatapackFile(String path) {
-		parseFile(new File(Config.DATAPACK_ROOT, path));
+		parseFile(new File(server().getDatapackRoot(), path));
 	}
 	
 	/**
@@ -154,7 +155,7 @@ public interface IXmlReader {
 	 * @return {@code false} if it fails to find the directory, {@code true} otherwise
 	 */
 	default boolean parseDatapackDirectory(String path, boolean recursive) {
-		return parseDirectory(new File(Config.DATAPACK_ROOT, path), recursive);
+		return parseDirectory(new File(server().getDatapackRoot(), path), recursive);
 	}
 	
 	/**

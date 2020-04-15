@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import com.l2jserver.gameserver.model.L2Object;
 import com.l2jserver.gameserver.model.L2World;
 import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
@@ -47,7 +48,7 @@ public class RequestExRqItemLink extends L2GameClientPacket {
 				if (item.isPublished()) {
 					client.sendPacket(new ExRpItemLink(item));
 				} else {
-					if (Config.DEBUG) {
+					if (general().debug()) {
 						_log.info(getClient() + " requested item link for item which wasnt published! ID:" + _objectId);
 					}
 				}

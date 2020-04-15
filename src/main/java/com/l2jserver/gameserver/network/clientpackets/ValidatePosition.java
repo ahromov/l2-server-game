@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,9 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.geodata;
+
 import com.l2jserver.gameserver.model.L2World;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.zone.ZoneId;
@@ -58,7 +60,7 @@ public class ValidatePosition extends L2GameClientPacket {
 		final int realY = activeChar.getY();
 		int realZ = activeChar.getZ();
 		
-		if (Config.DEVELOPER) {
+		if (general().developer()) {
 			_log.fine("client pos: " + _x + " " + _y + " " + _z + " head " + _heading);
 			_log.fine("server pos: " + realX + " " + realY + " " + realZ + " head " + activeChar.getHeading());
 		}
@@ -73,7 +75,7 @@ public class ValidatePosition extends L2GameClientPacket {
 		double diffSq;
 		
 		if (activeChar.isInBoat()) {
-			if (Config.COORD_SYNCHRONIZE == 2) {
+			if (geodata().getCoordSynchronize() == 2) {
 				dx = _x - activeChar.getInVehiclePosition().getX();
 				dy = _y - activeChar.getInVehiclePosition().getY();
 				// dz = _z - activeChar.getInVehiclePosition().getZ();
@@ -129,16 +131,16 @@ public class ValidatePosition extends L2GameClientPacket {
 			}
 		} else if (diffSq < 360000) // if too large, messes observation
 		{
-			if (Config.COORD_SYNCHRONIZE == -1) // Only Z coordinate synched to server,
+			// Only Z coordinate synched to server,
 			// mainly used when no geodata but can be used also with geodata
-			{
+			if (geodata().getCoordSynchronize() == -1) {
 				activeChar.setXYZ(realX, realY, _z);
 				return;
 			}
-			if (Config.COORD_SYNCHRONIZE == 1) // Trusting also client x,y coordinates (should not be used with geodata)
-			{
-				if (!activeChar.isMoving() || !activeChar.validateMovementHeading(_heading)) // Heading changed on client = possible obstacle
-				{
+			// Trusting also client x,y coordinates (should not be used with geodata)
+			if (geodata().getCoordSynchronize() == 1) {
+				// Heading changed on client = possible obstacle
+				if (!activeChar.isMoving() || !activeChar.validateMovementHeading(_heading)) {
 					// character is not moving, take coordinates from client
 					if (diffSq < 2500) {
 						activeChar.setXYZ(realX, realY, _z);
@@ -164,7 +166,7 @@ public class ValidatePosition extends L2GameClientPacket {
 					activeChar.setXYZ(realX, realY, _z);
 					realZ = _z;
 				} else {
-					if (Config.DEVELOPER) {
+					if (general().developer()) {
 						_log.info(activeChar.getName() + ": Synchronizing position Server --> Client");
 					}
 					

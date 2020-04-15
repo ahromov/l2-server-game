@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,14 @@
  */
 package com.l2jserver.gameserver;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.hexId;
+import static com.l2jserver.gameserver.config.Configuration.ip;
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,6 +42,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -46,7 +54,6 @@ import com.l2jserver.commons.network.BaseSendablePacket;
 import com.l2jserver.commons.security.crypt.NewCrypt;
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.commons.util.Util;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.L2World;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.L2GameClient;
@@ -76,8 +83,16 @@ import com.l2jserver.gameserver.network.serverpackets.LoginFail;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 public class LoginServerThread extends Thread {
+	
 	protected static final Logger LOG = LoggerFactory.getLogger(LoginServerThread.class);
+	
 	protected static final Logger LOG_ACCOUNTING = LoggerFactory.getLogger("accounting");
+	
+	private static final String HEXID_FILE = "./config/hexid.txt";
+	
+	private static final int TEENAGER = 15;
+	
+	private static final int ADULT = 18;
 	
 	/** @see com.l2jserver.loginserver.L2LoginServer#PROTOCOL_REV */
 	private static final int REVISION = 0x0106;
@@ -109,27 +124,25 @@ public class LoginServerThread extends Thread {
 	private final List<String> _subnets;
 	private final List<String> _hosts;
 	
-	/**
-	 * Instantiates a new login server thread.
-	 */
 	protected LoginServerThread() {
 		super("LoginServerThread");
-		_port = Config.GAME_SERVER_LOGIN_PORT;
-		_gamePort = Config.PORT_GAME;
-		_hostname = Config.GAME_SERVER_LOGIN_HOST;
-		_hexID = Config.HEX_ID;
-		if (_hexID == null) {
-			_requestID = Config.REQUEST_ID;
+		_port = server().getLoginPort();
+		_gamePort = server().getPort();
+		_hostname = server().getLoginHost();
+		if (hexId().getHexID() == null) {
 			_hexID = Util.generateHex(16);
+			_requestID = server().getRequestServerId();
+			hexId().setProperty("ServerID", String.valueOf(_requestID));
 		} else {
-			_requestID = Config.SERVER_ID;
+			_hexID = hexId().getHexID().toByteArray();
+			_requestID = hexId().getServerID();
 		}
-		_acceptAlternate = Config.ACCEPT_ALTERNATE_ID;
-		_reserveHost = Config.RESERVE_HOST_ON_LOGIN;
-		_subnets = Config.GAME_SERVER_SUBNETS;
-		_hosts = Config.GAME_SERVER_HOSTS;
+		_acceptAlternate = server().acceptAlternateId();
+		_reserveHost = server().reserveHostOnLogin();
+		_subnets = ip().getSubnets();
+		_hosts = ip().getHosts();
 		_waitingClients = new CopyOnWriteArrayList<>();
-		_maxPlayer = Config.MAXIMUM_ONLINE_USERS;
+		_maxPlayer = server().getMaxOnlineUsers();
 	}
 	
 	@Override
@@ -224,23 +237,23 @@ public class LoginServerThread extends Thread {
 							AuthResponse aresp = new AuthResponse(incoming);
 							int serverID = aresp.getServerId();
 							_serverName = aresp.getServerName();
-							Config.saveHexid(serverID, hexToString(_hexID));
+							saveHexid(serverID, hexToString(_hexID), HEXID_FILE);
 							LOG.info("Registered on login as Server {}: {}", serverID, _serverName);
 							ServerStatus st = new ServerStatus();
-							if (Config.SERVER_LIST_BRACKET) {
+							if (general().getServerListBrackets()) {
 								st.addAttribute(ServerStatus.SERVER_LIST_SQUARE_BRACKET, ServerStatus.ON);
 							} else {
 								st.addAttribute(ServerStatus.SERVER_LIST_SQUARE_BRACKET, ServerStatus.OFF);
 							}
-							st.addAttribute(ServerStatus.SERVER_TYPE, Config.SERVER_LIST_TYPE);
-							if (Config.SERVER_GMONLY) {
+							st.addAttribute(ServerStatus.SERVER_TYPE, general().getServerListType());
+							if (general().serverGMOnly()) {
 								st.addAttribute(ServerStatus.SERVER_LIST_STATUS, ServerStatus.STATUS_GM_ONLY);
 							} else {
 								st.addAttribute(ServerStatus.SERVER_LIST_STATUS, ServerStatus.STATUS_AUTO);
 							}
-							if (Config.SERVER_LIST_AGE == 15) {
+							if (general().getServerListAge() == TEENAGER) {
 								st.addAttribute(ServerStatus.SERVER_AGE, ServerStatus.SERVER_AGE_15);
-							} else if (Config.SERVER_LIST_AGE == 18) {
+							} else if (general().getServerListAge() == ADULT) {
 								st.addAttribute(ServerStatus.SERVER_AGE, ServerStatus.SERVER_AGE_18);
 							} else {
 								st.addAttribute(ServerStatus.SERVER_AGE, ServerStatus.SERVER_AGE_ALL);
@@ -548,7 +561,7 @@ public class LoginServerThread extends Thread {
 	 */
 	public void sendServerType() {
 		ServerStatus ss = new ServerStatus();
-		ss.addAttribute(ServerStatus.SERVER_TYPE, Config.SERVER_LIST_TYPE);
+		ss.addAttribute(ServerStatus.SERVER_TYPE, general().getServerListType());
 		try {
 			sendPacket(ss);
 		} catch (IOException e) {
@@ -666,6 +679,28 @@ public class LoginServerThread extends Thread {
 			account = acc;
 			gameClient = client;
 			session = key;
+		}
+	}
+	
+	/**
+	 * Save hexadecimal ID of the server in the L2Properties file.
+	 * @param serverId the ID of the server whose hexId to save
+	 * @param hexId the hexadecimal ID to store
+	 * @param fileName name of the L2Properties file
+	 */
+	public static void saveHexid(int serverId, String hexId, String fileName) {
+		try {
+			Properties hexSetting = new Properties();
+			File file = new File(fileName);
+			// Create a new empty file only if it doesn't exist
+			file.createNewFile();
+			try (OutputStream out = new FileOutputStream(file)) {
+				hexSetting.setProperty("ServerID", String.valueOf(serverId));
+				hexSetting.setProperty("HexID", hexId);
+				hexSetting.store(out, "the hexID to auth into login");
+			}
+		} catch (Exception ex) {
+			LOG.warn("Failed to save hex Id to {} file.", fileName, ex);
 		}
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.model;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.rates;
+
 import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.model.items.L2Item;
 
@@ -83,11 +84,11 @@ public final class L2Seed {
 	}
 	
 	public final int getSeedLimit() {
-		return _limitSeeds * Config.RATE_DROP_MANOR;
+		return _limitSeeds * rates().getRateDropManor();
 	}
 	
 	public final int getCropLimit() {
-		return _limitCrops * Config.RATE_DROP_MANOR;
+		return _limitCrops * rates().getRateDropManor();
 	}
 	
 	public final int getSeedReferencePrice() {

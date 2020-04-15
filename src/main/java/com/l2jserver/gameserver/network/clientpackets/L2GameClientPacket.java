@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,13 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.nio.BufferUnderflowException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.L2GameClient;
 import com.l2jserver.gameserver.network.SystemMessageId;
@@ -36,7 +38,12 @@ import com.l2jserver.mmocore.ReceivablePacket;
  * @author KenM
  */
 public abstract class L2GameClientPacket extends ReceivablePacket<L2GameClient> {
+	
 	protected static final Logger _log = Logger.getLogger(L2GameClientPacket.class.getName());
+	
+	static final int MAX_ITEM_IN_PACKET = Math.max(character().getMaximumSlotsForNoDwarf(), //
+		Math.max(character().getMaximumSlotsForDwarf(), //
+			character().getMaximumSlotsForGMPlayer()));
 	
 	@Override
 	public boolean read() {
@@ -67,7 +74,7 @@ public abstract class L2GameClientPacket extends ReceivablePacket<L2GameClient> 
 				final L2PcInstance actor = getClient().getActiveChar();
 				if ((actor != null) && (actor.isSpawnProtected() || actor.isInvul())) {
 					actor.onActionRequest();
-					if (Config.DEBUG) {
+					if (general().debug()) {
 						_log.info("Spawn protection for player " + actor.getName() + " removed by packet: " + getType());
 					}
 				}

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,9 +18,10 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.Arrays;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.PcCondOverride;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.items.L2EtcItem;
@@ -48,7 +49,7 @@ public class RequestUnEquipItem extends L2GameClientPacket {
 	
 	@Override
 	protected void runImpl() {
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			_log.fine("Request unequip slot " + _slot);
 		}
 		

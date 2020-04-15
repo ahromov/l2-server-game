@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.model.base;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import com.l2jserver.gameserver.data.json.ExperienceData;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.actor.stat.PcStat;
@@ -35,8 +36,8 @@ public final class SubClass {
 	
 	public SubClass(L2PcInstance activeChar) {
 		_stats = new PcStat(activeChar);
-		_stats.setExp(ExperienceData.getInstance().getExpForLevel(Config.BASE_SUBCLASS_LEVEL));
-		_stats.setLevel(Config.BASE_SUBCLASS_LEVEL);
+		_stats.setExp(ExperienceData.getInstance().getExpForLevel(character().getBaseSubclassLevel()));
+		_stats.setLevel(character().getBaseSubclassLevel());
 	}
 	
 	public PlayerClass getClassDefinition() {

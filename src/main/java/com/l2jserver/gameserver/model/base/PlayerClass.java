@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,7 @@
  */
 package com.l2jserver.gameserver.model.base;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
 import static com.l2jserver.gameserver.model.base.ClassLevel.First;
 import static com.l2jserver.gameserver.model.base.ClassLevel.Fourth;
 import static com.l2jserver.gameserver.model.base.ClassLevel.Second;
@@ -30,7 +31,6 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.Set;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.Race;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
@@ -271,7 +271,7 @@ public enum PlayerClass {
 				// Check sex, male subclasses female and vice versa
 				// If server owner set MaxSubclass > 3 some kamael's cannot take 4 sub
 				// So, in that situation we must skip sex check
-				if (Config.MAX_SUBCLASS <= 3) {
+				if (character().getMaxSubclass() <= 3) {
 					if (player.getAppearance().getSex()) {
 						subclasses.removeAll(EnumSet.of(femaleSoulbreaker));
 					} else {

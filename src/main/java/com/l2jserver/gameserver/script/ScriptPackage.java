@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import com.l2jserver.gameserver.config.Config;
+import com.l2jserver.gameserver.config.Configuration;
 
 /**
  * @author Luis Arias
@@ -89,23 +89,23 @@ public class ScriptPackage {
 		}
 		
 		StringBuilder out = new StringBuilder();
-		out.append("Package Name: ");
+		out.append("package Name: ");
 		out.append(getName());
-		out.append(Config.EOL);
+		out.append(Configuration.EOL);
 		
 		if (!getScriptFiles().isEmpty()) {
-			out.append("Xml Script Files..." + Config.EOL);
+			out.append("Xml Script Files..." + Configuration.EOL);
 			for (ScriptDocument script : getScriptFiles()) {
 				out.append(script.getName());
-				out.append(Config.EOL);
+				out.append(Configuration.EOL);
 			}
 		}
 		
 		if (!getOtherFiles().isEmpty()) {
-			out.append("Other Files..." + Config.EOL);
+			out.append("Other Files..." + Configuration.EOL);
 			for (String fileName : getOtherFiles()) {
 				out.append(fileName);
-				out.append(Config.EOL);
+				out.append(Configuration.EOL);
 			}
 		}
 		return out.toString();

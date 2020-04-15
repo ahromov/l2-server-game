@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.model.drops.strategy;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import com.l2jserver.gameserver.model.drops.IDropItem;
 
 /**
@@ -27,7 +28,7 @@ import com.l2jserver.gameserver.model.drops.IDropItem;
 public interface IPreciseDeterminationStrategy {
 	public static final IPreciseDeterminationStrategy ALWAYS = dropItem -> true;
 	
-	public static final IPreciseDeterminationStrategy DEFAULT = dropItem -> Config.PRECISE_DROP_CALCULATION;
+	public static final IPreciseDeterminationStrategy DEFAULT = dropItem -> general().preciseDropCalculation();
 	
 	public static final IPreciseDeterminationStrategy NEVER = dropItem -> false;
 	

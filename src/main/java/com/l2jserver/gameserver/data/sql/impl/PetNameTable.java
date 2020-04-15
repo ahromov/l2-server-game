@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,12 @@
  */
 package com.l2jserver.gameserver.data.sql.impl;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 
 public class PetNameTable {
 	
@@ -42,7 +43,7 @@ public class PetNameTable {
 	}
 	
 	public boolean isValidPetName(String name) {
-		return Config.PET_NAME_TEMPLATE.matcher(name).matches();
+		return character().getPetNameTemplate().matcher(name).matches();
 	}
 	
 	public static PetNameTable getInstance() {

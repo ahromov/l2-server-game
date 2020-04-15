@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model.skills;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +28,6 @@ import java.util.concurrent.ScheduledFuture;
 
 import com.l2jserver.gameserver.GameTimeController;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.CharEffectList;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.L2Summon;
@@ -252,7 +253,7 @@ public final class BuffInfo {
 			if (effect.getTicks() > 0) {
 				// The task for the effect ticks.
 				final EffectTickTask effectTask = new EffectTickTask(this, effect);
-				final ScheduledFuture<?> scheduledFuture = ThreadPoolManager.getInstance().scheduleEffectAtFixedRate(effectTask, effect.getTicks() * Config.EFFECT_TICK_RATIO, effect.getTicks() * Config.EFFECT_TICK_RATIO);
+				final ScheduledFuture<?> scheduledFuture = ThreadPoolManager.getInstance().scheduleEffectAtFixedRate(effectTask, effect.getTicks() * character().getEffectTickRatio(), effect.getTicks() * character().getEffectTickRatio());
 				// Adds the task for ticking.
 				addTask(effect, new EffectTaskInfo(effectTask, scheduledFuture));
 			}
@@ -338,20 +339,25 @@ public final class BuffInfo {
 	 * Prevents multiple updates.
 	 */
 	private void addAbnormalVisualEffects() {
+		var updated = false;
 		if (_skill.hasAbnormalVisualEffects()) {
 			_effected.startAbnormalVisualEffect(false, _skill.getAbnormalVisualEffects());
+			updated = true;
 		}
 		
 		if (_effected.isPlayer() && _skill.hasAbnormalVisualEffectsEvent()) {
 			_effected.startAbnormalVisualEffect(false, _skill.getAbnormalVisualEffectsEvent());
+			updated = true;
 		}
 		
 		if (_skill.hasAbnormalVisualEffectsSpecial()) {
 			_effected.startAbnormalVisualEffect(false, _skill.getAbnormalVisualEffectsSpecial());
+			updated = true;
 		}
 		
-		// Update abnormal visual effects.
-		_effected.updateAbnormalEffect();
+		if (updated) {
+			_effected.updateAbnormalEffect();
+		}
 	}
 	
 	/**
@@ -363,19 +369,25 @@ public final class BuffInfo {
 			return;
 		}
 		
+		var updated = false;
 		if (_skill.hasAbnormalVisualEffects()) {
 			_effected.stopAbnormalVisualEffect(false, _skill.getAbnormalVisualEffects());
+			updated = true;
 		}
 		
 		if (_effected.isPlayer() && _skill.hasAbnormalVisualEffectsEvent()) {
 			_effected.stopAbnormalVisualEffect(false, _skill.getAbnormalVisualEffectsEvent());
+			updated = true;
 		}
 		
 		if (_skill.hasAbnormalVisualEffectsSpecial()) {
 			_effected.stopAbnormalVisualEffect(false, _skill.getAbnormalVisualEffectsSpecial());
+			updated = true;
 		}
 		
-		_effected.updateAbnormalEffect();
+		if (updated) {
+			_effected.updateAbnormalEffect();
+		}
 	}
 	
 	/**

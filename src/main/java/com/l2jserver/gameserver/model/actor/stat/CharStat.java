@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,9 +18,12 @@
  */
 package com.l2jserver.gameserver.model.actor.stat;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.npc;
+
 import java.util.Arrays;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.Elementals;
 import com.l2jserver.gameserver.model.PcCondOverride;
 import com.l2jserver.gameserver.model.actor.L2Character;
@@ -159,7 +162,7 @@ public class CharStat {
 	public int getCriticalHit(L2Character target, Skill skill) {
 		double val = (int) calcStat(Stats.CRITICAL_RATE, _activeChar.getTemplate().getBaseCritRate(), target, skill);
 		if (!_activeChar.canOverrideCond(PcCondOverride.MAX_STATS_VALUE)) {
-			val = Math.min(val, Config.MAX_PCRIT_RATE);
+			val = Math.min(val, character().getMaxPCritRate());
 		}
 		return (int) (val + .5);
 	}
@@ -185,11 +188,9 @@ public class CharStat {
 	 */
 	public int getEvasionRate(L2Character target) {
 		int val = (int) Math.round(calcStat(Stats.EVASION_RATE, 0, target, null));
-		
 		if (!_activeChar.canOverrideCond(PcCondOverride.MAX_STATS_VALUE)) {
-			val = Math.min(val, Config.MAX_EVASION);
+			val = Math.min(val, character().getMaxEvasion());
 		}
-		
 		return val;
 	}
 	
@@ -253,13 +254,12 @@ public class CharStat {
 	 */
 	public double getMAtk(L2Character target, Skill skill) {
 		float bonusAtk = 1;
-		if (Config.L2JMOD_CHAMPION_ENABLE && _activeChar.isChampion()) {
-			bonusAtk = Config.L2JMOD_CHAMPION_ATK;
+		if (customs().championEnable() && _activeChar.isChampion()) {
+			bonusAtk = customs().getChampionAtk();
 		}
 		if (_activeChar.isRaid()) {
-			bonusAtk *= Config.RAID_MATTACK_MULTIPLIER;
+			bonusAtk *= npc().getRaidMAttackMultiplier();
 		}
-		
 		// Calculate modifiers Magic Attack
 		return calcStat(Stats.MAGIC_ATTACK, _activeChar.getTemplate().getBaseMAtk() * bonusAtk, target, skill);
 	}
@@ -269,16 +269,14 @@ public class CharStat {
 	 */
 	public int getMAtkSpd() {
 		float bonusSpdAtk = 1;
-		if (Config.L2JMOD_CHAMPION_ENABLE && _activeChar.isChampion()) {
-			bonusSpdAtk = Config.L2JMOD_CHAMPION_SPD_ATK;
+		if (customs().championEnable() && _activeChar.isChampion()) {
+			bonusSpdAtk = customs().getChampionSpdAtk();
 		}
 		
 		double val = calcStat(Stats.MAGIC_ATTACK_SPEED, _activeChar.getTemplate().getBaseMAtkSpd() * bonusSpdAtk);
-		
 		if (!_activeChar.canOverrideCond(PcCondOverride.MAX_STATS_VALUE)) {
-			val = Math.min(val, Config.MAX_MATK_SPEED);
+			val = Math.min(val, character().getMaxMAtkSpeed());
 		}
-		
 		return (int) val;
 	}
 	
@@ -289,11 +287,9 @@ public class CharStat {
 	 */
 	public final int getMCriticalHit(L2Character target, Skill skill) {
 		int val = (int) calcStat(Stats.MCRITICAL_RATE, 1, target, skill) * 10;
-		
 		if (!_activeChar.canOverrideCond(PcCondOverride.MAX_STATS_VALUE)) {
-			val = Math.min(val, Config.MAX_MCRIT_RATE);
+			val = Math.min(val, character().getMaxMCritRate());
 		}
-		
 		return val;
 	}
 	
@@ -309,9 +305,8 @@ public class CharStat {
 		
 		// Calculate modifier for Raid Bosses
 		if (_activeChar.isRaid()) {
-			defence *= Config.RAID_MDEFENCE_MULTIPLIER;
+			defence *= npc().getRaidMDefenceMultiplier();
 		}
-		
 		// Calculate modifiers Magic Attack
 		return calcStat(Stats.MAGIC_DEFENCE, defence, target, skill);
 	}
@@ -413,11 +408,11 @@ public class CharStat {
 	 */
 	public double getPAtk(L2Character target) {
 		float bonusAtk = 1;
-		if (Config.L2JMOD_CHAMPION_ENABLE && _activeChar.isChampion()) {
-			bonusAtk = Config.L2JMOD_CHAMPION_ATK;
+		if (customs().championEnable() && _activeChar.isChampion()) {
+			bonusAtk = customs().getChampionAtk();
 		}
 		if (_activeChar.isRaid()) {
-			bonusAtk *= Config.RAID_PATTACK_MULTIPLIER;
+			bonusAtk *= npc().getRaidPAttackMultiplier();
 		}
 		return calcStat(Stats.POWER_ATTACK, _activeChar.getTemplate().getBasePAtk() * bonusAtk, target, null);
 	}
@@ -427,8 +422,8 @@ public class CharStat {
 	 */
 	public double getPAtkSpd() {
 		float bonusAtk = 1;
-		if (Config.L2JMOD_CHAMPION_ENABLE && _activeChar.isChampion()) {
-			bonusAtk = Config.L2JMOD_CHAMPION_SPD_ATK;
+		if (customs().championEnable() && _activeChar.isChampion()) {
+			bonusAtk = customs().getChampionSpdAtk();
 		}
 		return Math.round(calcStat(Stats.POWER_ATTACK_SPEED, _activeChar.getTemplate().getBasePAtkSpd() * bonusAtk, null, null));
 	}
@@ -438,7 +433,7 @@ public class CharStat {
 	 * @return the PDef (base+modifier) of the L2Character.
 	 */
 	public double getPDef(L2Character target) {
-		return calcStat(Stats.POWER_DEFENCE, (_activeChar.isRaid()) ? _activeChar.getTemplate().getBasePDef() * Config.RAID_PDEFENCE_MULTIPLIER : _activeChar.getTemplate().getBasePDef(), target, null);
+		return calcStat(Stats.POWER_DEFENCE, (_activeChar.isRaid()) ? _activeChar.getTemplate().getBasePDef() * npc().getRaidPDefenceMultiplier() : _activeChar.getTemplate().getBasePDef(), target, null);
 	}
 	
 	/**
@@ -509,7 +504,7 @@ public class CharStat {
 		double mpConsume2 = skill.getMpConsume2();
 		double nextDanceMpCost = Math.ceil(skill.getMpConsume2() / 2.);
 		if (skill.isDance()) {
-			if (Config.DANCE_CONSUME_ADDITIONAL_MP && (_activeChar != null) && (_activeChar.getDanceCount() > 0)) {
+			if (character().danceConsumeAdditionalMP() && (_activeChar != null) && (_activeChar.getDanceCount() > 0)) {
 				mpConsume2 += _activeChar.getDanceCount() * nextDanceMpCost;
 			}
 		}
@@ -660,6 +655,6 @@ public class CharStat {
 	 * @return the maximum buff count
 	 */
 	public int getMaxBuffCount() {
-		return (int) calcStat(Stats.ENLARGE_ABNORMAL_SLOT, Config.BUFFS_MAX_AMOUNT);
+		return (int) calcStat(Stats.ENLARGE_ABNORMAL_SLOT, character().getMaxBuffAmount());
 	}
 }

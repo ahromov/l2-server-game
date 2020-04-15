@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,9 +18,10 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.logging.Level;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.CharSelectInfoPackage;
 import com.l2jserver.gameserver.model.events.Containers;
 import com.l2jserver.gameserver.model.events.EventDispatcher;
@@ -51,7 +52,7 @@ public final class CharacterDelete extends L2GameClientPacket {
 			return;
 		}
 		
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			_log.fine("deleting slot:" + _charSlot);
 		}
 		

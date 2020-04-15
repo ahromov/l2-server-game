@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -20,6 +20,12 @@ package com.l2jserver.gameserver.model.actor;
 
 import static com.l2jserver.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 import static com.l2jserver.gameserver.ai.CtrlIntention.AI_INTENTION_ATTACK;
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.geodata;
+import static com.l2jserver.gameserver.config.Configuration.npc;
+import static com.l2jserver.gameserver.config.Configuration.territoryWar;
 import static com.l2jserver.gameserver.model.stats.Stats.NUM_STATS;
 
 import java.util.ArrayList;
@@ -46,7 +52,6 @@ import com.l2jserver.gameserver.ai.CtrlEvent;
 import com.l2jserver.gameserver.ai.CtrlIntention;
 import com.l2jserver.gameserver.ai.L2AttackableAI;
 import com.l2jserver.gameserver.ai.L2CharacterAI;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.CategoryData;
 import com.l2jserver.gameserver.data.xml.impl.DoorData;
 import com.l2jserver.gameserver.datatables.ItemTable;
@@ -639,7 +644,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 		
 		getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
 		
-		if (Config.OFFSET_ON_TELEPORT_ENABLED && (randomOffset > 0)) {
+		if (character().offsetOnTeleport() && (randomOffset > 0)) {
 			x += Rnd.get(-randomOffset, randomOffset);
 			y += Rnd.get(-randomOffset, randomOffset);
 		}
@@ -669,7 +674,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 	}
 	
 	public void teleToLocation(int x, int y, int z, int heading, int instanceId, boolean randomOffset) {
-		teleToLocation(x, y, z, heading, instanceId, (randomOffset) ? Config.MAX_OFFSET_ON_TELEPORT : 0);
+		teleToLocation(x, y, z, heading, instanceId, (randomOffset) ? character().getMaxOffsetOnTeleport() : 0);
 	}
 	
 	public void teleToLocation(int x, int y, int z, int heading, int instanceId) {
@@ -677,7 +682,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 	}
 	
 	public void teleToLocation(int x, int y, int z, int heading, boolean randomOffset) {
-		teleToLocation(x, y, z, heading, -1, (randomOffset) ? Config.MAX_OFFSET_ON_TELEPORT : 0);
+		teleToLocation(x, y, z, heading, -1, (randomOffset) ? character().getMaxOffsetOnTeleport() : 0);
 	}
 	
 	public void teleToLocation(int x, int y, int z, int heading) {
@@ -685,7 +690,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 	}
 	
 	public void teleToLocation(int x, int y, int z, boolean randomOffset) {
-		teleToLocation(x, y, z, 0, -1, (randomOffset) ? Config.MAX_OFFSET_ON_TELEPORT : 0);
+		teleToLocation(x, y, z, 0, -1, (randomOffset) ? character().getMaxOffsetOnTeleport() : 0);
 	}
 	
 	public void teleToLocation(int x, int y, int z) {
@@ -701,7 +706,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 	}
 	
 	public void teleToLocation(ILocational loc, boolean randomOffset) {
-		teleToLocation(loc.getX(), loc.getY(), loc.getZ(), loc.getHeading(), loc.getInstanceId(), (randomOffset) ? Config.MAX_OFFSET_ON_TELEPORT : 0);
+		teleToLocation(loc.getX(), loc.getY(), loc.getZ(), loc.getHeading(), loc.getInstanceId(), (randomOffset) ? character().getMaxOffsetOnTeleport() : 0);
 	}
 	
 	public void teleToLocation(ILocational loc) {
@@ -2159,14 +2164,14 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 			setIsPendingRevive(false);
 			setIsDead(false);
 			
-			if ((Config.RESPAWN_RESTORE_CP > 0) && (getCurrentCp() < (getMaxCp() * Config.RESPAWN_RESTORE_CP))) {
-				_status.setCurrentCp(getMaxCp() * Config.RESPAWN_RESTORE_CP);
+			if ((character().getRespawnRestoreCP() > 0) && (getCurrentCp() < (getMaxCp() * character().getRespawnRestoreCP()))) {
+				_status.setCurrentCp(getMaxCp() * character().getRespawnRestoreCP());
 			}
-			if ((Config.RESPAWN_RESTORE_HP > 0) && (getCurrentHp() < (getMaxHp() * Config.RESPAWN_RESTORE_HP))) {
-				_status.setCurrentHp(getMaxHp() * Config.RESPAWN_RESTORE_HP);
+			if ((character().getRespawnRestoreHP() > 0) && (getCurrentHp() < (getMaxHp() * character().getRespawnRestoreHP()))) {
+				_status.setCurrentHp(getMaxHp() * character().getRespawnRestoreHP());
 			}
-			if ((Config.RESPAWN_RESTORE_MP > 0) && (getCurrentMp() < (getMaxMp() * Config.RESPAWN_RESTORE_MP))) {
-				_status.setCurrentMp(getMaxMp() * Config.RESPAWN_RESTORE_MP);
+			if ((character().getRespawnRestoreMP() > 0) && (getCurrentMp() < (getMaxMp() * character().getRespawnRestoreMP()))) {
+				_status.setCurrentMp(getMaxMp() * character().getRespawnRestoreMP());
 			}
 			
 			// Start broadcast status
@@ -3404,14 +3409,12 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 		int zPrev = getZ(); // the z coordinate may be modified by coordinate synchronizations
 		
 		double dx, dy, dz;
-		if (Config.COORD_SYNCHRONIZE == 1)
-		// the only method that can modify x,y while moving (otherwise _move would/should be set null)
-		{
+		if (geodata().getCoordSynchronize() == 1) {
+			// the only method that can modify x,y while moving (otherwise _move would/should be set null)
 			dx = m._xDestination - xPrev;
 			dy = m._yDestination - yPrev;
-		} else
-		// otherwise we need saved temporary values to avoid rounding errors
-		{
+		} else {
+			// otherwise we need saved temporary values to avoid rounding errors
 			dx = m._xDestination - m._xAccurate;
 			dy = m._yDestination - m._yAccurate;
 		}
@@ -3419,8 +3422,11 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 		final boolean isFloating = isFlying() || isInsideZone(ZoneId.WATER);
 		
 		// Z coordinate will follow geodata or client values
-		if ((Config.COORD_SYNCHRONIZE == 2) && !isFloating && !m.disregardingGeodata && ((GameTimeController.getInstance().getGameTicks() % 10) == 0 // once a second to reduce possible cpu load
-		) && GeoData.getInstance().hasGeo(xPrev, yPrev)) {
+		// once a second to reduce possible cpu load
+		if ((geodata().getCoordSynchronize() == 2) && //
+			!isFloating && !m.disregardingGeodata && //
+			((GameTimeController.getInstance().getGameTicks() % 10) == 0) //
+			&& GeoData.getInstance().hasGeo(xPrev, yPrev)) {
 			int geoHeight = GeoData.getInstance().getSpawnHeight(xPrev, yPrev, zPrev);
 			dz = m._zDestination - geoHeight;
 			// quite a big difference, compare to validatePosition packet
@@ -3437,8 +3443,8 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 		}
 		
 		double delta = (dx * dx) + (dy * dy);
-		if ((delta < 10000) && ((dz * dz) > 2500) // close enough, allows error between client and server geodata if it cannot be avoided
-			&& !isFloating) {
+		// close enough, allows error between client and server geodata if it cannot be avoided
+		if ((delta < 10000) && ((dz * dz) > 2500) && !isFloating) {
 			delta = Math.sqrt(delta);
 		} else {
 			delta = Math.sqrt(delta + (dz * dz));
@@ -3450,7 +3456,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 			distFraction = distPassed / delta;
 		}
 		
-		// if (Config.DEVELOPER) _log.warning("Move Ticks:" + (gameTicks - m._moveTimestamp) + ", distPassed:" + distPassed + ", distFraction:" + distFraction);
+		// if (general().developer()) _log.warning("Move Ticks:" + (gameTicks - m._moveTimestamp) + ", distPassed:" + distPassed + ", distFraction:" + distFraction);
 		
 		if (distFraction > 1) {
 			// Set the position of the L2Character to the destination
@@ -3470,7 +3476,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 		if (distFraction > 1) {
 			ThreadPoolManager.getInstance().executeAi(() -> {
 				try {
-					if (Config.MOVE_BASED_KNOWNLIST) {
+					if (general().moveBasedKnownList()) {
 						getKnownList().findObjects();
 					}
 					
@@ -3479,10 +3485,8 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 					LOG.warn("{}", e);
 				}
 			});
-			
 			return true;
 		}
-		
 		return false;
 	}
 	
@@ -3537,7 +3541,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 			revalidateZone(true);
 		}
 		broadcastPacket(new StopMove(this));
-		if (Config.MOVE_BASED_KNOWNLIST && updateKnownObjects) {
+		if (general().moveBasedKnownList() && updateKnownObjects) {
 			getKnownList().findObjects();
 		}
 	}
@@ -3732,7 +3736,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 			
 			// Movement checks:
 			// When pathfinding enabled, for all characters except monsters returning home (could be changed later to teleport if pathfinding fails)
-			if (((Config.PATHFINDING > 0) && (!(isAttackable() && ((L2Attackable) this).isReturningToSpawnPoint()))) //
+			if (((geodata().getPathFinding() > 0) && (!(isAttackable() && ((L2Attackable) this).isReturningToSpawnPoint()))) //
 				|| (isPlayer() && !(isInVehicle && (distance > 1500))) //
 				|| (this instanceof L2RiftInvaderInstance)) {
 				if (isOnGeodataPath()) {
@@ -3772,7 +3776,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 			// Pathfinding checks. Only when geodata setting is 2, the LoS check gives shorter result
 			// than the original movement was and the LoS gives a shorter distance than 2000
 			// This way of detecting need for pathfinding could be changed.
-			if ((Config.PATHFINDING > 0) && ((originalDistance - distance) > 30) && (distance < 2000)) {
+			if ((geodata().getPathFinding() > 0) && ((originalDistance - distance) > 30) && (distance < 2000)) {
 				// Path calculation
 				// Overrides previous movement check
 				if ((isPlayable() && !isInVehicle) || isMinion() || isInCombat()) {
@@ -3831,7 +3835,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 				}
 			}
 			// If no distance to go through, the movement is canceled
-			if ((distance < 1) && ((Config.PATHFINDING > 0) || isPlayable() || (this instanceof L2RiftInvaderInstance) || isAfraid())) {
+			if ((distance < 1) && ((geodata().getPathFinding() > 0) || isPlayable() || (this instanceof L2RiftInvaderInstance) || isAfraid())) {
 				if (isSummon()) {
 					((L2Summon) this).setFollowStatus(false);
 				}
@@ -4103,7 +4107,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 		// Check Raidboss attack
 		// Character will be petrified if attacking a raid that's more
 		// than 8 levels lower
-		if (target.isRaid() && target.giveRaidCurse() && !Config.RAID_DISABLE_CURSE) {
+		if (target.isRaid() && target.giveRaidCurse() && npc().raidCurse()) {
 			if (getLevel() > (target.getLevel() + 8)) {
 				Skill skill = CommonSkill.RAID_CURSE2.getSkill();
 				
@@ -4360,13 +4364,13 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 			return false;
 		}
 		
-		if (TerritoryWarManager.PLAYER_WITH_WARD_CAN_BE_KILLED_IN_PEACEZONE && TerritoryWarManager.getInstance().isTWInProgress()) {
+		if (territoryWar().playerWithWardCanBeKilledInPeaceZone() && TerritoryWarManager.getInstance().isTWInProgress()) {
 			if (target.isPlayer() && target.getActingPlayer().isCombatFlagEquipped()) {
 				return false;
 			}
 		}
 		
-		if (Config.ALT_GAME_KARMA_PLAYER_CAN_BE_KILLED_IN_PEACEZONE) {
+		if (character().karmaPlayerCanBeKilledInPeaceZone()) {
 			// allows red to be attacked and red to attack flagged players
 			if ((target.getActingPlayer() != null) && (target.getActingPlayer().getKarma() > 0)) {
 				return false;
@@ -4867,7 +4871,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 					targetsCastTarget = target.getAI().getCastTarget();
 				}
 				
-				if (!Config.RAID_DISABLE_CURSE && ((target.isRaid() && target.giveRaidCurse() && (getLevel() > (target.getLevel() + 8)))
+				if (npc().raidCurse() && ((target.isRaid() && target.giveRaidCurse() && (getLevel() > (target.getLevel() + 8)))
 					|| (!skill.isBad() && (targetsAttackTarget != null) && targetsAttackTarget.isRaid() && targetsAttackTarget.giveRaidCurse() && targetsAttackTarget.getAttackByList().contains(target) && (getLevel() > (targetsAttackTarget.getLevel() + 8)))
 					|| (!skill.isBad() && (targetsCastTarget != null) && targetsCastTarget.isRaid() && targetsCastTarget.giveRaidCurse() && targetsCastTarget.getAttackByList().contains(target) && (getLevel() > (targetsCastTarget.getLevel() + 8))))) {
 					final CommonSkill curse = skill.isMagic() ? CommonSkill.RAID_CURSE : CommonSkill.RAID_CURSE2;
@@ -5329,8 +5333,8 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 	}
 	
 	public void reduceCurrentHp(double i, L2Character attacker, boolean awake, boolean isDOT, Skill skill) {
-		if (Config.L2JMOD_CHAMPION_ENABLE && isChampion() && (Config.L2JMOD_CHAMPION_HP != 0)) {
-			getStatus().reduceHp(i / Config.L2JMOD_CHAMPION_HP, attacker, awake, isDOT, false);
+		if (customs().championEnable() && isChampion() && (customs().getChampionHp() != 0)) {
+			getStatus().reduceHp(i / customs().getChampionHp(), attacker, awake, isDOT, false);
 		} else {
 			getStatus().reduceHp(i, attacker, awake, isDOT, false);
 		}
@@ -5552,7 +5556,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 					}
 				}
 				
-				if (Config.ALT_VALIDATE_TRIGGER_SKILLS && isPlayable() && (target != null) && target.isPlayable()) {
+				if (character().validateTriggerSkills() && isPlayable() && (target != null) && target.isPlayable()) {
 					final L2PcInstance player = getActingPlayer();
 					if (!player.checkPvpSkill(target, skill)) {
 						return;

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,13 +18,14 @@
  */
 package com.l2jserver.gameserver.dao.impl.mysql;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.dao.SkillDAO;
 import com.l2jserver.gameserver.data.xml.impl.ClassListData;
 import com.l2jserver.gameserver.data.xml.impl.SkillTreesData;
@@ -77,11 +78,11 @@ public class SkillDAOMySQLImpl implements SkillDAO {
 					// Add the L2Skill object to the L2Character _skills and its Func objects to the calculator set of the L2Character
 					player.addSkill(skill);
 					
-					if (Config.SKILL_CHECK_ENABLE && (!player.canOverrideCond(PcCondOverride.SKILL_CONDITIONS) || Config.SKILL_CHECK_GM)) {
+					if (general().skillCheckEnable() && (!player.canOverrideCond(PcCondOverride.SKILL_CONDITIONS) || general().skillCheckGM())) {
 						if (!SkillTreesData.getInstance().isSkillAllowed(player, skill)) {
 							Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " has invalid skill " + skill.getName() + " (" + skill.getId() + "/" + skill.getLevel() + "), class:"
 								+ ClassListData.getInstance().getClass(player.getClassId()).getClassName(), IllegalActionPunishmentType.BROADCAST);
-							if (Config.SKILL_CHECK_REMOVE) {
+							if (general().skillCheckRemove()) {
 								player.removeSkill(skill);
 							}
 						}

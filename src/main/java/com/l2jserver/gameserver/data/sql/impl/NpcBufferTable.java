@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.data.sql.impl;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.holders.ItemHolder;
 import com.l2jserver.gameserver.model.holders.SkillHolder;
 
@@ -113,7 +114,7 @@ public class NpcBufferTable {
 			LOG.warn("There has been an error reading npc_buffer table!", ex);
 		}
 		
-		if (Config.CUSTOM_NPCBUFFER_TABLES) {
+		if (general().customNpcBufferTables()) {
 			try (var con = ConnectionFactory.getInstance().getConnection();
 				var s = con.createStatement();
 				var rset = s.executeQuery("SELECT `npc_id`,`skill_id`,`skill_level`,`skill_fee_id`,`skill_fee_amount`,`buff_group` FROM `custom_npc_buffer` ORDER BY `npc_id` ASC")) {

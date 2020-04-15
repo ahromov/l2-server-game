@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.instancemanager;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.util.Util;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.quest.Quest;
 import com.l2jserver.gameserver.scripting.ScriptEngineManager;
 import com.l2jserver.gameserver.scripting.ScriptManager;
@@ -94,7 +96,7 @@ public final class QuestManager extends ScriptManager<Quest> {
 		_scripts.clear();
 		
 		try {
-			ScriptEngineManager.getInstance().executeScriptList(new File(Config.DATAPACK_ROOT, "data/scripts.cfg"));
+			ScriptEngineManager.getInstance().executeScriptList(new File(server().getDatapackRoot(), "data/scripts.cfg"));
 		} catch (Exception ex) {
 			LOG.warn("Failed loading scripts.cfg, no script going to be loaded!", ex);
 		}
@@ -174,7 +176,7 @@ public final class QuestManager extends ScriptManager<Quest> {
 			
 		}
 		
-		if (Config.ALT_DEV_SHOW_QUESTS_LOAD_IN_LOGS) {
+		if (general().showQuestsLoadInLogs()) {
 			final String questName = quest.getName().contains("_") ? quest.getName().substring(quest.getName().indexOf('_') + 1) : quest.getName();
 			LOG.info("Loaded quest {}.", Util.splitWords(questName));
 		}
@@ -231,7 +233,7 @@ public final class QuestManager extends ScriptManager<Quest> {
 			LOG.info("Replaced script {} with a new version.", old);
 		}
 		
-		if (Config.ALT_DEV_SHOW_SCRIPTS_LOAD_IN_LOGS) {
+		if (general().showQuestsLoadInLogs()) {
 			LOG.info("Loaded script {}.", Util.splitWords(script.getClass().getSimpleName()));
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import com.l2jserver.gameserver.enums.PartyDistributionType;
 import com.l2jserver.gameserver.model.BlockList;
 import com.l2jserver.gameserver.model.L2Party;
@@ -160,7 +161,7 @@ public final class RequestJoinParty extends L2GameClientPacket {
 			target.sendPacket(new AskJoinParty(requestor.getName(), party.getDistributionType()));
 			party.setPendingInvitation(true);
 			
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.fine("sent out a party invitation to:" + target.getName());
 			}
 			
@@ -169,7 +170,7 @@ public final class RequestJoinParty extends L2GameClientPacket {
 			sm.addString(target.getName());
 			requestor.sendPacket(sm);
 			
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.warning(requestor.getName() + " already received a party invitation");
 			}
 		}
@@ -191,14 +192,14 @@ public final class RequestJoinParty extends L2GameClientPacket {
 			requestor.onTransactionRequest(target);
 			requestor.setPartyDistributionType(partyDistributionType);
 			
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.fine("sent out a party invitation to:" + target.getName());
 			}
 			
 		} else {
 			requestor.sendPacket(SystemMessageId.WAITING_FOR_ANOTHER_REPLY);
 			
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.warning(requestor.getName() + " already received a party invitation");
 			}
 		}

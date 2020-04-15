@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.data.json;
 
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -32,7 +34,6 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import com.l2jserver.gameserver.config.Config;
 
 /**
  * @author Zealar
@@ -52,7 +53,7 @@ public final class ExperienceData {
 	
 	public void load() {
 		_expTable.clear();
-		try (JsonReader reader = new JsonReader(new FileReader(new File(Config.DATAPACK_ROOT, "data/stats/expData.json")))) {
+		try (JsonReader reader = new JsonReader(new FileReader(new File(server().getDatapackRoot(), "data/stats/expData.json")))) {
 			_expTable.putAll(GSON.fromJson(reader, TYPE_MAP_INTEGER_LONG));
 		} catch (FileNotFoundException fnfe) {
 			LOG.warn("data/stats/expData.json not found!");

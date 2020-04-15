@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model.effects;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -25,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.handler.EffectHandler;
 import com.l2jserver.gameserver.model.StatsSet;
 import com.l2jserver.gameserver.model.actor.L2Character;
@@ -149,7 +150,7 @@ public abstract class AbstractEffect {
 	}
 	
 	public double getTicksMultiplier() {
-		return (getTicks() * Config.EFFECT_TICK_RATIO) / 1000f;
+		return (getTicks() * character().getEffectTickRatio()) / 1000f;
 	}
 	
 	public List<FuncTemplate> getFuncTemplates() {

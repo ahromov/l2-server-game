@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -21,6 +21,7 @@ package com.l2jserver.gameserver.taskmanager;
 import static com.l2jserver.gameserver.taskmanager.TaskTypes.TYPE_NONE;
 import static com.l2jserver.gameserver.taskmanager.TaskTypes.TYPE_SHEDULED;
 import static com.l2jserver.gameserver.taskmanager.TaskTypes.TYPE_TIME;
+import static java.util.concurrent.TimeUnit.DAYS;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -159,7 +160,6 @@ public final class TaskManager {
 			
 			_currentTasks.remove(this);
 		}
-		
 	}
 	
 	private void initializate() {
@@ -245,7 +245,7 @@ public final class TaskManager {
 				}
 				break;
 			case TYPE_GLOBAL_TASK:
-				interval = Long.valueOf(task.getParams()[0]) * 86400000L;
+				interval = DAYS.toMillis(Long.valueOf(task.getParams()[0]));
 				String[] hour = task.getParams()[1].split(":");
 				
 				if (hour.length != 3) {

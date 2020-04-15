@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,12 +18,13 @@
  */
 package com.l2jserver.gameserver.model.actor.tasks.cubics;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.l2jserver.commons.util.Rnd;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.instance.L2CubicInstance;
 import com.l2jserver.gameserver.model.effects.L2EffectType;
@@ -116,7 +117,7 @@ public final class CubicAction implements Runnable {
 				}
 				L2Character target = _cubic.getTarget();
 				if ((target != null) && !target.isDead()) {
-					if (Config.DEBUG) {
+					if (general().debug()) {
 						_log.info("L2CubicInstance: Action.run();");
 						_log.info("Cubic ID: " + _cubic.getId() + " Target: " + target.getName() + " distance: " + target.calculateDistance(_cubic.getOwner(), true, false));
 					}
@@ -128,39 +129,39 @@ public final class CubicAction implements Runnable {
 					};
 					
 					if (skill.isContinuous()) {
-						if (Config.DEBUG) {
+						if (general().debug()) {
 							_log.info("L2CubicInstance: Action.run() skill " + skill);
 						}
 						_cubic.useCubicContinuous(skill, targets);
 					} else {
 						skill.activateSkill(_cubic, targets);
-						if (Config.DEBUG) {
+						if (general().debug()) {
 							_log.info("L2CubicInstance: Action.run(); other handler");
 						}
 					}
 					
 					if (skill.hasEffectType(L2EffectType.MAGICAL_ATTACK)) {
-						if (Config.DEBUG) {
+						if (general().debug()) {
 							_log.info("L2CubicInstance: Action.run() skill " + skill);
 						}
 						_cubic.useCubicMdam(skill, targets);
 					} else if (skill.hasEffectType(L2EffectType.HP_DRAIN)) {
-						if (Config.DEBUG) {
+						if (general().debug()) {
 							_log.info("L2CubicInstance: Action.run() skill " + skill);
 						}
 						_cubic.useCubicDrain(skill, targets);
 					} else if (skill.hasEffectType(L2EffectType.STUN, L2EffectType.ROOT, L2EffectType.PARALYZE)) {
-						if (Config.DEBUG) {
+						if (general().debug()) {
 							_log.info("L2CubicInstance: Action.run() skill " + skill);
 						}
 						_cubic.useCubicDisabler(skill, targets);
 					} else if (skill.hasEffectType(L2EffectType.DMG_OVER_TIME)) {
-						if (Config.DEBUG) {
+						if (general().debug()) {
 							_log.info("L2CubicInstance: Action.run() skill " + skill);
 						}
 						_cubic.useCubicContinuous(skill, targets);
 					} else if (skill.hasEffectType(L2EffectType.AGGRESSION)) {
-						if (Config.DEBUG) {
+						if (general().debug()) {
 							_log.info("L2CubicInstance: Action.run() skill " + skill);
 						}
 						_cubic.useCubicDisabler(skill, targets);

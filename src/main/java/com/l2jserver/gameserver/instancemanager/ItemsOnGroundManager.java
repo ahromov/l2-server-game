@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.instancemanager;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
@@ -26,7 +28,6 @@ import java.util.logging.Logger;
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.ItemsAutoDestroy;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.L2World;
 import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
 
@@ -41,30 +42,30 @@ public final class ItemsOnGroundManager implements Runnable {
 	private final List<L2ItemInstance> _items = new CopyOnWriteArrayList<>();
 	
 	protected ItemsOnGroundManager() {
-		if (Config.SAVE_DROPPED_ITEM_INTERVAL > 0) {
-			ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(this, Config.SAVE_DROPPED_ITEM_INTERVAL, Config.SAVE_DROPPED_ITEM_INTERVAL);
+		if (general().getSaveDroppedItemInterval() > 0) {
+			ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(this, general().getSaveDroppedItemInterval(), general().getSaveDroppedItemInterval());
 		}
 		load();
 	}
 	
 	private void load() {
 		// If SaveDroppedItem is false, may want to delete all items previously stored to avoid add old items on reactivate
-		if (!Config.SAVE_DROPPED_ITEM && Config.CLEAR_DROPPED_ITEM_TABLE) {
+		if (!general().saveDroppedItem() && general().clearDroppedItemTable()) {
 			emptyTable();
 		}
 		
-		if (!Config.SAVE_DROPPED_ITEM) {
+		if (!general().saveDroppedItem()) {
 			return;
 		}
 		
 		// if DestroyPlayerDroppedItem was previously false, items currently protected will be added to ItemsAutoDestroy
-		if (Config.DESTROY_DROPPED_PLAYER_ITEM) {
+		if (general().destroyPlayerDroppedItem()) {
 			String str = null;
-			if (!Config.DESTROY_EQUIPABLE_PLAYER_ITEM) {
+			if (!general().destroyEquipableItem()) {
 				// Recycle misc. items only
 				str = "UPDATE itemsonground SET drop_time = ? WHERE drop_time = -1 AND equipable = 0";
-			} else if (Config.DESTROY_EQUIPABLE_PLAYER_ITEM) {
-				// Recycle all items including equip-able
+			} else {
+				// Recycle all items including equipable
 				str = "UPDATE itemsonground SET drop_time = ? WHERE drop_time = -1";
 			}
 			
@@ -105,9 +106,9 @@ public final class ItemsOnGroundManager implements Runnable {
 					_items.add(item);
 					count++;
 					// add to ItemsAutoDestroy only items not protected
-					if (!Config.LIST_PROTECTED_ITEMS.contains(item.getId())) {
+					if (!general().getProtectedItems().contains(item.getId())) {
 						if (dropTime > -1) {
-							if (((Config.AUTODESTROY_ITEM_AFTER > 0) && !item.getItem().hasExImmediateEffect()) || ((Config.HERB_AUTO_DESTROY_TIME > 0) && item.getItem().hasExImmediateEffect())) {
+							if (((general().getAutoDestroyDroppedItemAfter() > 0) && !item.getItem().hasExImmediateEffect()) || ((general().getAutoDestroyHerbTime() > 0) && item.getItem().hasExImmediateEffect())) {
 								ItemsAutoDestroy.getInstance().addItem(item);
 							}
 						}
@@ -119,20 +120,20 @@ public final class ItemsOnGroundManager implements Runnable {
 			_log.log(Level.SEVERE, getClass().getSimpleName() + ": Error while loading ItemsOnGround " + e.getMessage(), e);
 		}
 		
-		if (Config.EMPTY_DROPPED_ITEM_TABLE_AFTER_LOAD) {
+		if (general().emptyDroppedItemTableAfterLoad()) {
 			emptyTable();
 		}
 	}
 	
 	public void save(L2ItemInstance item) {
-		if (!Config.SAVE_DROPPED_ITEM) {
+		if (!general().saveDroppedItem()) {
 			return;
 		}
 		_items.add(item);
 	}
 	
 	public void removeObject(L2ItemInstance item) {
-		if (Config.SAVE_DROPPED_ITEM) {
+		if (general().saveDroppedItem()) {
 			_items.remove(item);
 		}
 	}
@@ -156,7 +157,7 @@ public final class ItemsOnGroundManager implements Runnable {
 	
 	@Override
 	public synchronized void run() {
-		if (!Config.SAVE_DROPPED_ITEM) {
+		if (!general().saveDroppedItem()) {
 			return;
 		}
 		

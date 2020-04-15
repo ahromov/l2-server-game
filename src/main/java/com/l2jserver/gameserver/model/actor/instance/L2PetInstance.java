@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,11 @@
  */
 package com.l2jserver.gameserver.model.actor.instance;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.npc;
+import static com.l2jserver.gameserver.config.Configuration.rates;
+
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -27,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.ThreadPoolManager;
 import com.l2jserver.gameserver.ai.CtrlIntention;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.dao.factory.impl.DAOFactory;
 import com.l2jserver.gameserver.data.sql.impl.CharSummonTable;
 import com.l2jserver.gameserver.data.sql.impl.SummonEffectsTable;
@@ -481,7 +485,7 @@ public class L2PetInstance extends L2Summon {
 			// Remove from the ground!
 			target.pickupMe(this);
 			
-			if (Config.SAVE_DROPPED_ITEM) {
+			if (general().saveDroppedItem()) {
 				ItemsOnGroundManager.getInstance().removeObject(target);
 			}
 		}
@@ -718,7 +722,7 @@ public class L2PetInstance extends L2Summon {
 			return;
 		}
 		
-		if (!Config.RESTORE_PET_ON_RECONNECT) {
+		if (!character().restorePetOnReconnect()) {
 			setRestoreSummon(false);
 		}
 		
@@ -745,7 +749,7 @@ public class L2PetInstance extends L2Summon {
 	
 	@Override
 	public void storeEffect(boolean storeEffects) {
-		if (!Config.SUMMON_STORE_SKILL_COOLTIME) {
+		if (!character().summonStoreSkillCooltime()) {
 			return;
 		}
 		
@@ -778,7 +782,7 @@ public class L2PetInstance extends L2Summon {
 	
 	@Override
 	public int getMaxLoad() {
-		return (int) calcStat(Stats.WEIGHT_LIMIT, Math.floor(BaseStats.CON.calcBonus(this) * 34500 * Config.ALT_WEIGHT_LIMIT), this, null);
+		return (int) calcStat(Stats.WEIGHT_LIMIT, Math.floor(BaseStats.CON.calcBonus(this) * 34500 * character().getWeightLimit()), this, null);
 	}
 	
 	@Override
@@ -844,7 +848,7 @@ public class L2PetInstance extends L2Summon {
 	
 	@Override
 	public void addExpAndSp(long addToExp, int addToSp) {
-		getStat().addExpAndSp(Math.round(addToExp * (isSinEater() ? Config.SINEATER_XP_RATE : Config.PET_XP_RATE)), addToSp);
+		getStat().addExpAndSp(Math.round(addToExp * (isSinEater() ? rates().getSinEaterXpRate() : rates().getPetXpRate())), addToSp);
 	}
 	
 	public boolean isSinEater() {
@@ -931,7 +935,7 @@ public class L2PetInstance extends L2Summon {
 	}
 	
 	public int getInventoryLimit() {
-		return Config.INVENTORY_MAXIMUM_PET;
+		return npc().getMaximumSlotsForPet();
 	}
 	
 	public void refreshOverloaded() {

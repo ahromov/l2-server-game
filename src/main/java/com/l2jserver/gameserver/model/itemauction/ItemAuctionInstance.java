@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,7 @@
  */
 package com.l2jserver.gameserver.model.itemauction;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
@@ -42,7 +43,6 @@ import org.w3c.dom.Node;
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.CharNameTable;
 import com.l2jserver.gameserver.enums.ItemLocation;
 import com.l2jserver.gameserver.instancemanager.ItemAuctionManager;
@@ -496,7 +496,7 @@ public final class ItemAuctionInstance {
 				return null;
 			}
 			
-			if ((auctionState == ItemAuctionState.FINISHED) && (startingTime < (System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(Config.ALT_ITEM_AUCTION_EXPIRED_AFTER, TimeUnit.DAYS)))) {
+			if ((auctionState == ItemAuctionState.FINISHED) && (startingTime < (System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(general().getItemAuctionExpiredAfter(), TimeUnit.DAYS)))) {
 				LOG.info("Clearing expired auction ID {}.", auctionId);
 				try (var ps = con.prepareStatement(DELETE_AUCTION_INFO_BY_AUCTION_ID)) {
 					ps.setInt(1, auctionId);

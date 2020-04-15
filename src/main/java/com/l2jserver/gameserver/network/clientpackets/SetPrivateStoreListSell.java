@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,9 +18,8 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import static com.l2jserver.gameserver.model.itemcontainer.Inventory.MAX_ADENA;
+import static com.l2jserver.gameserver.config.Configuration.character;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
 import com.l2jserver.gameserver.model.TradeList;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -49,7 +48,7 @@ public class SetPrivateStoreListSell extends L2GameClientPacket {
 	protected void readImpl() {
 		_packageSale = (readD() == 1);
 		int count = readD();
-		if ((count < 1) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != _buf.remaining())) {
+		if ((count < 1) || (count > MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != _buf.remaining())) {
 			return;
 		}
 		
@@ -114,13 +113,13 @@ public class SetPrivateStoreListSell extends L2GameClientPacket {
 		long totalCost = player.getAdena();
 		for (Item i : _items) {
 			if (!i.addToTradeList(tradeList)) {
-				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to set price more than " + MAX_ADENA + " adena in Private Store - Sell.", Config.DEFAULT_PUNISH);
+				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to set price more than " + character().getMaxAdena() + " adena in Private Store - Sell.");
 				return;
 			}
 			
 			totalCost += i.getPrice();
-			if (totalCost > MAX_ADENA) {
-				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to set total price more than " + MAX_ADENA + " adena in Private Store - Sell.", Config.DEFAULT_PUNISH);
+			if (totalCost > character().getMaxAdena()) {
+				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to set total price more than " + character().getMaxAdena() + " adena in Private Store - Sell.");
 				return;
 			}
 		}
@@ -153,7 +152,7 @@ public class SetPrivateStoreListSell extends L2GameClientPacket {
 		}
 		
 		public boolean addToTradeList(TradeList list) {
-			if ((MAX_ADENA / _count) < _price) {
+			if ((character().getMaxAdena() / _count) < _price) {
 				return false;
 			}
 			

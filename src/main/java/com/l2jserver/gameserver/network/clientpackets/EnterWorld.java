@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -20,6 +20,10 @@ package com.l2jserver.gameserver.network.clientpackets;
 
 import static com.l2jserver.gameserver.SevenSigns.CABAL_NULL;
 import static com.l2jserver.gameserver.SevenSigns.SEAL_STRIFE;
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.vitality;
 import static com.l2jserver.gameserver.model.PcCondOverride.ZONE_CONDITIONS;
 import static com.l2jserver.gameserver.model.TeleportWhereType.TOWN;
 import static com.l2jserver.gameserver.model.skills.CommonSkill.THE_VANQUISHED_OF_WAR;
@@ -41,7 +45,6 @@ import java.util.Base64;
 import com.l2jserver.gameserver.LoginServerThread;
 import com.l2jserver.gameserver.SevenSigns;
 import com.l2jserver.gameserver.cache.HtmCache;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.AnnouncementsTable;
 import com.l2jserver.gameserver.data.xml.impl.AdminData;
 import com.l2jserver.gameserver.data.xml.impl.SkillTreesData;
@@ -151,7 +154,7 @@ public class EnterWorld extends L2GameClientPacket {
 		getClient().setClientTracert(tracert);
 		
 		// Restore to instanced area if enabled
-		if (Config.RESTORE_PLAYER_INSTANCE) {
+		if (general().restorePlayerInstance()) {
 			activeChar.setInstanceId(InstanceManager.getInstance().getPlayerInstance(activeChar.getObjectId()));
 		} else {
 			int instanceId = InstanceManager.getInstance().getPlayerInstance(activeChar.getObjectId());
@@ -160,7 +163,7 @@ public class EnterWorld extends L2GameClientPacket {
 			}
 		}
 		
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			if (L2World.getInstance().findObject(activeChar.getObjectId()) != null) {
 				_log.warning("User already exists in Object ID map! User " + activeChar.getName() + " is a character clone.");
 			}
@@ -170,34 +173,34 @@ public class EnterWorld extends L2GameClientPacket {
 		
 		// Apply special GM properties to the GM when entering
 		if (activeChar.isGM()) {
-			if (Config.GM_STARTUP_INVULNERABLE && AdminData.getInstance().hasAccess("admin_invul", activeChar.getAccessLevel())) {
+			if (general().gmStartupInvulnerable() && AdminData.getInstance().hasAccess("admin_invul", activeChar.getAccessLevel())) {
 				activeChar.setIsInvul(true);
 			}
 			
-			if (Config.GM_STARTUP_INVISIBLE && AdminData.getInstance().hasAccess("admin_invisible", activeChar.getAccessLevel())) {
+			if (general().gmStartupInvisible() && AdminData.getInstance().hasAccess("admin_invisible", activeChar.getAccessLevel())) {
 				activeChar.setInvisible(true);
 			}
 			
-			if (Config.GM_STARTUP_SILENCE && AdminData.getInstance().hasAccess("admin_silence", activeChar.getAccessLevel())) {
+			if (general().gmStartupSilence() && AdminData.getInstance().hasAccess("admin_silence", activeChar.getAccessLevel())) {
 				activeChar.setSilenceMode(true);
 			}
 			
-			if (Config.GM_STARTUP_DIET_MODE && AdminData.getInstance().hasAccess("admin_diet", activeChar.getAccessLevel())) {
+			if (general().gmStartupDietMode() && AdminData.getInstance().hasAccess("admin_diet", activeChar.getAccessLevel())) {
 				activeChar.setDietMode(true);
 				activeChar.refreshOverloaded();
 			}
 			
-			if (Config.GM_STARTUP_AUTO_LIST && AdminData.getInstance().hasAccess("admin_gmliston", activeChar.getAccessLevel())) {
+			if (general().gmStartupAutoList() && AdminData.getInstance().hasAccess("admin_gmliston", activeChar.getAccessLevel())) {
 				AdminData.getInstance().addGm(activeChar, false);
 			} else {
 				AdminData.getInstance().addGm(activeChar, true);
 			}
 			
-			if (Config.GM_GIVE_SPECIAL_SKILLS) {
+			if (general().gmGiveSpecialSkills()) {
 				SkillTreesData.getInstance().addSkills(activeChar, false);
 			}
 			
-			if (Config.GM_GIVE_SPECIAL_AURA_SKILLS) {
+			if (general().gmGiveSpecialAuraSkills()) {
 				SkillTreesData.getInstance().addSkills(activeChar, true);
 			}
 		}
@@ -302,8 +305,8 @@ public class EnterWorld extends L2GameClientPacket {
 			activeChar.removeSkill(THE_VANQUISHED_OF_WAR.getSkill());
 		}
 		
-		if (Config.ENABLE_VITALITY && Config.RECOVER_VITALITY_ON_RECONNECT) {
-			float points = (Config.RATE_RECOVERY_ON_RECONNECT * (System.currentTimeMillis() - activeChar.getLastAccess())) / 60000;
+		if (vitality().enabled() && vitality().recoverVitalityOnReconnect()) {
+			float points = (vitality().getRateRecoveryOnReconnect() * (System.currentTimeMillis() - activeChar.getLastAccess())) / 60000;
 			if (points > 0) {
 				activeChar.updateVitalityPoints(points, false, true);
 			}
@@ -344,7 +347,7 @@ public class EnterWorld extends L2GameClientPacket {
 		
 		activeChar.sendPacket(new QuestList());
 		
-		if (Config.PLAYER_SPAWN_PROTECTION > 0) {
+		if (character().getPlayerSpawnProtection() > 0) {
 			activeChar.setProtection(true);
 		}
 		
@@ -357,7 +360,7 @@ public class EnterWorld extends L2GameClientPacket {
 		}
 		
 		// Wedding Checks
-		if (Config.L2JMOD_ALLOW_WEDDING) {
+		if (customs().allowWedding()) {
 			engage(activeChar);
 			notifyPartner(activeChar, activeChar.getPartnerId());
 		}
@@ -406,14 +409,14 @@ public class EnterWorld extends L2GameClientPacket {
 			notice.replace("%notice_text%", activeChar.getClan().getNotice());
 			notice.disableValidation();
 			sendPacket(notice);
-		} else if (Config.SERVER_NEWS) {
+		} else if (general().showServerNews()) {
 			String serverNews = HtmCache.getInstance().getHtm(activeChar.getHtmlPrefix(), "data/html/servnews.htm");
 			if (serverNews != null) {
 				sendPacket(new NpcHtmlMessage(serverNews));
 			}
 		}
 		
-		if (Config.PETITIONING_ALLOWED) {
+		if (character().petitioningAllowed()) {
 			PetitionManager.getInstance().checkPetitionMessages(activeChar);
 		}
 		
@@ -473,7 +476,7 @@ public class EnterWorld extends L2GameClientPacket {
 			activeChar.teleToLocation(TOWN);
 		}
 		
-		if (Config.ALLOW_MAIL) {
+		if (general().allowMail()) {
 			if (MailManager.getInstance().hasUnreadPost(activeChar)) {
 				sendPacket(ExNoticePostArrived.valueOf(false));
 			}
@@ -481,8 +484,8 @@ public class EnterWorld extends L2GameClientPacket {
 		
 		TvTEvent.onLogin(activeChar);
 		
-		if (Config.WELCOME_MESSAGE_ENABLED) {
-			activeChar.sendPacket(new ExShowScreenMessage(Config.WELCOME_MESSAGE_TEXT, Config.WELCOME_MESSAGE_TIME));
+		if (customs().screenWelcomeMessageEnable()) {
+			activeChar.sendPacket(new ExShowScreenMessage(customs().getScreenWelcomeMessageText(), customs().getScreenWelcomeMessageTime()));
 		}
 		
 		final int birthday = activeChar.checkBirthDay();

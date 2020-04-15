@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,13 +18,14 @@
  */
 package com.l2jserver.gameserver.model.itemcontainer;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.enums.ItemLocation;
 import com.l2jserver.gameserver.model.TradeItem;
@@ -443,7 +444,7 @@ public class PcInventory extends Inventory {
 			}
 			if (actor != null) {
 				// Send inventory update packet
-				if (!Config.FORCE_INVENTORY_UPDATE) {
+				if (!general().forceInventoryUpdate()) {
 					InventoryUpdate playerIU = new InventoryUpdate();
 					playerIU.addItem(item);
 					actor.sendPacket(playerIU);

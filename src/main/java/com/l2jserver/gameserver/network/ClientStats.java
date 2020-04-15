@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.network;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.mmo;
 
 public class ClientStats {
 	public int processedPackets = 0;
@@ -53,7 +54,7 @@ public class ClientStats {
 	private final int BUFFER_SIZE;
 	
 	public ClientStats() {
-		BUFFER_SIZE = Config.CLIENT_PACKET_QUEUE_MEASURE_INTERVAL;
+		BUFFER_SIZE = general().getClientPacketQueueMeasureInterval();
 		_packetsInSecond = new int[BUFFER_SIZE];
 		_head = BUFFER_SIZE - 1;
 	}
@@ -101,7 +102,7 @@ public class ClientStats {
 		}
 		
 		_unknownPacketsInMin++;
-		return _unknownPacketsInMin > Config.CLIENT_PACKET_QUEUE_MAX_UNKNOWN_PER_MIN;
+		return _unknownPacketsInMin > general().getClientPacketQueueMaxUnknownPerMin();
 	}
 	
 	/**
@@ -113,7 +114,8 @@ public class ClientStats {
 			maxBurstSize = count;
 		}
 		
-		if (count < Config.CLIENT_PACKET_QUEUE_MAX_BURST_SIZE) {
+		final var maxBurstSize = Math.max(general().getClientPacketQueueMaxBurstSize(), mmo().getMaxReadPerPass() + 1);
+		if (count < maxBurstSize) {
 			return false;
 		}
 		
@@ -136,7 +138,7 @@ public class ClientStats {
 		}
 		
 		_overflowsInMin++;
-		return _overflowsInMin > Config.CLIENT_PACKET_QUEUE_MAX_OVERFLOWS_PER_MIN;
+		return _overflowsInMin > general().getClientPacketQueueMaxOverflowsPerMin();
 	}
 	
 	/**
@@ -153,18 +155,18 @@ public class ClientStats {
 		}
 		
 		_underflowReadsInMin++;
-		return _underflowReadsInMin > Config.CLIENT_PACKET_QUEUE_MAX_UNDERFLOWS_PER_MIN;
+		return _underflowReadsInMin > general().getClientPacketQueueMaxUnderflowsPerMin();
 	}
 	
 	/**
 	 * @return true if maximum number of floods per minute is reached.
 	 */
 	protected final boolean countFloods() {
-		return _floodsInMin > Config.CLIENT_PACKET_QUEUE_MAX_FLOODS_PER_MIN;
+		return _floodsInMin > general().getClientPacketQueueMaxFloodsPerMin();
 	}
 	
 	private final boolean longFloodDetected() {
-		return (_totalCount / BUFFER_SIZE) > Config.CLIENT_PACKET_QUEUE_MAX_AVERAGE_PACKETS_PER_SECOND;
+		return (_totalCount / BUFFER_SIZE) > general().getClientPacketQueueMaxAveragePacketsPerSecond();
 	}
 	
 	/**
@@ -178,7 +180,7 @@ public class ClientStats {
 			_packetCountStartTick = tick;
 			
 			// clear flag if no more flooding during last seconds
-			if (_floodDetected && !longFloodDetected() && (_packetsInSecond[_head] < (Config.CLIENT_PACKET_QUEUE_MAX_PACKETS_PER_SECOND / 2))) {
+			if (_floodDetected && !longFloodDetected() && (_packetsInSecond[_head] < (general().getClientPacketQueueMaxPacketsPerSecond() / 2))) {
 				_floodDetected = false;
 			}
 			
@@ -195,7 +197,7 @@ public class ClientStats {
 		
 		final int count = ++_packetsInSecond[_head];
 		if (!_floodDetected) {
-			if (count > Config.CLIENT_PACKET_QUEUE_MAX_PACKETS_PER_SECOND) {
+			if (count > general().getClientPacketQueueMaxPacketsPerSecond()) {
 				shortFloods++;
 			} else if (longFloodDetected()) {
 				longFloods++;

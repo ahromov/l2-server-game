@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.serverpackets.ExShowContactList;
 
@@ -36,7 +37,7 @@ public final class RequestExShowContactList extends L2GameClientPacket {
 	
 	@Override
 	public void runImpl() {
-		if (!Config.ALLOW_MAIL) {
+		if (!general().allowMail()) {
 			return;
 		}
 		

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,9 +18,10 @@
  */
 package com.l2jserver.gameserver.network.serverpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.rates;
+
 import java.util.Collection;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.model.buylist.L2BuyList;
 import com.l2jserver.gameserver.model.buylist.Product;
 
@@ -73,7 +74,7 @@ public final class BuyList extends L2GameServerPacket {
 				writeH(0x00);
 				
 				if ((product.getItemId() >= 3960) && (product.getItemId() <= 4026)) {
-					writeQ((long) (product.getPrice() * Config.RATE_SIEGE_GUARDS_PRICE * (1 + _taxRate)));
+					writeQ((long) (product.getPrice() * rates().getRateSiegeGuardsPrice() * (1 + _taxRate)));
 				} else {
 					writeQ((long) (product.getPrice() * (1 + _taxRate)));
 				}

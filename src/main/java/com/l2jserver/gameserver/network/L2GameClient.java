@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,12 @@
  */
 package com.l2jserver.gameserver.network;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.mmo;
 import static com.l2jserver.gameserver.model.PcCondOverride.SEE_ALL_PLAYERS;
+import static java.util.concurrent.TimeUnit.DAYS;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -37,7 +42,6 @@ import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.LoginServerThread;
 import com.l2jserver.gameserver.LoginServerThread.SessionKey;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.CharNameTable;
 import com.l2jserver.gameserver.data.sql.impl.ClanTable;
 import com.l2jserver.gameserver.data.xml.impl.SecondaryAuthData;
@@ -130,10 +134,11 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 		_crypt = new GameCrypt();
 		_stats = new ClientStats();
 		
-		_packetQueue = new ArrayBlockingQueue<>(Config.CLIENT_PACKET_QUEUE_SIZE);
+		final var capacity = Math.max(general().getClientPacketQueueSize(), mmo().getMaxReadPerPass() + 2);
+		_packetQueue = new ArrayBlockingQueue<>(capacity);
 		
-		if (Config.CHAR_STORE_INTERVAL > 0) {
-			_autoSaveInDB = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new AutoSaveTask(), 300000L, (Config.CHAR_STORE_INTERVAL * 60000L));
+		if (general().getCharacterDataStoreInterval() > 0) {
+			_autoSaveInDB = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new AutoSaveTask(), 300000L, general().getCharacterDataStoreInterval());
 		} else {
 			_autoSaveInDB = null;
 		}
@@ -293,11 +298,11 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 				
 				// Setting delete time
 				if (answer == 0) {
-					if (Config.DELETE_DAYS == 0) {
+					if (character().getDeleteCharAfterDays() == 0) {
 						deleteCharByObjId(objid);
 					} else {
 						try (var ps2 = con.prepareStatement("UPDATE characters SET deletetime=? WHERE charId=?")) {
-							ps2.setLong(1, System.currentTimeMillis() + (Config.DELETE_DAYS * 86400000L)); // 24*60*60*1000 = 86400000
+							ps2.setLong(1, System.currentTimeMillis() + DAYS.toMillis(character().getDeleteCharAfterDays()));
 							ps2.setInt(2, objid);
 							ps2.execute();
 						}
@@ -320,7 +325,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 			if (getActiveChar() != null) {
 				getActiveChar().storeMe();
 				getActiveChar().storeRecommendations();
-				if (Config.UPDATE_ITEMS_ON_CHAR_STORE) {
+				if (general().updateItemsOnCharStore()) {
 					getActiveChar().getInventory().updateDatabase();
 					getActiveChar().getWarehouse().updateDatabase();
 				}
@@ -472,7 +477,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 				ps.execute();
 			}
 			
-			if (Config.L2JMOD_ALLOW_WEDDING) {
+			if (customs().allowWedding()) {
 				try (var ps = con.prepareStatement("DELETE FROM mods_wedding WHERE player1Id = ? OR player2Id = ?")) {
 					ps.setInt(1, objid);
 					ps.setInt(2, objid);
@@ -642,8 +647,8 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 							}
 						}
 						
-						if (Config.OFFLINE_SET_NAME_COLOR) {
-							player.getAppearance().setNameColor(Config.OFFLINE_NAME_COLOR);
+						if (customs().offlineSetNameColor()) {
+							player.getAppearance().setNameColor(customs().getOfflineNameColor());
 							player.broadcastUserInfo();
 						}
 						
@@ -676,20 +681,20 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 			case SELL:
 			case PACKAGE_SELL:
 			case BUY: {
-				canSetShop = Config.OFFLINE_TRADE_ENABLE;
+				canSetShop = customs().offlineTradeEnable();
 				break;
 			}
 			case MANUFACTURE: {
-				canSetShop = Config.OFFLINE_TRADE_ENABLE;
+				canSetShop = customs().offlineTradeEnable();
 				break;
 			}
 			default: {
-				canSetShop = Config.OFFLINE_CRAFT_ENABLE && player.isInCraftMode();
+				canSetShop = customs().offlineCraftEnable() && player.isInCraftMode();
 				break;
 			}
 		}
 		
-		if (Config.OFFLINE_MODE_IN_PEACE_ZONE && !player.isInsideZone(ZoneId.PEACE)) {
+		if (customs().offlineModeInPeaceZone() && !player.isInsideZone(ZoneId.PEACE)) {
 			canSetShop = false;
 		}
 		return canSetShop;
@@ -773,7 +778,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	
 	public boolean handleCheat(String punishment) {
 		if (_activeChar != null) {
-			Util.handleIllegalPlayerAction(_activeChar, toString() + ": " + punishment, Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(_activeChar, toString() + ": " + punishment);
 			return true;
 		}
 		
@@ -812,7 +817,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 		
 		// In CONNECTED state kick client immediately.
 		if (_state == GameClientState.CONNECTED) {
-			if (Config.PACKET_HANDLER_DEBUG) {
+			if (general().packetHandlerDebug()) {
 				LOG.error("Client {} disconnected, too many buffer underflows in non-authed state!", this);
 			}
 			closeNow();
@@ -831,7 +836,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 		
 		// In CONNECTED state kick client immediately.
 		if (_state == GameClientState.CONNECTED) {
-			if (Config.PACKET_HANDLER_DEBUG) {
+			if (general().packetHandlerDebug()) {
 				LOG.error("Client {} disconnected, too many unknown packets in non-authed state!", this);
 			}
 			closeNow();
@@ -866,7 +871,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 		try {
 			if (_state == GameClientState.CONNECTED) {
 				if (getStats().processedPackets > 3) {
-					if (Config.PACKET_HANDLER_DEBUG) {
+					if (general().packetHandlerDebug()) {
 						LOG.error("Client {} disconnected, too many packets in non-authed state!", this);
 					}
 					closeNow();

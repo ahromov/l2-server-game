@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.model.entity;
 
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -34,7 +37,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.l2jserver.gameserver.cache.HtmCache;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.NpcData;
 import com.l2jserver.gameserver.datatables.SpawnTable;
 import com.l2jserver.gameserver.instancemanager.AntiFeedManager;
@@ -222,7 +224,7 @@ public class L2Event {
 			return;
 		}
 		
-		if ((Config.L2JMOD_DUALBOX_CHECK_MAX_L2EVENT_PARTICIPANTS_PER_IP == 0) || AntiFeedManager.getInstance().tryAddPlayer(AntiFeedManager.L2EVENT_ID, player, Config.L2JMOD_DUALBOX_CHECK_MAX_L2EVENT_PARTICIPANTS_PER_IP)) {
+		if ((customs().getDualboxCheckMaxL2EventParticipantsPerIP() == 0) || AntiFeedManager.getInstance().tryAddPlayer(AntiFeedManager.L2EVENT_ID, player, customs().getDualboxCheckMaxL2EventParticipantsPerIP())) {
 			_registeredPlayers.add(player);
 		} else {
 			player.sendMessage("You have reached the maximum allowed participants per IP.");
@@ -322,7 +324,7 @@ public class L2Event {
 				return "Cannot start event, invalid npc id.";
 			}
 			
-			try (FileReader fr = new FileReader(Config.DATAPACK_ROOT + "/data/events/" + _eventName);
+			try (FileReader fr = new FileReader(server().getDatapackRoot() + "/data/events/" + _eventName);
 				BufferedReader br = new BufferedReader(fr)) {
 				_eventCreator = br.readLine();
 				_eventInfo = br.readLine();

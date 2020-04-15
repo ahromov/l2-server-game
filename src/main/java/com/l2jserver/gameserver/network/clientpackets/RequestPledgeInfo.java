@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,9 +18,10 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.logging.Level;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.ClanTable;
 import com.l2jserver.gameserver.model.L2Clan;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -38,7 +39,7 @@ public final class RequestPledgeInfo extends L2GameClientPacket {
 	
 	@Override
 	protected void runImpl() {
-		if (Config.DEBUG) {
+		if (general().debug()) {
 			_log.log(Level.FINE, "Info for clan " + _clanId + " requested");
 		}
 		
@@ -49,7 +50,7 @@ public final class RequestPledgeInfo extends L2GameClientPacket {
 		
 		final L2Clan clan = ClanTable.getInstance().getClan(_clanId);
 		if (clan == null) {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.warning(getType() + ": Clan data for clanId " + _clanId + " is missing for player " + activeChar);
 			}
 			return; // we have no clan data ?!? should not happen

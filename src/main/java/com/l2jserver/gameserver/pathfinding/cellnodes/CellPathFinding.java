@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.pathfinding.cellnodes;
 
+import static com.l2jserver.gameserver.config.Configuration.geodata;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,7 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.l2jserver.gameserver.GeoData;
-import com.l2jserver.gameserver.config.Config;
+import com.l2jserver.gameserver.config.Configuration;
 import com.l2jserver.gameserver.idfactory.IdFactory;
 import com.l2jserver.gameserver.model.itemcontainer.Inventory;
 import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
@@ -56,7 +58,7 @@ public class CellPathFinding extends PathFinding {
 	
 	protected CellPathFinding() {
 		try {
-			String[] array = Config.PATHFIND_BUFFERS.split(";");
+			String[] array = geodata().getPathFindBuffers().split(";");
 			
 			_allBuffers = new BufferInfo[array.length];
 			
@@ -101,7 +103,7 @@ public class CellPathFinding extends PathFinding {
 			return null;
 		}
 		
-		boolean debug = playable && Config.DEBUG_PATH;
+		boolean debug = playable && geodata().debugPath();
 		
 		if (debug) {
 			if (_debugItems == null) {
@@ -143,7 +145,7 @@ public class CellPathFinding extends PathFinding {
 			buffer.free();
 		}
 		
-		if ((path.size() < 3) || (Config.MAX_POSTFILTER_PASSES <= 0)) {
+		if ((path.size() < 3) || (geodata().getMaxPostfilterPasses() <= 0)) {
 			_findSuccess++;
 			return path;
 		}
@@ -186,7 +188,7 @@ public class CellPathFinding extends PathFinding {
 			}
 		}
 		// only one postfilter pass for AI
-		while (playable && remove && (path.size() > 2) && (pass < Config.MAX_POSTFILTER_PASSES));
+		while (playable && remove && (path.size() > 2) && (pass < geodata().getMaxPostfilterPasses()));
 		
 		if (debug) {
 			path.forEach(n -> dropDebugItem(65, 1, n));
@@ -204,7 +206,7 @@ public class CellPathFinding extends PathFinding {
 		int directionX, directionY;
 		
 		while (node.getParent() != null) {
-			if (!Config.ADVANCED_DIAGONAL_STRATEGY && (node.getParent().getParent() != null)) {
+			if (!geodata().advancedDiagonalStrategy() && (node.getParent().getParent() != null)) {
 				int tmpX = node.getLoc().getNodeX() - node.getParent().getParent().getLoc().getNodeX();
 				int tmpY = node.getLoc().getNodeY() - node.getParent().getParent().getLoc().getNodeY();
 				if (Math.abs(tmpX) == Math.abs(tmpY)) {
@@ -323,7 +325,7 @@ public class CellPathFinding extends PathFinding {
 		StringUtil.append(stat, "LOS postfilter uses:", String.valueOf(_postFilterUses), "/", String.valueOf(_postFilterPlayableUses));
 		if (_postFilterUses > 0) {
 			StringUtil.append(stat, " total/avg(ms):", String.valueOf(_postFilterElapsed), "/", String.format("%1.2f", (double) _postFilterElapsed / _postFilterUses), //
-				" passes total/avg:", String.valueOf(_postFilterPasses), "/", String.format("%1.1f", (double) _postFilterPasses / _postFilterUses), Config.EOL);
+				" passes total/avg:", String.valueOf(_postFilterPasses), "/", String.format("%1.1f", (double) _postFilterPasses / _postFilterUses), Configuration.EOL);
 		}
 		StringUtil.append(stat, "Pathfind success/fail:", String.valueOf(_findSuccess), "/", String.valueOf(_findFails));
 		result[result.length - 1] = stat.toString();

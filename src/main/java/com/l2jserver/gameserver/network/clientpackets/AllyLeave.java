@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,10 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.model.L2Clan.PENALTY_TYPE_CLAN_LEAVED;
+import static java.util.concurrent.TimeUnit.DAYS;
+
 import com.l2jserver.gameserver.model.L2Clan;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.SystemMessageId;
@@ -36,31 +39,33 @@ public final class AllyLeave extends L2GameClientPacket {
 		if (player == null) {
 			return;
 		}
-		if (player.getClan() == null) {
+		
+		L2Clan clan = player.getClan();
+		if (clan == null) {
 			player.sendPacket(SystemMessageId.YOU_ARE_NOT_A_CLAN_MEMBER);
 			return;
 		}
+		
 		if (!player.isClanLeader()) {
 			player.sendPacket(SystemMessageId.ONLY_CLAN_LEADER_WITHDRAW_ALLY);
 			return;
 		}
-		L2Clan clan = player.getClan();
+		
 		if (clan.getAllyId() == 0) {
 			player.sendPacket(SystemMessageId.NO_CURRENT_ALLIANCES);
 			return;
 		}
+		
 		if (clan.getId() == clan.getAllyId()) {
 			player.sendPacket(SystemMessageId.ALLIANCE_LEADER_CANT_WITHDRAW);
 			return;
 		}
 		
-		long currentTime = System.currentTimeMillis();
 		clan.setAllyId(0);
 		clan.setAllyName(null);
 		clan.changeAllyCrest(0, true);
-		clan.setAllyPenaltyExpiryTime(currentTime + (Config.ALT_ALLY_JOIN_DAYS_WHEN_LEAVED * 86400000L), L2Clan.PENALTY_TYPE_CLAN_LEAVED); // 24*60*60*1000 = 86400000
+		clan.setAllyPenaltyExpiryTime(System.currentTimeMillis() + DAYS.toMillis(character().getDaysBeforeJoiningAllianceAfterLeaving()), PENALTY_TYPE_CLAN_LEAVED);
 		clan.updateClanInDB();
-		
 		player.sendPacket(SystemMessageId.YOU_HAVE_WITHDRAWN_FROM_ALLIANCE);
 	}
 	

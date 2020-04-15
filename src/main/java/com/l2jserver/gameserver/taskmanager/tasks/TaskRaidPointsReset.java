@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.taskmanager.tasks;
 
+import static com.l2jserver.gameserver.config.Configuration.clan;
+
 import java.util.Calendar;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,7 +27,6 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.ClanTable;
 import com.l2jserver.gameserver.instancemanager.RaidBossPointsManager;
 import com.l2jserver.gameserver.model.L2Clan;
@@ -57,40 +58,40 @@ public class TaskRaidPointsReset extends Task {
 						int reputation = 0;
 						switch (entry.getValue()) {
 							case 1:
-								reputation = Config.RAID_RANKING_1ST;
+								reputation = clan().get1stRaidRankingPoints();
 								break;
 							case 2:
-								reputation = Config.RAID_RANKING_2ND;
+								reputation = clan().get2ndRaidRankingPoints();
 								break;
 							case 3:
-								reputation = Config.RAID_RANKING_3RD;
+								reputation = clan().get3rdRaidRankingPoints();
 								break;
 							case 4:
-								reputation = Config.RAID_RANKING_4TH;
+								reputation = clan().get4thRaidRankingPoints();
 								break;
 							case 5:
-								reputation = Config.RAID_RANKING_5TH;
+								reputation = clan().get5thRaidRankingPoints();
 								break;
 							case 6:
-								reputation = Config.RAID_RANKING_6TH;
+								reputation = clan().get6thRaidRankingPoints();
 								break;
 							case 7:
-								reputation = Config.RAID_RANKING_7TH;
+								reputation = clan().get7thRaidRankingPoints();
 								break;
 							case 8:
-								reputation = Config.RAID_RANKING_8TH;
+								reputation = clan().get8thRaidRankingPoints();
 								break;
 							case 9:
-								reputation = Config.RAID_RANKING_9TH;
+								reputation = clan().get9thRaidRankingPoints();
 								break;
 							case 10:
-								reputation = Config.RAID_RANKING_10TH;
+								reputation = clan().get10thRaidRankingPoints();
 								break;
 							default:
 								if (entry.getValue() <= 50) {
-									reputation = Config.RAID_RANKING_UP_TO_50TH;
+									reputation = clan().getUpTo50thRaidRankingPoints();
 								} else {
-									reputation = Config.RAID_RANKING_UP_TO_100TH;
+									reputation = clan().getUpTo100thRaidRankingPoints();
 								}
 								break;
 						}

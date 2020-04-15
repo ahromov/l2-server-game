@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.instancemanager;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -35,7 +37,6 @@ import org.slf4j.LoggerFactory;
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.DoorData;
 import com.l2jserver.gameserver.datatables.SpawnTable;
 import com.l2jserver.gameserver.instancemanager.tasks.FourSepulchersChangeAttackTimeTask;
@@ -229,9 +230,9 @@ public final class FourSepulchersManager {
 		}
 		tmp.set(Calendar.MINUTE, _newCycleMin);
 		_coolDownTimeEnd = tmp.getTimeInMillis();
-		_entryTimeEnd = _coolDownTimeEnd + (Config.FS_TIME_ENTRY * 60000L);
-		_warmUpTimeEnd = _entryTimeEnd + (Config.FS_TIME_WARMUP * 60000L);
-		_attackTimeEnd = _warmUpTimeEnd + (Config.FS_TIME_ATTACK * 60000L);
+		_entryTimeEnd = _coolDownTimeEnd + general().getTimeOfEntry();
+		_warmUpTimeEnd = _entryTimeEnd + general().getTimeOfWarmUp();
+		_attackTimeEnd = _warmUpTimeEnd + general().getTimeOfAttack();
 	}
 	
 	public void clean() {
@@ -757,7 +758,7 @@ public final class FourSepulchersManager {
 			default: {
 				if (!player.isGM()) {
 					LOG.warn("Player {} tried to cheat in four sepulchers.", player);
-					Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " tried to enter four sepulchers with invalid npc id.", Config.DEFAULT_PUNISH);
+					Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " tried to enter four sepulchers with invalid npc id.");
 				}
 				return;
 			}
@@ -768,8 +769,8 @@ public final class FourSepulchersManager {
 			return;
 		}
 		
-		if (Config.FS_PARTY_MEMBER_COUNT > 1) {
-			if (!player.isInParty() || (player.getParty().getMemberCount() < Config.FS_PARTY_MEMBER_COUNT)) {
+		if (general().getNumberOfNecessaryPartyMembers() > 1) {
+			if (!player.isInParty() || (player.getParty().getMemberCount() < general().getNumberOfNecessaryPartyMembers())) {
 				showHtmlFile(player, npcId + "-SP.htm", npc, null);
 				return;
 			}
@@ -795,7 +796,7 @@ public final class FourSepulchersManager {
 					return;
 				}
 			}
-		} else if ((Config.FS_PARTY_MEMBER_COUNT <= 1) && player.isInParty()) {
+		} else if ((general().getNumberOfNecessaryPartyMembers() <= 1) && player.isInParty()) {
 			if (!player.getParty().isLeader(player)) {
 				showHtmlFile(player, npcId + "-NL.htm", npc, null);
 				return;
@@ -848,7 +849,7 @@ public final class FourSepulchersManager {
 		int driftx;
 		int drifty;
 		
-		if (Config.FS_PARTY_MEMBER_COUNT > 1) {
+		if (general().getNumberOfNecessaryPartyMembers() > 1) {
 			final List<L2PcInstance> members = new LinkedList<>();
 			for (L2PcInstance mem : player.getParty().getMembers()) {
 				if (!mem.isDead() && Util.checkIfInRange(700, player, mem, true)) {
@@ -876,7 +877,7 @@ public final class FourSepulchersManager {
 			
 			_hallInUse.put(npcId, true);
 		}
-		if ((Config.FS_PARTY_MEMBER_COUNT <= 1) && player.isInParty()) {
+		if ((general().getNumberOfNecessaryPartyMembers() <= 1) && player.isInParty()) {
 			final List<L2PcInstance> members = new LinkedList<>();
 			for (L2PcInstance mem : player.getParty().getMembers()) {
 				if (!mem.isDead() && Util.checkIfInRange(700, player, mem, true)) {

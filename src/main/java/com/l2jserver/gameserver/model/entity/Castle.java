@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.model.entity;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.clan;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -28,7 +31,6 @@ import java.util.logging.Logger;
 
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.ClanTable;
 import com.l2jserver.gameserver.data.xml.impl.DoorData;
 import com.l2jserver.gameserver.data.xml.impl.SkillTreesData;
@@ -285,8 +287,8 @@ public final class Castle extends AbstractResidence {
 			}
 			_treasury -= amount;
 		} else {
-			if ((_treasury + amount) > Inventory.MAX_ADENA) {
-				_treasury = Inventory.MAX_ADENA;
+			if ((_treasury + amount) > character().getMaxAdena()) {
+				_treasury = character().getMaxAdena();
 			} else {
 				_treasury += amount;
 			}
@@ -404,7 +406,7 @@ public final class Castle extends AbstractResidence {
 			if (oldOwner != null) {
 				if (_formerOwner == null) {
 					_formerOwner = oldOwner;
-					if (Config.REMOVE_CASTLE_CIRCLETS) {
+					if (character().removeCastleCirclets()) {
 						CastleManager.getInstance().removeCirclet(_formerOwner, getResidenceId());
 					}
 				}
@@ -451,7 +453,7 @@ public final class Castle extends AbstractResidence {
 	public void removeOwner(L2Clan clan) {
 		if (clan != null) {
 			_formerOwner = clan;
-			if (Config.REMOVE_CASTLE_CIRCLETS) {
+			if (character().removeCastleCirclets()) {
 				CastleManager.getInstance().removeCirclet(_formerOwner, getResidenceId());
 			}
 			for (L2PcInstance member : clan.getOnlineMembers(0)) {
@@ -785,18 +787,18 @@ public final class Castle extends AbstractResidence {
 		if (_formerOwner != null) {
 			if (_formerOwner != ClanTable.getInstance().getClan(getOwnerId())) {
 				int maxreward = Math.max(0, _formerOwner.getReputationScore());
-				_formerOwner.takeReputationScore(Config.LOOSE_CASTLE_POINTS, true);
+				_formerOwner.takeReputationScore(clan().getLoseCastlePoints(), true);
 				L2Clan owner = ClanTable.getInstance().getClan(getOwnerId());
 				if (owner != null) {
-					owner.addReputationScore(Math.min(Config.TAKE_CASTLE_POINTS, maxreward), true);
+					owner.addReputationScore(Math.min(clan().getTakeCastlePoints(), maxreward), true);
 				}
 			} else {
-				_formerOwner.addReputationScore(Config.CASTLE_DEFENDED_POINTS, true);
+				_formerOwner.addReputationScore(clan().getCastleDefendedPoints(), true);
 			}
 		} else {
 			L2Clan owner = ClanTable.getInstance().getClan(getOwnerId());
 			if (owner != null) {
-				owner.addReputationScore(Config.TAKE_CASTLE_POINTS, true);
+				owner.addReputationScore(clan().getTakeCastlePoints(), true);
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,11 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.model.L2Clan.PENALTY_TYPE_CLAN_DISMISSED;
+import static com.l2jserver.gameserver.model.L2Clan.PENALTY_TYPE_DISMISS_CLAN;
+import static java.util.concurrent.TimeUnit.DAYS;
+
 import com.l2jserver.gameserver.data.sql.impl.ClanTable;
 import com.l2jserver.gameserver.model.L2Clan;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -39,47 +43,53 @@ public final class AllyDismiss extends L2GameClientPacket {
 		if (_clanName == null) {
 			return;
 		}
+		
 		L2PcInstance player = getClient().getActiveChar();
 		if (player == null) {
 			return;
 		}
-		if (player.getClan() == null) {
+		
+		L2Clan leaderClan = player.getClan();
+		if (leaderClan == null) {
 			player.sendPacket(SystemMessageId.YOU_ARE_NOT_A_CLAN_MEMBER);
 			return;
 		}
-		L2Clan leaderClan = player.getClan();
+		
 		if (leaderClan.getAllyId() == 0) {
 			player.sendPacket(SystemMessageId.NO_CURRENT_ALLIANCES);
 			return;
 		}
+		
 		if (!player.isClanLeader() || (leaderClan.getId() != leaderClan.getAllyId())) {
 			player.sendPacket(SystemMessageId.FEATURE_ONLY_FOR_ALLIANCE_LEADER);
 			return;
 		}
+		
 		L2Clan clan = ClanTable.getInstance().getClanByName(_clanName);
 		if (clan == null) {
 			player.sendPacket(SystemMessageId.CLAN_DOESNT_EXISTS);
 			return;
 		}
+		
 		if (clan.getId() == leaderClan.getId()) {
 			player.sendPacket(SystemMessageId.ALLIANCE_LEADER_CANT_WITHDRAW);
 			return;
 		}
+		
 		if (clan.getAllyId() != leaderClan.getAllyId()) {
 			player.sendPacket(SystemMessageId.DIFFERENT_ALLIANCE);
 			return;
 		}
 		
 		long currentTime = System.currentTimeMillis();
-		leaderClan.setAllyPenaltyExpiryTime(currentTime + (Config.ALT_ACCEPT_CLAN_DAYS_WHEN_DISMISSED * 86400000L), L2Clan.PENALTY_TYPE_DISMISS_CLAN); // 24*60*60*1000 = 86400000
+		leaderClan.setAllyPenaltyExpiryTime(currentTime + DAYS.toMillis(character().getDaysBeforeAcceptNewClanWhenDismissed()), PENALTY_TYPE_DISMISS_CLAN);
 		leaderClan.updateClanInDB();
 		
 		clan.setAllyId(0);
 		clan.setAllyName(null);
 		clan.changeAllyCrest(0, true);
-		clan.setAllyPenaltyExpiryTime(currentTime + (Config.ALT_ALLY_JOIN_DAYS_WHEN_DISMISSED * 86400000L), L2Clan.PENALTY_TYPE_CLAN_DISMISSED); // 24*60*60*1000 = 86400000
+		clan.setAllyPenaltyExpiryTime(currentTime + DAYS.toMillis(character().getDaysBeforeJoinAllyWhenDismissed()), PENALTY_TYPE_CLAN_DISMISSED);
 		clan.updateClanInDB();
-		
 		player.sendPacket(SystemMessageId.YOU_HAVE_EXPELED_A_CLAN);
 	}
 	

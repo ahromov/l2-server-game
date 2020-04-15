@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.data.sql.impl;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.NpcData;
 import com.l2jserver.gameserver.data.xml.impl.PetDataTable;
 import com.l2jserver.gameserver.datatables.SkillData;
@@ -69,7 +70,7 @@ public class CharSummonTable {
 	}
 	
 	public void init() {
-		if (Config.RESTORE_SERVITOR_ON_RECONNECT) {
+		if (character().restoreServitorOnReconnect()) {
 			try (var con = ConnectionFactory.getInstance().getConnection();
 				var s = con.createStatement();
 				var rs = s.executeQuery(INIT_SUMMONS)) {
@@ -81,7 +82,7 @@ public class CharSummonTable {
 			}
 		}
 		
-		if (Config.RESTORE_PET_ON_RECONNECT) {
+		if (character().restorePetOnReconnect()) {
 			try (var con = ConnectionFactory.getInstance().getConnection();
 				var s = con.createStatement();
 				var rs = s.executeQuery(INIT_PET)) {

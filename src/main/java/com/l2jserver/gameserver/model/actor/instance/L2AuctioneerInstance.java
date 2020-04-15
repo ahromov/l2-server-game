@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,9 @@
  */
 package com.l2jserver.gameserver.model.actor.instance;
 
-import static com.l2jserver.gameserver.model.itemcontainer.Inventory.MAX_ADENA;
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static java.util.concurrent.TimeUnit.DAYS;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -30,7 +32,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.InstanceType;
 import com.l2jserver.gameserver.instancemanager.AuctionManager;
 import com.l2jserver.gameserver.instancemanager.ClanHallManager;
@@ -91,10 +92,10 @@ public final class L2AuctioneerInstance extends L2Npc {
 						SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 						long bid = 0;
 						if (st.hasMoreTokens()) {
-							bid = Math.min(Long.parseLong(st.nextToken()), MAX_ADENA);
+							bid = Math.min(Long.parseLong(st.nextToken()), character().getMaxAdena());
 						}
 						
-						Auction a = new Auction(player.getClan().getHideoutId(), player.getClan(), days * 86400000L, bid, ClanHallManager.getInstance().getClanHallByOwner(player.getClan()).getName());
+						Auction a = new Auction(player.getClan().getHideoutId(), player.getClan(), DAYS.toMillis(days), bid, ClanHallManager.getInstance().getClanHallByOwner(player.getClan()).getName());
 						if (_pendingAuctions.get(a.getId()) != null) {
 							_pendingAuctions.remove(a.getId());
 						}
@@ -133,7 +134,7 @@ public final class L2AuctioneerInstance extends L2Npc {
 					return;
 				}
 				
-				if (Config.DEBUG) {
+				if (general().debug()) {
 					LOG.debug("bidding show successful");
 				}
 				
@@ -141,7 +142,7 @@ public final class L2AuctioneerInstance extends L2Npc {
 					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 					int auctionId = Integer.parseInt(val);
 					
-					if (Config.DEBUG) {
+					if (general().debug()) {
 						LOG.debug("auction test started");
 					}
 					
@@ -184,7 +185,7 @@ public final class L2AuctioneerInstance extends L2Npc {
 					try {
 						long bid = 0;
 						if (st.hasMoreTokens()) {
-							bid = Math.min(Long.parseLong(st.nextToken()), MAX_ADENA);
+							bid = Math.min(Long.parseLong(st.nextToken()), character().getMaxAdena());
 						}
 						
 						AuctionManager.getInstance().getAuction(auctionId).setBid(player, bid);
@@ -246,7 +247,7 @@ public final class L2AuctioneerInstance extends L2Npc {
 					limit *= Integer.parseInt(val);
 				}
 				
-				if (Config.DEBUG) {
+				if (general().debug()) {
 					LOG.debug("cmd list: auction test started");
 				}
 				
@@ -318,7 +319,7 @@ public final class L2AuctioneerInstance extends L2Npc {
 					auctionId = Integer.parseInt(val);
 				}
 				
-				if (Config.DEBUG) {
+				if (general().debug()) {
 					LOG.debug("cmd bidlist: auction test started");
 				}
 				

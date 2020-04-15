@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,12 @@
  */
 package com.l2jserver.gameserver.model.entity;
 
-import com.l2jserver.commons.util.Rnd;
+import static com.l2jserver.gameserver.config.Configuration.tvt;
+
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.enums.DuelState;
 import com.l2jserver.gameserver.enums.Team;
+import com.l2jserver.gameserver.model.Location;
 import com.l2jserver.gameserver.model.actor.L2Summon;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
@@ -30,7 +31,7 @@ public class TvTEventTeleporter implements Runnable {
 	/** The instance of the player to teleport */
 	private L2PcInstance _playerInstance = null;
 	/** Coordinates of the spot to teleport to */
-	private int[] _coordinates = new int[3];
+	private Location _loc = null;
 	/** Admin removed this player from event */
 	private boolean _adminRemove = false;
 	
@@ -41,13 +42,12 @@ public class TvTEventTeleporter implements Runnable {
 	 * @param fastSchedule
 	 * @param adminRemove
 	 */
-	public TvTEventTeleporter(L2PcInstance playerInstance, int[] coordinates, boolean fastSchedule, boolean adminRemove) {
+	public TvTEventTeleporter(L2PcInstance playerInstance, Location loc, boolean fastSchedule, boolean adminRemove) {
 		_playerInstance = playerInstance;
-		_coordinates = coordinates;
+		_loc = loc;
 		_adminRemove = adminRemove;
 		
-		long delay = (TvTEvent.isStarted() ? Config.TVT_EVENT_RESPAWN_TELEPORT_DELAY : Config.TVT_EVENT_START_LEAVE_TELEPORT_DELAY) * 1000;
-		
+		long delay = TvTEvent.isStarted() ? tvt().getRespawnTeleportDelay() : tvt().getStartLeaveTeleportDelay();
 		ThreadPoolManager.getInstance().scheduleGeneral(this, fastSchedule ? 0 : delay);
 	}
 	
@@ -71,7 +71,8 @@ public class TvTEventTeleporter implements Runnable {
 			summon.unSummon(_playerInstance);
 		}
 		
-		if ((Config.TVT_EVENT_EFFECTS_REMOVAL == 0) || ((Config.TVT_EVENT_EFFECTS_REMOVAL == 1) && ((_playerInstance.getTeam() == Team.NONE) || (_playerInstance.isInDuel() && (_playerInstance.getDuelState() != DuelState.INTERRUPTED))))) {
+		final var effectRemoval = tvt().getEffectsRemoval();
+		if ((effectRemoval == 0) || ((effectRemoval == 1) && ((_playerInstance.getTeam() == Team.NONE) || (_playerInstance.isInDuel() && (_playerInstance.getDuelState() != DuelState.INTERRUPTED))))) {
 			_playerInstance.stopAllEffectsExceptThoseThatLastThroughDeath();
 		}
 		
@@ -91,8 +92,7 @@ public class TvTEventTeleporter implements Runnable {
 		}
 		
 		_playerInstance.doRevive();
-		
-		_playerInstance.teleToLocation((_coordinates[0] + Rnd.get(101)) - 50, (_coordinates[1] + Rnd.get(101)) - 50, _coordinates[2], false);
+		_playerInstance.teleToLocation(_loc, true);
 		
 		if (TvTEvent.isStarted() && !_adminRemove) {
 			int teamId = TvTEvent.getParticipantTeamId(_playerInstance.getObjectId()) + 1;

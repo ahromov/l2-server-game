@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.datatables;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +35,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.NpcData;
 import com.l2jserver.gameserver.instancemanager.DayNightSpawnManager;
 import com.l2jserver.gameserver.instancemanager.ZoneManager;
@@ -59,12 +61,12 @@ public final class SpawnTable implements IXmlReader {
 	
 	@Override
 	public void load() {
-		if (!Config.ALT_DEV_NO_SPAWNS) {
+		if (!general().noSpawns()) {
 			fillSpawnTable(false);
 			final int spawnCount = _spawnTable.size();
 			LOG.info("Loaded {} NPC spawns.", spawnCount);
 			
-			if (Config.CUSTOM_SPAWNLIST_TABLE) {
+			if (general().customSpawnlistTable()) {
 				fillSpawnTable(true);
 				LOG.info("Loaded {} custom NPC spawns.", (_spawnTable.size() - spawnCount));
 			}
@@ -352,7 +354,7 @@ public final class SpawnTable implements IXmlReader {
 		addSpawn(spawn);
 		
 		if (storeInDb) {
-			final String spawnTable = spawn.isCustom() && Config.CUSTOM_SPAWNLIST_TABLE ? "custom_spawnlist" : "spawnlist";
+			final String spawnTable = spawn.isCustom() && general().customSpawnlistTable() ? "custom_spawnlist" : "spawnlist";
 			try (var con = ConnectionFactory.getInstance().getConnection();
 				var insert = con.prepareStatement("INSERT INTO " + spawnTable + "(count,npc_templateid,locx,locy,locz,heading,respawn_delay,respawn_random,loc_id) values(?,?,?,?,?,?,?,?,?)")) {
 				insert.setInt(1, spawn.getAmount());
@@ -361,7 +363,7 @@ public final class SpawnTable implements IXmlReader {
 				insert.setInt(4, spawn.getY());
 				insert.setInt(5, spawn.getZ());
 				insert.setInt(6, spawn.getHeading());
-				insert.setInt(7, spawn.getRespawnDelay() / 1000);
+				insert.setInt(7, (int) MILLISECONDS.toSeconds(spawn.getRespawnDelay()));
 				insert.setInt(8, spawn.getRespawnMaxDelay() - spawn.getRespawnMinDelay());
 				insert.setInt(9, spawn.getLocationId());
 				insert.execute();

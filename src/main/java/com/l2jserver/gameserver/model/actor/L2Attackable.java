@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -17,6 +17,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.l2jserver.gameserver.model.actor;
+
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.customs;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.npc;
+import static com.l2jserver.gameserver.config.Configuration.rates;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +43,6 @@ import com.l2jserver.gameserver.ai.L2AttackableAI;
 import com.l2jserver.gameserver.ai.L2CharacterAI;
 import com.l2jserver.gameserver.ai.L2FortSiegeGuardAI;
 import com.l2jserver.gameserver.ai.L2SiegeGuardAI;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.datatables.EventDroplist;
 import com.l2jserver.gameserver.datatables.EventDroplist.DateDrop;
 import com.l2jserver.gameserver.datatables.ItemTable;
@@ -303,7 +308,8 @@ public class L2Attackable extends L2Npc {
 		if (isMonster()) {
 			final L2MonsterInstance mob = (L2MonsterInstance) this;
 			if ((mob.getLeader() != null) && mob.getLeader().hasMinions()) {
-				final int respawnTime = Config.MINIONS_RESPAWN_TIME.containsKey(getId()) ? Config.MINIONS_RESPAWN_TIME.get(getId()) * 1000 : -1;
+				var respawnTime = npc().getCustomMinionsRespawnTime().get(getId());
+				respawnTime = respawnTime != null ? respawnTime * 1000 : -1;
 				mob.getLeader().getMinionList().onMinionDie(mob, respawnTime);
 			}
 			
@@ -352,7 +358,7 @@ public class L2Attackable extends L2Npc {
 					// Prevent unwanted behavior
 					if (damage > 1) {
 						// Check if damage dealer isn't too far from this (killed monster)
-						if (!Util.checkIfInRange(Config.ALT_PARTY_RANGE, this, attacker, true)) {
+						if (!Util.checkIfInRange(character().getPartyRange(), this, attacker, true)) {
 							continue;
 						}
 						
@@ -413,9 +419,9 @@ public class L2Attackable extends L2Npc {
 							long exp = expSp[0];
 							int sp = expSp[1];
 							
-							if (Config.L2JMOD_CHAMPION_ENABLE && isChampion()) {
-								exp *= Config.L2JMOD_CHAMPION_REWARDS_EXP_SP;
-								sp *= Config.L2JMOD_CHAMPION_REWARDS_EXP_SP;
+							if (customs().championEnable() && isChampion()) {
+								exp *= customs().getChampionRewardsExpSp();
+								sp *= customs().getChampionRewardsExpSp();
 							}
 							
 							exp *= penalty;
@@ -455,7 +461,7 @@ public class L2Attackable extends L2Npc {
 							
 							// If the L2PcInstance is in the L2Attackable rewards add its damages to party damages
 							if (reward2 != null) {
-								if (Util.checkIfInRange(Config.ALT_PARTY_RANGE, this, partyPlayer, true)) {
+								if (Util.checkIfInRange(character().getPartyRange(), this, partyPlayer, true)) {
 									partyDmg += reward2.getDamage(); // Add L2PcInstance damages to party damages
 									rewardedMembers.add(partyPlayer);
 									
@@ -471,7 +477,7 @@ public class L2Attackable extends L2Npc {
 							} else {
 								// Add L2PcInstance of the party (that have attacked or not) to members that can be rewarded
 								// and in range of the monster.
-								if (Util.checkIfInRange(Config.ALT_PARTY_RANGE, this, partyPlayer, true)) {
+								if (Util.checkIfInRange(character().getPartyRange(), this, partyPlayer, true)) {
 									rewardedMembers.add(partyPlayer);
 									if (partyPlayer.getLevel() > partyLvl) {
 										if (attackerParty.isInCommandChannel()) {
@@ -497,16 +503,16 @@ public class L2Attackable extends L2Npc {
 						long exp = expSp[0];
 						int sp = expSp[1];
 						
-						if (Config.L2JMOD_CHAMPION_ENABLE && isChampion()) {
-							exp *= Config.L2JMOD_CHAMPION_REWARDS_EXP_SP;
-							sp *= Config.L2JMOD_CHAMPION_REWARDS_EXP_SP;
+						if (customs().championEnable() && isChampion()) {
+							exp *= customs().getChampionRewardsExpSp();
+							sp *= customs().getChampionRewardsExpSp();
 						}
 						
 						exp *= partyMul;
 						sp *= partyMul;
 						
 						// Check for an over-hit enabled strike
-						// (When in party, the over-hit exp bonus is given to the whole party and splitted proportionally through the party members)
+						// (When in party, the over-hit exp bonus is given to the whole party and split proportionally through the party members)
 						L2Character overhitAttacker = getOverhitAttacker();
 						if (isOverhit() && (overhitAttacker != null) && (overhitAttacker.getActingPlayer() != null) && (attacker == overhitAttacker.getActingPlayer())) {
 							attacker.sendPacket(SystemMessageId.OVER_HIT);
@@ -830,7 +836,8 @@ public class L2Attackable extends L2Npc {
 			for (ItemHolder drop : deathItems) {
 				L2Item item = ItemTable.getInstance().getTemplate(drop.getId());
 				// Check if the autoLoot mode is active
-				if (isFlying() || (!item.hasExImmediateEffect() && ((!isRaid() && Config.AUTO_LOOT) || (isRaid() && Config.AUTO_LOOT_RAIDS))) || (item.hasExImmediateEffect() && Config.AUTO_LOOT_HERBS)) {
+				if (isFlying() || (!item.hasExImmediateEffect() && ((!isRaid() && character().autoLoot()) || //
+					(isRaid() && character().autoLootRaids()))) || (item.hasExImmediateEffect() && character().autoLootHerbs())) {
 					player.doAutoLoot(this, drop); // Give the item(s) to the L2PcInstance that has killed the L2Attackable
 				} else {
 					dropItem(player, drop); // drop the item on the ground
@@ -848,18 +855,18 @@ public class L2Attackable extends L2Npc {
 		}
 		
 		// Apply Special Item drop with random(rnd) quantity(qty) for champions.
-		if (Config.L2JMOD_CHAMPION_ENABLE && isChampion() && ((Config.L2JMOD_CHAMPION_REWARD_LOWER_LVL_ITEM_CHANCE > 0) || (Config.L2JMOD_CHAMPION_REWARD_HIGHER_LVL_ITEM_CHANCE > 0))) {
-			int champqty = Rnd.get(Config.L2JMOD_CHAMPION_REWARD_QTY);
-			ItemHolder item = new ItemHolder(Config.L2JMOD_CHAMPION_REWARD_ID, ++champqty);
+		if (customs().championEnable() && isChampion() && ((customs().getChampionRewardLowerLvlItemChance() > 0) || (customs().getChampionRewardHigherLvlItemChance() > 0))) {
+			int champqty = Rnd.get(customs().getChampionRewardItemQty());
+			ItemHolder item = new ItemHolder(customs().getChampionRewardItemID(), ++champqty);
 			
-			if ((player.getLevel() <= getLevel()) && (Rnd.get(100) < Config.L2JMOD_CHAMPION_REWARD_LOWER_LVL_ITEM_CHANCE)) {
-				if (Config.AUTO_LOOT || isFlying()) {
+			if ((player.getLevel() <= getLevel()) && (Rnd.get(100) < customs().getChampionRewardLowerLvlItemChance())) {
+				if (character().autoLoot() || isFlying()) {
 					player.addItem("ChampionLoot", item.getId(), item.getCount(), this, true); // Give the item(s) to the L2PcInstance that has killed the L2Attackable
 				} else {
 					dropItem(player, item);
 				}
-			} else if ((player.getLevel() > getLevel()) && (Rnd.get(100) < Config.L2JMOD_CHAMPION_REWARD_HIGHER_LVL_ITEM_CHANCE)) {
-				if (Config.AUTO_LOOT || isFlying()) {
+			} else if ((player.getLevel() > getLevel()) && (Rnd.get(100) < customs().getChampionRewardHigherLvlItemChance())) {
+				if (character().autoLoot() || isFlying()) {
 					player.addItem("ChampionLoot", item.getId(), item.getCount(), this, true); // Give the item(s) to the L2PcInstance that has killed the L2Attackable
 				} else {
 					dropItem(player, item);
@@ -903,7 +910,7 @@ public class L2Attackable extends L2Npc {
 			if (Rnd.get(1000000) < drop.getEventDrop().getDropChance()) {
 				final int itemId = drop.getEventDrop().getItemIdList()[Rnd.get(drop.getEventDrop().getItemIdList().length)];
 				final long itemCount = Rnd.get(drop.getEventDrop().getMinCount(), drop.getEventDrop().getMaxCount());
-				if (Config.AUTO_LOOT || isFlying()) {
+				if (character().autoLoot() || isFlying()) {
 					player.doAutoLoot(this, itemId, itemCount); // Give the item(s) to the L2PcInstance that has killed the L2Attackable
 				} else {
 					dropItem(player, itemId, itemCount); // drop the item on the ground
@@ -1119,18 +1126,18 @@ public class L2Attackable extends L2Npc {
 		}
 		
 		xp = ((double) getExpReward() * damage) / totalDamage;
-		if (Config.ALT_GAME_EXPONENT_XP != 0) {
-			xp *= Math.pow(2., -diff / Config.ALT_GAME_EXPONENT_XP);
+		if (character().getExponentXp() != 0) {
+			xp *= Math.pow(2., -diff / character().getExponentXp());
 		}
 		
 		sp = ((double) getSpReward() * damage) / totalDamage;
-		if (Config.ALT_GAME_EXPONENT_SP != 0) {
-			sp *= Math.pow(2., -diff / Config.ALT_GAME_EXPONENT_SP);
+		if (character().getExponentSp() != 0) {
+			sp *= Math.pow(2., -diff / character().getExponentSp());
 		}
 		
-		if ((Config.ALT_GAME_EXPONENT_XP == 0) && (Config.ALT_GAME_EXPONENT_SP == 0)) {
-			if (diff > 5) // formula revised May 07
-			{
+		if ((character().getExponentXp() == 0) && (character().getExponentSp() == 0)) {
+			// formula revised May 07
+			if (diff > 5) {
 				double pow = Math.pow((double) 5 / 6, diff - 5);
 				xp = xp * pow;
 				sp = sp * pow;
@@ -1272,7 +1279,7 @@ public class L2Attackable extends L2Npc {
 			if (diff > 0) {
 				count += diff;
 			}
-			_harvestItem.set(new ItemHolder(_seed.getCropId(), count * Config.RATE_DROP_MANOR));
+			_harvestItem.set(new ItemHolder(_seed.getCropId(), count * rates().getRateDropManor()));
 		}
 	}
 	
@@ -1318,7 +1325,7 @@ public class L2Attackable extends L2Npc {
 	// This is located here because L2Monster and L2FriendlyMob both extend this class. The other non-pc instances extend either L2NpcInstance or L2MonsterInstance.
 	@Override
 	public boolean hasRandomAnimation() {
-		return ((Config.MAX_MONSTER_ANIMATION > 0) && isRandomAnimationEnabled() && !(this instanceof L2GrandBossInstance));
+		return ((general().getMaxMonsterAnimation() > 0) && isRandomAnimationEnabled() && !(this instanceof L2GrandBossInstance));
 	}
 	
 	@Override
@@ -1386,7 +1393,7 @@ public class L2Attackable extends L2Npc {
 	 * True if vitality rate for exp and sp should be applied
 	 */
 	public boolean useVitalityRate() {
-		return isChampion() ? Config.L2JMOD_CHAMPION_ENABLE_VITALITY : true;
+		return isChampion() ? customs().championEnableVitality() : true;
 	}
 	
 	/** Return True if the L2Character is RaidBoss or his minion. */

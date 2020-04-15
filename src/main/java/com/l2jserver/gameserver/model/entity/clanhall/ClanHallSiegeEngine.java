@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model.entity.clanhall;
 
+import static com.l2jserver.gameserver.config.Configuration.clanhall;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -30,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.sql.impl.ClanTable;
 import com.l2jserver.gameserver.instancemanager.ClanHallSiegeManager;
 import com.l2jserver.gameserver.instancemanager.MapRegionManager;
@@ -380,17 +381,17 @@ public abstract class ClanHallSiegeEngine extends Quest implements Siegable {
 	
 	@Override
 	public boolean giveFame() {
-		return Config.CHS_ENABLE_FAME;
+		return clanhall().enableFame();
 	}
 	
 	@Override
 	public int getFameAmount() {
-		return Config.CHS_FAME_AMOUNT;
+		return clanhall().getFameAmount();
 	}
 	
 	@Override
 	public int getFameFrequency() {
-		return Config.CHS_FAME_FREQUENCY;
+		return clanhall().getFameFrequency();
 	}
 	
 	public final void broadcastNpcSay(final L2Npc npc, final int type, final NpcStringId messageId) {

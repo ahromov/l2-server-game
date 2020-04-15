@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,7 +18,8 @@
  */
 package com.l2jserver.gameserver.model.itemcontainer;
 
-import com.l2jserver.gameserver.config.Config;
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import com.l2jserver.gameserver.enums.ItemLocation;
 import com.l2jserver.gameserver.model.L2Clan;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -68,7 +69,7 @@ public final class ClanWarehouse extends Warehouse {
 	
 	@Override
 	public boolean validateCapacity(long slots) {
-		return ((_items.size() + slots) <= Config.WAREHOUSE_SLOTS_CLAN);
+		return ((_items.size() + slots) <= character().getMaximumWarehouseSlotsForClan());
 	}
 	
 	@Override

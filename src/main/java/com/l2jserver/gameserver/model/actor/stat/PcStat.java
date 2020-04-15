@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,9 +18,12 @@
  */
 package com.l2jserver.gameserver.model.actor.stat;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.vitality;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.data.xml.impl.PetDataTable;
 import com.l2jserver.gameserver.model.L2PetLevelData;
 import com.l2jserver.gameserver.model.PcCondOverride;
@@ -61,7 +64,7 @@ public class PcStat extends PlayableStat {
 	}
 	
 	public void setStartingExp(long value) {
-		if (Config.BOTREPORT_ENABLE) {
+		if (general().enableBotReportButton()) {
 			_startingXp = value;
 		}
 	}
@@ -177,11 +180,11 @@ public class PcStat extends PlayableStat {
 	
 	@Override
 	public double getRunSpeed() {
-		double val = super.getRunSpeed() + Config.RUN_SPD_BOOST;
+		double val = super.getRunSpeed() + character().getRunSpeedBoost();
 		
 		// Apply max run speed cap.
-		if ((val > Config.MAX_RUN_SPEED) && !getActiveChar().canOverrideCond(PcCondOverride.MAX_STATS_VALUE)) {
-			return Config.MAX_RUN_SPEED;
+		if ((val > character().getMaxRunSpeed()) && !getActiveChar().canOverrideCond(PcCondOverride.MAX_STATS_VALUE)) {
+			return character().getMaxRunSpeed();
 		}
 		
 		// Check for mount penalties
@@ -201,11 +204,11 @@ public class PcStat extends PlayableStat {
 	
 	@Override
 	public double getWalkSpeed() {
-		double val = super.getWalkSpeed() + Config.RUN_SPD_BOOST;
+		double val = super.getWalkSpeed() + character().getRunSpeedBoost();
 		
 		// Apply max run speed cap.
-		if ((val > Config.MAX_RUN_SPEED) && !getActiveChar().canOverrideCond(PcCondOverride.MAX_STATS_VALUE)) {
-			return Config.MAX_RUN_SPEED;
+		if ((val > character().getMaxRunSpeed()) && !getActiveChar().canOverrideCond(PcCondOverride.MAX_STATS_VALUE)) {
+			return character().getMaxRunSpeed();
 		}
 		
 		if (getActiveChar().isMounted()) {
@@ -226,8 +229,8 @@ public class PcStat extends PlayableStat {
 	public double getPAtkSpd() {
 		double val = super.getPAtkSpd();
 		
-		if ((val > Config.MAX_PATK_SPEED) && !getActiveChar().canOverrideCond(PcCondOverride.MAX_STATS_VALUE)) {
-			return Config.MAX_PATK_SPEED;
+		if ((val > character().getMaxPAtkSpeed()) && !getActiveChar().canOverrideCond(PcCondOverride.MAX_STATS_VALUE)) {
+			return character().getMaxPAtkSpeed();
 		}
 		
 		return val;
@@ -286,7 +289,7 @@ public class PcStat extends PlayableStat {
 	}
 	
 	public synchronized void updateVitalityPoints(float points, boolean useRates, boolean quiet) {
-		if ((points == 0) || !Config.ENABLE_VITALITY) {
+		if ((points == 0) || !vitality().enabled()) {
 			return;
 		}
 		
@@ -309,10 +312,10 @@ public class PcStat extends PlayableStat {
 			
 			if (points > 0) {
 				// vitality increased
-				points *= Config.RATE_VITALITY_GAIN;
+				points *= vitality().getRateVitalityGain();
 			} else {
 				// vitality decreased
-				points *= Config.RATE_VITALITY_LOST;
+				points *= vitality().getRateVitalityLost();
 			}
 		}
 		
@@ -333,19 +336,19 @@ public class PcStat extends PlayableStat {
 	public double getVitalityMultiplier() {
 		double vitality = 1.0;
 		
-		if (Config.ENABLE_VITALITY) {
+		if (vitality().enabled()) {
 			switch (getVitalityLevel()) {
 				case 1:
-					vitality = Config.RATE_VITALITY_LEVEL_1;
+					vitality = vitality().getRateVitalityLevel1();
 					break;
 				case 2:
-					vitality = Config.RATE_VITALITY_LEVEL_2;
+					vitality = vitality().getRateVitalityLevel2();
 					break;
 				case 3:
-					vitality = Config.RATE_VITALITY_LEVEL_3;
+					vitality = vitality().getRateVitalityLevel3();
 					break;
 				case 4:
-					vitality = Config.RATE_VITALITY_LEVEL_4;
+					vitality = vitality().getRateVitalityLevel4();
 					break;
 			}
 		}
@@ -394,7 +397,7 @@ public class PcStat extends PlayableStat {
 		
 		// Check for abnormal bonuses
 		bonus = Math.max(bonus, 1);
-		bonus = Math.min(bonus, Config.MAX_BONUS_EXP);
+		bonus = Math.min(bonus, character().getMaxExpBonus());
 		
 		return bonus;
 	}
@@ -433,19 +436,19 @@ public class PcStat extends PlayableStat {
 		
 		// Check for abnormal bonuses
 		bonus = Math.max(bonus, 1);
-		bonus = Math.min(bonus, Config.MAX_BONUS_SP);
+		bonus = Math.min(bonus, character().getMaxSpBonus());
 		
 		return bonus;
 	}
 	
 	@Override
 	public int getMaxLevel() {
-		return getActiveChar().isSubClassActive() ? Config.MAX_SUBCLASS_LEVEL : Config.MAX_PLAYER_LEVEL;
+		return getActiveChar().isSubClassActive() ? character().getMaxSubclassLevel() : character().getMaxPlayerLevel();
 	}
 	
 	@Override
 	public int getMaxExpLevel() {
-		return getActiveChar().isSubClassActive() ? Config.MAX_SUBCLASS_LEVEL + 1 : Config.MAX_PLAYER_LEVEL + 1;
+		return getActiveChar().isSubClassActive() ? character().getMaxSubclassLevel() + 1 : character().getMaxPlayerLevel() + 1;
 	}
 	
 	@Override

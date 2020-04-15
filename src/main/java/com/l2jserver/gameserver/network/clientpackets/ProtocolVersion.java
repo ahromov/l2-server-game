@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,13 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.server;
+
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.network.serverpackets.KeyPacket;
 import com.l2jserver.gameserver.network.serverpackets.L2GameServerPacket;
 
@@ -45,12 +47,12 @@ public final class ProtocolVersion extends L2GameClientPacket {
 	protected void runImpl() {
 		// this packet is never encrypted
 		if (_version == -2) {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.info("Ping received");
 			}
 			// this is just a ping attempt from the new C2 client
 			getClient().close((L2GameServerPacket) null);
-		} else if (!Config.PROTOCOL_LIST.contains(_version)) {
+		} else if (!server().getAllowedProtocolRevisions().contains(_version)) {
 			LogRecord record = new LogRecord(Level.WARNING, "Wrong protocol");
 			record.setParameters(new Object[] {
 				_version,
@@ -61,7 +63,7 @@ public final class ProtocolVersion extends L2GameClientPacket {
 			getClient().setProtocolOk(false);
 			getClient().close(pk);
 		} else {
-			if (Config.DEBUG) {
+			if (general().debug()) {
 				_log.fine("Client Protocol Revision is ok: " + _version);
 			}
 			

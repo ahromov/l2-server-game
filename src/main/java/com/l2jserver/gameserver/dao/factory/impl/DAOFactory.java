@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,11 @@
  */
 package com.l2jserver.gameserver.dao.factory.impl;
 
+import static com.l2jserver.gameserver.config.Configuration.database;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.dao.factory.IDAOFactory;
 
 /**
@@ -43,15 +44,15 @@ public class DAOFactory {
 		protected static final IDAOFactory INSTANCE;
 		
 		static {
-			switch (Config.DATABASE_ENGINE) {
+			switch (database().getEngine()) {
+				default:
 				case "MSSQL":
 				case "OracleDB":
 				case "PostgreSQL":
 				case "H2":
 				case "HSQLDB": {
-					throw new UnsupportedOperationException(Config.DATABASE_ENGINE + " is not supported!");
+					throw new UnsupportedOperationException(database().getEngine() + " is not supported!");
 				}
-				default:
 				case "MariaDB":
 				case "MySQL": {
 					INSTANCE = MySQLDAOFactory.INSTANCE;

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver;
 
+import static com.l2jserver.gameserver.config.Configuration.npc;
+import static com.l2jserver.gameserver.config.Configuration.sevenSings;
 import static com.l2jserver.gameserver.network.SystemMessageId.COMPETITION_PERIOD_BEGUN;
 import static com.l2jserver.gameserver.network.SystemMessageId.DAWN_OBTAINED_AVARICE;
 import static com.l2jserver.gameserver.network.SystemMessageId.DAWN_OBTAINED_GNOSIS;
@@ -47,7 +49,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.instancemanager.CastleManager;
 import com.l2jserver.gameserver.model.AutoSpawnHandler;
 import com.l2jserver.gameserver.model.AutoSpawnHandler.AutoSpawnInstance;
@@ -251,7 +252,7 @@ public class SevenSigns {
 			}
 			
 			if ((getSealOwner(SEAL_GNOSIS) == getCabalHighestScore()) && (getSealOwner(SEAL_GNOSIS) != CABAL_NULL)) {
-				if (!Config.ANNOUNCE_MAMMON_SPAWN) {
+				if (!npc().announceMammonSpawn()) {
 					blacksmithSpawn.setBroadcast(false);
 				}
 				
@@ -283,7 +284,7 @@ public class SevenSigns {
 			}
 			
 			if ((getSealOwner(SEAL_AVARICE) == getCabalHighestScore()) && (getSealOwner(SEAL_AVARICE) != CABAL_NULL)) {
-				if (!Config.ANNOUNCE_MAMMON_SPAWN) {
+				if (!npc().announceMammonSpawn()) {
 					merchantSpawn.setBroadcast(false);
 				}
 				
@@ -883,7 +884,7 @@ public class SevenSigns {
 			_signsDuskSealTotals.put(chosenSeal, _signsDuskSealTotals.get(chosenSeal) + 1);
 		}
 		
-		if (!Config.ALT_SEVENSIGNS_LAZY_UPDATE) {
+		if (!sevenSings().sevenSignsLazyUpdate()) {
 			saveSevenSignsStatus();
 		}
 		
@@ -908,7 +909,7 @@ public class SevenSigns {
 		
 		if (removeReward) {
 			_signsPlayerData.put(objectId, currPlayer);
-			if (!Config.ALT_SEVENSIGNS_LAZY_UPDATE) {
+			if (!sevenSings().sevenSignsLazyUpdate()) {
 				saveSevenSignsData(objectId);
 				saveSevenSignsStatus();
 			}
@@ -934,7 +935,7 @@ public class SevenSigns {
 		long totalAncientAdena = currPlayer.getLong("ancient_adena_amount") + calcAncientAdenaReward(blueCount, greenCount, redCount);
 		long totalContribScore = currPlayer.getLong("contribution_score") + contribScore;
 		
-		if (totalContribScore > Config.ALT_MAXIMUM_PLAYER_CONTRIB) {
+		if (totalContribScore > sevenSings().getMaxPlayerContrib()) {
 			return -1;
 		}
 		
@@ -954,7 +955,7 @@ public class SevenSigns {
 				break;
 		}
 		
-		if (!Config.ALT_SEVENSIGNS_LAZY_UPDATE) {
+		if (!sevenSings().sevenSignsLazyUpdate()) {
 			saveSevenSignsData(objectId);
 			saveSevenSignsStatus();
 		}

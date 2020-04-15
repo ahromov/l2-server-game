@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,14 +18,14 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import static com.l2jserver.gameserver.model.itemcontainer.Inventory.MAX_ADENA;
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.instancemanager.CastleManager;
 import com.l2jserver.gameserver.instancemanager.CastleManorManager;
@@ -52,7 +52,7 @@ public class RequestBuySeed extends L2GameClientPacket {
 	protected final void readImpl() {
 		_manorId = readD();
 		final int count = readD();
-		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != _buf.remaining())) {
+		if ((count <= 0) || (count > MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != _buf.remaining())) {
 			return;
 		}
 		
@@ -106,15 +106,15 @@ public class RequestBuySeed extends L2GameClientPacket {
 		final Map<Integer, SeedProduction> _productInfo = new HashMap<>();
 		for (ItemHolder ih : _items) {
 			final SeedProduction sp = manor.getSeedProduct(_manorId, ih.getId(), false);
-			if ((sp == null) || (sp.getPrice() <= 0) || (sp.getAmount() < ih.getCount()) || ((MAX_ADENA / ih.getCount()) < sp.getPrice())) {
+			if ((sp == null) || (sp.getPrice() <= 0) || (sp.getAmount() < ih.getCount()) || ((character().getMaxAdena() / ih.getCount()) < sp.getPrice())) {
 				sendActionFailed();
 				return;
 			}
 			
 			// Calculate price
 			totalPrice += (sp.getPrice() * ih.getCount());
-			if (totalPrice > MAX_ADENA) {
-				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to purchase over " + MAX_ADENA + " adena worth of goods.", Config.DEFAULT_PUNISH);
+			if (totalPrice > character().getMaxAdena()) {
+				Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to purchase over " + character().getMaxAdena() + " adena worth of goods.");
 				sendActionFailed();
 				return;
 			}
@@ -167,7 +167,7 @@ public class RequestBuySeed extends L2GameClientPacket {
 			sm.addLong(totalPrice);
 			player.sendPacket(sm);
 			
-			if (Config.ALT_MANOR_SAVE_ALL_ACTIONS) {
+			if (general().manorSaveAllActions()) {
 				manor.updateCurrentProduction(_manorId, _productInfo.values());
 			}
 		}

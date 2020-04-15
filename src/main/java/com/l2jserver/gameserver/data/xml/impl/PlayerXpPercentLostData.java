@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,13 +18,14 @@
  */
 package com.l2jserver.gameserver.data.xml.impl;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+
 import java.util.Arrays;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.util.IXmlReader;
 
 /**
@@ -33,7 +34,7 @@ import com.l2jserver.gameserver.util.IXmlReader;
  */
 public final class PlayerXpPercentLostData implements IXmlReader {
 	
-	private final double[] _playerXpPercentLost = new double[Config.MAX_PLAYER_LEVEL + 1];
+	private final double[] _playerXpPercentLost = new double[character().getMaxPlayerLevel() + 1];
 	
 	protected PlayerXpPercentLostData() {
 		Arrays.fill(_playerXpPercentLost, 1.);
@@ -60,9 +61,9 @@ public final class PlayerXpPercentLostData implements IXmlReader {
 	}
 	
 	public double getXpPercent(final int level) {
-		if (level > Config.MAX_PLAYER_LEVEL) {
+		if (level > character().getMaxPlayerLevel()) {
 			LOG.warn("Require to high level inside PlayerXpPercentLostData ({})", level);
-			return _playerXpPercentLost[Config.MAX_PLAYER_LEVEL];
+			return _playerXpPercentLost[character().getMaxPlayerLevel()];
 		}
 		return _playerXpPercentLost[level];
 	}

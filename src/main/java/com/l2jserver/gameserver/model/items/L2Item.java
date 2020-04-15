@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2019 L2J Server
+ * Copyright © 2004-2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,13 +18,15 @@
  */
 package com.l2jserver.gameserver.model.items;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.config.Configuration.general;
+import static com.l2jserver.gameserver.config.Configuration.olympiad;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.l2jserver.gameserver.config.Config;
 import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.model.Elementals;
 import com.l2jserver.gameserver.model.L2Object;
@@ -545,7 +547,7 @@ public abstract class L2Item extends ListenersContainer implements IIdentifiable
 	 * @return {@code true} if the item can be enchanted, {@code false} otherwise.
 	 */
 	public final int isEnchantable() {
-		return Arrays.binarySearch(Config.ENCHANT_BLACKLIST, getId()) < 0 ? _enchantable : 0;
+		return character().getEnchantBlacklist().contains(getId()) ? 0 : _enchantable;
 	}
 	
 	/**
@@ -679,7 +681,7 @@ public abstract class L2Item extends ListenersContainer implements IIdentifiable
 	}
 	
 	public boolean checkCondition(L2Character activeChar, L2Object object, boolean sendMessage) {
-		if (activeChar.canOverrideCond(PcCondOverride.ITEM_CONDITIONS) && !Config.GM_ITEM_RESTRICTION) {
+		if (activeChar.canOverrideCond(PcCondOverride.ITEM_CONDITIONS) && !general().gmItemRestriction()) {
 			return true;
 		}
 		
@@ -745,7 +747,7 @@ public abstract class L2Item extends ListenersContainer implements IIdentifiable
 	}
 	
 	public boolean isOlyRestrictedItem() {
-		return _is_oly_restricted || Config.LIST_OLY_RESTRICTED_ITEMS.contains(_itemId);
+		return _is_oly_restricted || olympiad().getRestrictedItems().contains(_itemId);
 	}
 	
 	public boolean isForNpc() {

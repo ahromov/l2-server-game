@@ -83,6 +83,14 @@ public class Configuration {
 	
 	private static final FloodProtectorConfiguration floodProtector = ConfigFactory.create(FloodProtectorConfiguration.class);
 	
+	private static final CustomTeleportConfiguration customTeleport = ConfigFactory.create(CustomTeleportConfiguration.class);
+	
+	private static final CustomClassMasterConfiguration customClassMaster = ConfigFactory.create(CustomClassMasterConfiguration.class);
+	
+	private static final CustomNobleMasterConfiguration customNobleMaster = ConfigFactory.create(CustomNobleMasterConfiguration.class);
+	
+	private static final CustomBufferConfiguration customBuffer = ConfigFactory.create(CustomBufferConfiguration.class);
+	
 	private Configuration() {
 		// Do nothing.
 	}
@@ -194,4 +202,21 @@ public class Configuration {
 	public static IPConfigData ip() {
 		return ipConfigData;
 	}
+	
+	public static CustomTeleportConfiguration customTeleportConfiguration() {
+		return customTeleport;
+	}
+	
+	public static CustomClassMasterConfiguration customClassMaster() {
+		return customClassMaster;
+	}
+	
+	public static CustomNobleMasterConfiguration customNobleMaster() {
+		return customNobleMaster;
+	}
+	
+	public static CustomBufferConfiguration customBufferConfiguration() {
+		return customBuffer;
+	}
+	
 }

@@ -138,6 +138,7 @@ public class L2SummonAI extends L2PlayableAI implements Runnable {
 		setIntention(AI_INTENTION_IDLE);
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	protected void onEvtThink() {
 		if (_thinking || _actor.isCastingNow() || _actor.isAllSkillsDisabled()) {
@@ -214,6 +215,7 @@ public class L2SummonAI extends L2PlayableAI implements Runnable {
 		}
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	public void notifyFollowStatusChange() {
 		_startFollow = !_startFollow;
 		switch (getIntention()) {

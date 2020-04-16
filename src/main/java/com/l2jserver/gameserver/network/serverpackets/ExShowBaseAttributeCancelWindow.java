@@ -46,6 +46,7 @@ public class ExShowBaseAttributeCancelWindow extends L2GameServerPacket {
 	 * @param item
 	 * @return
 	 */
+	@SuppressWarnings("incomplete-switch")
 	private long getPrice(L2ItemInstance item) {
 		switch (item.getItem().getCrystalType()) {
 			case S:

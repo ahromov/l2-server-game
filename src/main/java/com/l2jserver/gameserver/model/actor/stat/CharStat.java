@@ -68,6 +68,7 @@ public class CharStat {
 	 * @param skill The L2Skill whose properties will be used in the calculation (ex : Level...)
 	 * @return
 	 */
+	@SuppressWarnings("incomplete-switch")
 	public final double calcStat(Stats stat, double initVal, L2Character target, Skill skill) {
 		double value = initVal;
 		if (stat == null) {

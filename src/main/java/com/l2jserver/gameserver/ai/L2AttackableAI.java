@@ -2041,6 +2041,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 	/**
 	 * Manage AI thinking actions of a L2Attackable.
 	 */
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	protected void onEvtThink() {
 		// Check if the actor can't use skills and if a thinking action isn't already in

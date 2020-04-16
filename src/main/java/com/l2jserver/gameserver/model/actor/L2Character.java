@@ -395,6 +395,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 	 * @param zone the zone Id to check
 	 * @return {code true} if the character is in that zone
 	 */
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	public final boolean isInsideZone(ZoneId zone) {
 		Instance instance = InstanceManager.getInstance().getInstance(getInstanceId());
@@ -4416,6 +4417,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 	 * @param weapon
 	 * @return the Reuse Time of Attack (used for bow delay)
 	 */
+	@SuppressWarnings("incomplete-switch")
 	public int calculateReuseTime(final L2Weapon weapon) {
 		if (isTransformed()) {
 			switch (getAttackType()) {

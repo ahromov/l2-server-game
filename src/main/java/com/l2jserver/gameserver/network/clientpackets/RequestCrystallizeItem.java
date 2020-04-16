@@ -48,6 +48,7 @@ public final class RequestCrystallizeItem extends L2GameClientPacket {
 		_count = readQ();
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	protected void runImpl() {
 		L2PcInstance activeChar = getClient().getActiveChar();

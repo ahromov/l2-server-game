@@ -299,6 +299,7 @@ public abstract class AbstractAI implements Ctrl {
 	 * Launch the L2CharacterAI onEvt method corresponding to the Event. <FONT COLOR=#FF0000><B> <U>Caution</U> : The current general intention won't be change (ex : If the character attack and is stunned, he will attack again after the stunned period)</B></FONT>
 	 * @param evt The event whose the AI must be notified
 	 */
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	public final void notifyEvent(CtrlEvent evt, Object... args) {
 		if ((!_actor.isVisible() && !_actor.isTeleporting()) || !_actor.hasAI()) {

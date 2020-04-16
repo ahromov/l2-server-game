@@ -29,19 +29,19 @@ import org.aeonbits.owner.Reloadable;
 /**
  * Custom Buffer Configuration.
  * @author Andrii Hromov
- * @version 1.0.0.0
+ * @version 1.0.0.1
  */
 @Sources({
-	"file:./config/customBuffer.properties",
-	"classpath:config/customBuffer.properties"
+	"file:./config/pvpCommunityBoard.properties",
+	"classpath:config/pvpCommunityBoard.properties"
 })
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
 public interface CustomBufferConfiguration extends Config, Reloadable {
 	
 	@Key("CommunityBuffer")
-	boolean communityClassMaster();
+	boolean communityBuffer();
 	
-	@Key("PaidFreeLevel")
+	@Key("BufferPaidFreeLevel")
 	int paidFreeLevel();
 		
 	@Key("BuffFee")

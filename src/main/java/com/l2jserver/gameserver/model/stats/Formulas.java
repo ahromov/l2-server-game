@@ -1156,6 +1156,7 @@ public final class Formulas {
 	 * @param skill the skill
 	 * @return {@code true} if the effect lands
 	 */
+	@SuppressWarnings("incomplete-switch")
 	public static boolean calcEffectSuccess(L2Character attacker, L2Character target, Skill skill) {
 		// StaticObjects can not receive continuous effects.
 		if (target.isDoor() || (target instanceof L2SiegeFlagInstance) || (target instanceof L2StaticObjectInstance)) {
@@ -1659,6 +1660,7 @@ public final class Formulas {
 		return Rnd.get(100) < rate;
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	public static List<BuffInfo> calcCancelEffects(L2Character activeChar, L2Character target, Skill skill, DispelCategory slot, int rate, int max) {
 		final List<BuffInfo> canceled = new ArrayList<>(max);
 		switch (slot) {
@@ -1718,6 +1720,7 @@ public final class Formulas {
 		return canceled;
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	public static List<BuffInfo> calcStealEffects(L2Character activeChar, L2Character target, Skill skill, DispelCategory slot, int rate, int max) {
 		final List<BuffInfo> canceled = new ArrayList<>(max);
 		final int cancelMagicLvl = skill.getMagicLevel();

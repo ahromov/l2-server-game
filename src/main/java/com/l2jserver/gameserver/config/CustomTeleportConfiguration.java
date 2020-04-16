@@ -29,19 +29,25 @@ import org.aeonbits.owner.Reloadable;
 /**
  * Custom Teleport Configuration.
  * @author Andrii Hromov
- * @version 1.0.0.0
+ * @version 1.0.0.1
  */
 @Sources({
-	"file:./config/customTeleport.properties",
-	"classpath:config/customTeleport.properties"
+	"file:./config/pvpCommunityBoard.properties",
+	"classpath:config/pvpCommunityBoard.properties"
 })
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
 public interface CustomTeleportConfiguration extends Config, Reloadable {
 	
+	@Key("CommunityTeleport")
+	boolean communityTeleport();
+	
 	@Key("PaidFreeLevel")
-	int paidFreeTpCharacterLevel();
+	int paidFreeTpLevel();
 	
 	@Key("TeleportFee")
 	int teleportFee();	
+	
+	@Key("TeleportToSavedPointFee")
+	int teleportToSavedPointFee();	
 	
 }

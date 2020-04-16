@@ -94,6 +94,7 @@ public final class UseItem extends L2GameClientPacket {
 		_ctrlPressed = readD() != 0;
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	protected void runImpl() {
 		final L2PcInstance activeChar = getClient().getActiveChar();

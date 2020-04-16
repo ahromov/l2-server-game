@@ -33,6 +33,7 @@ public class FuncEnchant extends AbstractFunction {
 		super(stat, order, owner, value, applayCond);
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	public double calc(L2Character effector, L2Character effected, Skill skill, double initVal) {
 		double value = initVal;

@@ -32,11 +32,11 @@ import com.l2jserver.gameserver.config.converter.ClassMasterSettingConverter;
 /**
  * Custom NobleMaster Configuration.
  * @author Andrii Hromov
- * @version 1.0.0.0
+ * @version 1.0.0.1
  */
 @Sources({
-	"file:./config/customNobleMaster.properties",
-	"classpath:config/customNobleMaster.properties"
+	"file:./config/pvpCommunityBoard.properties",
+	"classpath:config/pvpCommunityBoard.properties"
 })
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
 public interface CustomNobleMasterConfiguration extends Config, Reloadable {

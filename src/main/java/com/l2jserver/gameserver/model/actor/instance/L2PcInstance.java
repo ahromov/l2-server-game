@@ -6876,6 +6876,7 @@ public final class L2PcInstance extends L2Playable {
 	}
 	
 	// returns false if the change of mount type fails.
+	@SuppressWarnings("incomplete-switch")
 	public void setMount(int npcId, int npcLevel) {
 		final MountType type = MountType.findByNpcId(npcId);
 		switch (type) {
@@ -9994,6 +9995,7 @@ public final class L2PcInstance extends L2Playable {
 		DAOFactory.getInstance().getTeleportBookmarkDAO().insert(this, id, x, y, z, icon, tag, name);
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	public void sendInfo(L2PcInstance activeChar) {
 		if (isInBoat()) {

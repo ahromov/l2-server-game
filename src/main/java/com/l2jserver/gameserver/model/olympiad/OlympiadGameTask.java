@@ -154,6 +154,7 @@ public final class OlympiadGameTask implements Runnable {
 		ThreadPoolManager.getInstance().executeGeneral(this);
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	public final void run() {
 		try {

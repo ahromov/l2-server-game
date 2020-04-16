@@ -52,6 +52,7 @@ public class OfflineTradersTable {
 	
 	private static final String LOAD_OFFLINE_ITEMS = "SELECT * FROM character_offline_trade_items WHERE charId = ?";
 	
+	@SuppressWarnings("incomplete-switch")
 	public void storeOffliners() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var stm1 = con.prepareStatement(CLEAR_OFFLINE_TABLE);
@@ -129,6 +130,7 @@ public class OfflineTradersTable {
 		}
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	public void restoreOfflineTraders() {
 		LOG.info("Loading offline traders...");
 		int nTraders = 0;

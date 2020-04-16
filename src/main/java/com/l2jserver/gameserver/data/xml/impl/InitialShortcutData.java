@@ -122,6 +122,7 @@ public final class InitialShortcutData implements IXmlReader {
 	 * Parses a macro.
 	 * @param d the node
 	 */
+	@SuppressWarnings("incomplete-switch")
 	private void parseMacros(Node d) {
 		for (Node c = d.getFirstChild(); c != null; c = c.getNextSibling()) {
 			if ("macro".equals(c.getNodeName())) {
@@ -228,6 +229,7 @@ public final class InitialShortcutData implements IXmlReader {
 	 * Register all the available shortcuts for the given player.
 	 * @param player the player
 	 */
+	@SuppressWarnings("incomplete-switch")
 	public void registerAllShortcuts(L2PcInstance player) {
 		if (player == null) {
 			return;

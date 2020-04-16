@@ -511,6 +511,7 @@ public class Duel {
 	/**
 	 * Send required messages for duel end
 	 */
+	@SuppressWarnings("incomplete-switch")
 	private void sendEndMessages() {
 		SystemMessage sm = null;
 		switch (checkEndDuelCondition()) {

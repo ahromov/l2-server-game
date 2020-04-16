@@ -140,6 +140,7 @@ public class OlympiadManager {
 		return isRegistered(noble, noble, false) || isInCompetition(noble, noble, false);
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	private final boolean isInCompetition(L2PcInstance noble, L2PcInstance player, boolean showMessage) {
 		if (!Olympiad._inCompPeriod) {
 			return false;
@@ -183,6 +184,7 @@ public class OlympiadManager {
 		return false;
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	public final boolean registerNoble(L2PcInstance player, CompetitionType type) {
 		if (!Olympiad._inCompPeriod) {
 			player.sendPacket(SystemMessageId.THE_OLYMPIAD_GAME_IS_NOT_CURRENTLY_IN_PROGRESS);

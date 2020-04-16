@@ -44,6 +44,7 @@ public final class IllegalPlayerActionTask implements Runnable {
 	
 	private final L2PcInstance _actor;
 	
+	@SuppressWarnings("incomplete-switch")
 	public IllegalPlayerActionTask(L2PcInstance actor, String message, IllegalActionPunishmentType punishment) {
 		_message = message;
 		_punishment = punishment;
@@ -70,6 +71,7 @@ public final class IllegalPlayerActionTask implements Runnable {
 		}
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	public void run() {
 		LOG.info("Illegal action [{}] by player {}, action taken {}!", _message, _actor, _punishment);

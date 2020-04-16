@@ -47,6 +47,7 @@ public class FuncArmorSet extends AbstractFunction {
 		super(stat, 1, null, 0, null);
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	public double calc(L2Character effector, L2Character effected, Skill skill, double initVal) {
 		double value = initVal;

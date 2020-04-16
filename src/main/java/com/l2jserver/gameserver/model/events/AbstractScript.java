@@ -1210,6 +1210,7 @@ public abstract class AbstractScript implements INamable {
 	 * @param ids
 	 * @return
 	 */
+	@SuppressWarnings("incomplete-switch")
 	protected final List<AbstractEventListener> registerListener(Function<ListenersContainer, AbstractEventListener> action, ListenerRegisterType registerType, int... ids) {
 		final List<AbstractEventListener> listeners = new ArrayList<>(ids.length > 0 ? ids.length : 1);
 		if (ids.length > 0) {
@@ -1303,6 +1304,7 @@ public abstract class AbstractScript implements INamable {
 	 * @param ids
 	 * @return
 	 */
+	@SuppressWarnings("incomplete-switch")
 	protected final List<AbstractEventListener> registerListener(Function<ListenersContainer, AbstractEventListener> action, ListenerRegisterType registerType, Collection<Integer> ids) {
 		final List<AbstractEventListener> listeners = new ArrayList<>(!ids.isEmpty() ? ids.size() : 1);
 		if (!ids.isEmpty()) {

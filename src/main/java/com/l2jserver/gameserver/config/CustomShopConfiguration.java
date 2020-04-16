@@ -26,26 +26,19 @@ import org.aeonbits.owner.Config.HotReload;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Reloadable;
 
-import com.l2jserver.gameserver.config.converter.ClassMasterSetting;
-import com.l2jserver.gameserver.config.converter.ClassMasterSettingConverter;
-
 /**
- * Custom ClassMaster Configuration.
+ * Custom Buffer Configuration.
  * @author Andrii Hromov
- * @version 1.0.0.1
+ * @version 1.0.0.0
  */
 @Sources({
 	"file:./config/pvpCommunityBoard.properties",
 	"classpath:config/pvpCommunityBoard.properties"
 })
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
-public interface CustomClassMasterConfiguration extends Config, Reloadable {
+public interface CustomShopConfiguration extends Config, Reloadable {
 	
-	@Key("CommunityClassMaster")
-	boolean communityClassMaster();
-	
-	@Key("ConfigCommunityClassMaster")
-	@ConverterClass(ClassMasterSettingConverter.class)
-	ClassMasterSetting getClassMaster();
-	
+	@Key("CommunityShop")
+	boolean communityShop();
+			
 }

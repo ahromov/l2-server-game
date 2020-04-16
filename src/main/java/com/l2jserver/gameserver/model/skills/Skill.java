@@ -356,6 +356,7 @@ public class Skill implements IIdentifiable {
 		return _affectScope;
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	public boolean isAOE() {
 		switch (_targetType) {
 			case AREA:

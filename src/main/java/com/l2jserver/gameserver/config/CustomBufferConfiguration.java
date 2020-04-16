@@ -29,7 +29,7 @@ import org.aeonbits.owner.Reloadable;
 /**
  * Custom Buffer Configuration.
  * @author Andrii Hromov
- * @version 1.0.0.1
+ * @version 1.0.0.2
  */
 @Sources({
 	"file:./config/pvpCommunityBoard.properties",
@@ -43,6 +43,9 @@ public interface CustomBufferConfiguration extends Config, Reloadable {
 	
 	@Key("BuffFreeLevel")
 	int getBuffFreeLevel();
+	
+	@Key("BuffItemId")
+	int getBuffItemId();
 		
 	@Key("BuffPrice")
 	int getBuffPrice();

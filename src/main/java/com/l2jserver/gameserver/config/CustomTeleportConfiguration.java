@@ -39,15 +39,15 @@ import org.aeonbits.owner.Reloadable;
 public interface CustomTeleportConfiguration extends Config, Reloadable {
 	
 	@Key("CommunityTeleport")
-	boolean communityTeleport();
+	boolean getCommunityTeleport();
 	
 	@Key("PaidFreeLevel")
-	int paidFreeTpLevel();
+	int getPaidFreeTpLevel();
 	
 	@Key("TeleportFee")
-	int teleportFee();	
+	int getTeleportFee();	
 	
 	@Key("TeleportToSavedPointFee")
-	int teleportToSavedPointFee();	
+	int getTeleportToSavedPointFee();	
 	
 }

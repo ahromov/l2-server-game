@@ -42,10 +42,10 @@ import com.l2jserver.gameserver.config.converter.ClassMasterSettingConverter;
 public interface CustomNobleMasterConfiguration extends Config, Reloadable {
 	
 	@Key("CommunityNobleMaster")
-	boolean communityClassMaster();
+	boolean getCommunityClassMaster();
 	
 	@Key("ConfigCommunityNobleMaster")
 	@ConverterClass(ClassMasterSettingConverter.class)
-	ClassMasterSetting getClassMaster();
+	ClassMasterSetting getNobleMasterSettings();
 	
 }

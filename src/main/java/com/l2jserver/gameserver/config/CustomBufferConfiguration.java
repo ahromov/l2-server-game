@@ -39,12 +39,12 @@ import org.aeonbits.owner.Reloadable;
 public interface CustomBufferConfiguration extends Config, Reloadable {
 	
 	@Key("CommunityBuffer")
-	boolean communityBuffer();
+	boolean getCommunityBuffer();
 	
 	@Key("BufferPaidFreeLevel")
-	int paidFreeLevel();
+	int getPaidFreeLevel();
 		
 	@Key("BuffFee")
-	int buffFee();
+	int getBuffFee();
 		
 }

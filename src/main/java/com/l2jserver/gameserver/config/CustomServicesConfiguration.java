@@ -39,6 +39,6 @@ import org.aeonbits.owner.Reloadable;
 public interface CustomServicesConfiguration extends Config, Reloadable {
 	
 	@Key("CommunityServices")
-	boolean сommunityServices();
+	boolean getCommunityServices();
 	
 }

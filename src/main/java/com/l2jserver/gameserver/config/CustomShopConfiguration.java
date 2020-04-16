@@ -39,6 +39,6 @@ import org.aeonbits.owner.Reloadable;
 public interface CustomShopConfiguration extends Config, Reloadable {
 	
 	@Key("CommunityShop")
-	boolean communityShop();
+	boolean getCommunityShop();
 			
 }

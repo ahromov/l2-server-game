@@ -41,10 +41,10 @@ public interface CustomBufferConfiguration extends Config, Reloadable {
 	@Key("CommunityBuffer")
 	boolean getCommunityBuffer();
 	
-	@Key("BufferPaidFreeLevel")
-	int getPaidFreeLevel();
+	@Key("BuffFreeLevel")
+	int getBuffFreeLevel();
 		
-	@Key("BuffFee")
-	int getBuffFee();
+	@Key("BuffPrice")
+	int getBuffPrice();
 		
 }

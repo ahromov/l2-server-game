@@ -41,13 +41,13 @@ public interface CustomTeleportConfiguration extends Config, Reloadable {
 	@Key("CommunityTeleport")
 	boolean getCommunityTeleport();
 	
-	@Key("PaidFreeLevel")
-	int getPaidFreeTpLevel();
+	@Key("FreeTeleportLevel")
+	int getFreeTeleportLevel();
 	
-	@Key("TeleportFee")
-	int getTeleportFee();	
+	@Key("TeleportPrice")
+	int getTeleportPrice();	
 	
-	@Key("TeleportToSavedPointFee")
-	int getTeleportToSavedPointFee();	
+	@Key("TeleportToSavedPointPrice")
+	int getTeleportToSavedPointPrice();	
 	
 }

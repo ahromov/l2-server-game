@@ -114,7 +114,7 @@ public class Skill implements IIdentifiable {
 	/** Abnormal type: global effect "group". */
 	private final AbnormalType _abnormalType;
 	/** Abnormal time: global effect duration time. */
-	private final int _abnormalTime;
+	private int _abnormalTime;
 	/** Abnormal visual effect: the visual effect displayed ingame. */
 	private AbnormalVisualEffect[] _abnormalVisualEffects = null;
 	/** Abnormal visual effect special: the visual effect displayed ingame. */
@@ -415,6 +415,10 @@ public class Skill implements IIdentifiable {
 	 */
 	public int getAbnormalTime() {
 		return _abnormalTime;
+	}
+	
+	public void setAbnormalTime(int time) {
+		_abnormalTime = time;
 	}
 	
 	/**

@@ -49,5 +49,8 @@ public interface CustomBufferConfiguration extends Config, Reloadable {
 		
 	@Key("BuffPrice")
 	int getBuffPrice();
+	
+	@Key("BuffTime")
+	int getBuffTime();
 		
 }

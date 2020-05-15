@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.model;
 
+import static com.l2jserver.gameserver.bbs.model.ForumType.CLAN;
+import static com.l2jserver.gameserver.bbs.model.ForumVisibility.CLAN_MEMBER_ONLY;
 import static com.l2jserver.gameserver.config.Configuration.character;
 import static com.l2jserver.gameserver.config.Configuration.clan;
 import static com.l2jserver.gameserver.config.Configuration.fortress;
@@ -37,8 +39,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.communitybbs.BB.Forum;
-import com.l2jserver.gameserver.communitybbs.Manager.ForumsBBSManager;
+import com.l2jserver.gameserver.bbs.model.Forum;
+import com.l2jserver.gameserver.bbs.service.ForumsBBSManager;
 import com.l2jserver.gameserver.dao.factory.impl.DAOFactory;
 import com.l2jserver.gameserver.data.sql.impl.CharNameTable;
 import com.l2jserver.gameserver.data.sql.impl.ClanTable;
@@ -591,11 +593,11 @@ public class L2Clan implements IIdentifiable, INamable {
 	public void setLevel(int level) {
 		_level = level;
 		if ((_level >= 2) && (_forum == null) && general().enableCommunityBoard()) {
-			final Forum forum = ForumsBBSManager.getInstance().getForumByName("ClanRoot");
-			if (forum != null) {
-				_forum = forum.getChildByName(_name);
+			final var clanRootForum = ForumsBBSManager.getInstance().getForumByName("ClanRoot");
+			if (clanRootForum != null) {
+				_forum = clanRootForum.getChildByName(_name);
 				if (_forum == null) {
-					_forum = ForumsBBSManager.getInstance().createNewForum(_name, ForumsBBSManager.getInstance().getForumByName("ClanRoot"), Forum.CLAN, Forum.CLANMEMBERONLY, getId());
+					_forum = ForumsBBSManager.getInstance().createNewForum(_name, clanRootForum, CLAN, CLAN_MEMBER_ONLY, getId());
 				}
 			}
 		}

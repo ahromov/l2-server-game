@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.dao.factory;
 
+import com.l2jserver.gameserver.bbs.repository.ForumRepository;
+import com.l2jserver.gameserver.bbs.repository.PostRepository;
+import com.l2jserver.gameserver.bbs.repository.TopicRepository;
 import com.l2jserver.gameserver.dao.ClanDAO;
 import com.l2jserver.gameserver.dao.FriendDAO;
 import com.l2jserver.gameserver.dao.HennaDAO;
@@ -77,4 +80,10 @@ public interface IDAOFactory {
 	TeleportBookmarkDAO getTeleportBookmarkDAO();
 	
 	ClanDAO getClanDAO();
+	
+	ForumRepository getForumRepository();
+	
+	TopicRepository getTopicRepository();
+	
+	PostRepository getPostRepository();
 }

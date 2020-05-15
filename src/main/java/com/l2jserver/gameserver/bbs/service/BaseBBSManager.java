@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.l2jserver.gameserver.communitybbs.Manager;
+package com.l2jserver.gameserver.bbs.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,48 +29,35 @@ public abstract class BaseBBSManager {
 	
 	public abstract void parsewrite(String ar1, String ar2, String ar3, String ar4, String ar5, L2PcInstance activeChar);
 	
-	/**
-	 * @param html
-	 * @param acha
-	 */
 	protected void send1001(String html, L2PcInstance acha) {
 		if (html.length() < 8192) {
 			acha.sendPacket(new ShowBoard(html, "1001"));
 		}
 	}
 	
-	/**
-	 * @param acha
-	 */
 	protected void send1002(L2PcInstance acha) {
 		send1002(acha, " ", " ", "0");
 	}
 	
-	/**
-	 * @param activeChar
-	 * @param string
-	 * @param string2
-	 * @param string3
-	 */
 	protected void send1002(L2PcInstance activeChar, String string, String string2, String string3) {
-		List<String> _arg = new ArrayList<>();
-		_arg.add("0");
-		_arg.add("0");
-		_arg.add("0");
-		_arg.add("0");
-		_arg.add("0");
-		_arg.add("0");
-		_arg.add(activeChar.getName());
-		_arg.add(Integer.toString(activeChar.getObjectId()));
-		_arg.add(activeChar.getAccountName());
-		_arg.add("9");
-		_arg.add(string2); // subject?
-		_arg.add(string2); // subject?
-		_arg.add(string); // text
-		_arg.add(string3); // date?
-		_arg.add(string3); // date?
-		_arg.add("0");
-		_arg.add("0");
-		activeChar.sendPacket(new ShowBoard(_arg));
+		List<String> arg = new ArrayList<>();
+		arg.add("0");
+		arg.add("0");
+		arg.add("0");
+		arg.add("0");
+		arg.add("0");
+		arg.add("0");
+		arg.add(activeChar.getName());
+		arg.add(Integer.toString(activeChar.getObjectId()));
+		arg.add(activeChar.getAccountName());
+		arg.add("9");
+		arg.add(string2); // subject?
+		arg.add(string2); // subject?
+		arg.add(string); // text
+		arg.add(string3); // date?
+		arg.add(string3); // date?
+		arg.add("0");
+		arg.add("0");
+		activeChar.sendPacket(new ShowBoard(arg));
 	}
 }

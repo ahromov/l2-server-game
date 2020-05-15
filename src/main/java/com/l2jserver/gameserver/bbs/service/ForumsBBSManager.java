@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.l2jserver.gameserver.communitybbs.Manager;
+package com.l2jserver.gameserver.bbs.service;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -25,55 +25,51 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.communitybbs.BB.Forum;
+import com.l2jserver.gameserver.bbs.model.Forum;
+import com.l2jserver.gameserver.bbs.model.ForumType;
+import com.l2jserver.gameserver.bbs.model.ForumVisibility;
+import com.l2jserver.gameserver.dao.factory.impl.DAOFactory;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
+/**
+ * Forums BBS Manager.
+ * @author Zoey76
+ * @version 2.6.2.0
+ */
 public class ForumsBBSManager extends BaseBBSManager {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ForumsBBSManager.class);
 	
-	private final List<Forum> _table = new CopyOnWriteArrayList<>();
+	private final List<Forum> table = new CopyOnWriteArrayList<>();
 	
-	private int _lastid = 1;
+	private int lastId = 1;
 	
-	/**
-	 * Instantiates a new forums bbs manager.
-	 */
 	protected ForumsBBSManager() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var s = con.createStatement();
 			var rs = s.executeQuery("SELECT forum_id FROM forums WHERE forum_type = 0")) {
 			while (rs.next()) {
-				int forumId = rs.getInt("forum_id");
-				Forum f = new Forum(forumId, null);
-				addForum(f);
+				addForum(new Forum(rs.getInt("forum_id"), null));
 			}
-		} catch (Exception e) {
-			LOG.warn("Data error on Forum (root)!", e);
+		} catch (Exception ex) {
+			LOG.warn("Data error on Forum (root)!", ex);
 		}
 	}
 	
-	/**
-	 * Inits the root.
-	 */
 	public void initRoot() {
-		_table.forEach(f -> f.vload());
-		LOG.info("Loaded " + _table.size() + " forums. Last forum id used: " + _lastid);
+		table.forEach(f -> DAOFactory.getInstance().getForumRepository().findById(f));
+		LOG.info("Loaded " + table.size() + " forums. Last forum id used: " + lastId);
 	}
 	
-	/**
-	 * Adds the forum.
-	 * @param ff the forum
-	 */
-	public void addForum(Forum ff) {
-		if (ff == null) {
+	public void addForum(Forum forum) {
+		if (forum == null) {
 			return;
 		}
 		
-		_table.add(ff);
+		table.add(forum);
 		
-		if (ff.getID() > _lastid) {
-			_lastid = ff.getID();
+		if (forum.getId() > lastId) {
+			lastId = forum.getId();
 		}
 	}
 	
@@ -81,45 +77,27 @@ public class ForumsBBSManager extends BaseBBSManager {
 	public void parsecmd(String command, L2PcInstance activeChar) {
 	}
 	
-	/**
-	 * Gets the forum by name.
-	 * @param name the forum name
-	 * @return the forum by name
-	 */
 	public Forum getForumByName(String name) {
-		return _table.stream().filter(f -> f.getName().equals(name)).findFirst().orElse(null);
+		return table.stream().filter(f -> f.getName().equals(name)).findFirst().orElse(null);
 	}
 	
-	/**
-	 * Creates the new forum.
-	 * @param name the forum name
-	 * @param parent the parent forum
-	 * @param type the forum type
-	 * @param perm the perm
-	 * @param oid the oid
-	 * @return the new forum
-	 */
-	public Forum createNewForum(String name, Forum parent, int type, int perm, int oid) {
-		Forum forum = new Forum(name, parent, type, perm, oid);
-		forum.insertIntoDb();
+	public Forum createNewForum(String name, Forum parent, ForumType type, ForumVisibility visibility, int ownerId) {
+		final var id = ForumsBBSManager.getInstance().getANewID();
+		final var forum = new Forum(id, name, parent, type, visibility, ownerId);
+		
+		parent.addChildren(forum);
+		ForumsBBSManager.getInstance().addForum(forum);
+		
+		DAOFactory.getInstance().getForumRepository().save(forum);
 		return forum;
 	}
 	
-	/**
-	 * Gets the a new Id.
-	 * @return the a new Id
-	 */
 	public int getANewID() {
-		return ++_lastid;
+		return ++lastId;
 	}
 	
-	/**
-	 * Gets the forum by Id.
-	 * @param idf the the forum Id
-	 * @return the forum by Id
-	 */
-	public Forum getForumByID(int idf) {
-		return _table.stream().filter(f -> f.getID() == idf).findFirst().orElse(null);
+	public Forum getForumByID(int id) {
+		return table.stream().filter(f -> f.getId() == id).findFirst().orElse(null);
 	}
 	
 	@Override
@@ -127,10 +105,6 @@ public class ForumsBBSManager extends BaseBBSManager {
 		
 	}
 	
-	/**
-	 * Gets the single instance of ForumsBBSManager.
-	 * @return single instance of ForumsBBSManager
-	 */
 	public static ForumsBBSManager getInstance() {
 		return SingletonHolder._instance;
 	}

@@ -18,6 +18,12 @@
  */
 package com.l2jserver.gameserver.dao.factory.impl;
 
+import com.l2jserver.gameserver.bbs.repository.ForumRepository;
+import com.l2jserver.gameserver.bbs.repository.PostRepository;
+import com.l2jserver.gameserver.bbs.repository.TopicRepository;
+import com.l2jserver.gameserver.bbs.repository.impl.ForumRepositoryMySQLImpl;
+import com.l2jserver.gameserver.bbs.repository.impl.PostRepositoryMySQLImpl;
+import com.l2jserver.gameserver.bbs.repository.impl.TopicRepositoryMySQLImpl;
 import com.l2jserver.gameserver.dao.ClanDAO;
 import com.l2jserver.gameserver.dao.FriendDAO;
 import com.l2jserver.gameserver.dao.HennaDAO;
@@ -81,6 +87,9 @@ enum MySQLDAOFactory implements IDAOFactory {
 	private final SubclassDAO subclassDAO = new SubclassDAOMySQLImpl();
 	private final TeleportBookmarkDAO teleportBookmarkDAO = new TeleportBookmarkDAOMySQLImpl();
 	private final ClanDAO clanDAO = new ClanDAOMySQLImpl();
+	private final ForumRepository forumRepository = new ForumRepositoryMySQLImpl();
+	private final TopicRepository topicRepository = new TopicRepositoryMySQLImpl();
+	private final PostRepository postRepository = new PostRepositoryMySQLImpl();
 	
 	@Override
 	public FriendDAO getFriendDAO() {
@@ -170,5 +179,20 @@ enum MySQLDAOFactory implements IDAOFactory {
 	@Override
 	public ClanDAO getClanDAO() {
 		return clanDAO;
+	}
+	
+	@Override
+	public ForumRepository getForumRepository() {
+		return forumRepository;
+	}
+	
+	@Override
+	public TopicRepository getTopicRepository() {
+		return topicRepository;
+	}
+	
+	@Override
+	public PostRepository getPostRepository() {
+		return postRepository;
 	}
 }

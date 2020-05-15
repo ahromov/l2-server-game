@@ -570,6 +570,17 @@ public class L2Npc extends L2Character {
 		return false;
 	}
 	
+	/**
+	 * Verify if the give dominion Id is this NPC's dominion.
+	 * @param dominionId the dominion Id to check
+	 * @return {@code true} if the dominion Id matches the castle/fort Id, {@code false} otherwise
+	 */
+	public boolean isDominionOfLord(int dominionId) {
+		final int castleId = getCastle() != null ? getCastle().getResidenceId() : -1;
+		final int fortId = getFort() != null ? getFort().getResidenceId() : -1;
+		return (dominionId == castleId) || (dominionId == fortId);
+	}
+	
 	public final SiegableHall getConquerableHall() {
 		return ClanHallSiegeManager.getInstance().getNearbyClanHall(getX(), getY(), 10000);
 	}

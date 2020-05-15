@@ -1437,6 +1437,24 @@ public abstract class AbstractScript implements INamable {
 	}
 	
 	/**
+	 * Show an on-screen message to the player.
+	 * @param player the player to display the message to
+	 * @param msgPosType he position of the message on the screen
+	 * @param unk1 unknown value
+	 * @param fontSize font size (normal, small)
+	 * @param unk2 unknown value
+	 * @param unk3 unknown value
+	 * @param showEffect if {@true} then it will show an effect
+	 * @param time the duration of the message in milliseconds
+	 * @param fade if {@true} then it will fade
+	 * @param npcStringId the NPC string to display
+	 * @param params values of parameters to replace in the NPC String
+	 */
+	public static void showOnScreenMsgFStr(L2PcInstance player, int msgPosType, int unk1, int fontSize, int unk2, int unk3, boolean showEffect, int time, boolean fade, NpcStringId npcStringId, String... params) {
+		player.sendPacket(new ExShowScreenMessage(2, -1, msgPosType, unk1, fontSize, unk2, unk3, showEffect, time, fade, null, npcStringId, params));
+	}
+	
+	/**
 	 * Add a temporary spawn of the specified NPC.
 	 * @param npcId the ID of the NPC to spawn
 	 * @param pos the object containing the spawn location coordinates

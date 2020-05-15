@@ -18,6 +18,9 @@
  */
 package com.l2jserver.gameserver.model.actor.instance;
 
+import static com.l2jserver.gameserver.bbs.model.ForumType.MAIL;
+import static com.l2jserver.gameserver.bbs.model.ForumType.MEMO;
+import static com.l2jserver.gameserver.bbs.model.ForumVisibility.OWNER_ONLY;
 import static com.l2jserver.gameserver.config.Configuration.character;
 import static com.l2jserver.gameserver.config.Configuration.clan;
 import static com.l2jserver.gameserver.config.Configuration.customs;
@@ -73,9 +76,9 @@ import com.l2jserver.gameserver.ai.CtrlIntention;
 import com.l2jserver.gameserver.ai.L2CharacterAI;
 import com.l2jserver.gameserver.ai.L2PlayerAI;
 import com.l2jserver.gameserver.ai.L2SummonAI;
+import com.l2jserver.gameserver.bbs.model.Forum;
+import com.l2jserver.gameserver.bbs.service.ForumsBBSManager;
 import com.l2jserver.gameserver.cache.WarehouseCacheManager;
-import com.l2jserver.gameserver.communitybbs.BB.Forum;
-import com.l2jserver.gameserver.communitybbs.Manager.ForumsBBSManager;
 import com.l2jserver.gameserver.dao.factory.impl.DAOFactory;
 import com.l2jserver.gameserver.data.sql.impl.CharNameTable;
 import com.l2jserver.gameserver.data.sql.impl.CharSummonTable;
@@ -5795,14 +5798,13 @@ public final class L2PcInstance extends L2Playable {
 	
 	public Forum getMail() {
 		if (_forumMail == null) {
-			setMail(ForumsBBSManager.getInstance().getForumByName("MailRoot").getChildByName(getName()));
-			
+			final var mailRootForum = ForumsBBSManager.getInstance().getForumByName("MailRoot");
+			setMail(mailRootForum.getChildByName(getName()));
 			if (_forumMail == null) {
-				ForumsBBSManager.getInstance().createNewForum(getName(), ForumsBBSManager.getInstance().getForumByName("MailRoot"), Forum.MAIL, Forum.OWNERONLY, getObjectId());
-				setMail(ForumsBBSManager.getInstance().getForumByName("MailRoot").getChildByName(getName()));
+				ForumsBBSManager.getInstance().createNewForum(getName(), mailRootForum, MAIL, OWNER_ONLY, getObjectId());
+				setMail(mailRootForum.getChildByName(getName()));
 			}
 		}
-		
 		return _forumMail;
 	}
 	
@@ -5812,14 +5814,13 @@ public final class L2PcInstance extends L2Playable {
 	
 	public Forum getMemo() {
 		if (_forumMemo == null) {
-			setMemo(ForumsBBSManager.getInstance().getForumByName("MemoRoot").getChildByName(_accountName));
-			
+			final var memoRootForum = ForumsBBSManager.getInstance().getForumByName("MemoRoot");
+			setMemo(memoRootForum.getChildByName(_accountName));
 			if (_forumMemo == null) {
-				ForumsBBSManager.getInstance().createNewForum(_accountName, ForumsBBSManager.getInstance().getForumByName("MemoRoot"), Forum.MEMO, Forum.OWNERONLY, getObjectId());
-				setMemo(ForumsBBSManager.getInstance().getForumByName("MemoRoot").getChildByName(_accountName));
+				ForumsBBSManager.getInstance().createNewForum(_accountName, memoRootForum, MEMO, OWNER_ONLY, getObjectId());
+				setMemo(memoRootForum.getChildByName(_accountName));
 			}
 		}
-		
 		return _forumMemo;
 	}
 	

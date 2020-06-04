@@ -6,10 +6,10 @@
  
 . /etc/rc.subr
  
-name="l2-server-game"
+name="l2game"
 rcvar="l2game_enable"
-folder="/usr/local/l2-server/game/"
-goprogram_user="l2user"
+folder="/usr/home/andrew/l2j-server-game/"
+goprogram_user="andrew"
 pidfile=/var/run/${name}.pid
  
 start_cmd="goprogram_start"

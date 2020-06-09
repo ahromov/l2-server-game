@@ -526,6 +526,10 @@ public final class QuestState {
 		return (getInt("memoState") == memoState);
 	}
 	
+	public String removeMemo() {
+		return unset("memoState");
+	}
+	
 	/**
 	 * Gets the memo state ex.
 	 * @param slot the slot where the value was saved
@@ -1120,8 +1124,16 @@ public final class QuestState {
 		return getInt("NRmemo") == slot;
 	}
 	
-	public void setNRFlagJournal(L2PcInstance talker, int questId, int val) {
-		// TODO Implement me!
+	public void setNRFlagJournal(L2PcInstance talker, int questId, int flagId) {
+		set("NRFlagJournal", String.valueOf(flagId));
+	}
+	
+	public void setFlagJournal(int flagId) {
+		set("FlagJournal", String.valueOf(flagId));
+	}
+	
+	public void resetFlagJournal(int flagId) {
+		unset("FlagJournal");
 	}
 	
 	/**

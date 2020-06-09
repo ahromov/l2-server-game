@@ -1382,6 +1382,10 @@ public final class TerritoryWarManager implements Siegable {
 		
 	}
 	
+	public void declareLord(int territoryId, L2PcInstance player) {
+		// TODO(Zoey76): Implement.
+	}
+	
 	public static final TerritoryWarManager getInstance() {
 		return SingletonHolder._instance;
 	}

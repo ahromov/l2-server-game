@@ -1059,7 +1059,7 @@ public final class CharEffectList {
 		// Because order matters and put method would insert in the same place it was before, instead of, at the end of the effect list
 		// Where new buff should be placed
 		if (skill.getAbnormalType().isNone()) {
-			stopSkillEffects(false, skill);
+			stopSkillEffects(true, skill);
 		}
 		// Verify stacked skills.
 		else {
@@ -1081,7 +1081,7 @@ public final class CharEffectList {
 					// But finish task continues to run, and ticks as well.
 					if (skill.isAbnormalInstant()) {
 						if (stackedInfo.getSkill().isAbnormalInstant()) {
-							stopSkillEffects(false, skill.getAbnormalType());
+							stopSkillEffects(true, skill.getAbnormalType());
 							stackedInfo = _stackedEffects.get(skill.getAbnormalType());
 						}
 						
@@ -1095,9 +1095,9 @@ public final class CharEffectList {
 					// Remove buff that will stack with the abnormal type.
 					else {
 						if (stackedInfo.getSkill().isAbnormalInstant()) {
-							stopSkillEffects(false, skill.getAbnormalType());
+							stopSkillEffects(true, skill.getAbnormalType());
 						}
-						stopSkillEffects(false, skill.getAbnormalType());
+						stopSkillEffects(true, skill.getAbnormalType());
 					}
 				}
 				// If the new buff is a lesser buff, then don't add it.

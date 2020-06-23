@@ -80,7 +80,7 @@ public final class CreatureSay extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x4a);
 		writeD(_objectId);
 		writeD(_textType);
@@ -100,7 +100,7 @@ public final class CreatureSay extends L2GameServerPacket {
 	}
 	
 	@Override
-	public final void runImpl() {
+	public void runImpl() {
 		L2PcInstance _pci = getClient().getActiveChar();
 		if (_pci != null) {
 			_pci.broadcastSnoop(_textType, _charName, _text);

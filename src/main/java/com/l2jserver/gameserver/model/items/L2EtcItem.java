@@ -132,7 +132,7 @@ public final class L2EtcItem extends L2Item {
 	/**
 	 * @return {@code true} if the item is blessed, {@code false} otherwise.
 	 */
-	public final boolean isBlessed() {
+	public boolean isBlessed() {
 		return _isBlessed;
 	}
 	

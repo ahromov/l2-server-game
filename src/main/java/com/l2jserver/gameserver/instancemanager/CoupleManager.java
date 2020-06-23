@@ -47,7 +47,7 @@ public final class CoupleManager {
 		load();
 	}
 	
-	private final void load() {
+	private void load() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.createStatement();
 			var rs = ps.executeQuery("SELECT id FROM mods_wedding ORDER BY id")) {
@@ -60,7 +60,7 @@ public final class CoupleManager {
 		}
 	}
 	
-	public final Couple getCouple(int coupleId) {
+	public Couple getCouple(int coupleId) {
 		int index = getCoupleIndex(coupleId);
 		if (index >= 0) {
 			return getCouples().get(index);
@@ -107,7 +107,7 @@ public final class CoupleManager {
 		}
 	}
 	
-	public final int getCoupleIndex(int coupleId) {
+	public int getCoupleIndex(int coupleId) {
 		int i = 0;
 		for (Couple temp : getCouples()) {
 			if ((temp != null) && (temp.getId() == coupleId)) {
@@ -118,11 +118,11 @@ public final class CoupleManager {
 		return -1;
 	}
 	
-	public final List<Couple> getCouples() {
+	public List<Couple> getCouples() {
 		return _couples;
 	}
 	
-	public static final CoupleManager getInstance() {
+	public static CoupleManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	

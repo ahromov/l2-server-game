@@ -24,7 +24,6 @@ import static org.aeonbits.owner.Config.HotReloadType.ASYNC;
 import java.io.File;
 import java.util.List;
 
-import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.HotReload;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Mutable;
@@ -40,7 +39,7 @@ import org.aeonbits.owner.Reloadable;
 	"classpath:config/geodata.properties"
 })
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
-public interface GeodataConfiguration extends Config, Mutable, Reloadable {
+public interface GeodataConfiguration extends Mutable, Reloadable {
 	
 	/**
 	 * Pathfinding options:

@@ -208,20 +208,20 @@ public class L2BossZone extends L2ZoneType {
 				if ((getCharactersInside() != null) && !getCharactersInside().isEmpty()) {
 					getSettings().getRaidList().clear();
 					int count = 0;
-					for (L2Character obj : getCharactersInside()) {
-						if (obj == null) {
+					for (L2Character creature : getCharactersInside()) {
+						if (creature == null) {
 							continue;
 						}
-						if (obj.isPlayable()) {
+						if (creature.isPlayable()) {
 							count++;
-						} else if (obj.isAttackable() && obj.isRaid()) {
-							getSettings().getRaidList().add(obj);
+						} else if (creature.isAttackable() && creature.isRaid()) {
+							getSettings().getRaidList().add(creature);
 						}
 					}
 					// if inside zone isnt any player, force all boss instance return to its spawn points
 					if ((count == 0) && !getSettings().getRaidList().isEmpty()) {
-						for (int i = 0; i < getSettings().getRaidList().size(); i++) {
-							L2Attackable raid = (L2Attackable) getSettings().getRaidList().get(i);
+						for (L2Character creature : getSettings().getRaidList()) {
+							L2Attackable raid = (L2Attackable) creature;
 							if ((raid == null) || (raid.getSpawn() == null) || raid.isDead()) {
 								continue;
 							}

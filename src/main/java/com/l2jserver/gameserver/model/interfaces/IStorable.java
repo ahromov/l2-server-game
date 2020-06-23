@@ -22,5 +22,5 @@ package com.l2jserver.gameserver.model.interfaces;
  * @author UnAfraid
  */
 public interface IStorable {
-	public boolean storeMe();
+	boolean storeMe();
 }

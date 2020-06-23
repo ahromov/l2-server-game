@@ -23,7 +23,6 @@ import static org.aeonbits.owner.Config.HotReloadType.ASYNC;
 
 import java.util.List;
 
-import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.HotReload;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Reloadable;
@@ -38,7 +37,7 @@ import org.aeonbits.owner.Reloadable;
 	"classpath:config/telnet.properties"
 })
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
-public interface TelnetConfiguration extends Config, Reloadable {
+public interface TelnetConfiguration extends Reloadable {
 	
 	@Key("EnableTelnet")
 	Boolean isEnabled();

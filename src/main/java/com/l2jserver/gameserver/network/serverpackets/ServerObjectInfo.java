@@ -46,7 +46,7 @@ public final class ServerObjectInfo extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x92);
 		writeD(_activeChar.getObjectId());
 		writeD(_idTemplate + 1000000);

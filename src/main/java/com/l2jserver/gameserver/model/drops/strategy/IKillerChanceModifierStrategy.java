@@ -30,7 +30,7 @@ import com.l2jserver.gameserver.util.Util;
  * @author Battlecruiser
  */
 public interface IKillerChanceModifierStrategy extends INonGroupedKillerChanceModifierStrategy {
-	public static final IKillerChanceModifierStrategy DEFAULT_STRATEGY = (item, victim, killer) -> {
+	IKillerChanceModifierStrategy DEFAULT_STRATEGY = (item, victim, killer) -> {
 		int levelDifference = victim.getLevel() - killer.getLevel();
 		if ((victim.isRaid()) && npc().useDeepBlueDropRulesRaid()) {
 			// FIXME: Config?
@@ -41,7 +41,7 @@ public interface IKillerChanceModifierStrategy extends INonGroupedKillerChanceMo
 		}
 		return 1;
 	};
-	public static final INonGroupedKillerChanceModifierStrategy DEFAULT_NONGROUP_STRATEGY = (item, victim, killer) -> {
+	INonGroupedKillerChanceModifierStrategy DEFAULT_NONGROUP_STRATEGY = (item, victim, killer) -> {
 		if (((!(victim.isRaid())) && npc().useDeepBlueDropRules()) || ((victim.isRaid()) && npc().useDeepBlueDropRulesRaid())) {
 			int levelDifference = victim.getLevel() - killer.getLevel();
 			if (item.getItemId() == Inventory.ADENA_ID) {
@@ -54,10 +54,10 @@ public interface IKillerChanceModifierStrategy extends INonGroupedKillerChanceMo
 	
 	IKillerChanceModifierStrategy NO_RULES = (item, victim, killer) -> 1;
 	
-	public double getKillerChanceModifier(IDropItem item, L2Character victim, L2Character killer);
+	double getKillerChanceModifier(IDropItem item, L2Character victim, L2Character killer);
 	
 	@Override
-	public default double getKillerChanceModifier(GeneralDropItem item, L2Character victim, L2Character killer) {
+	default double getKillerChanceModifier(GeneralDropItem item, L2Character victim, L2Character killer) {
 		return getKillerChanceModifier((IDropItem) item, victim, killer);
 	}
 }

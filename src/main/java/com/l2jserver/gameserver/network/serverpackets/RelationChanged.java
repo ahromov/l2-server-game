@@ -80,7 +80,7 @@ public final class RelationChanged extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0xce);
 		if (_multi == null) {
 			writeD(1);

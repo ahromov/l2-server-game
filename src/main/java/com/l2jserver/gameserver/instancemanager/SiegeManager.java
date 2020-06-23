@@ -47,25 +47,25 @@ public final class SiegeManager {
 	
 	private final Map<Integer, List<TowerSpawn>> _flameTowers = new HashMap<>();
 	
-	private int _attackerMaxClans = siege().getAttackerMaxClans();
+	private final int _attackerMaxClans = siege().getAttackerMaxClans();
 	
-	private int _attackerRespawnDelay = siege().getAttackerRespawn();
+	private final int _attackerRespawnDelay = siege().getAttackerRespawn();
 	
-	private int _defenderMaxClans = siege().getDefenderMaxClans();
+	private final int _defenderMaxClans = siege().getDefenderMaxClans();
 	
-	private int _flagMaxCount = siege().getMaxFlags();
+	private final int _flagMaxCount = siege().getMaxFlags();
 	
-	private int _siegeClanMinLevel = siege().getClanMinLevel();
+	private final int _siegeClanMinLevel = siege().getClanMinLevel();
 	
-	private int _siegeLength = siege().getSiegeLength();
+	private final int _siegeLength = siege().getSiegeLength();
 	
-	private int _bloodAllianceReward = siege().getBloodAllianceReward();
+	private final int _bloodAllianceReward = siege().getBloodAllianceReward();
 	
 	protected SiegeManager() {
 		load();
 	}
 	
-	public final void addSiegeSkills(L2PcInstance character) {
+	public void addSiegeSkills(L2PcInstance character) {
 		for (Skill sk : SkillData.getInstance().getSiegeSkills(character.isNoble(), character.getClan().getCastleId() > 0)) {
 			character.addSkill(sk, false);
 		}
@@ -76,7 +76,7 @@ public final class SiegeManager {
 	 * @param castleid
 	 * @return true if the clan is registered or owner of a castle
 	 */
-	public final boolean checkIsRegistered(L2Clan clan, int castleid) {
+	public boolean checkIsRegistered(L2Clan clan, int castleid) {
 		if (clan == null) {
 			return false;
 		}
@@ -102,13 +102,13 @@ public final class SiegeManager {
 		return register;
 	}
 	
-	public final void removeSiegeSkills(L2PcInstance character) {
+	public void removeSiegeSkills(L2PcInstance character) {
 		for (Skill sk : SkillData.getInstance().getSiegeSkills(character.isNoble(), character.getClan().getCastleId() > 0)) {
 			character.removeSkill(sk);
 		}
 	}
 	
-	private final void load() {
+	private void load() {
 		// Gludio
 		_controlTowers.put(1, List.of(siege().getGludioControlTower1(), //
 			siege().getGludioControlTower2(), //
@@ -180,39 +180,39 @@ public final class SiegeManager {
 		}
 	}
 	
-	public final List<TowerSpawn> getControlTowers(int castleId) {
+	public List<TowerSpawn> getControlTowers(int castleId) {
 		return _controlTowers.get(castleId);
 	}
 	
-	public final List<TowerSpawn> getFlameTowers(int castleId) {
+	public List<TowerSpawn> getFlameTowers(int castleId) {
 		return _flameTowers.get(castleId);
 	}
 	
-	public final int getAttackerMaxClans() {
+	public int getAttackerMaxClans() {
 		return _attackerMaxClans;
 	}
 	
-	public final int getAttackerRespawnDelay() {
+	public int getAttackerRespawnDelay() {
 		return _attackerRespawnDelay;
 	}
 	
-	public final int getDefenderMaxClans() {
+	public int getDefenderMaxClans() {
 		return _defenderMaxClans;
 	}
 	
-	public final int getFlagMaxCount() {
+	public int getFlagMaxCount() {
 		return _flagMaxCount;
 	}
 	
-	public final Siege getSiege(ILocational loc) {
+	public Siege getSiege(ILocational loc) {
 		return getSiege(loc.getX(), loc.getY(), loc.getZ());
 	}
 	
-	public final Siege getSiege(L2Object activeObject) {
+	public Siege getSiege(L2Object activeObject) {
 		return getSiege(activeObject.getX(), activeObject.getY(), activeObject.getZ());
 	}
 	
-	public final Siege getSiege(int x, int y, int z) {
+	public Siege getSiege(int x, int y, int z) {
 		for (Castle castle : CastleManager.getInstance().getCastles()) {
 			if (castle.getSiege().checkIfInZone(x, y, z)) {
 				return castle.getSiege();
@@ -221,19 +221,19 @@ public final class SiegeManager {
 		return null;
 	}
 	
-	public final int getSiegeClanMinLevel() {
+	public int getSiegeClanMinLevel() {
 		return _siegeClanMinLevel;
 	}
 	
-	public final int getSiegeLength() {
+	public int getSiegeLength() {
 		return _siegeLength;
 	}
 	
-	public final int getBloodAllianceReward() {
+	public int getBloodAllianceReward() {
 		return _bloodAllianceReward;
 	}
 	
-	public final List<Siege> getSieges() {
+	public List<Siege> getSieges() {
 		List<Siege> sieges = new ArrayList<>();
 		for (Castle castle : CastleManager.getInstance().getCastles()) {
 			sieges.add(castle.getSiege());
@@ -241,7 +241,7 @@ public final class SiegeManager {
 		return sieges;
 	}
 	
-	private final void loadTrapUpgrade(int castleId) {
+	private void loadTrapUpgrade(int castleId) {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("SELECT * FROM castle_trapupgrade WHERE castleId=?")) {
 			ps.setInt(1, castleId);
@@ -255,7 +255,7 @@ public final class SiegeManager {
 		}
 	}
 	
-	public static final SiegeManager getInstance() {
+	public static SiegeManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	

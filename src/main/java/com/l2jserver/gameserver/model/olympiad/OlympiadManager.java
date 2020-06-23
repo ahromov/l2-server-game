@@ -470,7 +470,7 @@ public class OlympiadManager {
 		}
 		
 		@Override
-		public final void run() {
+		public void run() {
 			final SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.YOU_HAVE_BEEN_DELETED_FROM_THE_WAITING_LIST_OF_A_GAME);
 			for (int objectId : _team) {
 				L2PcInstance teamMember = L2World.getInstance().getPlayer(objectId);

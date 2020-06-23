@@ -28,7 +28,7 @@ public final class SurrenderPledgeWar extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x67);
 		writeS(_pledgeName);
 		writeS(_playerName);

@@ -55,7 +55,7 @@ public final class MagicSkillUse extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x48);
 		writeD(_activeChar.getObjectId());
 		writeD(_target.getObjectId());

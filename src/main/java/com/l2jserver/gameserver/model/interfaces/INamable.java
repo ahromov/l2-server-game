@@ -23,5 +23,5 @@ package com.l2jserver.gameserver.model.interfaces;
  * @author xban1x
  */
 public interface INamable {
-	public String getName();
+	String getName();
 }

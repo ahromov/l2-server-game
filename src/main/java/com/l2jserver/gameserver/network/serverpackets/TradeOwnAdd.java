@@ -32,7 +32,7 @@ public final class TradeOwnAdd extends AbstractItemPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x1A);
 		
 		writeH(1); // items added count

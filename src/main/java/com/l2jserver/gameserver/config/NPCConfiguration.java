@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.HotReload;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Reloadable;
@@ -42,7 +41,7 @@ import com.l2jserver.gameserver.config.converter.MapIntegerIntegerConverter;
 	"classpath:config/npc.properties"
 })
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
-public interface NPCConfiguration extends Config, Reloadable {
+public interface NPCConfiguration extends Reloadable {
 	
 	@Key("AnnounceMammonSpawn")
 	Boolean announceMammonSpawn();

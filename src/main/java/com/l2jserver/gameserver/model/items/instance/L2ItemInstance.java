@@ -262,7 +262,7 @@ public final class L2ItemInstance extends L2Object {
 	 * <BR>
 	 * @param player Player that pick up the item
 	 */
-	public final void pickupMe(L2Character player) {
+	public void pickupMe(L2Character player) {
 		assert getWorldRegion() != null;
 		
 		L2WorldRegion oldregion = getWorldRegion();
@@ -305,7 +305,7 @@ public final class L2ItemInstance extends L2Object {
 		
 		if (general().logItems()) {
 			if (!general().logItemsSmallLog() || (general().logItemsSmallLog() && (getItem().isEquipable() || (getItem().getId() == ADENA_ID)))) {
-				if (getItemType() != ARROW && getItemType() != SHOT) {
+				if ((getItemType() != ARROW) && (getItemType() != SHOT)) {
 					LOG_ITEM.info("SET_OWNER {} by {}, referenced by {}.", this, creator, reference);
 				}
 			}
@@ -442,7 +442,7 @@ public final class L2ItemInstance extends L2Object {
 		
 		if (general().logItems() && (process != null)) {
 			if (!general().logItemsSmallLog() || (general().logItemsSmallLog() && (_item.isEquipable() || (_item.getId() == ADENA_ID)))) {
-				if (getItemType() != ARROW && getItemType() != SHOT) {
+				if ((getItemType() != ARROW) && (getItemType() != SHOT)) {
 					LOG_ITEM.info("CHANGED {} amount {} by {}, referenced by {}.", this, old, creator, reference);
 				}
 			}
@@ -614,7 +614,7 @@ public final class L2ItemInstance extends L2Object {
 	/**
 	 * @return the quantity of crystals for crystallization.
 	 */
-	public final int getCrystalCount() {
+	public int getCrystalCount() {
 		return _item.getCrystalCount(_enchantLevel);
 	}
 	
@@ -1372,7 +1372,7 @@ public final class L2ItemInstance extends L2Object {
 		}
 	}
 	
-	public final void dropMe(L2Character dropper, int x, int y, int z) {
+	public void dropMe(L2Character dropper, int x, int y, int z) {
 		ThreadPoolManager.getInstance().executeGeneral(new ItemDropTask(this, dropper, x, y, z));
 		if ((dropper != null) && dropper.isPlayer()) {
 			// Notify to scripts
@@ -1652,7 +1652,7 @@ public final class L2ItemInstance extends L2Object {
 		}
 	}
 	
-	public final DropProtection getDropProtection() {
+	public DropProtection getDropProtection() {
 		return _dropProtection;
 	}
 	

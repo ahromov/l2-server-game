@@ -32,7 +32,7 @@ public final class AskJoinPledge extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x2c);
 		writeD(_requestorObjId);
 		if (_subPledgeName != null) {

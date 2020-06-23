@@ -54,7 +54,7 @@ public final class SiegeDefenderList extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0xcb);
 		writeD(_castle.getResidenceId());
 		writeD(0x00); // 0

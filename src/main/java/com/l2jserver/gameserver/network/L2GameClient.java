@@ -78,7 +78,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	/**
 	 * @author KenM
 	 */
-	public static enum GameClientState {
+	public enum GameClientState {
 		/** Client has just connected . */
 		CONNECTED,
 		/** Client has authed but doesn't has character attached to it yet. */

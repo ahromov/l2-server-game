@@ -27,9 +27,9 @@ import com.l2jserver.gameserver.model.skills.targets.L2TargetType;
  * @author UnAfraid
  */
 public interface ITargetTypeHandler {
-	static final L2Object[] EMPTY_TARGET_LIST = new L2Object[0];
+	L2Object[] EMPTY_TARGET_LIST = new L2Object[0];
 	
-	public L2Object[] getTargetList(Skill skill, L2Character activeChar, boolean onlyFirst, L2Character target);
+	L2Object[] getTargetList(Skill skill, L2Character activeChar, boolean onlyFirst, L2Character target);
 	
-	public Enum<L2TargetType> getTargetType();
+	Enum<L2TargetType> getTargetType();
 }

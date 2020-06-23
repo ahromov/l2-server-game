@@ -29,10 +29,10 @@ import com.l2jserver.gameserver.bbs.model.Topic;
  * @version 2.6.2.0
  */
 public interface PostRepository {
-
+	
 	void delete(Topic topic);
-
+	
 	void update(Post post);
-
+	
 	List<Post> load(Topic topic);
 }

@@ -55,12 +55,7 @@ public class NpcBufferTable {
 	}
 	
 	private static class NpcBufferSkills {
-		private final int _npcId;
 		private final Map<Integer, NpcBufferData> _skills = new HashMap<>();
-		
-		protected NpcBufferSkills(int npcId) {
-			_npcId = npcId;
-		}
 		
 		public void addSkill(int skillId, int skillLevel, int skillFeeId, int skillFeeAmount, int buffGroup) {
 			_skills.put(buffGroup, new NpcBufferData(skillId, skillLevel, skillFeeId, skillFeeAmount));
@@ -68,11 +63,6 @@ public class NpcBufferTable {
 		
 		public NpcBufferData getSkillGroupInfo(int buffGroup) {
 			return _skills.get(buffGroup);
-		}
-		
-		@SuppressWarnings("unused")
-		public int getNpcId() {
-			return _npcId;
 		}
 	}
 	
@@ -97,7 +87,7 @@ public class NpcBufferTable {
 						_buffers.put(lastNpcId, skills);
 					}
 					
-					skills = new NpcBufferSkills(npcId);
+					skills = new NpcBufferSkills();
 					skills.addSkill(skillId, skillLevel, skillFeeId, skillFeeAmount, buffGroup);
 				} else if (skills != null) {
 					skills.addSkill(skillId, skillLevel, skillFeeId, skillFeeAmount, buffGroup);
@@ -133,7 +123,7 @@ public class NpcBufferTable {
 							_buffers.put(lastNpcId, skills);
 						}
 						
-						skills = new NpcBufferSkills(npcId);
+						skills = new NpcBufferSkills();
 						skills.addSkill(skillId, skillLevel, skillFeeId, skillFeeAmount, buffGroup);
 					} else if (skills != null) {
 						skills.addSkill(skillId, skillLevel, skillFeeId, skillFeeAmount, buffGroup);

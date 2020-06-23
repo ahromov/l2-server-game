@@ -70,7 +70,7 @@ public final class FloodProtectorAction {
 	/**
 	 * Creates new instance of FloodProtectorAction.
 	 * @param client the game client for which flood protection is being created
-	 * @param config flood protector configuration
+	 * @param configName flood protector configuration
 	 */
 	public FloodProtectorAction(L2GameClient client, String configName) {
 		this.client = client;

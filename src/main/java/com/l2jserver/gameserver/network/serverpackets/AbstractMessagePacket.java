@@ -63,27 +63,27 @@ public abstract class AbstractMessagePacket<T extends AbstractMessagePacket<?>> 
 			_value = value;
 		}
 		
-		public final byte getType() {
+		public byte getType() {
 			return _type;
 		}
 		
-		public final Object getValue() {
+		public Object getValue() {
 			return _value;
 		}
 		
-		public final String getStringValue() {
+		public String getStringValue() {
 			return (String) _value;
 		}
 		
-		public final int getIntValue() {
+		public int getIntValue() {
 			return ((Integer) _value).intValue();
 		}
 		
-		public final long getLongValue() {
+		public long getLongValue() {
 			return ((Long) _value).longValue();
 		}
 		
-		public final int[] getIntArrayValue() {
+		public int[] getIntArrayValue() {
 			return (int[]) _value;
 		}
 	}

@@ -184,22 +184,22 @@ public class RequestProcureCropList extends L2GameClientPacket {
 			_manorId = manorId;
 		}
 		
-		public final int getManorId() {
+		public int getManorId() {
 			return _manorId;
 		}
 		
-		public final long getPrice() {
+		public long getPrice() {
 			return getCount() * _cp.getPrice();
 		}
 		
-		public final CropProcure getCropProcure() {
+		public CropProcure getCropProcure() {
 			if (_cp == null) {
 				_cp = CastleManorManager.getInstance().getCropProcure(_manorId, getId(), false);
 			}
 			return _cp;
 		}
 		
-		public final int getRewardId() {
+		public int getRewardId() {
 			if (_rewardId == 0) {
 				_rewardId = CastleManorManager.getInstance().getSeedByCrop(_cp.getId()).getReward(_cp.getReward());
 			}

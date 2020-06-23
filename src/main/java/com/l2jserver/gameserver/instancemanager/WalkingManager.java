@@ -77,7 +77,7 @@ public final class WalkingManager implements IXmlReader {
 	}
 	
 	@Override
-	public final void load() {
+	public void load() {
 		parseDatapackFile("data/Routes.xml");
 		LOG.info("Loaded {} walking routes.", _routes.size());
 	}
@@ -411,7 +411,7 @@ public final class WalkingManager implements IXmlReader {
 		}
 	}
 	
-	public static final WalkingManager getInstance() {
+	public static WalkingManager getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 	

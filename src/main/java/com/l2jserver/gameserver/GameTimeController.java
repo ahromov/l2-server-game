@@ -64,23 +64,23 @@ public final class GameTimeController extends Thread {
 		super.start();
 	}
 	
-	public static final void init() {
+	public static void init() {
 		_instance = new GameTimeController();
 	}
 	
-	public final int getGameTime() {
+	public int getGameTime() {
 		return (getGameTicks() % TICKS_PER_IG_DAY) / MILLIS_IN_TICK;
 	}
 	
-	public final int getGameHour() {
+	public int getGameHour() {
 		return getGameTime() / 60;
 	}
 	
-	public final int getGameMinute() {
+	public int getGameMinute() {
 		return getGameTime() % 60;
 	}
 	
-	public final boolean isNight() {
+	public boolean isNight() {
 		return getGameHour() < 6;
 	}
 	
@@ -88,7 +88,7 @@ public final class GameTimeController extends Thread {
 	 * The true GameTime tick. Directly taken from current time. This represents the tick of the time.
 	 * @return
 	 */
-	public final int getGameTicks() {
+	public int getGameTicks() {
 		return (int) ((System.currentTimeMillis() - _referenceTime) / MILLIS_IN_TICK);
 	}
 	
@@ -96,7 +96,7 @@ public final class GameTimeController extends Thread {
 	 * Add a L2Character to movingObjects of GameTimeController.
 	 * @param cha The L2Character to add to movingObjects of GameTimeController
 	 */
-	public final void registerMovingObject(final L2Character cha) {
+	public void registerMovingObject(final L2Character cha) {
 		if (cha == null) {
 			return;
 		}
@@ -115,17 +115,17 @@ public final class GameTimeController extends Thread {
 	 * <li>Create a task to update the _knownObject and _knowPlayers of each L2Character that finished its movement and of their already known L2Object then notify AI with EVT_ARRIVED</li>
 	 * </ul>
 	 */
-	private final void moveObjects() {
+	private void moveObjects() {
 		_movingObjects.removeIf(L2Character::updatePosition);
 	}
 	
-	public final void stopTimer() {
+	public void stopTimer() {
 		super.interrupt();
 		LOG.info("Stopping {}", getClass().getSimpleName());
 	}
 	
 	@Override
-	public final void run() {
+	public void run() {
 		LOG.debug("{}: Started.", getClass().getSimpleName());
 		
 		long nextTickTime, sleepTime;
@@ -161,7 +161,7 @@ public final class GameTimeController extends Thread {
 		}
 	}
 	
-	public static final GameTimeController getInstance() {
+	public static GameTimeController getInstance() {
 		return _instance;
 	}
 }

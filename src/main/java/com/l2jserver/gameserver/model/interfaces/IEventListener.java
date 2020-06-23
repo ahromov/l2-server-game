@@ -27,22 +27,22 @@ public interface IEventListener {
 	/**
 	 * @return {@code true} if player is on event, {@code false} otherwise.
 	 */
-	public boolean isOnEvent();
+	boolean isOnEvent();
 	
 	/**
 	 * @return {@code true} if player is blocked from leaving the game, {@code false} otherwise.
 	 */
-	public boolean isBlockingExit();
+	boolean isBlockingExit();
 	
 	/**
 	 * @return {@code true} if player is blocked from receiving death penalty upon death, {@code false} otherwise.
 	 */
-	public boolean isBlockingDeathPenalty();
+	boolean isBlockingDeathPenalty();
 	
 	/**
 	 * @return {@code true} if player can revive after death, {@code false} otherwise.
 	 */
-	public boolean canRevive();
+	boolean canRevive();
 	
-	public L2PcInstance getPlayer();
+	L2PcInstance getPlayer();
 }

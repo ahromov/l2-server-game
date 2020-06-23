@@ -110,7 +110,7 @@ public final class SiegableHall extends ClanHall {
 	}
 	
 	@Override
-	public final void updateDb() {
+	public void updateDb() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement(SQL_SAVE)) {
 			ps.setInt(1, getOwnerId());
@@ -122,20 +122,20 @@ public final class SiegableHall extends ClanHall {
 		}
 	}
 	
-	public final void setSiege(final ClanHallSiegeEngine siegable) {
+	public void setSiege(final ClanHallSiegeEngine siegable) {
 		_siege = siegable;
 		_siegeZone.setSiegeInstance(siegable);
 	}
 	
-	public final ClanHallSiegeEngine getSiege() {
+	public ClanHallSiegeEngine getSiege() {
 		return _siege;
 	}
 	
-	public final Calendar getSiegeDate() {
+	public Calendar getSiegeDate() {
 		return _nextSiege;
 	}
 	
-	public final long getNextSiegeTime() {
+	public long getNextSiegeTime() {
 		return _nextSiege.getTimeInMillis();
 	}
 	
@@ -143,15 +143,15 @@ public final class SiegableHall extends ClanHall {
 		return _siegeLength;
 	}
 	
-	public final void setNextSiegeDate(long date) {
+	public void setNextSiegeDate(long date) {
 		_nextSiege.setTimeInMillis(date);
 	}
 	
-	public final void setNextSiegeDate(final Calendar c) {
+	public void setNextSiegeDate(final Calendar c) {
 		_nextSiege = c;
 	}
 	
-	public final void updateNextSiege() {
+	public void updateNextSiege() {
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.DAY_OF_YEAR, _scheduleConfig[0]);
 		c.add(Calendar.MONTH, _scheduleConfig[1]);
@@ -163,19 +163,19 @@ public final class SiegableHall extends ClanHall {
 		updateDb();
 	}
 	
-	public final void addAttacker(final L2Clan clan) {
+	public void addAttacker(final L2Clan clan) {
 		if (getSiege() != null) {
 			getSiege().getAttackers().put(clan.getId(), new L2SiegeClan(clan.getId(), SiegeClanType.ATTACKER));
 		}
 	}
 	
-	public final void removeAttacker(final L2Clan clan) {
+	public void removeAttacker(final L2Clan clan) {
 		if (getSiege() != null) {
 			getSiege().getAttackers().remove(clan.getId());
 		}
 	}
 	
-	public final boolean isRegistered(L2Clan clan) {
+	public boolean isRegistered(L2Clan clan) {
 		if (getSiege() == null) {
 			return false;
 		}
@@ -187,40 +187,40 @@ public final class SiegableHall extends ClanHall {
 		return _status;
 	}
 	
-	public final boolean isRegistering() {
+	public boolean isRegistering() {
 		return _status == SiegeStatus.REGISTERING;
 	}
 	
-	public final boolean isInSiege() {
+	public boolean isInSiege() {
 		return _status == SiegeStatus.RUNNING;
 	}
 	
-	public final boolean isWaitingBattle() {
+	public boolean isWaitingBattle() {
 		return _status == SiegeStatus.WAITING_BATTLE;
 	}
 	
-	public final void updateSiegeStatus(SiegeStatus status) {
+	public void updateSiegeStatus(SiegeStatus status) {
 		_status = status;
 	}
 	
-	public final L2SiegeZone getSiegeZone() {
+	public L2SiegeZone getSiegeZone() {
 		return _siegeZone;
 	}
 	
-	public final void setSiegeZone(L2SiegeZone zone) {
+	public void setSiegeZone(L2SiegeZone zone) {
 		_siegeZone = zone;
 	}
 	
-	public final void updateSiegeZone(boolean active) {
+	public void updateSiegeZone(boolean active) {
 		_siegeZone.setIsActive(active);
 	}
 	
-	public final void showSiegeInfo(L2PcInstance player) {
+	public void showSiegeInfo(L2PcInstance player) {
 		player.sendPacket(new SiegeInfo(this));
 	}
 	
 	@Override
-	public final boolean isSiegableHall() {
+	public boolean isSiegableHall() {
 		return true;
 	}
 	

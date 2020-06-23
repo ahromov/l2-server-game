@@ -28,7 +28,7 @@ public final class SetSummonRemainTime extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0xd1);
 		writeD(_maxTime);
 		writeD(_remainingTime);

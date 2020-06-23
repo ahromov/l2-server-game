@@ -123,7 +123,7 @@ public final class MapRegionManager implements IXmlReader {
 		}
 	}
 	
-	public final L2MapRegion getMapRegion(int locX, int locY) {
+	public L2MapRegion getMapRegion(int locX, int locY) {
 		for (L2MapRegion region : REGIONS.values()) {
 			if (region.isZoneInRegion(getMapRegionX(locX), getMapRegionY(locY))) {
 				return region;
@@ -132,7 +132,7 @@ public final class MapRegionManager implements IXmlReader {
 		return null;
 	}
 	
-	public final int getMapRegionLocId(int locX, int locY) {
+	public int getMapRegionLocId(int locX, int locY) {
 		L2MapRegion region = getMapRegion(locX, locY);
 		if (region != null) {
 			return region.getLocId();
@@ -140,19 +140,19 @@ public final class MapRegionManager implements IXmlReader {
 		return 0;
 	}
 	
-	public final L2MapRegion getMapRegion(L2Object obj) {
+	public L2MapRegion getMapRegion(L2Object obj) {
 		return getMapRegion(obj.getX(), obj.getY());
 	}
 	
-	public final int getMapRegionLocId(L2Object obj) {
+	public int getMapRegionLocId(L2Object obj) {
 		return getMapRegionLocId(obj.getX(), obj.getY());
 	}
 	
-	public final int getMapRegionX(int posX) {
+	public int getMapRegionX(int posX) {
 		return (posX >> 15) + 9 + 11;// + centerTileX;
 	}
 	
-	public final int getMapRegionY(int posY) {
+	public int getMapRegionY(int posY) {
 		return (posY >> 15) + 10 + 8;// + centerTileX;
 	}
 	

@@ -55,68 +55,68 @@ public final class L2Seed {
 		_seedReferencePrice = (item != null) ? item.getReferencePrice() : 1;
 	}
 	
-	public final int getCastleId() {
+	public int getCastleId() {
 		return _castleId;
 	}
 	
-	public final int getSeedId() {
+	public int getSeedId() {
 		return _seedId;
 	}
 	
-	public final int getCropId() {
+	public int getCropId() {
 		return _cropId;
 	}
 	
-	public final int getMatureId() {
+	public int getMatureId() {
 		return _matureId;
 	}
 	
-	public final int getReward(int type) {
+	public int getReward(int type) {
 		return (type == 1) ? _reward1 : _reward2;
 	}
 	
-	public final int getLevel() {
+	public int getLevel() {
 		return _level;
 	}
 	
-	public final boolean isAlternative() {
+	public boolean isAlternative() {
 		return _isAlternative;
 	}
 	
-	public final int getSeedLimit() {
+	public int getSeedLimit() {
 		return _limitSeeds * rates().getRateDropManor();
 	}
 	
-	public final int getCropLimit() {
+	public int getCropLimit() {
 		return _limitCrops * rates().getRateDropManor();
 	}
 	
-	public final int getSeedReferencePrice() {
+	public int getSeedReferencePrice() {
 		return _seedReferencePrice;
 	}
 	
-	public final int getSeedMaxPrice() {
+	public int getSeedMaxPrice() {
 		return _seedReferencePrice * 10;
 	}
 	
-	public final int getSeedMinPrice() {
+	public int getSeedMinPrice() {
 		return (int) (_seedReferencePrice * 0.6);
 	}
 	
-	public final int getCropReferencePrice() {
+	public int getCropReferencePrice() {
 		return _cropReferencePrice;
 	}
 	
-	public final int getCropMaxPrice() {
+	public int getCropMaxPrice() {
 		return _cropReferencePrice * 10;
 	}
 	
-	public final int getCropMinPrice() {
+	public int getCropMinPrice() {
 		return (int) (_cropReferencePrice * 0.6);
 	}
 	
 	@Override
-	public final String toString() {
+	public String toString() {
 		return "SeedData [_id=" + _seedId + ", _level=" + _level + ", _crop=" + _cropId + ", _mature=" + _matureId + ", _type1=" + _reward1 + ", _type2=" + _reward2 + //
 			", _manorId=" + _castleId + ", _isAlternative=" + _isAlternative + ", _limitSeeds=" + _limitSeeds + ", _limitCrops=" + _limitCrops + "]";
 	}

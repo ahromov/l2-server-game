@@ -146,7 +146,7 @@ public final class TerritoryWarManager implements Siegable {
 	 * @param clan The L2Clan of the player
 	 * @return true if the clan is registered
 	 */
-	public final boolean checkIsRegistered(int castleId, L2Clan clan) {
+	public boolean checkIsRegistered(int castleId, L2Clan clan) {
 		if (clan == null) {
 			return false;
 		}
@@ -171,7 +171,7 @@ public final class TerritoryWarManager implements Siegable {
 	 * @param objId
 	 * @return true if the player is registered
 	 */
-	public final boolean checkIsRegistered(int castleId, int objId) {
+	public boolean checkIsRegistered(int castleId, int objId) {
 		if (castleId == -1) {
 			for (int cId : _registeredMercenaries.keySet()) {
 				if (_registeredMercenaries.get(cId).contains(objId)) {
@@ -621,7 +621,7 @@ public final class TerritoryWarManager implements Siegable {
 		}
 	}
 	
-	private final void load() {
+	private void load() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var s = con.createStatement();
 			var rs = s.executeQuery("SELECT * FROM territory_spawnlist")) {
@@ -1386,7 +1386,7 @@ public final class TerritoryWarManager implements Siegable {
 		// TODO(Zoey76): Implement.
 	}
 	
-	public static final TerritoryWarManager getInstance() {
+	public static TerritoryWarManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	

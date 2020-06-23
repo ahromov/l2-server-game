@@ -37,7 +37,7 @@ public final class Ride extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x8C);
 		writeD(_objectId);
 		writeD(_mounted);

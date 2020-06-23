@@ -22,5 +22,5 @@ package com.l2jserver.gameserver.model.interfaces;
  * @author xban1x
  */
 public interface IDecayable {
-	public boolean decayMe();
+	boolean decayMe();
 }

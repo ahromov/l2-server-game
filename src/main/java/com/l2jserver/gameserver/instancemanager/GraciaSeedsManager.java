@@ -177,7 +177,7 @@ public final class GraciaSeedsManager {
 	 * Gets the single instance of {@code GraciaSeedsManager}.
 	 * @return single instance of {@code GraciaSeedsManager}
 	 */
-	public static final GraciaSeedsManager getInstance() {
+	public static GraciaSeedsManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	

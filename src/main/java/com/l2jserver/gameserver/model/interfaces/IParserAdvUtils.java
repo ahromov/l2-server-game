@@ -25,22 +25,21 @@ package com.l2jserver.gameserver.model.interfaces;
  */
 public interface IParserAdvUtils extends IParserUtils {
 	
-	public boolean getBoolean(String key);
+	boolean getBoolean(String key);
 	
-	public byte getByte(String key);
+	byte getByte(String key);
 	
-	public short getShort(String key);
+	short getShort(String key);
 	
-	public int getInt(String key);
+	int getInt(String key);
 	
-	public long getLong(String key);
+	long getLong(String key);
 	
-	public float getFloat(String key);
+	float getFloat(String key);
 	
-	public double getDouble(String key);
+	double getDouble(String key);
 	
-	public String getString(String key);
+	String getString(String key);
 	
-	public <T extends Enum<T>> T getEnum(String key, Class<T> clazz);
-	
+	<T extends Enum<T>> T getEnum(String key, Class<T> clazz);
 }

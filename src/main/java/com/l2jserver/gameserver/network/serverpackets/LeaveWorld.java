@@ -25,7 +25,7 @@ public final class LeaveWorld extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x84);
 	}
 }

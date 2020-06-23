@@ -160,7 +160,7 @@ public final class L2FestivalGuideInstance extends L2Npc {
 		}
 	}
 	
-	public final void showChatWindow(L2PcInstance player, int val, String suffix, boolean isDescription) {
+	public void showChatWindow(L2PcInstance player, int val, String suffix, boolean isDescription) {
 		String filename = SevenSigns.SEVEN_SIGNS_HTML_PATH + "festival/";
 		filename += (isDescription) ? "desc_" : "festival_";
 		filename += (suffix != null) ? val + suffix + ".htm" : val + ".htm";
@@ -196,7 +196,7 @@ public final class L2FestivalGuideInstance extends L2Npc {
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	
-	private static final String getStatsTable() {
+	private static String getStatsTable() {
 		final StringBuilder tableHtml = new StringBuilder(1000);
 		
 		// Get the scores for each of the festival level ranges (types).
@@ -218,7 +218,7 @@ public final class L2FestivalGuideInstance extends L2Npc {
 		return tableHtml.toString();
 	}
 	
-	private static final String getBonusTable() {
+	private static String getBonusTable() {
 		final StringBuilder tableHtml = new StringBuilder(500);
 		
 		// Get the accumulated scores for each of the festival level ranges (types).

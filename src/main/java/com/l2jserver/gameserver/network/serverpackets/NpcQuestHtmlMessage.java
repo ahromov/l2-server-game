@@ -33,7 +33,7 @@ public final class NpcQuestHtmlMessage extends AbstractHtmlPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0xFE);
 		writeH(0x8D);
 		writeD(getNpcObjId());

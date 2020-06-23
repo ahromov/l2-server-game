@@ -53,7 +53,7 @@ public final class ClanHallSiegeManager {
 		loadClanHalls();
 	}
 	
-	private final void loadClanHalls() {
+	private void loadClanHalls() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var s = con.createStatement();
 			var rs = s.executeQuery(SQL_LOAD_HALLS)) {
@@ -74,7 +74,7 @@ public final class ClanHallSiegeManager {
 				set.set("scheduleConfig", rs.getString("schedule_config"));
 				SiegableHall hall = new SiegableHall(set);
 				_siegableHalls.put(id, hall);
-				ClanHallManager.addClanHall(hall);
+				ClanHallManager.getInstance().addClanHall(hall);
 			}
 			LOG.info("Loaded {} conquerable clan halls.", _siegableHalls.size());
 		} catch (Exception ex) {
@@ -90,11 +90,11 @@ public final class ClanHallSiegeManager {
 		return getConquerableHalls().get(clanHall);
 	}
 	
-	public final SiegableHall getNearbyClanHall(L2Character activeChar) {
+	public SiegableHall getNearbyClanHall(L2Character activeChar) {
 		return getNearbyClanHall(activeChar.getX(), activeChar.getY(), 10000);
 	}
 	
-	public final SiegableHall getNearbyClanHall(int x, int y, int maxDist) {
+	public SiegableHall getNearbyClanHall(int x, int y, int maxDist) {
 		L2ClanHallZone zone = null;
 		
 		for (Map.Entry<Integer, SiegableHall> ch : _siegableHalls.entrySet()) {
@@ -106,7 +106,7 @@ public final class ClanHallSiegeManager {
 		return null;
 	}
 	
-	public final ClanHallSiegeEngine getSiege(L2Character character) {
+	public ClanHallSiegeEngine getSiege(L2Character character) {
 		SiegableHall hall = getNearbyClanHall(character);
 		if (hall == null) {
 			return null;
@@ -114,7 +114,7 @@ public final class ClanHallSiegeManager {
 		return hall.getSiege();
 	}
 	
-	public final void registerClan(L2Clan clan, SiegableHall hall, L2PcInstance player) {
+	public void registerClan(L2Clan clan, SiegableHall hall, L2PcInstance player) {
 		if (clan.getLevel() < clanhall().getMinClanLevel()) {
 			player.sendMessage("Only clans of level " + clanhall().getMinClanLevel() + " or higher may register for a castle siege");
 		} else if (hall.isWaitingBattle()) {
@@ -138,14 +138,14 @@ public final class ClanHallSiegeManager {
 		}
 	}
 	
-	public final void unRegisterClan(L2Clan clan, SiegableHall hall) {
+	public void unRegisterClan(L2Clan clan, SiegableHall hall) {
 		if (!hall.isRegistering()) {
 			return;
 		}
 		hall.removeAttacker(clan);
 	}
 	
-	public final boolean isClanParticipating(L2Clan clan) {
+	public boolean isClanParticipating(L2Clan clan) {
 		for (SiegableHall hall : getConquerableHalls().values()) {
 			if ((hall.getSiege() != null) && hall.getSiege().checkIsAttacker(clan)) {
 				return true;
@@ -154,7 +154,7 @@ public final class ClanHallSiegeManager {
 		return false;
 	}
 	
-	public final void onServerShutDown() {
+	public void onServerShutDown() {
 		for (SiegableHall hall : getConquerableHalls().values()) {
 			// Rainbow springs has his own attackers table
 			if ((hall.getId() == 62) || (hall.getSiege() == null)) {

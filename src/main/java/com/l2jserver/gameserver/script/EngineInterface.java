@@ -22,7 +22,7 @@ package com.l2jserver.gameserver.script;
  * @author Luis Arias
  */
 public interface EngineInterface {
-	public void addEventDrop(int[] items, int[] count, double chance, DateRange range);
+	void addEventDrop(int[] items, int[] count, double chance, DateRange range);
 	
-	public void onPlayerLogin(String message, DateRange range);
+	void onPlayerLogin(String message, DateRange range);
 }

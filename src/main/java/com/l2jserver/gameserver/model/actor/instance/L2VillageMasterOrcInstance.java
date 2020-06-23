@@ -32,7 +32,7 @@ public final class L2VillageMasterOrcInstance extends L2VillageMasterInstance {
 	}
 	
 	@Override
-	protected final boolean checkVillageMasterRace(PlayerClass pclass) {
+	protected boolean checkVillageMasterRace(PlayerClass pclass) {
 		if (pclass == null) {
 			return false;
 		}

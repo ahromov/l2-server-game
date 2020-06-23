@@ -976,7 +976,7 @@ public final class L2PcInstance extends L2Playable {
 	}
 	
 	@Override
-	public final PcKnownList getKnownList() {
+	public PcKnownList getKnownList() {
 		return (PcKnownList) super.getKnownList();
 	}
 	
@@ -986,7 +986,7 @@ public final class L2PcInstance extends L2Playable {
 	}
 	
 	@Override
-	public final PcStat getStat() {
+	public PcStat getStat() {
 		return (PcStat) super.getStat();
 	}
 	
@@ -996,7 +996,7 @@ public final class L2PcInstance extends L2Playable {
 	}
 	
 	@Override
-	public final PcStatus getStatus() {
+	public PcStatus getStatus() {
 		return (PcStatus) super.getStatus();
 	}
 	
@@ -1005,14 +1005,14 @@ public final class L2PcInstance extends L2Playable {
 		setStatus(new PcStatus(this));
 	}
 	
-	public final PcAppearance getAppearance() {
+	public PcAppearance getAppearance() {
 		return _appearance;
 	}
 	
 	/**
 	 * @return the base L2PcTemplate link to the L2PcInstance.
 	 */
-	public final L2PcTemplate getBaseTemplate() {
+	public L2PcTemplate getBaseTemplate() {
 		return PlayerTemplateData.getInstance().getTemplate(_baseClass);
 	}
 	
@@ -1020,7 +1020,7 @@ public final class L2PcInstance extends L2Playable {
 	 * @return the L2PcTemplate link to the L2PcInstance.
 	 */
 	@Override
-	public final L2PcTemplate getTemplate() {
+	public L2PcTemplate getTemplate() {
 		return (L2PcTemplate) super.getTemplate();
 	}
 	
@@ -1038,7 +1038,7 @@ public final class L2PcInstance extends L2Playable {
 	
 	/** Return the Level of the L2PcInstance. */
 	@Override
-	public final int getLevel() {
+	public int getLevel() {
 		if (isSubClassActive()) {
 			return getSubClasses().get(getClassIndex()).getStat().getLevel();
 		}
@@ -1315,7 +1315,7 @@ public final class L2PcInstance extends L2Playable {
 	 * Gets the quest states registered for notify of death of this player.
 	 * @return the quest states
 	 */
-	public final Set<QuestState> getNotifyQuestOfDeath() {
+	public Set<QuestState> getNotifyQuestOfDeath() {
 		if (_notifyQuestOfDeathList == null) {
 			synchronized (this) {
 				if (_notifyQuestOfDeathList == null) {
@@ -1327,7 +1327,7 @@ public final class L2PcInstance extends L2Playable {
 		return _notifyQuestOfDeathList;
 	}
 	
-	public final boolean isNotifyQuestOfDeathEmpty() {
+	public boolean isNotifyQuestOfDeathEmpty() {
 		return (_notifyQuestOfDeathList == null) || _notifyQuestOfDeathList.isEmpty();
 	}
 	
@@ -2036,20 +2036,20 @@ public final class L2PcInstance extends L2Playable {
 		getSubStat().setLevel(Math.min(level, getMaxLevel()));
 	}
 	
-	public final int getMaxLevel() {
+	public int getMaxLevel() {
 		return getSubStat().getMaxLevel();
 	}
 	
-	public final int getMaxExpLevel() {
+	public int getMaxExpLevel() {
 		return getSubStat().getMaxExpLevel();
 	}
 	
-	private final PcStat getSubStat() {
+	private PcStat getSubStat() {
 		return isSubClassActive() ? getSubClasses().get(getClassIndex()).getStat() : getStat();
 	}
 	
 	@Override
-	public final boolean addLevel(int value) {
+	public boolean addLevel(int value) {
 		if ((getLevel() + value) > getMaxLevel()) {
 			return false;
 		}
@@ -3428,16 +3428,16 @@ public final class L2PcInstance extends L2Playable {
 		_recentFakeDeathEndTime = protect ? GameTimeController.getInstance().getGameTicks() + (character().getPlayerFakeDeathUpProtection() * GameTimeController.TICKS_PER_SECOND) : 0;
 	}
 	
-	public final boolean isFakeDeath() {
+	public boolean isFakeDeath() {
 		return _isFakeDeath;
 	}
 	
-	public final void setIsFakeDeath(boolean value) {
+	public void setIsFakeDeath(boolean value) {
 		_isFakeDeath = value;
 	}
 	
 	@Override
-	public final boolean isAlikeDead() {
+	public boolean isAlikeDead() {
 		return super.isAlikeDead() || isFakeDeath();
 	}
 	
@@ -3627,7 +3627,7 @@ public final class L2PcInstance extends L2Playable {
 	 * <li>Send a Server->Client packet CharInfo to all L2PcInstance in _KnownPlayers of the L2PcInstance (Public data only)</li> <FONT COLOR=#FF0000><B> <U>Caution</U> : DON'T SEND UserInfo packet to other players instead of CharInfo packet. Indeed, UserInfo packet contains PRIVATE DATA as MaxHP,
 	 * STR, DEX...</B></FONT>
 	 */
-	public final void broadcastUserInfo() {
+	public void broadcastUserInfo() {
 		// Send a Server->Client packet UserInfo to this L2PcInstance
 		sendPacket(new UserInfo(this));
 		
@@ -3639,7 +3639,7 @@ public final class L2PcInstance extends L2Playable {
 		}
 	}
 	
-	public final void broadcastTitleInfo() {
+	public void broadcastTitleInfo() {
 		// Send a Server->Client packet UserInfo to this L2PcInstance
 		sendPacket(new UserInfo(this));
 		sendPacket(new ExBrExtraUserInfo(this));
@@ -3650,7 +3650,7 @@ public final class L2PcInstance extends L2Playable {
 	}
 	
 	@Override
-	public final void broadcastPacket(L2GameServerPacket mov) {
+	public void broadcastPacket(L2GameServerPacket mov) {
 		if (!(mov instanceof CharInfo)) {
 			sendPacket(mov);
 		}
@@ -3776,10 +3776,7 @@ public final class L2PcInstance extends L2Playable {
 			}
 			
 		} else {
-			// _interactTarget=null should never happen but one never knows ^^;
-			if (target != null) {
-				target.onAction(this);
-			}
+			target.onAction(this);
 		}
 	}
 	
@@ -4029,11 +4026,11 @@ public final class L2PcInstance extends L2Playable {
 		}
 	}
 	
-	public final PreparedListContainer getMultiSell() {
+	public PreparedListContainer getMultiSell() {
 		return _currentMultiSell;
 	}
 	
-	public final void setMultiSell(PreparedListContainer list) {
+	public void setMultiSell(PreparedListContainer list) {
 		_currentMultiSell = list;
 	}
 	
@@ -4742,9 +4739,8 @@ public final class L2PcInstance extends L2Playable {
 	 * Used for quest no bonus and no pet consume
 	 * @param addToExp
 	 * @param addToSp
-	 * @param useBonuses
 	 */
-	public final void addExpAndSpQuest(long addToExp, int addToSp) {
+	public void addExpAndSpQuest(long addToExp, int addToSp) {
 		if (addToExp != 0) {
 			getSubStat().addExp(addToExp);
 			SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.EARNED_S1_EXPERIENCE);
@@ -4762,7 +4758,7 @@ public final class L2PcInstance extends L2Playable {
 		sendPacket(new ExBrExtraUserInfo(this));
 	}
 	
-	public final void removeExpAndSp(long removeFromExp, int removeFromSp) {
+	public void removeExpAndSp(long removeFromExp, int removeFromSp) {
 		getSubStat().removeExp(removeFromExp);
 		getSubStat().removeSp(removeFromSp);
 		
@@ -4770,7 +4766,7 @@ public final class L2PcInstance extends L2Playable {
 		sendPacket(new ExBrExtraUserInfo(this));
 	}
 	
-	public final void addExpAndSp(long addToExp, int addToSp, boolean useBonuses) {
+	public void addExpAndSp(long addToExp, int addToSp, boolean useBonuses) {
 		// Allowed to gain exp?
 		if (!getAccessLevel().canGainExp()) {
 			return;
@@ -4825,7 +4821,7 @@ public final class L2PcInstance extends L2Playable {
 		sendPacket(new ExBrExtraUserInfo(this));
 	}
 	
-	public final void removeExp(long exp) {
+	public void removeExp(long exp) {
 		changeKarma(exp);
 		getSubStat().removeExp(exp);
 		
@@ -4845,7 +4841,7 @@ public final class L2PcInstance extends L2Playable {
 		}
 	}
 	
-	public final boolean removeSp(int sp) {
+	public boolean removeSp(int sp) {
 		return getSubStat().removeSp(sp);
 	}
 	
@@ -6913,23 +6909,23 @@ public final class L2PcInstance extends L2Playable {
 	}
 	
 	@Override
-	public final void stopAllEffects() {
+	public void stopAllEffects() {
 		super.stopAllEffects();
 		updateAndBroadcastStatus(2);
 	}
 	
 	@Override
-	public final void stopAllEffectsExceptThoseThatLastThroughDeath() {
+	public void stopAllEffectsExceptThoseThatLastThroughDeath() {
 		super.stopAllEffectsExceptThoseThatLastThroughDeath();
 		updateAndBroadcastStatus(2);
 	}
 	
-	public final void stopAllEffectsNotStayOnSubclassChange() {
+	public void stopAllEffectsNotStayOnSubclassChange() {
 		getEffectList().stopAllEffectsNotStayOnSubclassChange();
 		updateAndBroadcastStatus(2);
 	}
 	
-	public final void stopCubics() {
+	public void stopCubics() {
 		if (!_cubics.isEmpty()) {
 			for (L2CubicInstance cubic : _cubics.values()) {
 				cubic.stopAction();
@@ -6940,7 +6936,7 @@ public final class L2PcInstance extends L2Playable {
 		}
 	}
 	
-	public final void stopCubicsByOthers() {
+	public void stopCubicsByOthers() {
 		if (!_cubics.isEmpty()) {
 			boolean broadcast = false;
 			for (L2CubicInstance cubic : _cubics.values()) {
@@ -8214,7 +8210,7 @@ public final class L2PcInstance extends L2Playable {
 	}
 	
 	@Override
-	public final void onTeleported() {
+	public void onTeleported() {
 		super.onTeleported();
 		
 		if (isInAirShip()) {
@@ -9393,7 +9389,6 @@ public final class L2PcInstance extends L2Playable {
 	/**
 	 * Decreases existing Souls.
 	 * @param count
-	 * @param skill
 	 * @return consumed souls count
 	 */
 	public int decreaseSouls(int count) {
@@ -9553,7 +9548,7 @@ public final class L2PcInstance extends L2Playable {
 	}
 	
 	@Override
-	public final void sendDamageMessage(L2Character target, int damage, boolean mcrit, boolean pcrit, boolean miss) {
+	public void sendDamageMessage(L2Character target, int damage, boolean mcrit, boolean pcrit, boolean miss) {
 		// Check if hit is missed
 		if (miss) {
 			if (target.isPlayer()) {
@@ -9721,7 +9716,7 @@ public final class L2PcInstance extends L2Playable {
 		}
 	}
 	
-	private final L2PetLevelData getPetLevelData(int npcId) {
+	private L2PetLevelData getPetLevelData(int npcId) {
 		if (_leveldata == null) {
 			_leveldata = PetDataTable.getInstance().getPetData(npcId).getPetLevelData(getMountLevel());
 		}
@@ -10255,35 +10250,35 @@ public final class L2PcInstance extends L2Playable {
 		return getAppearance().getSex() ? getBaseTemplate().getFCollisionHeightFemale() : getBaseTemplate().getfCollisionHeight();
 	}
 	
-	public final int getClientX() {
+	public int getClientX() {
 		return _clientX;
 	}
 	
-	public final void setClientX(int val) {
+	public void setClientX(int val) {
 		_clientX = val;
 	}
 	
-	public final int getClientY() {
+	public int getClientY() {
 		return _clientY;
 	}
 	
-	public final void setClientY(int val) {
+	public void setClientY(int val) {
 		_clientY = val;
 	}
 	
-	public final int getClientZ() {
+	public int getClientZ() {
 		return _clientZ;
 	}
 	
-	public final void setClientZ(int val) {
+	public void setClientZ(int val) {
 		_clientZ = val;
 	}
 	
-	public final int getClientHeading() {
+	public int getClientHeading() {
 		return _clientHeading;
 	}
 	
-	public final void setClientHeading(int val) {
+	public void setClientHeading(int val) {
 		_clientHeading = val;
 	}
 	
@@ -10291,7 +10286,7 @@ public final class L2PcInstance extends L2Playable {
 	 * @param z
 	 * @return true if character falling now on the start of fall return false for correct coord sync!
 	 */
-	public final boolean isFalling(int z) {
+	public boolean isFalling(int z) {
 		if (isDead() || isFlying() || isFlyingMounted() || isInsideZone(ZoneId.WATER)) {
 			return false;
 		}
@@ -10326,7 +10321,7 @@ public final class L2PcInstance extends L2Playable {
 	/**
 	 * Set falling timestamp
 	 */
-	public final void setFalling() {
+	public void setFalling() {
 		_fallingTimestamp = System.currentTimeMillis() + FALLING_VALIDATION_DELAY;
 	}
 	
@@ -10689,7 +10684,7 @@ public final class L2PcInstance extends L2Playable {
 	 * @param skillId the display skill Id
 	 * @return the custom skill
 	 */
-	public final Skill getCustomSkill(int skillId) {
+	public Skill getCustomSkill(int skillId) {
 		return (_customSkills != null) ? _customSkills.get(skillId) : null;
 	}
 	
@@ -10697,7 +10692,7 @@ public final class L2PcInstance extends L2Playable {
 	 * Add a skill level to the custom skills map.
 	 * @param skill the skill to add
 	 */
-	private final void addCustomSkill(Skill skill) {
+	private void addCustomSkill(Skill skill) {
 		if ((skill != null) && (skill.getDisplayId() != skill.getId())) {
 			if (_customSkills == null) {
 				_customSkills = new ConcurrentHashMap<>();
@@ -10710,7 +10705,7 @@ public final class L2PcInstance extends L2Playable {
 	 * Remove a skill level from the custom skill map.
 	 * @param skill the skill to remove
 	 */
-	private final void removeCustomSkill(Skill skill) {
+	private void removeCustomSkill(Skill skill) {
 		if ((skill != null) && (_customSkills != null) && (skill.getDisplayId() != skill.getId())) {
 			_customSkills.remove(skill.getDisplayId());
 		}
@@ -10979,7 +10974,7 @@ public final class L2PcInstance extends L2Playable {
 		_servitorShare = map;
 	}
 	
-	public final double getServitorShareBonus(Stats stat) {
+	public double getServitorShareBonus(Stats stat) {
 		if (_servitorShare == null) {
 			return 1.0d;
 		}

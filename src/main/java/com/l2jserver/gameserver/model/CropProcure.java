@@ -29,7 +29,7 @@ public final class CropProcure extends SeedProduction {
 		_rewardType = type;
 	}
 	
-	public final int getReward() {
+	public int getReward() {
 		return _rewardType;
 	}
 }

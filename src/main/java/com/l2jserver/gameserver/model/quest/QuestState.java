@@ -348,7 +348,7 @@ public final class QuestState {
 	 * @param value the value of the variable
 	 */
 	// TODO: these methods should not be here, they could be used by other classes to save some variables, but they can't because they require to create a QuestState first.
-	public final void saveGlobalQuestVar(String var, String value) {
+	public void saveGlobalQuestVar(String var, String value) {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("REPLACE INTO character_quest_global_data (charId, var, value) VALUES (?, ?, ?)")) {
 			ps.setInt(1, _player.getObjectId());
@@ -370,7 +370,7 @@ public final class QuestState {
 	 * @return the value of the variable or an empty string if the variable does not exist in the database
 	 */
 	// TODO: these methods should not be here, they could be used by other classes to save some variables, but they can't because they require to create a QuestState first.
-	public final String getGlobalQuestVar(String var) {
+	public String getGlobalQuestVar(String var) {
 		String result = "";
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("SELECT value FROM character_quest_global_data WHERE charId = ? AND var = ?")) {
@@ -391,7 +391,7 @@ public final class QuestState {
 	 * Permanently delete a global quest variable from the database.
 	 * @param var the name of the variable to delete
 	 */
-	public final void deleteGlobalQuestVar(String var) {
+	public void deleteGlobalQuestVar(String var) {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("DELETE FROM character_quest_global_data WHERE charId = ? AND var = ?")) {
 			ps.setInt(1, _player.getObjectId());
@@ -702,7 +702,7 @@ public final class QuestState {
 	
 	/**
 	 * Send a packet in order to play a sound to the player.
-	 * @param sound the {@link IAudio} object of the sound to play
+	 * @param audio the {@link IAudio} object of the sound to play
 	 */
 	public void playSound(IAudio audio) {
 		AbstractScript.playSound(_player, audio);
@@ -728,7 +728,7 @@ public final class QuestState {
 	/**
 	 * @return {@code true} if quest is to be exited on clean up by QuestStateManager, {@code false} otherwise
 	 */
-	public final boolean isExitQuestOnCleanUp() {
+	public boolean isExitQuestOnCleanUp() {
 		return _isExitQuestOnCleanUp;
 	}
 	
@@ -785,7 +785,7 @@ public final class QuestState {
 	 * @param name the name of the QuestTimer required
 	 * @return the {@link QuestTimer} object with the specified name or {@code null} if it doesn't exist
 	 */
-	public final QuestTimer getQuestTimer(String name) {
+	public QuestTimer getQuestTimer(String name) {
 		return getQuest().getQuestTimer(name, null, _player);
 	}
 	

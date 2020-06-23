@@ -21,7 +21,6 @@ package com.l2jserver.gameserver.config;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.aeonbits.owner.Config.HotReloadType.ASYNC;
 
-import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.HotReload;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Reloadable;
@@ -38,7 +37,7 @@ import com.l2jserver.gameserver.config.converter.Minutes2MillisecondsConverter;
 	"classpath:config/grandboss.properties"
 })
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
-public interface GrandBossConfiguration extends Config, Reloadable {
+public interface GrandBossConfiguration extends Reloadable {
 	
 	@Key("AntharasWaitTime")
 	@ConverterClass(Minutes2MillisecondsConverter.class)

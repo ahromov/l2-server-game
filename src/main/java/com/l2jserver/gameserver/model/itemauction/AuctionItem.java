@@ -46,7 +46,7 @@ public final class AuctionItem {
 		_itemExtra = itemExtra;
 	}
 	
-	public final boolean checkItemExists() {
+	public boolean checkItemExists() {
 		final L2Item item = ItemTable.getInstance().getTemplate(_itemId);
 		if (item == null) {
 			return false;
@@ -54,27 +54,27 @@ public final class AuctionItem {
 		return true;
 	}
 	
-	public final int getAuctionItemId() {
+	public int getAuctionItemId() {
 		return _auctionItemId;
 	}
 	
-	public final int getAuctionLength() {
+	public int getAuctionLength() {
 		return _auctionLength;
 	}
 	
-	public final long getAuctionInitBid() {
+	public long getAuctionInitBid() {
 		return _auctionInitBid;
 	}
 	
-	public final int getItemId() {
+	public int getItemId() {
 		return _itemId;
 	}
 	
-	public final long getItemCount() {
+	public long getItemCount() {
 		return _itemCount;
 	}
 	
-	public final L2ItemInstance createNewItemInstance() {
+	public L2ItemInstance createNewItemInstance() {
 		final L2ItemInstance item = ItemTable.getInstance().createItem("ItemAuction", _itemId, _itemCount, null, null);
 		
 		item.setEnchantLevel(item.getDefaultEnchantLevel());

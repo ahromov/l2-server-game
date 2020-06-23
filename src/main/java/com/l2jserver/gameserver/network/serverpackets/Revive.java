@@ -28,7 +28,7 @@ public final class Revive extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x01);
 		writeD(_objectId);
 	}

@@ -35,5 +35,5 @@ public interface IWriteBoardHandler extends IParseBoardHandler {
 	 * @param arg5 the fifth argument
 	 * @return
 	 */
-	public boolean writeCommunityBoardCommand(L2PcInstance player, String arg1, String arg2, String arg3, String arg4, String arg5);
+	boolean writeCommunityBoardCommand(L2PcInstance player, String arg1, String arg2, String arg3, String arg4, String arg5);
 }

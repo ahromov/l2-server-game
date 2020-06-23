@@ -23,7 +23,6 @@ import static org.aeonbits.owner.Config.HotReloadType.ASYNC;
 
 import java.util.regex.Pattern;
 
-import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.HotReload;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Reloadable;
@@ -40,7 +39,7 @@ import com.l2jserver.gameserver.config.converter.PatternConverter;
 	"classpath:config/clan.properties"
 })
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
-public interface ClanConfiguration extends Config, Reloadable {
+public interface ClanConfiguration extends Reloadable {
 	
 	@Key("ClanNameTemplate")
 	@ConverterClass(PatternConverter.class)

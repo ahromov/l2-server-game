@@ -34,7 +34,7 @@ public final class TradeStart extends AbstractItemPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		if ((_activeChar.getActiveTradeList() == null) || (_activeChar.getActiveTradeList().getPartner() == null)) {
 			return;
 		}

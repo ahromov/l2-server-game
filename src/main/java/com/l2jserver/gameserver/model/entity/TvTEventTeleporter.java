@@ -38,7 +38,7 @@ public class TvTEventTeleporter implements Runnable {
 	/**
 	 * Initialize the teleporter and start the delayed task.
 	 * @param playerInstance
-	 * @param coordinates
+	 * @param loc
 	 * @param fastSchedule
 	 * @param adminRemove
 	 */

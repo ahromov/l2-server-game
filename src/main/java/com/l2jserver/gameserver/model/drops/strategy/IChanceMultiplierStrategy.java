@@ -30,11 +30,11 @@ import com.l2jserver.gameserver.model.itemcontainer.Inventory;
  * @author Battlecruiser
  */
 public interface IChanceMultiplierStrategy {
-	public static final IChanceMultiplierStrategy DROP = DEFAULT_STRATEGY(rates().getDeathDropChanceMultiplier());
-	public static final IChanceMultiplierStrategy SPOIL = DEFAULT_STRATEGY(rates().getCorpseDropChanceMultiplier());
-	public static final IChanceMultiplierStrategy STATIC = (item, victim) -> 1;
+	IChanceMultiplierStrategy DROP = DEFAULT_STRATEGY(rates().getDeathDropChanceMultiplier());
+	IChanceMultiplierStrategy SPOIL = DEFAULT_STRATEGY(rates().getCorpseDropChanceMultiplier());
+	IChanceMultiplierStrategy STATIC = (item, victim) -> 1;
 	
-	public static final IChanceMultiplierStrategy QUEST = (item, victim) -> {
+	IChanceMultiplierStrategy QUEST = (item, victim) -> {
 		double championmult;
 		if ((item.getItemId() == Inventory.ADENA_ID) || (item.getItemId() == Inventory.ANCIENT_ADENA_ID)) {
 			championmult = customs().getChampionAdenasRewardsChance();
@@ -45,7 +45,7 @@ public interface IChanceMultiplierStrategy {
 		return (customs().championEnable() && (victim != null) && victim.isChampion()) ? (rates().getRateQuestDrop() * championmult) : rates().getRateQuestDrop();
 	};
 	
-	public static IChanceMultiplierStrategy DEFAULT_STRATEGY(final double defaultMultiplier) {
+	static IChanceMultiplierStrategy DEFAULT_STRATEGY(final double defaultMultiplier) {
 		return (item, victim) -> {
 			float multiplier = 1;
 			if (victim.isChampion()) {
@@ -65,5 +65,5 @@ public interface IChanceMultiplierStrategy {
 		};
 	}
 	
-	public double getChanceMultiplier(GeneralDropItem item, L2Character victim);
+	double getChanceMultiplier(GeneralDropItem item, L2Character victim);
 }

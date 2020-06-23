@@ -90,7 +90,7 @@ public final class OlympiadGameTask implements Runnable {
 	private boolean _needAnnounce = false;
 	private int _countDown = 0;
 	
-	private static enum GameState {
+	private enum GameState {
 		BEGIN,
 		TELEPORT_TO_ARENA,
 		GAME_STARTED,
@@ -110,23 +110,23 @@ public final class OlympiadGameTask implements Runnable {
 		zone.registerTask(this);
 	}
 	
-	public final boolean isRunning() {
+	public boolean isRunning() {
 		return _state != GameState.IDLE;
 	}
 	
-	public final boolean isGameStarted() {
+	public boolean isGameStarted() {
 		return (_state.ordinal() >= GameState.GAME_STARTED.ordinal()) && (_state.ordinal() <= GameState.CLEANUP.ordinal());
 	}
 	
-	public final boolean isBattleStarted() {
+	public boolean isBattleStarted() {
 		return _state == GameState.BATTLE_IN_PROGRESS;
 	}
 	
-	public final boolean isBattleFinished() {
+	public boolean isBattleFinished() {
 		return _state == GameState.TELEPORT_TO_TOWN;
 	}
 	
-	public final boolean needAnnounce() {
+	public boolean needAnnounce() {
 		if (_needAnnounce) {
 			_needAnnounce = false;
 			return true;
@@ -134,15 +134,15 @@ public final class OlympiadGameTask implements Runnable {
 		return false;
 	}
 	
-	public final L2OlympiadStadiumZone getZone() {
+	public L2OlympiadStadiumZone getZone() {
 		return _zone;
 	}
 	
-	public final AbstractOlympiadGame getGame() {
+	public AbstractOlympiadGame getGame() {
 		return _game;
 	}
 	
-	public final void attachGame(AbstractOlympiadGame game) {
+	public void attachGame(AbstractOlympiadGame game) {
 		if ((game != null) && (_state != GameState.IDLE)) {
 			_log.log(Level.WARNING, "Attempt to overwrite non-finished game in state " + _state);
 			return;
@@ -156,7 +156,7 @@ public final class OlympiadGameTask implements Runnable {
 	
 	@SuppressWarnings("incomplete-switch")
 	@Override
-	public final void run() {
+	public void run() {
 		try {
 			int delay = 1; // schedule next call after 1s
 			switch (_state) {
@@ -302,7 +302,7 @@ public final class OlympiadGameTask implements Runnable {
 		}
 	}
 	
-	private final int getDelay(int[] times) {
+	private int getDelay(int[] times) {
 		int time;
 		for (int i = 0; i < (times.length - 1); i++) {
 			time = times[i];
@@ -323,7 +323,7 @@ public final class OlympiadGameTask implements Runnable {
 	 * Second stage: check for defaulted, port players to arena, announce game.
 	 * @return true if no participants defaulted.
 	 */
-	private final boolean startGame() {
+	private boolean startGame() {
 		try {
 			// Checking for opponents and teleporting to arena
 			if (_game.checkDefaulted()) {
@@ -352,7 +352,7 @@ public final class OlympiadGameTask implements Runnable {
 	/**
 	 * Third stage: open doors.
 	 */
-	private final void openDoors() {
+	private void openDoors() {
 		try {
 			_game.resetDamage();
 			_zone.openDoors();
@@ -365,7 +365,7 @@ public final class OlympiadGameTask implements Runnable {
 	 * Fourth stage: last checks, remove buffers, start competition itself.
 	 * @return true if all participants online and ready on the stadium.
 	 */
-	private final boolean startBattle() {
+	private boolean startBattle() {
 		try {
 			if (_game.needBuffers()) {
 				_zone.deleteBuffers();
@@ -388,7 +388,7 @@ public final class OlympiadGameTask implements Runnable {
 	 * Fifth stage: battle is running, returns true if winner found.
 	 * @return
 	 */
-	private final boolean checkBattle() {
+	private boolean checkBattle() {
 		try {
 			return _game.haveWinner();
 		} catch (Exception e) {
@@ -401,7 +401,7 @@ public final class OlympiadGameTask implements Runnable {
 	/**
 	 * Sixth stage: winner's validations
 	 */
-	private final void stopGame() {
+	private void stopGame() {
 		try {
 			_game.validateWinner(_zone);
 		} catch (Exception e) {
@@ -424,7 +424,7 @@ public final class OlympiadGameTask implements Runnable {
 	/**
 	 * Seventh stage: game cleanup (port players back, closing doors, etc)
 	 */
-	private final void cleanupGame() {
+	private void cleanupGame() {
 		try {
 			_game.playersStatusBack();
 		} catch (Exception e) {

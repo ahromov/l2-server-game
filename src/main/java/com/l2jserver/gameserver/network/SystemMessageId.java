@@ -15205,7 +15205,7 @@ public final class SystemMessageId {
 		buildFastLookupTable();
 	}
 	
-	private static final void buildFastLookupTable() {
+	private static void buildFastLookupTable() {
 		final Field[] fields = SystemMessageId.class.getDeclaredFields();
 		
 		int mod;
@@ -15225,7 +15225,7 @@ public final class SystemMessageId {
 		}
 	}
 	
-	private static final int parseMessageParameters(final String name) {
+	private static int parseMessageParameters(final String name) {
 		int paramCount = 0;
 		char c1, c2;
 		for (int i = 0; i < (name.length() - 1); i++) {
@@ -15241,16 +15241,16 @@ public final class SystemMessageId {
 		return paramCount;
 	}
 	
-	public static final SystemMessageId getSystemMessageId(final int id) {
+	public static SystemMessageId getSystemMessageId(final int id) {
 		final SystemMessageId smi = getSystemMessageIdInternal(id);
 		return smi == null ? new SystemMessageId(id) : smi;
 	}
 	
-	private static final SystemMessageId getSystemMessageIdInternal(final int id) {
+	private static SystemMessageId getSystemMessageIdInternal(final int id) {
 		return VALUES.get(id);
 	}
 	
-	public static final SystemMessageId getSystemMessageId(final String name) {
+	public static SystemMessageId getSystemMessageId(final String name) {
 		try {
 			return (SystemMessageId) SystemMessageId.class.getField(name).get(null);
 		} catch (final Exception e) {
@@ -15258,7 +15258,7 @@ public final class SystemMessageId {
 		}
 	}
 	
-	public static final void reloadLocalisations() {
+	public static void reloadLocalisations() {
 		for (final SystemMessageId smId : VALUES.values()) {
 			if (smId != null) {
 				smId.removeAllLocalisations();
@@ -15341,19 +15341,19 @@ public final class SystemMessageId {
 		_localisations = EMPTY_SML_ARRAY;
 	}
 	
-	public final int getId() {
+	public int getId() {
 		return _id;
 	}
 	
-	private final void setName(final String name) {
+	private void setName(final String name) {
 		_name = name;
 	}
 	
-	public final String getName() {
+	public String getName() {
 		return _name;
 	}
 	
-	public final int getParamCount() {
+	public int getParamCount() {
 		return _params;
 	}
 	
@@ -15361,7 +15361,7 @@ public final class SystemMessageId {
 	 * You better don`t touch this!
 	 * @param params
 	 */
-	public final void setParamCount(final int params) {
+	public void setParamCount(final int params) {
 		if (params < 0) {
 			throw new IllegalArgumentException("Invalid negative param count: " + params);
 		}
@@ -15377,7 +15377,7 @@ public final class SystemMessageId {
 		_params = (byte) params;
 	}
 	
-	public final SMLocalisation getLocalisation(final String lang) {
+	public SMLocalisation getLocalisation(final String lang) {
 		SMLocalisation sml;
 		for (int i = _localisations.length; i-- > 0;) {
 			sml = _localisations[i];
@@ -15388,27 +15388,27 @@ public final class SystemMessageId {
 		return null;
 	}
 	
-	public final void attachLocalizedText(final String lang, final String text) {
+	public void attachLocalizedText(final String lang, final String text) {
 		final int length = _localisations.length;
 		final SMLocalisation[] localisations = Arrays.copyOf(_localisations, length + 1);
 		localisations[length] = new SMLocalisation(lang, text);
 		_localisations = localisations;
 	}
 	
-	public final void removeAllLocalisations() {
+	public void removeAllLocalisations() {
 		_localisations = EMPTY_SML_ARRAY;
 	}
 	
-	public final SystemMessage getStaticSystemMessage() {
+	public SystemMessage getStaticSystemMessage() {
 		return _staticSystemMessage;
 	}
 	
-	public final void setStaticSystemMessage(final SystemMessage sm) {
+	public void setStaticSystemMessage(final SystemMessage sm) {
 		_staticSystemMessage = sm;
 	}
 	
 	@Override
-	public final String toString() {
+	public String toString() {
 		return "SM[" + getId() + ":" + getName() + "]";
 	}
 	
@@ -15421,7 +15421,7 @@ public final class SystemMessageId {
 			_builder = Builder.newBuilder(text);
 		}
 		
-		public final String getLanguage() {
+		public String getLanguage() {
 			return _lang;
 		}
 		

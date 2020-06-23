@@ -216,11 +216,11 @@ public final class SiegeGuardManager {
 		}
 	}
 	
-	public final Castle getCastle() {
+	public Castle getCastle() {
 		return _castle;
 	}
 	
-	public final List<L2Spawn> getSiegeGuardSpawn() {
+	public List<L2Spawn> getSiegeGuardSpawn() {
 		return _siegeGuardSpawn;
 	}
 }

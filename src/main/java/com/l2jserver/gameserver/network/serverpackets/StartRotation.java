@@ -29,7 +29,7 @@ public final class StartRotation extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x7a);
 		writeD(_charObjId);
 		writeD(_degree);

@@ -757,7 +757,7 @@ public final class Instance {
 	 * @param killer the character that killed the {@code victim}
 	 * @param victim the character that was killed by the {@code killer}
 	 */
-	public final void notifyDeath(L2Character killer, L2Character victim) {
+	public void notifyDeath(L2Character killer, L2Character victim) {
 		final InstanceWorld instance = InstanceManager.getInstance().getPlayerWorld(victim.getActingPlayer());
 		if (instance != null) {
 			instance.onDeath(killer, victim);

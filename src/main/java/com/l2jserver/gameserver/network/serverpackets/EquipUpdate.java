@@ -31,7 +31,7 @@ public final class EquipUpdate extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		int bodypart = 0;
 		writeC(0x4b);
 		writeD(_change);

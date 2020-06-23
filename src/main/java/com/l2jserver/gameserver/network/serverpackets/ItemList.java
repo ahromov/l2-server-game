@@ -41,7 +41,7 @@ public final class ItemList extends AbstractItemPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x11);
 		writeH(_showWindow ? 0x01 : 0x00);
 		writeH(_items.size());

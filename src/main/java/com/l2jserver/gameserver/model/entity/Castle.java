@@ -709,7 +709,7 @@ public final class Castle extends AbstractResidence {
 		}
 	}
 	
-	public final L2DoorInstance getDoor(int doorId) {
+	public L2DoorInstance getDoor(int doorId) {
 		if (doorId <= 0) {
 			return null;
 		}
@@ -722,26 +722,26 @@ public final class Castle extends AbstractResidence {
 		return null;
 	}
 	
-	public final List<L2DoorInstance> getDoors() {
+	public List<L2DoorInstance> getDoors() {
 		return _doors;
 	}
 	
-	public final int getOwnerId() {
+	public int getOwnerId() {
 		return _ownerId;
 	}
 	
-	public final L2Clan getOwner() {
+	public L2Clan getOwner() {
 		return (_ownerId != 0) ? ClanTable.getInstance().getClan(_ownerId) : null;
 	}
 	
-	public final Siege getSiege() {
+	public Siege getSiege() {
 		if (_siege == null) {
 			_siege = new Siege(this);
 		}
 		return _siege;
 	}
 	
-	public final Calendar getSiegeDate() {
+	public Calendar getSiegeDate() {
 		return _siegeDate;
 	}
 	
@@ -760,23 +760,23 @@ public final class Castle extends AbstractResidence {
 		return _siegeTimeRegistrationEndDate;
 	}
 	
-	public final int getTaxPercent() {
+	public int getTaxPercent() {
 		return _taxPercent;
 	}
 	
-	public final double getTaxRate() {
+	public double getTaxRate() {
 		return _taxRate;
 	}
 	
-	public final long getTreasury() {
+	public long getTreasury() {
 		return _treasury;
 	}
 	
-	public final boolean getShowNpcCrest() {
+	public boolean getShowNpcCrest() {
 		return _showNpcCrest;
 	}
 	
-	public final void setShowNpcCrest(boolean showNpcCrest) {
+	public void setShowNpcCrest(boolean showNpcCrest) {
 		if (_showNpcCrest != showNpcCrest) {
 			_showNpcCrest = showNpcCrest;
 			updateShowNpcCrest();

@@ -57,11 +57,11 @@ public final class CastleManager implements InstanceListManager {
 		8183
 	};
 	
-	public final int findNearestCastleIndex(L2Object obj) {
+	public int findNearestCastleIndex(L2Object obj) {
 		return findNearestCastleIndex(obj, Long.MAX_VALUE);
 	}
 	
-	public final int findNearestCastleIndex(L2Object obj, long maxDistance) {
+	public int findNearestCastleIndex(L2Object obj, long maxDistance) {
 		int index = getCastleIndex(obj);
 		if (index < 0) {
 			double distance;
@@ -81,7 +81,7 @@ public final class CastleManager implements InstanceListManager {
 		return index;
 	}
 	
-	public final Castle getCastleById(int castleId) {
+	public Castle getCastleById(int castleId) {
 		for (Castle temp : _castles) {
 			if (temp.getResidenceId() == castleId) {
 				return temp;
@@ -90,7 +90,7 @@ public final class CastleManager implements InstanceListManager {
 		return null;
 	}
 	
-	public final Castle getCastleByOwner(L2Clan clan) {
+	public Castle getCastleByOwner(L2Clan clan) {
 		for (Castle temp : _castles) {
 			if (temp.getOwnerId() == clan.getId()) {
 				return temp;
@@ -99,7 +99,7 @@ public final class CastleManager implements InstanceListManager {
 		return null;
 	}
 	
-	public final Castle getCastle(String name) {
+	public Castle getCastle(String name) {
 		for (Castle temp : _castles) {
 			if (temp.getName().equalsIgnoreCase(name.trim())) {
 				return temp;
@@ -108,7 +108,7 @@ public final class CastleManager implements InstanceListManager {
 		return null;
 	}
 	
-	public final Castle getCastle(int x, int y, int z) {
+	public Castle getCastle(int x, int y, int z) {
 		for (Castle temp : _castles) {
 			if (temp.checkIfInZone(x, y, z)) {
 				return temp;
@@ -117,11 +117,11 @@ public final class CastleManager implements InstanceListManager {
 		return null;
 	}
 	
-	public final Castle getCastle(L2Object activeObject) {
+	public Castle getCastle(L2Object activeObject) {
 		return getCastle(activeObject.getX(), activeObject.getY(), activeObject.getZ());
 	}
 	
-	public final int getCastleIndex(int castleId) {
+	public int getCastleIndex(int castleId) {
 		Castle castle;
 		for (int i = 0; i < _castles.size(); i++) {
 			castle = _castles.get(i);
@@ -132,11 +132,11 @@ public final class CastleManager implements InstanceListManager {
 		return -1;
 	}
 	
-	public final int getCastleIndex(L2Object activeObject) {
+	public int getCastleIndex(L2Object activeObject) {
 		return getCastleIndex(activeObject.getX(), activeObject.getY(), activeObject.getZ());
 	}
 	
-	public final int getCastleIndex(int x, int y, int z) {
+	public int getCastleIndex(int x, int y, int z) {
 		Castle castle;
 		for (int i = 0; i < _castles.size(); i++) {
 			castle = _castles.get(i);
@@ -147,7 +147,7 @@ public final class CastleManager implements InstanceListManager {
 		return -1;
 	}
 	
-	public final List<Castle> getCastles() {
+	public List<Castle> getCastles() {
 		return _castles;
 	}
 	
@@ -162,7 +162,7 @@ public final class CastleManager implements InstanceListManager {
 		return hasOwnedCastle;
 	}
 	
-	public final void validateTaxes(int sealStrifeOwner) {
+	public void validateTaxes(int sealStrifeOwner) {
 		int maxTax;
 		switch (sealStrifeOwner) {
 			case SevenSigns.CABAL_DUSK:
@@ -275,7 +275,7 @@ public final class CastleManager implements InstanceListManager {
 		return count;
 	}
 	
-	public static final CastleManager getInstance() {
+	public static CastleManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	

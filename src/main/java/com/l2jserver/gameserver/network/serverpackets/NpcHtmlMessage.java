@@ -67,7 +67,7 @@ public final class NpcHtmlMessage extends AbstractHtmlPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x19);
 		
 		writeD(getNpcObjId());

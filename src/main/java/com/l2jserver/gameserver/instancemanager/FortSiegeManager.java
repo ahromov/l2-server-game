@@ -54,7 +54,7 @@ public final class FortSiegeManager {
 		load();
 	}
 	
-	public final void addSiegeSkills(L2PcInstance character) {
+	public void addSiegeSkills(L2PcInstance character) {
 		character.addSkill(CommonSkill.SEAL_OF_RULER.getSkill(), false);
 		character.addSkill(CommonSkill.BUILD_HEADQUARTERS.getSkill(), false);
 	}
@@ -64,7 +64,7 @@ public final class FortSiegeManager {
 	 * @param fortid
 	 * @return true if the clan is registered or owner of a fort
 	 */
-	public final boolean checkIsRegistered(L2Clan clan, int fortid) {
+	public boolean checkIsRegistered(L2Clan clan, int fortid) {
 		if (clan == null) {
 			return false;
 		}
@@ -86,12 +86,12 @@ public final class FortSiegeManager {
 		return register;
 	}
 	
-	public final void removeSiegeSkills(L2PcInstance character) {
+	public void removeSiegeSkills(L2PcInstance character) {
 		character.removeSkill(CommonSkill.SEAL_OF_RULER.getSkill());
 		character.removeSkill(CommonSkill.BUILD_HEADQUARTERS.getSkill());
 	}
 	
-	private final void load() {
+	private void load() {
 		// Siege spawns settings
 		_commanderSpawnList = new ConcurrentHashMap<>();
 		_flagList = new ConcurrentHashMap<>();
@@ -142,19 +142,19 @@ public final class FortSiegeManager {
 		}
 	}
 	
-	public final List<FortSiegeSpawn> getCommanderSpawnList(int _fortId) {
+	public List<FortSiegeSpawn> getCommanderSpawnList(int _fortId) {
 		return _commanderSpawnList.get(_fortId);
 	}
 	
-	public final List<CombatFlag> getFlagList(int _fortId) {
+	public List<CombatFlag> getFlagList(int _fortId) {
 		return _flagList.get(_fortId);
 	}
 	
-	public final FortSiege getSiege(L2Object activeObject) {
+	public FortSiege getSiege(L2Object activeObject) {
 		return getSiege(activeObject.getX(), activeObject.getY(), activeObject.getZ());
 	}
 	
-	public final FortSiege getSiege(int x, int y, int z) {
+	public FortSiege getSiege(int x, int y, int z) {
 		for (Fort fort : FortManager.getInstance().getForts()) {
 			if (fort.getSiege().checkIfInZone(x, y, z)) {
 				return fort.getSiege();
@@ -163,11 +163,11 @@ public final class FortSiegeManager {
 		return null;
 	}
 	
-	public final List<FortSiege> getSieges() {
+	public List<FortSiege> getSieges() {
 		return _sieges;
 	}
 	
-	public final void addSiege(FortSiege fortSiege) {
+	public void addSiege(FortSiege fortSiege) {
 		_sieges.add(fortSiege);
 	}
 	
@@ -230,7 +230,7 @@ public final class FortSiegeManager {
 		}
 	}
 	
-	public static final FortSiegeManager getInstance() {
+	public static FortSiegeManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	

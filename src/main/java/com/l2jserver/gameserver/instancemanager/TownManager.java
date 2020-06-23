@@ -23,7 +23,7 @@ import com.l2jserver.gameserver.model.zone.L2ZoneType;
 import com.l2jserver.gameserver.model.zone.type.L2TownZone;
 
 public final class TownManager {
-	public static final int getTownCastle(int townId) {
+	public static int getTownCastle(int townId) {
 		switch (townId) {
 			case 912:
 				return 1;
@@ -48,7 +48,7 @@ public final class TownManager {
 		}
 	}
 	
-	public static final boolean townHasCastleInSiege(int townId) {
+	public static boolean townHasCastleInSiege(int townId) {
 		int castleIndex = getTownCastle(townId);
 		
 		if (castleIndex > 0) {
@@ -60,11 +60,11 @@ public final class TownManager {
 		return false;
 	}
 	
-	public static final boolean townHasCastleInSiege(int x, int y) {
+	public static boolean townHasCastleInSiege(int x, int y) {
 		return townHasCastleInSiege(MapRegionManager.getInstance().getMapRegionLocId(x, y));
 	}
 	
-	public static final L2TownZone getTown(int townId) {
+	public static L2TownZone getTown(int townId) {
 		for (L2TownZone temp : ZoneManager.getInstance().getAllZones(L2TownZone.class)) {
 			if (temp.getTownId() == townId) {
 				return temp;
@@ -80,7 +80,7 @@ public final class TownManager {
 	 * @param z
 	 * @return
 	 */
-	public static final L2TownZone getTown(int x, int y, int z) {
+	public static L2TownZone getTown(int x, int y, int z) {
 		for (L2ZoneType temp : ZoneManager.getInstance().getZones(x, y, z)) {
 			if (temp instanceof L2TownZone) {
 				return (L2TownZone) temp;

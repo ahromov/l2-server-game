@@ -52,9 +52,9 @@ public abstract class Inventory extends ItemContainer {
 	private static final Logger _log = Logger.getLogger(Inventory.class.getName());
 	
 	public interface PaperdollListener {
-		public void notifyEquiped(int slot, L2ItemInstance inst, Inventory inventory);
+		void notifyEquiped(int slot, L2ItemInstance inst, Inventory inventory);
 		
-		public void notifyUnequiped(int slot, L2ItemInstance inst, Inventory inventory);
+		void notifyUnequiped(int slot, L2ItemInstance inst, Inventory inventory);
 	}
 	
 	// Common Items

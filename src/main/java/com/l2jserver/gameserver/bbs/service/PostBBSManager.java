@@ -26,9 +26,9 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.l2jserver.gameserver.bbs.model.Post;
 import com.l2jserver.gameserver.bbs.model.Forum;
 import com.l2jserver.gameserver.bbs.model.ForumType;
+import com.l2jserver.gameserver.bbs.model.Post;
 import com.l2jserver.gameserver.bbs.model.Topic;
 import com.l2jserver.gameserver.dao.factory.impl.DAOFactory;
 import com.l2jserver.gameserver.handler.CommunityBoardHandler;

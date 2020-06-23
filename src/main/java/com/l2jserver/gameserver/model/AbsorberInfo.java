@@ -50,7 +50,7 @@ public final class AbsorberInfo implements IUniqueId {
 	}
 	
 	@Override
-	public final boolean equals(Object obj) {
+	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -63,7 +63,7 @@ public final class AbsorberInfo implements IUniqueId {
 	}
 	
 	@Override
-	public final int hashCode() {
+	public int hashCode() {
 		return _objectId;
 	}
 }

@@ -29,7 +29,7 @@ public final class JoinParty extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x3a);
 		writeD(_response);
 	}

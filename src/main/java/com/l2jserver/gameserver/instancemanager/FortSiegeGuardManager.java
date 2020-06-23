@@ -105,11 +105,11 @@ public final class FortSiegeGuardManager {
 		}
 	}
 	
-	public final Fort getFort() {
+	public Fort getFort() {
 		return _fort;
 	}
 	
-	public final Map<Integer, List<L2Spawn>> getSiegeGuardSpawn() {
+	public Map<Integer, List<L2Spawn>> getSiegeGuardSpawn() {
 		return _siegeGuards;
 	}
 }

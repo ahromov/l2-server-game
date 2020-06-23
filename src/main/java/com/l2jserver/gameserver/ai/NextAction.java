@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class NextAction {
 	public interface NextActionCallback {
-		public void doWork();
+		void doWork();
 	}
 	
 	private List<CtrlEvent> _events;

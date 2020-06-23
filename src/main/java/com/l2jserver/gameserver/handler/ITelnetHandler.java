@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  * @author UnAfraid
  */
 public interface ITelnetHandler {
-	public static Logger _log = Logger.getLogger(ITelnetHandler.class.getName());
+	Logger _log = Logger.getLogger(ITelnetHandler.class.getName());
 	
 	/**
 	 * this is the worker method that is called when someone uses an bypass command
@@ -36,11 +36,11 @@ public interface ITelnetHandler {
 	 * @param __uptime
 	 * @return success
 	 */
-	public boolean useCommand(String command, PrintWriter _print, Socket _cSocket, int __uptime);
+	boolean useCommand(String command, PrintWriter _print, Socket _cSocket, int __uptime);
 	
 	/**
 	 * this method is called at initialization to register all bypasses automatically
 	 * @return all known bypasses
 	 */
-	public String[] getCommandList();
+	String[] getCommandList();
 }

@@ -94,7 +94,7 @@ public final class AuctionManager {
 		load();
 	}
 	
-	private final void load() {
+	private void load() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var s = con.createStatement();
 			var rs = s.executeQuery("SELECT id FROM auction ORDER BY id")) {
@@ -107,7 +107,7 @@ public final class AuctionManager {
 		}
 	}
 	
-	public final Auction getAuction(int auctionId) {
+	public Auction getAuction(int auctionId) {
 		int index = getAuctionIndex(auctionId);
 		if (index >= 0) {
 			return _auctions.get(index);
@@ -115,7 +115,7 @@ public final class AuctionManager {
 		return null;
 	}
 	
-	public final int getAuctionIndex(int auctionId) {
+	public int getAuctionIndex(int auctionId) {
 		Auction auction;
 		for (int i = 0; i < _auctions.size(); i++) {
 			auction = _auctions.get(i);
@@ -126,7 +126,7 @@ public final class AuctionManager {
 		return -1;
 	}
 	
-	public final List<Auction> getAuctions() {
+	public List<Auction> getAuctions() {
 		return _auctions;
 	}
 	
@@ -152,7 +152,7 @@ public final class AuctionManager {
 		}
 	}
 	
-	public static final AuctionManager getInstance() {
+	public static AuctionManager getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 	

@@ -63,7 +63,7 @@ public final class Participant {
 	 * Updates the reference to {@link #player}, if it's null or appears off-line.
 	 * @return {@code true} if after the update the player isn't null, {@code false} otherwise.
 	 */
-	public final boolean updatePlayer() {
+	public boolean updatePlayer() {
 		if ((player == null) || !player.isOnline()) {
 			player = L2World.getInstance().getPlayer(getObjectId());
 		}
@@ -74,7 +74,7 @@ public final class Participant {
 	 * @param statName
 	 * @param increment
 	 */
-	public final void updateStat(String statName, int increment) {
+	public void updateStat(String statName, int increment) {
 		stats.set(statName, Math.max(stats.getInt(statName) + increment, 0));
 	}
 	

@@ -29,5 +29,5 @@ public interface IDropItemFactory {
 	 * @param chance the chance of this drop item
 	 * @return the drop item created by this factory
 	 */
-	public IDropItem newDropItem(int itemId, long min, long max, double chance);
+	IDropItem newDropItem(int itemId, long min, long max, double chance);
 }

@@ -77,15 +77,15 @@ public final class MailManager {
 		LOG.info("Successfully loaded {} messages.", count);
 	}
 	
-	public final Message getMessage(int msgId) {
+	public Message getMessage(int msgId) {
 		return _messages.get(msgId);
 	}
 	
-	public final Collection<Message> getMessages() {
+	public Collection<Message> getMessages() {
 		return _messages.values();
 	}
 	
-	public final boolean hasUnreadPost(L2PcInstance player) {
+	public boolean hasUnreadPost(L2PcInstance player) {
 		final int objectId = player.getObjectId();
 		for (Message msg : getMessages()) {
 			if ((msg != null) && (msg.getReceiverId() == objectId) && msg.isUnread()) {
@@ -95,7 +95,7 @@ public final class MailManager {
 		return false;
 	}
 	
-	public final int getInboxSize(int objectId) {
+	public int getInboxSize(int objectId) {
 		int size = 0;
 		for (Message msg : getMessages()) {
 			if ((msg != null) && (msg.getReceiverId() == objectId) && !msg.isDeletedByReceiver()) {
@@ -105,7 +105,7 @@ public final class MailManager {
 		return size;
 	}
 	
-	public final int getOutboxSize(int objectId) {
+	public int getOutboxSize(int objectId) {
 		int size = 0;
 		for (Message msg : getMessages()) {
 			if ((msg != null) && (msg.getSenderId() == objectId) && !msg.isDeletedBySender()) {
@@ -115,7 +115,7 @@ public final class MailManager {
 		return size;
 	}
 	
-	public final List<Message> getInbox(int objectId) {
+	public List<Message> getInbox(int objectId) {
 		final List<Message> inbox = new ArrayList<>();
 		for (Message msg : getMessages()) {
 			if ((msg != null) && (msg.getReceiverId() == objectId) && !msg.isDeletedByReceiver()) {
@@ -125,7 +125,7 @@ public final class MailManager {
 		return inbox;
 	}
 	
-	public final List<Message> getOutbox(int objectId) {
+	public List<Message> getOutbox(int objectId) {
 		final List<Message> outbox = new ArrayList<>();
 		for (Message msg : getMessages()) {
 			if ((msg != null) && (msg.getSenderId() == objectId) && !msg.isDeletedBySender()) {
@@ -152,7 +152,7 @@ public final class MailManager {
 		ThreadPoolManager.getInstance().scheduleGeneral(new MessageDeletionTask(msg.getId()), msg.getExpiration() - System.currentTimeMillis());
 	}
 	
-	public final void markAsReadInDb(int msgId) {
+	public void markAsReadInDb(int msgId) {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("UPDATE messages SET isUnread = 'false' WHERE messageId = ?")) {
 			ps.setInt(1, msgId);
@@ -162,7 +162,7 @@ public final class MailManager {
 		}
 	}
 	
-	public final void markAsDeletedBySenderInDb(int msgId) {
+	public void markAsDeletedBySenderInDb(int msgId) {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("UPDATE messages SET isDeletedBySender = 'true' WHERE messageId = ?")) {
 			ps.setInt(1, msgId);
@@ -172,7 +172,7 @@ public final class MailManager {
 		}
 	}
 	
-	public final void markAsDeletedByReceiverInDb(int msgId) {
+	public void markAsDeletedByReceiverInDb(int msgId) {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("UPDATE messages SET isDeletedByReceiver = 'true' WHERE messageId = ?")) {
 			ps.setInt(1, msgId);
@@ -182,7 +182,7 @@ public final class MailManager {
 		}
 	}
 	
-	public final void removeAttachmentsInDb(int msgId) {
+	public void removeAttachmentsInDb(int msgId) {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("UPDATE messages SET hasAttachments = 'false' WHERE messageId = ?")) {
 			ps.setInt(1, msgId);
@@ -192,7 +192,7 @@ public final class MailManager {
 		}
 	}
 	
-	public final void deleteMessageInDb(int msgId) {
+	public void deleteMessageInDb(int msgId) {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("DELETE FROM messages WHERE messageId = ?")) {
 			ps.setInt(1, msgId);

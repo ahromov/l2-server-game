@@ -45,7 +45,7 @@ public final class SkillList extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x5F);
 		writeD(_skills.size());
 		

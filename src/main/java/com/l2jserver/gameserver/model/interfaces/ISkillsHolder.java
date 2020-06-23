@@ -26,11 +26,11 @@ import com.l2jserver.gameserver.model.skills.Skill;
  * @author UnAfraid
  */
 public interface ISkillsHolder {
-	public Map<Integer, Skill> getSkills();
+	Map<Integer, Skill> getSkills();
 	
-	public Skill addSkill(Skill skill);
+	Skill addSkill(Skill skill);
 	
-	public Skill getKnownSkill(int skillId);
+	Skill getKnownSkill(int skillId);
 	
-	public int getSkillLevel(int skillId);
+	int getSkillLevel(int skillId);
 }

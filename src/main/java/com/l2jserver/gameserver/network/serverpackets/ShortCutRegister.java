@@ -32,7 +32,7 @@ public final class ShortCutRegister extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x44);
 		writeD(_shortcut.getType().ordinal());
 		writeD(_shortcut.getSlot() + (_shortcut.getPage() * 12)); // C4 Client

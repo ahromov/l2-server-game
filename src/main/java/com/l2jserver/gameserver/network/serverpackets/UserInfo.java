@@ -72,7 +72,7 @@ public final class UserInfo extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x32);
 		
 		writeD(_activeChar.getX());

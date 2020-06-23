@@ -61,7 +61,7 @@ public final class SiegeAttackerList extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0xca);
 		
 		if (_castle != null) {

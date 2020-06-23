@@ -138,7 +138,7 @@ public final class MultisellData implements IXmlReader {
 		return NUMERIC_FILTER;
 	}
 	
-	private final Entry parseEntry(Node n, int entryId, ListContainer list) {
+	private Entry parseEntry(Node n, int entryId, ListContainer list) {
 		Node first = n.getFirstChild();
 		final Entry entry = new Entry(entryId);
 		
@@ -198,7 +198,7 @@ public final class MultisellData implements IXmlReader {
 	 * @param productMultiplier
 	 * @param ingredientMultiplier
 	 */
-	public final void separateAndSend(int listId, L2PcInstance player, L2Npc npc, boolean inventoryOnly, double productMultiplier, double ingredientMultiplier) {
+	public void separateAndSend(int listId, L2PcInstance player, L2Npc npc, boolean inventoryOnly, double productMultiplier, double ingredientMultiplier) {
 		ListContainer template = _entries.get(listId);
 		if (template == null) {
 			LOG.warn("{}: Cannot find list ID: {} requested by player: {}, NPC ID: {}!", getClass().getSimpleName(), listId, player, (npc != null ? npc.getId() : 0));
@@ -233,11 +233,11 @@ public final class MultisellData implements IXmlReader {
 		player.setMultiSell(list);
 	}
 	
-	public final void separateAndSend(int listId, L2PcInstance player, L2Npc npc, boolean inventoryOnly) {
+	public void separateAndSend(int listId, L2PcInstance player, L2Npc npc, boolean inventoryOnly) {
 		separateAndSend(listId, player, npc, inventoryOnly, 1, 1);
 	}
 	
-	public static final boolean hasSpecialIngredient(int id, long amount, L2PcInstance player) {
+	public static boolean hasSpecialIngredient(int id, long amount, L2PcInstance player) {
 		switch (id) {
 			case CLAN_REPUTATION:
 				if (player.getClan() == null) {
@@ -263,7 +263,7 @@ public final class MultisellData implements IXmlReader {
 		return false;
 	}
 	
-	public static final boolean takeSpecialIngredient(int id, long amount, L2PcInstance player) {
+	public static boolean takeSpecialIngredient(int id, long amount, L2PcInstance player) {
 		switch (id) {
 			case CLAN_REPUTATION:
 				player.getClan().takeReputationScore((int) amount, true);
@@ -280,7 +280,7 @@ public final class MultisellData implements IXmlReader {
 		return false;
 	}
 	
-	public static final void giveSpecialProduct(int id, long amount, L2PcInstance player) {
+	public static void giveSpecialProduct(int id, long amount, L2PcInstance player) {
 		switch (id) {
 			case CLAN_REPUTATION:
 				player.getClan().addReputationScore((int) amount, true);
@@ -293,7 +293,7 @@ public final class MultisellData implements IXmlReader {
 		}
 	}
 	
-	private final void verify() {
+	private void verify() {
 		ListContainer list;
 		final Iterator<ListContainer> iter = _entries.values().iterator();
 		while (iter.hasNext()) {
@@ -314,7 +314,7 @@ public final class MultisellData implements IXmlReader {
 		}
 	}
 	
-	private final boolean verifyIngredient(Ingredient ing) {
+	private boolean verifyIngredient(Ingredient ing) {
 		switch (ing.getItemId()) {
 			case CLAN_REPUTATION:
 			case FAME:

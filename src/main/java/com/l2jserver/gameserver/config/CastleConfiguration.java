@@ -23,7 +23,6 @@ import static org.aeonbits.owner.Config.HotReloadType.ASYNC;
 
 import java.util.List;
 
-import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.HotReload;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Reloadable;
@@ -38,7 +37,7 @@ import org.aeonbits.owner.Reloadable;
 	"classpath:config/castle.properties"
 })
 @HotReload(value = 1, unit = HOURS, type = ASYNC)
-public interface CastleConfiguration extends Config, Reloadable {
+public interface CastleConfiguration extends Reloadable {
 	
 	@Key("SiegeHourList")
 	List<Integer> getSiegeHourList();

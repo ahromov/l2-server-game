@@ -269,7 +269,7 @@ public final class InstanceManager implements IXmlReader {
 		return _dynamic;
 	}
 	
-	public static final InstanceManager getInstance() {
+	public static InstanceManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	

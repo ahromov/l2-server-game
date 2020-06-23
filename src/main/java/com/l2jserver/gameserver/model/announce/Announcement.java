@@ -20,7 +20,6 @@ package com.l2jserver.gameserver.model.announce;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,7 +53,7 @@ public class Announcement implements IAnnouncement {
 		_author = author;
 	}
 	
-	public Announcement(int id, AnnouncementType type, String content, String author) throws SQLException {
+	public Announcement(int id, AnnouncementType type, String content, String author) {
 		this(type, content, author);
 		_id = id;
 	}

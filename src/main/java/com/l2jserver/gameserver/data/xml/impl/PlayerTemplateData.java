@@ -138,7 +138,7 @@ public final class PlayerTemplateData implements IXmlReader {
 		return _playerTemplates.get(ClassId.getClassId(classId));
 	}
 	
-	public static final PlayerTemplateData getInstance() {
+	public static PlayerTemplateData getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 	

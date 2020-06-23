@@ -139,7 +139,7 @@ public final class DuelManager {
 		return true;
 	}
 	
-	public static final DuelManager getInstance() {
+	public static DuelManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	

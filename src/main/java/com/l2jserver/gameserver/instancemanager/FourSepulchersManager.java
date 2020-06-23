@@ -1339,7 +1339,7 @@ public final class FourSepulchersManager {
 		player.sendPacket(html);
 	}
 	
-	public static final FourSepulchersManager getInstance() {
+	public static FourSepulchersManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	

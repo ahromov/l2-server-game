@@ -27,7 +27,7 @@ import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
  * Mother class of all Item Handlers.
  */
 public interface IItemHandler {
-	public static final Logger _log = Logger.getLogger(IItemHandler.class.getName());
+	Logger _log = Logger.getLogger(IItemHandler.class.getName());
 	
 	/**
 	 * Launch task associated to the item.
@@ -36,5 +36,5 @@ public interface IItemHandler {
 	 * @param forceUse ctrl hold on item use
 	 * @return {@code true} if the item all conditions are met and the item is used, {@code false} otherwise.
 	 */
-	public boolean useItem(L2Playable playable, L2ItemInstance item, boolean forceUse);
+	boolean useItem(L2Playable playable, L2ItemInstance item, boolean forceUse);
 }

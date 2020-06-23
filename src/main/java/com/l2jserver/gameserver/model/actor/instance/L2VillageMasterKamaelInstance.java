@@ -34,7 +34,7 @@ public final class L2VillageMasterKamaelInstance extends L2VillageMasterInstance
 	}
 	
 	@Override
-	protected final String getSubClassMenu(Race race) {
+	protected String getSubClassMenu(Race race) {
 		if (character().subclassEverywhere() || (race == Race.KAMAEL)) {
 			return "data/html/villagemaster/SubClass.htm";
 		}
@@ -43,17 +43,17 @@ public final class L2VillageMasterKamaelInstance extends L2VillageMasterInstance
 	}
 	
 	@Override
-	protected final String getSubClassFail() {
+	protected String getSubClassFail() {
 		return "data/html/villagemaster/SubClass_Fail_Kamael.htm";
 	}
 	
 	@Override
-	protected final boolean checkQuests(L2PcInstance player) {
+	protected boolean checkQuests(L2PcInstance player) {
 		return player.isNoble() || player.hasQuestCompleted("Q00234_FatesWhisper") || player.hasQuestCompleted("Q00236_SeedsOfChaos");
 	}
 	
 	@Override
-	protected final boolean checkVillageMasterRace(PlayerClass pclass) {
+	protected boolean checkVillageMasterRace(PlayerClass pclass) {
 		if (pclass == null) {
 			return false;
 		}

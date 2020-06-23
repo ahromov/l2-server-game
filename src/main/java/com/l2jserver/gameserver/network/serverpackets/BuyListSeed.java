@@ -44,7 +44,7 @@ public final class BuyListSeed extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0xe9);
 		
 		writeQ(_money); // current money

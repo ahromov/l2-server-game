@@ -81,7 +81,7 @@ public class ThreadPoolManager {
 		}
 		
 		@Override
-		public final void run() {
+		public void run() {
 			try {
 				_r.run();
 			} catch (final Throwable e) {

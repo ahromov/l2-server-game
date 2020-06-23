@@ -28,7 +28,7 @@ public final class PartySmallWindowUpdate extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x52);
 		writeD(_member.getObjectId());
 		writeS(_member.getName());

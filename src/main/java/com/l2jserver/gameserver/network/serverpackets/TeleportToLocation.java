@@ -36,7 +36,7 @@ public final class TeleportToLocation extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x22);
 		writeD(_targetObjId);
 		writeD(_x);

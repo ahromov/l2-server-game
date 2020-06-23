@@ -39,7 +39,7 @@ public final class BuyList extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0xFE);
 		writeH(0xB7);
 		writeD(0x00);

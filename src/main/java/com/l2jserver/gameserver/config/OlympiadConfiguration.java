@@ -24,7 +24,6 @@ import static org.aeonbits.owner.Config.HotReloadType.ASYNC;
 import java.util.List;
 import java.util.Set;
 
-import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.HotReload;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Reloadable;
@@ -42,7 +41,7 @@ import com.l2jserver.gameserver.model.holders.ItemHolder;
 	"classpath:config/olympiad.properties"
 })
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
-public interface OlympiadConfiguration extends Config, Reloadable {
+public interface OlympiadConfiguration extends Reloadable {
 	
 	@Key("StartHour")
 	Integer getStartHour();

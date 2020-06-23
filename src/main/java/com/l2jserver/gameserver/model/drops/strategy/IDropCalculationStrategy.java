@@ -30,7 +30,7 @@ import com.l2jserver.gameserver.model.holders.ItemHolder;
  * @author Battlecruiser
  */
 public interface IDropCalculationStrategy {
-	public static final IDropCalculationStrategy DEFAULT_STRATEGY = (item, victim, killer) -> {
+	IDropCalculationStrategy DEFAULT_STRATEGY = (item, victim, killer) -> {
 		double chance = item.getChance(victim, killer);
 		if (chance > (Rnd.nextDouble() * 100)) {
 			int amountMultiply = 1;
@@ -47,5 +47,5 @@ public interface IDropCalculationStrategy {
 		return null;
 	};
 	
-	public List<ItemHolder> calculateDrops(GeneralDropItem item, L2Character victim, L2Character killer);
+	List<ItemHolder> calculateDrops(GeneralDropItem item, L2Character victim, L2Character killer);
 }

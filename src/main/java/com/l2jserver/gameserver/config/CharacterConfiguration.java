@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.HotReload;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Reloadable;
@@ -47,7 +46,7 @@ import com.l2jserver.gameserver.config.converter.Seconds2MillisecondsConverter;
 	"classpath:config/character.properties"
 })
 @HotReload(value = 5, unit = MINUTES, type = ASYNC)
-public interface CharacterConfiguration extends Config, Reloadable {
+public interface CharacterConfiguration extends Reloadable {
 	
 	// Statistics
 	@Key("Delevel")

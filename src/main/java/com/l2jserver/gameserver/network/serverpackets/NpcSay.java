@@ -103,7 +103,7 @@ public final class NpcSay extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x30);
 		writeD(_objectId);
 		writeD(_textType);

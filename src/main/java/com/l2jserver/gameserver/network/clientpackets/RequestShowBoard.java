@@ -33,7 +33,7 @@ public final class RequestShowBoard extends L2GameClientPacket {
 	private int _unknown;
 	
 	@Override
-	protected final void readImpl() {
+	protected void readImpl() {
 		_unknown = readD();
 	}
 	
@@ -43,7 +43,7 @@ public final class RequestShowBoard extends L2GameClientPacket {
 	}
 	
 	@Override
-	public final String getType() {
+	public String getType() {
 		return _C__5E_REQUESTSHOWBOARD;
 	}
 	

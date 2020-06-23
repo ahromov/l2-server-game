@@ -22,7 +22,6 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.aeonbits.owner.Config.HotReloadType.ASYNC;
 
 import org.aeonbits.owner.Accessible;
-import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.HotReload;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Reloadable;
@@ -37,7 +36,7 @@ import org.aeonbits.owner.Reloadable;
 	"classpath:config/fortsiege.properties"
 })
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
-public interface FortSiegeConfiguration extends Config, Accessible, Reloadable {
+public interface FortSiegeConfiguration extends Accessible, Reloadable {
 	
 	@Key("SiegeLength")
 	Long getSiegeLength();

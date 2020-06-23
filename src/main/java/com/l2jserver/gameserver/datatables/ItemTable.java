@@ -230,7 +230,7 @@ public class ItemTable {
 		
 		if (general().logItems() && !process.equals("Reset")) {
 			if (!general().logItemsSmallLog() || (general().logItemsSmallLog() && (item.isEquipable() || (item.getId() == ADENA_ID)))) {
-				if (item.getItemType() != ARROW && item.getItemType() != SHOT) {
+				if ((item.getItemType() != ARROW) && (item.getItemType() != SHOT)) {
 					LOG_ITEM.info("CREATED {} by {}, referenced by {}.", item, actor, reference);
 				}
 			}
@@ -286,7 +286,7 @@ public class ItemTable {
 			
 			if (general().logItems()) {
 				if (!general().logItemsSmallLog() || (general().logItemsSmallLog() && (item.isEquipable() || (item.getId() == ADENA_ID)))) {
-					if (item.getItemType() != ARROW && item.getItemType() != SHOT) {
+					if ((item.getItemType() != ARROW) && (item.getItemType() != SHOT)) {
 						LOG_ITEM.info("DELETED {} amount {} by {}, referenced by {}.", item, old, actor, reference);
 					}
 				}

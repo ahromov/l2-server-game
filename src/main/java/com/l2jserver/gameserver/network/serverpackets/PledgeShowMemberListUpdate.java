@@ -69,7 +69,7 @@ public final class PledgeShowMemberListUpdate extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x5b);
 		writeS(_name);
 		writeD(_level);

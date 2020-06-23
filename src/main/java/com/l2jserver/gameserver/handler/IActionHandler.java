@@ -25,9 +25,9 @@ import com.l2jserver.gameserver.model.L2Object;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 public interface IActionHandler {
-	public static Logger _log = Logger.getLogger(IActionHandler.class.getName());
+	Logger _log = Logger.getLogger(IActionHandler.class.getName());
 	
-	public boolean action(L2PcInstance activeChar, L2Object target, boolean interact);
+	boolean action(L2PcInstance activeChar, L2Object target, boolean interact);
 	
-	public InstanceType getInstanceType();
+	InstanceType getInstanceType();
 }

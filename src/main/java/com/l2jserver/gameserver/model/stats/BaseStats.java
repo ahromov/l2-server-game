@@ -85,54 +85,54 @@ public enum BaseStats {
 	}
 	
 	private interface BaseStat {
-		public double calcBonus(L2Character actor);
+		double calcBonus(L2Character actor);
 	}
 	
 	protected static final class STR implements BaseStat {
 		@Override
-		public final double calcBonus(L2Character actor) {
+		public double calcBonus(L2Character actor) {
 			return STRbonus[actor.getSTR()];
 		}
 	}
 	
 	protected static final class INT implements BaseStat {
 		@Override
-		public final double calcBonus(L2Character actor) {
+		public double calcBonus(L2Character actor) {
 			return INTbonus[actor.getINT()];
 		}
 	}
 	
 	protected static final class DEX implements BaseStat {
 		@Override
-		public final double calcBonus(L2Character actor) {
+		public double calcBonus(L2Character actor) {
 			return DEXbonus[actor.getDEX()];
 		}
 	}
 	
 	protected static final class WIT implements BaseStat {
 		@Override
-		public final double calcBonus(L2Character actor) {
+		public double calcBonus(L2Character actor) {
 			return WITbonus[actor.getWIT()];
 		}
 	}
 	
 	protected static final class CON implements BaseStat {
 		@Override
-		public final double calcBonus(L2Character actor) {
+		public double calcBonus(L2Character actor) {
 			return CONbonus[actor.getCON()];
 		}
 	}
 	
 	protected static final class MEN implements BaseStat {
 		@Override
-		public final double calcBonus(L2Character actor) {
+		public double calcBonus(L2Character actor) {
 			return MENbonus[actor.getMEN()];
 		}
 	}
 	
 	protected static final class NONE implements BaseStat {
 		@Override
-		public final double calcBonus(L2Character actor) {
+		public double calcBonus(L2Character actor) {
 			return 1f;
 		}
 	}

@@ -82,7 +82,7 @@ public final class Util {
 	 * @param toY
 	 * @return degree value of object 2 to the horizontal line with object 1 being the origin
 	 */
-	public static final double calculateAngleFrom(int fromX, int fromY, int toX, int toY) {
+	public static double calculateAngleFrom(int fromX, int fromY, int toX, int toY) {
 		double angleTarget = Math.toDegrees(Math.atan2(toY - fromY, toX - fromX));
 		if (angleTarget < 0) {
 			angleTarget = 360 + angleTarget;
@@ -90,22 +90,22 @@ public final class Util {
 		return angleTarget;
 	}
 	
-	public static final double convertHeadingToDegree(int clientHeading) {
+	public static double convertHeadingToDegree(int clientHeading) {
 		return clientHeading / 182.044444444;
 	}
 	
-	public static final int convertDegreeToClientHeading(double degree) {
+	public static int convertDegreeToClientHeading(double degree) {
 		if (degree < 0) {
 			degree = 360 + degree;
 		}
 		return (int) (degree * 182.044444444);
 	}
 	
-	public static final int calculateHeadingFrom(ILocational from, ILocational to) {
+	public static int calculateHeadingFrom(ILocational from, ILocational to) {
 		return calculateHeadingFrom(from.getX(), from.getY(), to.getX(), to.getY());
 	}
 	
-	public static final int calculateHeadingFrom(int fromX, int fromY, int toX, int toY) {
+	public static int calculateHeadingFrom(int fromX, int fromY, int toX, int toY) {
 		double angleTarget = Math.toDegrees(Math.atan2(toY - fromY, toX - fromX));
 		if (angleTarget < 0) {
 			angleTarget = 360 + angleTarget;
@@ -113,7 +113,7 @@ public final class Util {
 		return (int) (angleTarget * 182.044444444);
 	}
 	
-	public static final int calculateHeadingFrom(double dx, double dy) {
+	public static int calculateHeadingFrom(double dx, double dy) {
 		double angleTarget = Math.toDegrees(Math.atan2(dy, dx));
 		if (angleTarget < 0) {
 			angleTarget = 360 + angleTarget;
@@ -415,7 +415,7 @@ public final class Util {
 		return dateFormat.format(date.getTime());
 	}
 	
-	private static final void buildHtmlBypassCache(L2PcInstance player, HtmlActionScope scope, String html) {
+	private static void buildHtmlBypassCache(L2PcInstance player, HtmlActionScope scope, String html) {
 		String htmlLower = html.toLowerCase(Locale.ENGLISH);
 		int bypassEnd = 0;
 		int bypassStart = htmlLower.indexOf("=\"bypass ", bypassEnd);
@@ -448,7 +448,7 @@ public final class Util {
 		}
 	}
 	
-	private static final void buildHtmlLinkCache(L2PcInstance player, HtmlActionScope scope, String html) {
+	private static void buildHtmlLinkCache(L2PcInstance player, HtmlActionScope scope, String html) {
 		String htmlLower = html.toLowerCase(Locale.ENGLISH);
 		int linkEnd = 0;
 		int linkStart = htmlLower.indexOf("=\"link ", linkEnd);

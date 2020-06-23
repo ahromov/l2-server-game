@@ -29,7 +29,7 @@ final class BuilderContainer extends Builder {
 	}
 	
 	@Override
-	public final String toString(final Object param) {
+	public String toString(final Object param) {
 		return toString(new Object[] {
 			param
 		});
@@ -68,7 +68,7 @@ final class BuilderContainer extends Builder {
 	}
 	
 	@Override
-	public final int getIndex() {
+	public int getIndex() {
 		return -1;
 	}
 }

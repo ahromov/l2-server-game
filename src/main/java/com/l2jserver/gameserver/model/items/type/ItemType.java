@@ -23,5 +23,5 @@ package com.l2jserver.gameserver.model.items.type;
  * @author DS
  */
 public interface ItemType {
-	public int mask();
+	int mask();
 }

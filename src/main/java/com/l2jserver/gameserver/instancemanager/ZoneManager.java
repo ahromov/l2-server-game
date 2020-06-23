@@ -312,7 +312,7 @@ public final class ZoneManager implements IXmlReader {
 	}
 	
 	@Override
-	public final void load() {
+	public void load() {
 		_classZones.clear();
 		_spawnTerritories.clear();
 		parseDatapackDirectory("data/zones", false);
@@ -525,7 +525,7 @@ public final class ZoneManager implements IXmlReader {
 	 * @param character the character
 	 * @return the arena
 	 */
-	public final L2ArenaZone getArena(L2Character character) {
+	public L2ArenaZone getArena(L2Character character) {
 		if (character == null) {
 			return null;
 		}
@@ -544,7 +544,7 @@ public final class ZoneManager implements IXmlReader {
 	 * @param character the character
 	 * @return the olympiad stadium
 	 */
-	public final L2OlympiadStadiumZone getOlympiadStadium(L2Character character) {
+	public L2OlympiadStadiumZone getOlympiadStadium(L2Character character) {
 		if (character == null) {
 			return null;
 		}
@@ -616,7 +616,7 @@ public final class ZoneManager implements IXmlReader {
 		return _settings.get(name);
 	}
 	
-	public static final ZoneManager getInstance() {
+	public static ZoneManager getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 	

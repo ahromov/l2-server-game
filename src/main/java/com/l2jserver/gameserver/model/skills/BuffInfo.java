@@ -428,7 +428,7 @@ public final class BuffInfo {
 	}
 	
 	/**
-	 * @param set loaded charges
+	 * @param charges set loaded charges
 	 */
 	public void setCharges(int charges) {
 		_charges = charges;

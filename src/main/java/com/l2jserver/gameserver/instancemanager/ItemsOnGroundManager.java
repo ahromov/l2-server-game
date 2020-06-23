@@ -203,7 +203,7 @@ public final class ItemsOnGroundManager implements Runnable {
 	 * Gets the single instance of {@code ItemsOnGroundManager}.
 	 * @return single instance of {@code ItemsOnGroundManager}
 	 */
-	public static final ItemsOnGroundManager getInstance() {
+	public static ItemsOnGroundManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	

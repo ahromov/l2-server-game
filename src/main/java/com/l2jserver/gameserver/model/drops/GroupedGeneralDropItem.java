@@ -67,7 +67,7 @@ public final class GroupedGeneralDropItem implements IDropItem {
 	 * Gets the chance of this drop item.
 	 * @return the chance
 	 */
-	public final double getChance() {
+	public double getChance() {
 		return _chance;
 	}
 	
@@ -75,14 +75,14 @@ public final class GroupedGeneralDropItem implements IDropItem {
 	 * Gets the items.
 	 * @return the items
 	 */
-	public final List<GeneralDropItem> getItems() {
+	public List<GeneralDropItem> getItems() {
 		return _items;
 	}
 	
 	/**
 	 * @return the strategy
 	 */
-	public final IGroupedItemDropCalculationStrategy getDropCalculationStrategy() {
+	public IGroupedItemDropCalculationStrategy getDropCalculationStrategy() {
 		return _dropCalculationStrategy;
 	}
 	
@@ -96,7 +96,7 @@ public final class GroupedGeneralDropItem implements IDropItem {
 	/**
 	 * @return the _preciseStrategy
 	 */
-	public final IPreciseDeterminationStrategy getPreciseStrategy() {
+	public IPreciseDeterminationStrategy getPreciseStrategy() {
 		return _preciseStrategy;
 	}
 	
@@ -104,7 +104,7 @@ public final class GroupedGeneralDropItem implements IDropItem {
 	 * Sets an item list to this drop item.
 	 * @param items the item list
 	 */
-	public final void setItems(List<GeneralDropItem> items) {
+	public void setItems(List<GeneralDropItem> items) {
 		_items = Collections.unmodifiableList(items);
 	}
 	
@@ -112,7 +112,7 @@ public final class GroupedGeneralDropItem implements IDropItem {
 	 * Returns a list of items in the group with chance multiplied by chance of the group
 	 * @return the list of items with modified chances
 	 */
-	public final List<GeneralDropItem> extractMe() {
+	public List<GeneralDropItem> extractMe() {
 		List<GeneralDropItem> items = new ArrayList<>();
 		for (final GeneralDropItem item : getItems()) {
 			// precise and killer strategies of the group
@@ -125,7 +125,7 @@ public final class GroupedGeneralDropItem implements IDropItem {
 	 * statically normalizes a group, useful when need to convert legacy SQL data
 	 * @return a new group with items, which have a sum of getChance() of 100%
 	 */
-	public final GroupedGeneralDropItem normalizeMe() {
+	public GroupedGeneralDropItem normalizeMe() {
 		double sumchance = 0;
 		for (GeneralDropItem item : getItems()) {
 			sumchance += (item.getChance() * getChance()) / 100;
@@ -147,7 +147,7 @@ public final class GroupedGeneralDropItem implements IDropItem {
 	 * @param killer
 	 * @return a new normalized group with all drop modifiers applied
 	 */
-	public final GroupedGeneralDropItem normalizeMe(L2Character victim, L2Character killer) {
+	public GroupedGeneralDropItem normalizeMe(L2Character victim, L2Character killer) {
 		return normalizeMe(victim, killer, true, 1);
 	}
 	
@@ -158,7 +158,7 @@ public final class GroupedGeneralDropItem implements IDropItem {
 	 * @param chanceModifier an additional chance modifier
 	 * @return a new normalized group with all drop modifiers applied
 	 */
-	public final GroupedGeneralDropItem normalizeMe(L2Character victim, L2Character killer, double chanceModifier) {
+	public GroupedGeneralDropItem normalizeMe(L2Character victim, L2Character killer, double chanceModifier) {
 		return normalizeMe(victim, killer, true, chanceModifier);
 	}
 	
@@ -167,7 +167,7 @@ public final class GroupedGeneralDropItem implements IDropItem {
 	 * @param victim
 	 * @return a new normalized group with all victim modifiers applied
 	 */
-	public final GroupedGeneralDropItem normalizeMe(L2Character victim) {
+	public GroupedGeneralDropItem normalizeMe(L2Character victim) {
 		return normalizeMe(victim, null, false, 1);
 	}
 	
@@ -177,7 +177,7 @@ public final class GroupedGeneralDropItem implements IDropItem {
 	 * @param chanceModifier an additional chance modifier
 	 * @return a new normalized group with all victim modifiers applied
 	 */
-	public final GroupedGeneralDropItem normalizeMe(L2Character victim, double chanceModifier) {
+	public GroupedGeneralDropItem normalizeMe(L2Character victim, double chanceModifier) {
 		return normalizeMe(victim, null, false, chanceModifier);
 	}
 	
@@ -189,7 +189,7 @@ public final class GroupedGeneralDropItem implements IDropItem {
 	 * @param chanceModifier an additional chance modifier
 	 * @return a new normalized group with all drop modifiers applied
 	 */
-	private final GroupedGeneralDropItem normalizeMe(L2Character victim, L2Character killer, boolean applyKillerModifier, double chanceModifier) {
+	private GroupedGeneralDropItem normalizeMe(L2Character victim, L2Character killer, boolean applyKillerModifier, double chanceModifier) {
 		if (applyKillerModifier) {
 			chanceModifier *= (getKillerChanceModifier(victim, killer));
 		}
@@ -214,7 +214,7 @@ public final class GroupedGeneralDropItem implements IDropItem {
 	}
 	
 	@Override
-	public final List<ItemHolder> calculateDrops(L2Character victim, L2Character killer) {
+	public List<ItemHolder> calculateDrops(L2Character victim, L2Character killer) {
 		return _dropCalculationStrategy.calculateDrops(this, victim, killer);
 	}
 	
@@ -224,7 +224,7 @@ public final class GroupedGeneralDropItem implements IDropItem {
 	 * @param killer who kills the victim
 	 * @return a number between 0 and 1 (usually)
 	 */
-	public final double getKillerChanceModifier(L2Character victim, L2Character killer) {
+	public double getKillerChanceModifier(L2Character victim, L2Character killer) {
 		return _killerChanceModifierStrategy.getKillerChanceModifier(this, victim, killer);
 	}
 	

@@ -21,7 +21,6 @@ package com.l2jserver.gameserver.config;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.aeonbits.owner.Config.HotReloadType.ASYNC;
 
-import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.HotReload;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Reloadable;
@@ -36,7 +35,7 @@ import org.aeonbits.owner.Reloadable;
 	"classpath:config/territorywar.properties"
 })
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
-public interface TerritoryWarConfiguration extends Config, Reloadable {
+public interface TerritoryWarConfiguration extends Reloadable {
 	
 	@Key("WarLength")
 	Long getWarLength();

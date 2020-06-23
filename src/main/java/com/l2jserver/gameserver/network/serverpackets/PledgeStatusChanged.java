@@ -28,7 +28,7 @@ public final class PledgeStatusChanged extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0xCD);
 		writeD(_clan.getLeaderId());
 		writeD(_clan.getId());

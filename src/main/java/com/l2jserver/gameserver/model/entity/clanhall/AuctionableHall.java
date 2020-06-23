@@ -62,37 +62,37 @@ public final class AuctionableHall extends ClanHall {
 	/**
 	 * @return if clanHall is paid or not
 	 */
-	public final boolean getPaid() {
+	public boolean getPaid() {
 		return _paid;
 	}
 	
 	/** Return lease */
 	@Override
-	public final int getLease() {
+	public int getLease() {
 		return _lease;
 	}
 	
 	/** Return PaidUntil */
 	@Override
-	public final long getPaidUntil() {
+	public long getPaidUntil() {
 		return _paidUntil;
 	}
 	
 	/** Return Grade */
 	@Override
-	public final int getGrade() {
+	public int getGrade() {
 		return _grade;
 	}
 	
 	@Override
-	public final void free() {
+	public void free() {
 		super.free();
 		_paidUntil = 0;
 		_paid = false;
 	}
 	
 	@Override
-	public final void setOwner(L2Clan clan) {
+	public void setOwner(L2Clan clan) {
 		super.setOwner(clan);
 		_paidUntil = System.currentTimeMillis();
 		initialyzeTask(true);
@@ -102,7 +102,7 @@ public final class AuctionableHall extends ClanHall {
 	 * Initialize Fee Task
 	 * @param forced
 	 */
-	private final void initialyzeTask(boolean forced) {
+	private void initialyzeTask(boolean forced) {
 		long currentTime = System.currentTimeMillis();
 		if (_paidUntil > currentTime) {
 			ThreadPoolManager.getInstance().scheduleGeneral(new FeeTask(), _paidUntil - currentTime);
@@ -178,7 +178,7 @@ public final class AuctionableHall extends ClanHall {
 	}
 	
 	@Override
-	public final void updateDb() {
+	public void updateDb() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("UPDATE clanhall SET ownerId=?, paidUntil=?, paid=? WHERE id=?")) {
 			ps.setInt(1, getOwnerId());

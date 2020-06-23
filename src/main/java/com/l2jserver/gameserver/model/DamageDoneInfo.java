@@ -44,7 +44,7 @@ public final class DamageDoneInfo {
 	}
 	
 	@Override
-	public final boolean equals(Object obj) {
+	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -57,7 +57,7 @@ public final class DamageDoneInfo {
 	}
 	
 	@Override
-	public final int hashCode() {
+	public int hashCode() {
 		return _attacker.getObjectId();
 	}
 }

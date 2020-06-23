@@ -106,7 +106,7 @@ public class L2DoorInstance extends L2Character {
 		
 		int clanhallId = template.getClanHallId();
 		if (clanhallId > 0) {
-			ClanHall hall = ClanHallManager.getAllClanHalls().get(clanhallId);
+			ClanHall hall = ClanHallManager.getInstance().getAllClanHalls().get(clanhallId);
 			if (hall != null) {
 				setClanHall(hall);
 				hall.getDoors().add(this);

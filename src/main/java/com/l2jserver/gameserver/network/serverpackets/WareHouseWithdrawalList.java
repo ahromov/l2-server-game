@@ -50,7 +50,7 @@ public final class WareHouseWithdrawalList extends AbstractItemPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x42);
 		writeH(_whType);
 		writeQ(_playerAdena);

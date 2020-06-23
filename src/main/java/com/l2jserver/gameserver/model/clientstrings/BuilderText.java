@@ -29,7 +29,7 @@ final class BuilderText extends Builder {
 	}
 	
 	@Override
-	public final String toString(final Object param) {
+	public String toString(final Object param) {
 		return toString();
 	}
 	
@@ -39,12 +39,12 @@ final class BuilderText extends Builder {
 	}
 	
 	@Override
-	public final int getIndex() {
+	public int getIndex() {
 		return -1;
 	}
 	
 	@Override
-	public final String toString() {
+	public String toString() {
 		return _text;
 	}
 }

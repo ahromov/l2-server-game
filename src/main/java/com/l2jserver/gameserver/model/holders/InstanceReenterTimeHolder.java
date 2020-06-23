@@ -44,19 +44,19 @@ public final class InstanceReenterTimeHolder {
 		_minute = minute;
 	}
 	
-	public final Long getTime() {
+	public Long getTime() {
 		return _time;
 	}
 	
-	public final DayOfWeek getDay() {
+	public DayOfWeek getDay() {
 		return _day;
 	}
 	
-	public final int getHour() {
+	public int getHour() {
 		return _hour;
 	}
 	
-	public final int getMinute() {
+	public int getMinute() {
 		return _minute;
 	}
 }

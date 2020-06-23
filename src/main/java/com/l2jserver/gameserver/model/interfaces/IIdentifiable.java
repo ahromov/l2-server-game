@@ -23,5 +23,5 @@ package com.l2jserver.gameserver.model.interfaces;
  * @author Zoey76
  */
 public interface IIdentifiable {
-	public int getId();
+	int getId();
 }

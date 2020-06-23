@@ -23,7 +23,6 @@ import static org.aeonbits.owner.Config.HotReloadType.ASYNC;
 
 import java.util.List;
 
-import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.HotReload;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Reloadable;
@@ -46,7 +45,7 @@ import com.l2jserver.gameserver.model.holders.SkillHolder;
 	"classpath:config/tvt.properties"
 })
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
-public interface TvTConfiguration extends Config, Reloadable {
+public interface TvTConfiguration extends Reloadable {
 	
 	@Key("Enabled")
 	Boolean enabled();

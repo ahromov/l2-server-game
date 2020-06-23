@@ -93,7 +93,7 @@ public final class GlobalVariablesManager extends AbstractVariables {
 		return true;
 	}
 	
-	public static final GlobalVariablesManager getInstance() {
+	public static GlobalVariablesManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	

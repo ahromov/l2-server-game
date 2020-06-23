@@ -23,7 +23,6 @@ import static org.aeonbits.owner.Config.HotReloadType.ASYNC;
 
 import java.util.Set;
 
-import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.HotReload;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Mutable;
@@ -44,7 +43,7 @@ import com.l2jserver.gameserver.enums.IllegalActionPunishmentType;
 	"classpath:config/general.properties"
 })
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
-public interface GeneralConfiguration extends Config, Mutable, Reloadable {
+public interface GeneralConfiguration extends Mutable, Reloadable {
 	
 	@Key("EverybodyHasAdminRights")
 	Boolean everybodyHasAdminRights();

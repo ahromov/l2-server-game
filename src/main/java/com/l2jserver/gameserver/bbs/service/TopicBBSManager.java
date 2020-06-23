@@ -28,9 +28,9 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.l2jserver.gameserver.bbs.model.Post;
 import com.l2jserver.gameserver.bbs.model.Forum;
 import com.l2jserver.gameserver.bbs.model.ForumType;
+import com.l2jserver.gameserver.bbs.model.Post;
 import com.l2jserver.gameserver.bbs.model.Topic;
 import com.l2jserver.gameserver.bbs.model.TopicType;
 import com.l2jserver.gameserver.dao.factory.impl.DAOFactory;

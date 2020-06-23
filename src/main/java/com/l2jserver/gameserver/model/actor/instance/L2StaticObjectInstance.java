@@ -71,7 +71,7 @@ public final class L2StaticObjectInstance extends L2Character {
 	}
 	
 	@Override
-	public final StaticObjectKnownList getKnownList() {
+	public StaticObjectKnownList getKnownList() {
 		return (StaticObjectKnownList) super.getKnownList();
 	}
 	
@@ -81,7 +81,7 @@ public final class L2StaticObjectInstance extends L2Character {
 	}
 	
 	@Override
-	public final StaticObjStat getStat() {
+	public StaticObjStat getStat() {
 		return (StaticObjStat) super.getStat();
 	}
 	
@@ -91,7 +91,7 @@ public final class L2StaticObjectInstance extends L2Character {
 	}
 	
 	@Override
-	public final StaticObjStatus getStatus() {
+	public StaticObjStatus getStatus() {
 		return (StaticObjStatus) super.getStatus();
 	}
 	
@@ -117,7 +117,7 @@ public final class L2StaticObjectInstance extends L2Character {
 	}
 	
 	@Override
-	public final int getLevel() {
+	public int getLevel() {
 		return 1;
 	}
 	

@@ -23,7 +23,6 @@ import static org.aeonbits.owner.Config.HotReloadType.ASYNC;
 
 import java.math.BigInteger;
 
-import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.HotReload;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Mutable;
@@ -41,7 +40,7 @@ import com.l2jserver.gameserver.config.converter.HexIdConverter;
 	"classpath:config/hexid.txt"
 })
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
-public interface HexIdConfiguration extends Config, Mutable, Reloadable {
+public interface HexIdConfiguration extends Mutable, Reloadable {
 	
 	@Key("ServerID")
 	Integer getServerID();

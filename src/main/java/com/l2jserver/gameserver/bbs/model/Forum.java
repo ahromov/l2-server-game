@@ -82,59 +82,59 @@ public final class Forum {
 	public void rmTopicByID(int id) {
 		topics.remove(id);
 	}
-
+	
 	public String getName() {
 		return name;
 	}
-
+	
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
 	public ForumType getType() {
 		return type;
 	}
-
+	
 	public void setType(ForumType type) {
 		this.type = type;
 	}
-
+	
 	public int getPost() {
 		return post;
 	}
-
+	
 	public void setPost(int post) {
 		this.post = post;
 	}
-
+	
 	public ForumVisibility getVisibility() {
 		return visibility;
 	}
-
+	
 	public void setVisibility(ForumVisibility visibility) {
 		this.visibility = visibility;
 	}
-
+	
 	public int getOwnerId() {
 		return ownerId;
 	}
-
+	
 	public void setOwnerId(int ownerId) {
 		this.ownerId = ownerId;
 	}
-
+	
 	public int getId() {
 		return id;
 	}
-
+	
 	public Forum getParent() {
 		return parent;
 	}
-
+	
 	public List<Forum> getChildren() {
 		return children;
 	}
-
+	
 	public Map<Integer, Topic> getTopics() {
 		return topics;
 	}

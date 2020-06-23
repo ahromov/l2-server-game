@@ -79,11 +79,11 @@ public final class CursedWeaponsManager {
 		LOG.info("Loaded {} cursed weapon(s).", _cursedWeapons.size());
 	}
 	
-	public final void reload() {
+	public void reload() {
 		init();
 	}
 	
-	private final void load() {
+	private void load() {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setValidating(false);
@@ -144,7 +144,7 @@ public final class CursedWeaponsManager {
 		}
 	}
 	
-	private final void restore() {
+	private void restore() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var s = con.createStatement();
 			var rs = s.executeQuery("SELECT itemId, charId, playerKarma, playerPkKills, nbKills, endTime FROM cursed_weapons")) {
@@ -164,7 +164,7 @@ public final class CursedWeaponsManager {
 		}
 	}
 	
-	private final void controlPlayers() {
+	private void controlPlayers() {
 		// TODO: See comments below...
 		// This entire for loop should NOT be necessary, since it is already handled by
 		// CursedWeapon.endOfLife(). However, if we indeed *need* to duplicate it for safety,
@@ -352,7 +352,7 @@ public final class CursedWeaponsManager {
 		}
 	}
 	
-	public static final CursedWeaponsManager getInstance() {
+	public static CursedWeaponsManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	

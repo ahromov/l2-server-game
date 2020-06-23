@@ -54,7 +54,7 @@ public final class WareHouseDepositList extends AbstractItemPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x41);
 		writeH(_whType);
 		writeQ(_playerAdena);

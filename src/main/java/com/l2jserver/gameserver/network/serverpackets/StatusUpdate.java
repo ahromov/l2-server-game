@@ -97,7 +97,7 @@ public final class StatusUpdate extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x18);
 		writeD(_objectId);
 		writeD(_attributes.size());

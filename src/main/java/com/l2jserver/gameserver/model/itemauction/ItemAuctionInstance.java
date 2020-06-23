@@ -185,22 +185,22 @@ public final class ItemAuctionInstance {
 		checkAndSetCurrentAndNextAuction();
 	}
 	
-	public final ItemAuction getCurrentAuction() {
+	public ItemAuction getCurrentAuction() {
 		return _currentAuction;
 	}
 	
-	public final ItemAuction getNextAuction() {
+	public ItemAuction getNextAuction() {
 		return _nextAuction;
 	}
 	
-	public final void shutdown() {
+	public void shutdown() {
 		final ScheduledFuture<?> stateTask = _stateTask;
 		if (stateTask != null) {
 			stateTask.cancel(false);
 		}
 	}
 	
-	private final AuctionItem getAuctionItem(final int auctionItemId) {
+	private AuctionItem getAuctionItem(final int auctionItemId) {
 		for (int i = _items.size(); i-- > 0;) {
 			final AuctionItem item = _items.get(i);
 			if (item.getAuctionItemId() == auctionItemId) {
@@ -210,7 +210,7 @@ public final class ItemAuctionInstance {
 		return null;
 	}
 	
-	final void checkAndSetCurrentAndNextAuction() {
+	void checkAndSetCurrentAndNextAuction() {
 		final ItemAuction[] auctions = _auctions.values().toArray(new ItemAuction[_auctions.size()]);
 		
 		ItemAuction currentAuction = null;
@@ -300,11 +300,11 @@ public final class ItemAuctionInstance {
 		}
 	}
 	
-	public final ItemAuction getAuction(int auctionId) {
+	public ItemAuction getAuction(int auctionId) {
 		return _auctions.get(auctionId);
 	}
 	
-	public final ItemAuction[] getAuctionsByBidder(int bidderObjId) {
+	public ItemAuction[] getAuctionsByBidder(int bidderObjId) {
 		final Collection<ItemAuction> auctions = getAuctions();
 		final ArrayList<ItemAuction> stack = new ArrayList<>(auctions.size());
 		for (final ItemAuction auction : getAuctions()) {
@@ -318,7 +318,7 @@ public final class ItemAuctionInstance {
 		return stack.toArray(new ItemAuction[stack.size()]);
 	}
 	
-	public final Collection<ItemAuction> getAuctions() {
+	public Collection<ItemAuction> getAuctions() {
 		final Collection<ItemAuction> auctions;
 		
 		synchronized (_auctions) {
@@ -412,7 +412,7 @@ public final class ItemAuctionInstance {
 		}
 	}
 	
-	final void onAuctionFinished(final ItemAuction auction) {
+	void onAuctionFinished(final ItemAuction auction) {
 		auction.broadcastToAllBiddersInternal(SystemMessage.getSystemMessage(SystemMessageId.S1_AUCTION_ENDED).addInt(auction.getAuctionId()));
 		
 		final ItemAuctionBid bid = auction.getHighestBid();
@@ -441,7 +441,7 @@ public final class ItemAuctionInstance {
 		}
 	}
 	
-	final void setStateTask(final ScheduledFuture<?> future) {
+	void setStateTask(final ScheduledFuture<?> future) {
 		final ScheduledFuture<?> stateTask = _stateTask;
 		if (stateTask != null) {
 			stateTask.cancel(false);
@@ -450,7 +450,7 @@ public final class ItemAuctionInstance {
 		_stateTask = future;
 	}
 	
-	private final ItemAuction createAuction(final long after) {
+	private ItemAuction createAuction(final long after) {
 		final AuctionItem auctionItem = _items.get(Rnd.get(_items.size()));
 		final long startingTime = _dateGenerator.nextDate(after);
 		final long endingTime = startingTime + TimeUnit.MILLISECONDS.convert(auctionItem.getAuctionLength(), TimeUnit.MINUTES);
@@ -459,7 +459,7 @@ public final class ItemAuctionInstance {
 		return auction;
 	}
 	
-	private final ItemAuction loadAuction(final int auctionId) throws Exception {
+	private ItemAuction loadAuction(final int auctionId) throws Exception {
 		try (var con = ConnectionFactory.getInstance().getConnection()) {
 			int auctionItemId = 0;
 			long startingTime = 0;

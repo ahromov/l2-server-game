@@ -22,7 +22,7 @@ public final class RestartResponse extends L2GameServerPacket {
 	private static final RestartResponse STATIC_PACKET_TRUE = new RestartResponse(true);
 	private static final RestartResponse STATIC_PACKET_FALSE = new RestartResponse(false);
 	
-	public static final RestartResponse valueOf(boolean result) {
+	public static RestartResponse valueOf(boolean result) {
 		return result ? STATIC_PACKET_TRUE : STATIC_PACKET_FALSE;
 	}
 	
@@ -33,7 +33,7 @@ public final class RestartResponse extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x71);
 		writeD(_result ? 1 : 0);
 	}

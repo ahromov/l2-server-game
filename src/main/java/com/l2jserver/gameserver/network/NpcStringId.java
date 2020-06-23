@@ -25217,7 +25217,7 @@ public final class NpcStringId {
 		buildFastLookupTable();
 	}
 	
-	private static final void buildFastLookupTable() {
+	private static void buildFastLookupTable() {
 		final Field[] fields = NpcStringId.class.getDeclaredFields();
 		
 		int mod;
@@ -25238,7 +25238,7 @@ public final class NpcStringId {
 		}
 	}
 	
-	private static final int parseMessageParameters(final String name) {
+	private static int parseMessageParameters(final String name) {
 		int paramCount = 0;
 		char c1, c2;
 		for (int i = 0; i < (name.length() - 1); i++) {
@@ -25254,16 +25254,16 @@ public final class NpcStringId {
 		return paramCount;
 	}
 	
-	public static final NpcStringId getNpcStringId(final int id) {
+	public static NpcStringId getNpcStringId(final int id) {
 		final NpcStringId nsi = getNpcStringIdInternal(id);
 		return nsi == null ? new NpcStringId(id) : nsi;
 	}
 	
-	private static final NpcStringId getNpcStringIdInternal(final int id) {
+	private static NpcStringId getNpcStringIdInternal(final int id) {
 		return VALUES.get(id);
 	}
 	
-	public static final NpcStringId getNpcStringId(final String name) {
+	public static NpcStringId getNpcStringId(final String name) {
 		try {
 			return (NpcStringId) NpcStringId.class.getField(name).get(null);
 		} catch (final Exception e) {
@@ -25271,7 +25271,7 @@ public final class NpcStringId {
 		}
 	}
 	
-	public static final void reloadLocalisations() {
+	public static void reloadLocalisations() {
 		for (final NpcStringId nsId : VALUES.values()) {
 			if (nsId != null) {
 				nsId.removeAllLocalisations();
@@ -25354,19 +25354,19 @@ public final class NpcStringId {
 		_localisations = EMPTY_NSL_ARRAY;
 	}
 	
-	public final int getId() {
+	public int getId() {
 		return _id;
 	}
 	
-	private final void setName(final String name) {
+	private void setName(final String name) {
 		_name = name;
 	}
 	
-	public final String getName() {
+	public String getName() {
 		return _name;
 	}
 	
-	public final int getParamCount() {
+	public int getParamCount() {
 		return _params;
 	}
 	
@@ -25374,7 +25374,7 @@ public final class NpcStringId {
 	 * You better don`t touch this!
 	 * @param params
 	 */
-	public final void setParamCount(final int params) {
+	public void setParamCount(final int params) {
 		if (params < 0) {
 			throw new IllegalArgumentException("Invalid negative param count: " + params);
 		}
@@ -25390,7 +25390,7 @@ public final class NpcStringId {
 		_params = (byte) params;
 	}
 	
-	public final NSLocalisation getLocalisation(final String lang) {
+	public NSLocalisation getLocalisation(final String lang) {
 		NSLocalisation nsl;
 		for (int i = _localisations.length; i-- > 0;) {
 			nsl = _localisations[i];
@@ -25401,27 +25401,27 @@ public final class NpcStringId {
 		return null;
 	}
 	
-	public final void attachLocalizedText(final String lang, final String text) {
+	public void attachLocalizedText(final String lang, final String text) {
 		final int length = _localisations.length;
 		final NSLocalisation[] localisations = Arrays.copyOf(_localisations, length + 1);
 		localisations[length] = new NSLocalisation(lang, text);
 		_localisations = localisations;
 	}
 	
-	public final void removeAllLocalisations() {
+	public void removeAllLocalisations() {
 		_localisations = EMPTY_NSL_ARRAY;
 	}
 	
-	public final ExShowScreenMessage getStaticScreenMessage() {
+	public ExShowScreenMessage getStaticScreenMessage() {
 		return _staticScreenMessage;
 	}
 	
-	public final void setStaticSystemMessage(final ExShowScreenMessage ns) {
+	public void setStaticSystemMessage(final ExShowScreenMessage ns) {
 		_staticScreenMessage = ns;
 	}
 	
 	@Override
-	public final String toString() {
+	public String toString() {
 		return "NS[" + getId() + ":" + getName() + "]";
 	}
 	
@@ -25434,7 +25434,7 @@ public final class NpcStringId {
 			_builder = Builder.newBuilder(text);
 		}
 		
-		public final String getLanguage() {
+		public String getLanguage() {
 			return _lang;
 		}
 		

@@ -31,7 +31,7 @@ public final class NewCharacterSuccess extends L2GameServerPacket {
 	}
 	
 	@Override
-	protected final void writeImpl() {
+	protected void writeImpl() {
 		writeC(0x0D);
 		writeD(_chars.size());
 		

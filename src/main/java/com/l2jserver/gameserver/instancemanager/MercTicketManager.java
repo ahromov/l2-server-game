@@ -134,7 +134,7 @@ public final class MercTicketManager {
 		load();
 	}
 	
-	private final void load() {
+	private void load() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var s = con.createStatement();
 			var rs = s.executeQuery("SELECT * FROM castle_siege_guards Where isHired = 1")) {
@@ -365,7 +365,7 @@ public final class MercTicketManager {
 		return ITEM_IDS;
 	}
 	
-	public final List<L2ItemInstance> getDroppedTickets() {
+	public List<L2ItemInstance> getDroppedTickets() {
 		return DROPPED_TICKETS;
 	}
 	
@@ -373,7 +373,7 @@ public final class MercTicketManager {
 	 * Gets the single instance of {@code MercTicketManager}.
 	 * @return single instance of {@code MercTicketManager}
 	 */
-	public static final MercTicketManager getInstance() {
+	public static MercTicketManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	

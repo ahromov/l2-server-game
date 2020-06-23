@@ -23,7 +23,6 @@ import static org.aeonbits.owner.Config.HotReloadType.ASYNC;
 
 import java.util.Map;
 
-import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.HotReload;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Reloadable;
@@ -40,7 +39,7 @@ import com.l2jserver.gameserver.config.converter.MapIntegerFloatConverter;
 	"classpath:config/rates.properties"
 })
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
-public interface RatesConfiguration extends Config, Reloadable {
+public interface RatesConfiguration extends Reloadable {
 	
 	@Key("DeathDropAmountMultiplier")
 	Double getDeathDropAmountMultiplier();

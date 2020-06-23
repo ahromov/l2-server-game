@@ -27,10 +27,10 @@ public interface IAudio {
 	/**
 	 * @return the name of the sound of this audio object
 	 */
-	public String getSoundName();
+	String getSoundName();
 	
 	/**
 	 * @return the {@link PlaySound} packet of this audio object
 	 */
-	public PlaySound getPacket();
+	PlaySound getPacket();
 }

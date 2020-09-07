@@ -18,41 +18,53 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.l2jserver.gameserver.network.serverpackets.ExListPartyMatchingWaitingRoom;
 
 /**
- * @author Gnacik
+ * RequestListPartyMatchingWaitingRoom client packet.
+ * @author Zoey76
  */
 public class RequestListPartyMatchingWaitingRoom extends L2GameClientPacket {
+	
 	private static final String _C__D0_31_REQUESTLISTPARTYMATCHINGWAITINGROOM = "[C] D0:31 RequestListPartyMatchingWaitingRoom";
-	private int _page;
-	private int _minlvl;
-	private int _maxlvl;
-	private int _mode; // 1 - waitlist 0 - room waitlist
+	
+	private int page;
+	
+	private int minLevel;
+	
+	private int maxLevel;
+	
+	private Set<Integer> classes;
+	
+	private String filter;
 	
 	@Override
 	protected void readImpl() {
-		_page = readD();
-		_minlvl = readD();
-		_maxlvl = readD();
-		_mode = readD();
+		page = readD();
+		minLevel = readD();
+		maxLevel = readD();
+		final var size = readD();
+		classes = new HashSet<>(size);
+		for (int i = 0; i < size; i++) {
+			classes.add(readD());
+		}
+		filter = hasRemaining() ? readS() : "";
 	}
 	
 	@Override
 	protected void runImpl() {
-		L2PcInstance _activeChar = getClient().getActiveChar();
-		
-		if (_activeChar == null) {
+		final var player = getClient().getActiveChar();
+		if (player == null) {
 			return;
 		}
-		
-		_activeChar.sendPacket(new ExListPartyMatchingWaitingRoom(_activeChar, _page, _minlvl, _maxlvl, _mode));
+		player.sendPacket(new ExListPartyMatchingWaitingRoom(page, minLevel, maxLevel, classes, filter));
 	}
 	
 	@Override
 	public String getType() {
 		return _C__D0_31_REQUESTLISTPARTYMATCHINGWAITINGROOM;
 	}
-	
 }

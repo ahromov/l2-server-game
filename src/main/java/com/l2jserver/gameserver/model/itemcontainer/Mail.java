@@ -100,7 +100,7 @@ public class Mail extends ItemContainer {
 	@Override
 	public void restore() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
-			var ps = con.prepareStatement("SELECT object_id, item_id, count, enchant_level, loc, loc_data, custom_type1, custom_type2, mana_left, time FROM items WHERE owner_id=? AND loc=? AND loc_data=?")) {
+			var ps = con.prepareStatement("SELECT object_id, item_id, count, enchant_level, loc, loc_data, custom_type1, custom_type2, mana_left, time, agathion_energy FROM items WHERE owner_id=? AND loc=? AND loc_data=?")) {
 			ps.setInt(1, getOwnerId());
 			ps.setString(2, getBaseLocation().name());
 			ps.setInt(3, getMessageId());

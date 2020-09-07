@@ -101,10 +101,6 @@ public final class QuestManager extends ScriptManager<Quest> {
 			LOG.warn("Failed loading scripts.cfg, no script going to be loaded!", ex);
 		}
 		
-		report();
-	}
-	
-	public void report() {
 		LOG.info("Loaded {} quests.", _quests.size());
 		LOG.info("Loaded {} scripts.", _scripts.size());
 	}

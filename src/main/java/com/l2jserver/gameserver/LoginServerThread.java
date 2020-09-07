@@ -94,8 +94,6 @@ public class LoginServerThread extends Thread {
 	
 	private static final int ADULT = 18;
 	
-	/** @see com.l2jserver.loginserver.L2LoginServer#PROTOCOL_REV */
-	private static final int REVISION = 0x0106;
 	private final String _hostname;
 	private final int _port;
 	private final int _gamePort;
@@ -205,11 +203,6 @@ public class LoginServerThread extends Thread {
 					switch (packetType) {
 						case 0x00:
 							InitLS init = new InitLS(incoming);
-							if (init.getRevision() != REVISION) {
-								// TODO: revision mismatch
-								LOG.warn("/!\\ Revision mismatch between LS and GS /!\\");
-								break;
-							}
 							
 							RSAPublicKey publicKey;
 							

@@ -102,7 +102,6 @@ public abstract class Inventory extends ItemContainer {
 	
 	// Recorder of alterations in inventory
 	private static final class ChangeRecorder implements PaperdollListener {
-		private final Inventory _inventory;
 		private final List<L2ItemInstance> _changed;
 		
 		/**
@@ -110,9 +109,8 @@ public abstract class Inventory extends ItemContainer {
 		 * @param inventory
 		 */
 		ChangeRecorder(Inventory inventory) {
-			_inventory = inventory;
 			_changed = new ArrayList<>();
-			_inventory.addPaperdollListener(this);
+			inventory.addPaperdollListener(this);
 		}
 		
 		/**
@@ -151,7 +149,7 @@ public abstract class Inventory extends ItemContainer {
 	}
 	
 	private static final class BowCrossRodListener implements PaperdollListener {
-		private static BowCrossRodListener instance = new BowCrossRodListener();
+		private static final BowCrossRodListener instance = new BowCrossRodListener();
 		
 		public static BowCrossRodListener getInstance() {
 			return instance;
@@ -207,7 +205,7 @@ public abstract class Inventory extends ItemContainer {
 	}
 	
 	private static final class StatsListener implements PaperdollListener {
-		private static StatsListener instance = new StatsListener();
+		private static final StatsListener instance = new StatsListener();
 		
 		public static StatsListener getInstance() {
 			return instance;
@@ -225,7 +223,7 @@ public abstract class Inventory extends ItemContainer {
 	}
 	
 	private static final class ItemSkillsListener implements PaperdollListener {
-		private static ItemSkillsListener instance = new ItemSkillsListener();
+		private static final ItemSkillsListener instance = new ItemSkillsListener();
 		
 		public static ItemSkillsListener getInstance() {
 			return instance;
@@ -402,7 +400,7 @@ public abstract class Inventory extends ItemContainer {
 	}
 	
 	private static final class ArmorSetListener implements PaperdollListener {
-		private static ArmorSetListener instance = new ArmorSetListener();
+		private static final ArmorSetListener instance = new ArmorSetListener();
 		
 		public static ArmorSetListener getInstance() {
 			return instance;
@@ -592,7 +590,7 @@ public abstract class Inventory extends ItemContainer {
 	}
 	
 	private static final class BraceletListener implements PaperdollListener {
-		private static BraceletListener instance = new BraceletListener();
+		private static final BraceletListener instance = new BraceletListener();
 		
 		public static BraceletListener getInstance() {
 			return instance;
@@ -1403,7 +1401,7 @@ public abstract class Inventory extends ItemContainer {
 	@Override
 	public void restore() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
-			var ps = con.prepareStatement("SELECT object_id, item_id, count, enchant_level, loc, loc_data, custom_type1, custom_type2, mana_left, time FROM items WHERE owner_id=? AND (loc=? OR loc=?) ORDER BY loc_data")) {
+			var ps = con.prepareStatement("SELECT object_id, item_id, count, enchant_level, loc, loc_data, custom_type1, custom_type2, mana_left, time, agathion_energy FROM items WHERE owner_id=? AND (loc=? OR loc=?) ORDER BY loc_data")) {
 			ps.setInt(1, getOwnerId());
 			ps.setString(2, getBaseLocation().name());
 			ps.setString(3, getEquipLocation().name());

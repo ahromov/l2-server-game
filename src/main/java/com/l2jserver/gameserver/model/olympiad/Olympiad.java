@@ -906,7 +906,7 @@ public class Olympiad extends ListenersContainer {
 			var ps = con.prepareStatement("SELECT olympiad_points FROM olympiad_nobles_eom WHERE charId = ?")) {
 			ps.setInt(1, objId);
 			try (var rs = ps.executeQuery()) {
-				if (rs.first()) {
+				if (rs.next()) {
 					result = rs.getInt(1);
 				}
 			}

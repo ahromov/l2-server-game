@@ -45,6 +45,8 @@ public class RaidBossSpawnManager {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(RaidBossSpawnManager.class);
 	
+	private static final int EILHALDER_VON_HELLMANN = 25328;
+	
 	protected static final Map<Integer, L2RaidBossInstance> _bosses = new ConcurrentHashMap<>();
 	
 	protected static final Map<Integer, L2Spawn> _spawns = new ConcurrentHashMap<>();
@@ -64,6 +66,8 @@ public class RaidBossSpawnManager {
 	}
 	
 	public void load() {
+		LOG.info("Spawning raid bosses...");
+		
 		_bosses.clear();
 		_spawns.clear();
 		_storedInfo.clear();
@@ -104,7 +108,7 @@ public class RaidBossSpawnManager {
 		public void run() {
 			L2RaidBossInstance raidboss = null;
 			
-			if (bossId == 25328) {
+			if (bossId == EILHALDER_VON_HELLMANN) {
 				raidboss = DayNightSpawnManager.getInstance().handleBoss(_spawns.get(bossId));
 			} else {
 				raidboss = (L2RaidBossInstance) _spawns.get(bossId).doSpawn();
@@ -194,7 +198,7 @@ public class RaidBossSpawnManager {
 		if ((respawnTime == 0L) || (time > respawnTime)) {
 			L2RaidBossInstance raidboss = null;
 			
-			if (bossId == 25328) {
+			if (bossId == EILHALDER_VON_HELLMANN) {
 				raidboss = DayNightSpawnManager.getInstance().handleBoss(spawnDat);
 			} else {
 				raidboss = (L2RaidBossInstance) spawnDat.doSpawn();

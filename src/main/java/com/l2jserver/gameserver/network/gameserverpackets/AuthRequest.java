@@ -22,20 +22,32 @@ import java.util.List;
 
 import com.l2jserver.commons.network.BaseSendablePacket;
 
+/**
+ * Auth Request packet.
+ * 
+ * <pre>
+ * Format: CCCCHDDBD[S]
+ * C protocol
+ * C desired Id
+ * C accept alternative Id
+ * C reserve Host
+ * H port
+ * D max players
+ * D hex Id size
+ * B hex Id
+ * D subnet size
+ * [S] subnets
+ * </pre>
+ * 
+ * @author Zoey76
+ */
 public class AuthRequest extends BaseSendablePacket {
-	/**
-	 * Format: cccSddb c desired ID c accept alternative ID c reserve Host s ExternalHostName s InetranlHostName d max players d hexid size b hexid
-	 * @param id
-	 * @param acceptAlternate
-	 * @param hexid
-	 * @param port
-	 * @param reserveHost
-	 * @param maxplayer
-	 * @param subnets the subnets lists
-	 * @param hosts the hosts list
-	 */
+	
+	private static final int VERSION = 14;
+	
 	public AuthRequest(int id, boolean acceptAlternate, byte[] hexid, int port, boolean reserveHost, int maxplayer, List<String> subnets, List<String> hosts) {
 		writeC(0x01);
+		writeC(VERSION);
 		writeC(id);
 		writeC(acceptAlternate ? 0x01 : 0x00);
 		writeC(reserveHost ? 0x01 : 0x00);
@@ -54,5 +66,4 @@ public class AuthRequest extends BaseSendablePacket {
 	public byte[] getContent() {
 		return getBytes();
 	}
-	
 }

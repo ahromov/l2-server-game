@@ -18,8 +18,6 @@
  */
 package com.l2jserver.gameserver.model;
 
-import static com.l2jserver.gameserver.bbs.model.ForumType.CLAN;
-import static com.l2jserver.gameserver.bbs.model.ForumVisibility.CLAN_MEMBER_ONLY;
 import static com.l2jserver.gameserver.config.Configuration.character;
 import static com.l2jserver.gameserver.config.Configuration.clan;
 import static com.l2jserver.gameserver.config.Configuration.fortress;
@@ -39,7 +37,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.l2jserver.commons.database.ConnectionFactory;
-import com.l2jserver.gameserver.bbs.model.Forum;
 import com.l2jserver.gameserver.bbs.service.ForumsBBSManager;
 import com.l2jserver.gameserver.dao.factory.impl.DAOFactory;
 import com.l2jserver.gameserver.data.sql.impl.CharNameTable;
@@ -142,8 +139,6 @@ public class L2Clan implements IIdentifiable, INamable {
 	private final ItemContainer _warehouse = new ClanWarehouse(this);
 	private final Set<Integer> _atWarWith = ConcurrentHashMap.newKeySet();
 	private final Set<Integer> _atWarAttackers = ConcurrentHashMap.newKeySet();
-	
-	private Forum _forum;
 	
 	/** Map(Integer, L2Skill) containing all skills of the L2Clan */
 	private final Map<Integer, Skill> _skills = new ConcurrentHashMap<>();
@@ -443,7 +438,7 @@ public class L2Clan implements IIdentifiable, INamable {
 	}
 	
 	public L2ClanMember[] getMembers() {
-		return _members.values().toArray(new L2ClanMember[_members.size()]);
+		return _members.values().toArray(new L2ClanMember[0]);
 	}
 	
 	public int getMembersCount() {
@@ -580,27 +575,19 @@ public class L2Clan implements IIdentifiable, INamable {
 	}
 	
 	/**
-	 * @return the clan level.
+	 * Gets the clan level.
+	 * @return the clan level
 	 */
 	public int getLevel() {
 		return _level;
 	}
 	
 	/**
-	 * Sets the clan level and updates the clan forum if it's needed.
-	 * @param level the clan level to be set.
+	 * Sets the clan level.
+	 * @param level the level to set
 	 */
 	public void setLevel(int level) {
 		_level = level;
-		if ((_level >= 2) && (_forum == null) && general().enableCommunityBoard()) {
-			final var clanRootForum = ForumsBBSManager.getInstance().getForumByName("ClanRoot");
-			if (clanRootForum != null) {
-				_forum = clanRootForum.getChildByName(_name);
-				if (_forum == null) {
-					_forum = ForumsBBSManager.getInstance().createNewForum(_name, clanRootForum, CLAN, CLAN_MEMBER_ONLY, getId());
-				}
-			}
-		}
 	}
 	
 	/**
@@ -692,7 +679,7 @@ public class L2Clan implements IIdentifiable, INamable {
 	 * @return {code true} if the player belongs to the clan.
 	 */
 	public boolean isMember(int id) {
-		return (id == 0 ? false : _members.containsKey(id));
+		return (id != 0 && _members.containsKey(id));
 	}
 	
 	/**
@@ -948,8 +935,8 @@ public class L2Clan implements IIdentifiable, INamable {
 			restoreRankPrivs();
 			restoreSkills();
 			restoreNotice();
-		} catch (Exception e) {
-			_log.log(Level.SEVERE, "Error restoring clan data: " + e.getMessage(), e);
+		} catch (Exception ex) {
+			_log.log(Level.SEVERE, "Error restoring clan data for clan " + getId() + "!", ex);
 		}
 	}
 	
@@ -1055,11 +1042,7 @@ public class L2Clan implements IIdentifiable, INamable {
 	}
 	
 	public final Skill[] getAllSkills() {
-		if (_skills == null) {
-			return new Skill[0];
-		}
-		
-		return _skills.values().toArray(new Skill[_skills.values().size()]);
+		return _skills.values().toArray(new Skill[0]);
 	}
 	
 	public Map<Integer, Skill> getSkills() {
@@ -1348,7 +1331,7 @@ public class L2Clan implements IIdentifiable, INamable {
 	}
 	
 	public boolean isAtWar() {
-		return (_atWarWith != null) && !_atWarWith.isEmpty();
+		return !_atWarWith.isEmpty();
 	}
 	
 	public Set<Integer> getWarList() {
@@ -1471,10 +1454,6 @@ public class L2Clan implements IIdentifiable, INamable {
 	 * @return
 	 */
 	public final SubPledge getSubPledge(int pledgeType) {
-		if (_subPledges == null) {
-			return null;
-		}
-		
 		return _subPledges.get(pledgeType);
 	}
 	
@@ -1484,10 +1463,6 @@ public class L2Clan implements IIdentifiable, INamable {
 	 * @return
 	 */
 	public final SubPledge getSubPledge(String pledgeName) {
-		if (_subPledges == null) {
-			return null;
-		}
-		
 		for (SubPledge sp : _subPledges.values()) {
 			if (sp.getName().equalsIgnoreCase(pledgeName)) {
 				return sp;
@@ -1501,7 +1476,7 @@ public class L2Clan implements IIdentifiable, INamable {
 	 * @return
 	 */
 	public final SubPledge[] getAllSubPledges() {
-		return _subPledges.values().toArray(new SubPledge[_subPledges.values().size()]);
+		return _subPledges.values().toArray(new SubPledge[0]);
 	}
 	
 	public SubPledge createSubPledge(L2PcInstance player, int pledgeType, int leaderId, String subPledgeName) {
@@ -1645,11 +1620,7 @@ public class L2Clan implements IIdentifiable, INamable {
 	}
 	
 	public final RankPrivs[] getAllRankPrivs() {
-		if (_privs == null) {
-			return new RankPrivs[0];
-		}
-		
-		return _privs.values().toArray(new RankPrivs[_privs.values().size()]);
+		return _privs.values().toArray(new RankPrivs[0]);
 	}
 	
 	public int getLeaderSubPledge(int leaderId) {
@@ -2195,12 +2166,14 @@ public class L2Clan implements IIdentifiable, INamable {
 		
 		setLevel(level);
 		
+		ForumsBBSManager.getInstance().onClanLevel(this);
+		
 		if (getLeader().isOnline()) {
 			L2PcInstance leader = getLeader().getPlayerInstance();
 			if (level > 4) {
 				SiegeManager.getInstance().addSiegeSkills(leader);
 				leader.sendPacket(SystemMessageId.CLAN_CAN_ACCUMULATE_CLAN_REPUTATION_POINTS);
-			} else if (level < 5) {
+			} else {
 				SiegeManager.getInstance().removeSiegeSkills(leader);
 			}
 		}
@@ -2353,11 +2326,7 @@ public class L2Clan implements IIdentifiable, INamable {
 			return true;
 		}
 		// is first level?
-		if ((current == null) && (skill.getLevel() == 1)) {
-			return true;
-		}
-		
-		return false;
+		return (current == null) && (skill.getLevel() == 1);
 	}
 	
 	public List<SubPledgeSkill> getAllSubSkills() {

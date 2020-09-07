@@ -27,13 +27,13 @@ Server and Datapack may not be not be bundled or packaged.
 Requeriments
 ---
 
-Windows or Linux system with Java JDK 11+, Maven 3.6+, MariaDB 10.4+.
+Windows or Linux system with Java JDK 14+ and MariaDB 10.4+.
 
 At least 4gb of RAM and 2 Cores.
 
-Open ports 2016 and 7777.
+Open ports 2106 and 7777.
 
-High Five part 5 NA client fully updated.
+High Five part 5 client fully updated.
 
 Links
 ---
@@ -42,7 +42,7 @@ Links
 
 - [Forums](http://www.l2jserver.com/forum/)
 
-- [Live Support](https://gitter.im/L2J/L2J_Server)
+- [Discord](https://discord.gg/jMnKZA)
 
 - [Trello](https://trello.com/b/qjLoH966)
 

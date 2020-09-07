@@ -497,7 +497,6 @@ public class Quest extends AbstractScript implements IIdentifiable {
 			onTutorialEvent(player, command);
 		} catch (Exception e) {
 			showError(player, e);
-			return;
 		}
 	}
 	
@@ -506,7 +505,6 @@ public class Quest extends AbstractScript implements IIdentifiable {
 			onTutorialClientEvent(player, event);
 		} catch (Exception e) {
 			showError(player, e);
-			return;
 		}
 	}
 	
@@ -1307,7 +1305,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 	 * Loads all quest states and variables for the specified player.
 	 * @param player the player who is entering the world
 	 */
-	public static final void playerEnter(L2PcInstance player) {
+	public static void playerEnter(L2PcInstance player) {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var invalidQuestData = con.prepareStatement("DELETE FROM character_quests WHERE charId = ? AND name = ?");
 			var invalidQuestDataVar = con.prepareStatement("DELETE FROM character_quests WHERE charId = ? AND name = ? AND var = ?");
@@ -1410,7 +1408,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 			ps.setString(1, getName());
 			ps.setString(2, var);
 			try (var rs = ps.executeQuery()) {
-				if (rs.first()) {
+				if (rs.next()) {
 					result = rs.getString(1);
 				}
 			}
@@ -2205,7 +2203,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		}
 		
 		final List<QuestState> candidates = new ArrayList<>();
-		if (checkPartyMemberConditions(qs, condition, target) && (playerChance > 0)) {
+		if (checkPartyMemberConditions(qs, condition, target)) {
 			for (int i = 0; i < playerChance; i++) {
 				candidates.add(qs);
 			}
@@ -2593,7 +2591,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 	 * @param html the HTML to display if the condition is not met
 	 */
 	public void addCondIsSubClassActive(String html) {
-		getStartConditions().put(p -> p.isSubClassActive(), html);
+		getStartConditions().put(L2PcInstance::isSubClassActive, html);
 	}
 	
 	/**
@@ -2615,10 +2613,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 	
 	public boolean haveMemo(L2PcInstance talker, int questId) {
 		Quest quest = QuestManager.getInstance().getQuest(questId);
-		if ((quest != null) && talker.hasQuestState(quest.getName())) {
-			return true;
-		}
-		return false;
+		return (quest != null) && talker.hasQuestState(quest.getName());
 	}
 	
 	/**

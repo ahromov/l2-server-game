@@ -478,7 +478,7 @@ public class L2PetInstance extends L2Summon {
 				return;
 			}
 			
-			if ((target.getItemLootShedule() != null) && ((target.getOwnerId() == getOwner().getObjectId()) || getOwner().isInLooterParty(target.getOwnerId()))) {
+			if ((target.getItemLootSchedule() != null) && ((target.getOwnerId() == getOwner().getObjectId()) || getOwner().isInLooterParty(target.getOwnerId()))) {
 				target.resetOwnerTimer();
 			}
 			

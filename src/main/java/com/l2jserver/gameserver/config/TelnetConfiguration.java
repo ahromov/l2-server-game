@@ -20,10 +20,12 @@ package com.l2jserver.gameserver.config;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.aeonbits.owner.Config.HotReloadType.ASYNC;
+import static org.aeonbits.owner.Config.LoadType.MERGE;
 
 import java.util.List;
 
 import org.aeonbits.owner.Config.HotReload;
+import org.aeonbits.owner.Config.LoadPolicy;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Reloadable;
 
@@ -33,9 +35,11 @@ import org.aeonbits.owner.Reloadable;
  * @version 2.6.1.0
  */
 @Sources({
+	"file:${L2J_HOME}/custom/game/config/telnet.properties",
 	"file:./config/telnet.properties",
 	"classpath:config/telnet.properties"
 })
+@LoadPolicy(MERGE)
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
 public interface TelnetConfiguration extends Reloadable {
 	

@@ -41,6 +41,8 @@ public class TopicRepositoryMySQLImpl implements TopicRepository {
 	
 	private static final String DELETE_TOPIC = "DELETE FROM topic WHERE topic_id=? AND topic_forum_id=?";
 	
+	private static final String INSERT_TOPIC = "INSERT INTO topic (topic_id,topic_forum_id,topic_name,topic_date,topic_ownername,topic_ownerid,topic_type,topic_reply) values (?,?,?,?,?,?,?,?)";
+	
 	@Override
 	public void load(Forum forum) {
 		try (var con = ConnectionFactory.getInstance().getConnection();
@@ -69,7 +71,7 @@ public class TopicRepositoryMySQLImpl implements TopicRepository {
 	@Override
 	public void save(Topic topic) {
 		try (var con = ConnectionFactory.getInstance().getConnection();
-			var ps = con.prepareStatement("INSERT INTO topic (topic_id,topic_forum_id,topic_name,topic_date,topic_ownername,topic_ownerid,topic_type,topic_reply) values (?,?,?,?,?,?,?,?)")) {
+			var ps = con.prepareStatement(INSERT_TOPIC)) {
 			ps.setInt(1, topic.getId());
 			ps.setInt(2, topic.getForumId());
 			ps.setString(3, topic.getName());
@@ -87,7 +89,7 @@ public class TopicRepositoryMySQLImpl implements TopicRepository {
 	@Override
 	public void delete(Topic topic, Forum forum) {
 		TopicBBSManager.getInstance().delTopic(topic);
-		forum.rmTopicByID(topic.getId());
+		forum.removeTopic(topic.getId());
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement(DELETE_TOPIC)) {
 			ps.setInt(1, topic.getId());

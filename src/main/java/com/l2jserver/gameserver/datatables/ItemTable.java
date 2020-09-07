@@ -207,12 +207,12 @@ public class ItemTable {
 				if ((raid.getFirstCommandChannelAttacked() != null) && !character().autoLootRaids()) {
 					item.setOwnerId(raid.getFirstCommandChannelAttacked().getLeaderObjectId());
 					itemLootShedule = ThreadPoolManager.getInstance().scheduleGeneral(new ResetOwner(item), character().getRaidLootRightsInterval());
-					item.setItemLootShedule(itemLootShedule);
+					item.setItemLootSchedule(itemLootShedule);
 				}
 			} else if (!character().autoLoot() || ((reference instanceof L2EventMonsterInstance) && ((L2EventMonsterInstance) reference).eventDropOnGround())) {
 				item.setOwnerId(actor.getObjectId());
 				itemLootShedule = ThreadPoolManager.getInstance().scheduleGeneral(new ResetOwner(item), 15000);
-				item.setItemLootShedule(itemLootShedule);
+				item.setItemLootSchedule(itemLootShedule);
 			}
 		}
 		
@@ -335,7 +335,7 @@ public class ItemTable {
 		@Override
 		public void run() {
 			_item.setOwnerId(0);
-			_item.setItemLootShedule(null);
+			_item.setItemLootSchedule(null);
 		}
 	}
 	

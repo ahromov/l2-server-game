@@ -41,30 +41,28 @@ final class BuilderContainer extends Builder {
 		final int paramsLength = params.length;
 		final String[] builds = new String[buildersLength];
 		
-		Builder builder;
-		String build;
-		int i, paramIndex, buildTextLen = 0;
+		int buildTextLen = 0;
 		if (paramsLength != 0) {
-			for (i = buildersLength; i-- > 0;) {
-				builder = _builders[i];
-				paramIndex = builder.getIndex();
-				build = (paramIndex != -1) && (paramIndex < paramsLength) ? builder.toString(params[paramIndex]) : builder.toString();
+			for (int i = buildersLength; i-- > 0;) {
+				var builder = _builders[i];
+				var paramIndex = builder.getIndex();
+				var build = (paramIndex != -1) && (paramIndex < paramsLength) ? builder.toString(params[paramIndex]) : builder.toString();
 				buildTextLen += build.length();
 				builds[i] = build;
 			}
 		} else {
-			for (i = buildersLength; i-- > 0;) {
-				build = _builders[i].toString();
+			for (int i = buildersLength; i-- > 0;) {
+				var build = _builders[i].toString();
 				buildTextLen += build.length();
 				builds[i] = build;
 			}
 		}
 		
-		final FastStringBuilder fsb = new FastStringBuilder(buildTextLen);
-		for (i = 0; i < buildersLength; i++) {
-			fsb.append(builds[i]);
+		final var sb = new StringBuilder(buildTextLen);
+		for (int i = 0; i < buildersLength; i++) {
+			sb.append(builds[i]);
 		}
-		return fsb.toString();
+		return sb.toString();
 	}
 	
 	@Override

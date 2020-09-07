@@ -23,21 +23,20 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerAgathionId.
+ * Condition Player Agathion Id.
+ * @author Zoey76
+ * @version 2.6.2.0
  */
 public class ConditionPlayerAgathionId extends Condition {
+	
 	private final int _agathionId;
 	
-	/**
-	 * Instantiates a new condition player agathion id.
-	 * @param agathionId the agathion id
-	 */
 	public ConditionPlayerAgathionId(int agathionId) {
 		_agathionId = agathionId;
 	}
 	
 	@Override
 	public boolean testImpl(L2Character effector, L2Character effected, Skill skill, L2Item item) {
-		return (effector.getActingPlayer() != null) && (effector.getActingPlayer().getAgathionId() == _agathionId);
+		return effector.isPlayer() && (effector.getActingPlayer().getAgathionId() == _agathionId);
 	}
 }

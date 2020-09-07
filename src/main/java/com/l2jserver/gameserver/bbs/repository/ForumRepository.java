@@ -18,6 +18,8 @@
  */
 package com.l2jserver.gameserver.bbs.repository;
 
+import java.util.Map;
+
 import com.l2jserver.gameserver.bbs.model.Forum;
 
 /**
@@ -27,7 +29,7 @@ import com.l2jserver.gameserver.bbs.model.Forum;
  */
 public interface ForumRepository {
 	
-	void findById(Forum forum);
+	Map<String, Forum> getForums();
 	
 	void save(Forum forum);
 }

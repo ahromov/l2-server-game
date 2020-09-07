@@ -18,8 +18,6 @@
  */
 package com.l2jserver.gameserver.bbs.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,20 +28,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class Forum {
 	
-	private final int id;
+	private int id;
 	private String name;
 	private ForumType type;
 	private int post;
 	private ForumVisibility visibility;
 	private final Forum parent;
 	private int ownerId;
-	private final List<Forum> children = new ArrayList<>();
+	private final Map<String, Forum> children = new ConcurrentHashMap<>();
 	private final Map<Integer, Topic> topics = new ConcurrentHashMap<>();
-	
-	public Forum(int id, Forum parent) {
-		this.id = id;
-		this.parent = parent;
-	}
 	
 	public Forum(int id, String name, Forum parent, ForumType type, ForumVisibility visibility, int ownerId) {
 		this.name = name;
@@ -55,86 +48,86 @@ public final class Forum {
 		this.ownerId = ownerId;
 	}
 	
-	public void addChildren(Forum children) {
-		this.children.add(children);
-	}
-	
 	public int getTopicSize() {
 		return topics.size();
 	}
 	
-	public Topic getTopic(int j) {
-		return topics.get(j);
+	public Topic getTopic(int topicId) {
+		return topics.get(topicId);
 	}
 	
 	public void addTopic(Topic t) {
 		topics.put(t.getId(), t);
 	}
 	
-	/**
-	 * @param name the forum name
-	 * @return the forum for the given name
-	 */
+	public void removeTopic(int topicId) {
+		topics.remove(topicId);
+	}
+	
 	public Forum getChildByName(String name) {
-		return children.stream().filter(f -> f.getName().equals(name)).findFirst().orElse(null);
+		return children.get(name);
 	}
 	
-	public void rmTopicByID(int id) {
-		topics.remove(id);
+	public void addChild(Forum child) {
+		children.put(child.getName(), child);
 	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public ForumType getType() {
-		return type;
-	}
-	
-	public void setType(ForumType type) {
-		this.type = type;
-	}
-	
-	public int getPost() {
-		return post;
-	}
-	
-	public void setPost(int post) {
-		this.post = post;
-	}
-	
-	public ForumVisibility getVisibility() {
-		return visibility;
-	}
-	
-	public void setVisibility(ForumVisibility visibility) {
-		this.visibility = visibility;
-	}
-	
-	public int getOwnerId() {
-		return ownerId;
-	}
-	
-	public void setOwnerId(int ownerId) {
-		this.ownerId = ownerId;
-	}
-	
+
 	public int getId() {
 		return id;
 	}
-	
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public ForumType getType() {
+		return type;
+	}
+
+	public void setType(ForumType type) {
+		this.type = type;
+	}
+
+	public int getPost() {
+		return post;
+	}
+
+	public void setPost(int post) {
+		this.post = post;
+	}
+
+	public ForumVisibility getVisibility() {
+		return visibility;
+	}
+
+	public void setVisibility(ForumVisibility visibility) {
+		this.visibility = visibility;
+	}
+
+	public int getOwnerId() {
+		return ownerId;
+	}
+
+	public void setOwnerId(int ownerId) {
+		this.ownerId = ownerId;
+	}
+
 	public Forum getParent() {
 		return parent;
 	}
-	
-	public List<Forum> getChildren() {
+
+	public Map<String, Forum> getChildren() {
 		return children;
 	}
-	
+
 	public Map<Integer, Topic> getTopics() {
 		return topics;
 	}

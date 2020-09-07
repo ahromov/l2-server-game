@@ -30,8 +30,6 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.script.ScriptException;
 
@@ -51,96 +49,90 @@ public final class ScriptEngineManager {
 	
 	private static final String MAIN = "main";
 	
-	private static final String[] EMPTY_STRING_ARRAY = new String[0];
+	private static final Object[] MAIN_METHOD_ARGS = new Object[] {
+		new String[0]
+	};
 	
 	private static final Class<?>[] ARG_MAIN = new Class[] {
 		String[].class
 	};
 	
-	private static final InMemoryJavaCompiler COMPILER = InMemoryJavaCompiler.newInstance() //
-		.useOptions("-classpath", CLASS_PATH, "-g") //
-		.ignoreWarnings();
+	private InMemoryJavaCompiler compiler() {
+		return InMemoryJavaCompiler.newInstance() //
+			.useOptions("-classpath", CLASS_PATH, "-g") //
+			.ignoreWarnings();
+	}
 	
 	public void executeScriptList(File list) throws Exception {
 		if (general().noQuests()) {
-			if (!general().noHandlers()) {
-				addSource(new File(server().getScriptRoot(), "com/l2jserver/datapack/handlers/MasterHandler.java"));
-				LOG.info("Handlers loaded, all other scripts skipped!");
-			}
 			return;
 		}
 		
-		if (list.isFile()) {
-			try (FileInputStream fis = new FileInputStream(list);
-				InputStreamReader isr = new InputStreamReader(fis);
-				LineNumberReader lnr = new LineNumberReader(isr)) {
-				String line;
-				while ((line = lnr.readLine()) != null) {
-					if (general().noHandlers() && line.contains("MasterHandler.java")) {
-						continue;
-					}
-					
-					String[] parts = line.trim().split("#");
-					
-					if ((parts.length > 0) && !parts[0].isEmpty() && (parts[0].charAt(0) != '#')) {
-						line = parts[0];
-						
-						if (line.endsWith("/**")) {
-							line = line.substring(0, line.length() - 3);
-						} else if (line.endsWith("/*")) {
-							line = line.substring(0, line.length() - 2);
-						}
-						
-						final File file = new File(server().getScriptRoot(), line);
-						if (file.isDirectory() && parts[0].endsWith("/**")) {
-							executeAllScriptsInDirectory(file, true);
-						} else if (file.isDirectory() && parts[0].endsWith("/*")) {
-							executeAllScriptsInDirectory(file, false);
-						} else if (file.isFile()) {
-							addSource(file);
-						} else {
-							LOG.warn("Failed loading: ({}) @ {}:{} - Reason: doesnt exists or is not a file.", file.getCanonicalPath(), list.getName(), lnr.getLineNumber());
-						}
-					}
-				}
-			}
-		} else {
+		if (!list.isFile()) {
 			throw new IllegalArgumentException("Argument must be an file containing a list of scripts to be loaded");
 		}
 		
-		final Map<String, Class<?>> classes = COMPILER.compileAll();
-		for (Entry<String, Class<?>> e : classes.entrySet()) {
-			runMain(e.getValue());
-		}
-	}
-	
-	private void executeAllScriptsInDirectory(File dir, boolean recurseDown) {
-		if (dir.isDirectory()) {
-			final File[] files = dir.listFiles();
-			if (files == null) {
-				return;
-			}
-			
-			for (File file : files) {
-				if (file.isDirectory() && recurseDown) {
-					if (general().debug()) {
-						LOG.info("Entering folder: {}", file.getName());
-					}
-					executeAllScriptsInDirectory(file, recurseDown);
+		final var compiler = compiler();
+		try (var fis = new FileInputStream(list);
+			var isr = new InputStreamReader(fis);
+			var lnr = new LineNumberReader(isr)) {
+			String line;
+			while ((line = lnr.readLine()) != null) {
+				final var parts = line.trim().split("#");
+				if ((parts.length <= 0) || parts[0].trim().isEmpty() || (parts[0].charAt(0) == '#')) {
+					continue;
+				}
+				
+				line = parts[0].trim();
+				if (line.endsWith("/**")) {
+					line = line.substring(0, line.length() - 3);
+				} else if (line.endsWith("/*")) {
+					line = line.substring(0, line.length() - 2);
+				}
+				
+				final var file = new File(server().getScriptRoot(), line);
+				if (file.isDirectory() && parts[0].endsWith("/**")) {
+					executeAllScriptsInDirectory(compiler, file, true);
+				} else if (file.isDirectory() && parts[0].endsWith("/*")) {
+					executeAllScriptsInDirectory(compiler, file, false);
 				} else if (file.isFile()) {
-					addSource(file);
+					addSource(compiler, file);
+				} else {
+					LOG.warn("Failed loading: ({}) @ {}:{} - Reason: doesnt exists or is not a file.", file.getCanonicalPath(), list.getName(), lnr.getLineNumber());
 				}
 			}
-		} else {
+		}
+		
+		compiler.compileAll().forEach((k, v) -> runMain(v));
+	}
+	
+	private void executeAllScriptsInDirectory(InMemoryJavaCompiler compiler, File dir, boolean recurseDown) {
+		if (!dir.isDirectory()) {
 			throw new IllegalArgumentException("The argument directory either doesnt exists or is not an directory.");
+		}
+		
+		final var files = dir.listFiles();
+		if (files == null) {
+			return;
+		}
+		
+		for (var file : files) {
+			if (file.isDirectory() && recurseDown) {
+				if (general().debug()) {
+					LOG.info("Entering folder: {}", file.getName());
+				}
+				executeAllScriptsInDirectory(compiler, file, recurseDown);
+			} else if (file.isFile()) {
+				addSource(compiler, file);
+			}
 		}
 	}
 	
 	public Class<?> compileScript(File file) {
-		try (FileInputStream fis = new FileInputStream(file);
-			InputStreamReader isr = new InputStreamReader(fis);
-			BufferedReader reader = new BufferedReader(isr)) {
-			return COMPILER.compile(getClassForFile(file), readerToString(reader));
+		try (var fis = new FileInputStream(file);
+			var isr = new InputStreamReader(fis);
+			var reader = new BufferedReader(isr)) {
+			return compiler().compile(getClassForFile(file), readerToString(reader));
 		} catch (Exception ex) {
 			LOG.warn("Error executing script!", ex);
 		}
@@ -149,7 +141,6 @@ public final class ScriptEngineManager {
 	
 	public void executeScript(File file) throws Exception {
 		final Class<?> clazz = compileScript(file);
-		
 		runMain(clazz);
 	}
 	
@@ -157,15 +148,15 @@ public final class ScriptEngineManager {
 		executeScript(new File(server().getScriptRoot(), file));
 	}
 	
-	public void addSource(File file) {
+	public void addSource(InMemoryJavaCompiler compiler, File file) {
 		if (general().debug()) {
 			LOG.info("Loading Script: {}", file.getAbsolutePath());
 		}
 		
-		try (FileInputStream fis = new FileInputStream(file);
-			InputStreamReader isr = new InputStreamReader(fis);
-			BufferedReader reader = new BufferedReader(isr)) {
-			COMPILER.addSource(getClassForFile(file), readerToString(reader));
+		try (var fis = new FileInputStream(file);
+			var isr = new InputStreamReader(fis);
+			var reader = new BufferedReader(isr)) {
+			compiler.addSource(getClassForFile(file), readerToString(reader));
 		} catch (Exception ex) {
 			LOG.warn("Error executing script!", ex);
 		}
@@ -181,23 +172,23 @@ public final class ScriptEngineManager {
 		return null;
 	}
 	
-	private static void runMain(Class<?> clazz) throws Exception {
-		final boolean isPublicClazz = Modifier.isPublic(clazz.getModifiers());
-		final Method mainMethod = findMethod(clazz, MAIN, ARG_MAIN);
-		if (mainMethod != null) {
-			if (!isPublicClazz) {
-				mainMethod.setAccessible(true);
-			}
-			
-			mainMethod.invoke(null, new Object[] {
-				EMPTY_STRING_ARRAY
-			});
+	private static void runMain(Class<?> clazz) {
+		final var mainMethod = findMethod(clazz, MAIN, ARG_MAIN);
+		if (mainMethod == null) {
+			LOG.warn("Unable to find main method in class {}!", clazz);
+			return;
+		}
+		
+		try {
+			mainMethod.invoke(null, MAIN_METHOD_ARGS);
+		} catch (Exception ex) {
+			LOG.error("Error loading script {}!", clazz);
 		}
 	}
 	
 	private static String readerToString(Reader reader) throws ScriptException {
-		try (BufferedReader in = new BufferedReader(reader)) {
-			final StringBuilder result = new StringBuilder();
+		try (var in = new BufferedReader(reader)) {
+			final var result = new StringBuilder();
 			String line;
 			while ((line = in.readLine()) != null) {
 				result.append(line).append(System.lineSeparator());
@@ -210,7 +201,7 @@ public final class ScriptEngineManager {
 	
 	private static Method findMethod(Class<?> clazz, String methodName, Class<?>[] args) {
 		try {
-			final Method mainMethod = clazz.getMethod(methodName, args);
+			final var mainMethod = clazz.getMethod(methodName, args);
 			final int modifiers = mainMethod.getModifiers();
 			if (Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers)) {
 				return mainMethod;

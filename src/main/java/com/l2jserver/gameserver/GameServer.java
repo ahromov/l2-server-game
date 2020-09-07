@@ -45,6 +45,7 @@ import com.l2jserver.commons.dao.ServerNameDAO;
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.commons.util.IPv4Filter;
 import com.l2jserver.commons.util.Util;
+import com.l2jserver.gameserver.bbs.service.ForumsBBSManager;
 import com.l2jserver.gameserver.cache.HtmCache;
 import com.l2jserver.gameserver.dao.factory.impl.DAOFactory;
 import com.l2jserver.gameserver.data.json.ExperienceData;
@@ -215,10 +216,13 @@ public final class GameServer {
 		
 		printSection("Effects");
 		EffectHandler.getInstance().executeScript();
+		
 		printSection("Enchant Skill Groups");
 		EnchantSkillGroupsData.getInstance();
+		
 		printSection("Skill Trees");
 		SkillTreesData.getInstance();
+		
 		printSection("Skills");
 		SkillData.getInstance();
 		SummonSkillsTable.getInstance();
@@ -256,6 +260,11 @@ public final class GameServer {
 		PetDataTable.getInstance();
 		CharSummonTable.getInstance().init();
 		
+		printSection("BBS");
+		if (general().enableCommunityBoard()) {
+			ForumsBBSManager.getInstance().load();
+		}
+		
 		printSection("Clans");
 		ClanTable.getInstance();
 		ClanHallSiegeManager.getInstance();
@@ -264,7 +273,6 @@ public final class GameServer {
 		
 		printSection("Geodata");
 		GeoData.getInstance();
-		
 		if (geodata().getPathFinding() > 0) {
 			PathFinding.getInstance();
 		}
@@ -280,6 +288,7 @@ public final class GameServer {
 		NpcBufferTable.getInstance();
 		GrandBossManager.getInstance().initZones();
 		EventDroplist.getInstance();
+		
 		printSection("Auction Manager");
 		ItemAuctionManager.getInstance();
 		
@@ -303,13 +312,31 @@ public final class GameServer {
 		CursedWeaponsManager.getInstance();
 		TransformData.getInstance();
 		BotReportTable.getInstance();
-		
-		printSection("Scripts");
 		QuestManager.getInstance();
 		BoatManager.getInstance();
 		AirShipManager.getInstance();
 		GraciaSeedsManager.getInstance();
 		
+		printSection("Handlers");
+		ScriptEngineManager.getInstance().executeScript("com/l2jserver/datapack/handlers/MasterHandler.java");
+		
+		printSection("AI");
+		ScriptEngineManager.getInstance().executeScript("com/l2jserver/datapack/ai/AILoader.java");
+		
+		printSection("Instances");
+		ScriptEngineManager.getInstance().executeScript("com/l2jserver/datapack/instances/InstanceLoader.java");
+		
+		printSection("Gracia");
+		ScriptEngineManager.getInstance().executeScript("com/l2jserver/datapack/gracia/GraciaLoader.java");
+		
+		printSection("Hellbound");
+		ScriptEngineManager.getInstance().executeScript("com/l2jserver/datapack/hellbound/HellboundLoader.java");
+		
+		printSection("Quests");
+		ScriptEngineManager.getInstance().executeScript("com/l2jserver/datapack/quests/QuestLoader.java");
+		ScriptEngineManager.getInstance().executeScript("com/l2jserver/datapack/quests/TerritoryWarScripts/TerritoryWarSuperClass.java");
+		
+		printSection("Scripts");
 		ScriptEngineManager.getInstance().executeScriptList(new File(server().getDatapackRoot(), "data/scripts.cfg"));
 		
 		SpawnTable.getInstance().load();
@@ -329,8 +356,6 @@ public final class GameServer {
 		TerritoryWarManager.getInstance();
 		CastleManorManager.getInstance();
 		MercTicketManager.getInstance();
-		printSection("Quests");
-		QuestManager.getInstance().report();
 		
 		if (general().saveDroppedItem()) {
 			ItemsOnGroundManager.getInstance();

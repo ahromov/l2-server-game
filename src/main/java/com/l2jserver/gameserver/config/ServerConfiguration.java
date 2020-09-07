@@ -20,11 +20,13 @@ package com.l2jserver.gameserver.config;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.aeonbits.owner.Config.HotReloadType.ASYNC;
+import static org.aeonbits.owner.Config.LoadType.MERGE;
 
 import java.io.File;
 import java.util.Set;
 
 import org.aeonbits.owner.Config.HotReload;
+import org.aeonbits.owner.Config.LoadPolicy;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Mutable;
 import org.aeonbits.owner.Reloadable;
@@ -38,9 +40,11 @@ import com.l2jserver.gameserver.idfactory.IdFactoryType;
  * @version 2.6.1.0
  */
 @Sources({
+	"file:${L2J_HOME}/custom/game/config/server.properties",
 	"file:./config/server.properties",
 	"classpath:config/server.properties"
 })
+@LoadPolicy(MERGE)
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
 public interface ServerConfiguration extends Mutable, Reloadable {
 	

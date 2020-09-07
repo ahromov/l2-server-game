@@ -18,6 +18,11 @@
  */
 package com.l2jserver.gameserver.bbs.repository.impl;
 
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,63 +43,77 @@ public class ForumRepositoryMySQLImpl implements ForumRepository {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ForumRepositoryMySQLImpl.class);
 	
-	private static final String SELECT_FORUM = "SELECT forum_name, forum_post, forum_type, forum_perm, forum_owner_id FROM forums WHERE forum_id=?";
+	private static final String SELECT_FORUMS = "SELECT forum_id, forum_name, forum_post, forum_type, forum_perm, forum_owner_id FROM forums WHERE forum_type = 0";
 	
-	private static final String INSERT_FORUM = "INSERT INTO forums (forum_id,forum_name,forum_parent,forum_post,forum_type,forum_perm,forum_owner_id) VALUES (?,?,?,?,?,?,?)";
+	private static final String SELECT_FORUM_CHILDREN = "SELECT forum_id, forum_name, forum_post, forum_type, forum_perm, forum_owner_id FROM forums WHERE forum_parent=?";
+	
+	private static final String INSERT_FORUM = "INSERT INTO forums (forum_name, forum_parent, forum_post, forum_type, forum_perm, forum_owner_id) VALUES (?,?,?,?,?,?)";
 	
 	@Override
-	public void findById(Forum forum) {
+	public Map<String, Forum> getForums() {
+		final var forums = new HashMap<String, Forum>();
 		try (var con = ConnectionFactory.getInstance().getConnection();
-			var ps = con.prepareStatement(SELECT_FORUM)) {
-			ps.setInt(1, forum.getId());
+			var s = con.createStatement();
+			var rs = s.executeQuery(SELECT_FORUMS)) {
+			while (rs.next()) {
+				final var forum = new Forum(rs.getInt("forum_id"), //
+					rs.getString("forum_name"), //
+					null, //
+					ForumType.values()[rs.getInt("forum_type")], //
+					ForumVisibility.values()[rs.getInt("forum_perm")], //
+					rs.getInt("forum_owner_id"));
+				forums.put(forum.getName(), forum);
+				
+				// Load topic
+				DAOFactory.getInstance().getTopicRepository().load(forum);
+				
+				// Load children
+				loadChildren(forum);
+			}
+		} catch (Exception ex) {
+			LOG.warn("Data error on Forum (root)!", ex);
+		}
+		return forums;
+	}
+	
+	private void loadChildren(Forum parent) {
+		try (var con = ConnectionFactory.getInstance().getConnection();
+			var ps = con.prepareStatement(SELECT_FORUM_CHILDREN)) {
+			ps.setInt(1, parent.getId());
 			try (var rs = ps.executeQuery()) {
-				if (rs.next()) {
-					forum.setName(rs.getString("forum_name"));
-					forum.setPost(rs.getInt("forum_post"));
-					forum.setType(ForumType.values()[rs.getInt("forum_type")]);
-					forum.setVisibility(ForumVisibility.values()[rs.getInt("forum_perm")]);
-					forum.setOwnerId(rs.getInt("forum_owner_id"));
+				while (rs.next()) {
+					ForumsBBSManager.getInstance().load(rs.getInt("forum_id"), //
+						rs.getString("forum_name"), //
+						parent, //
+						ForumType.values()[rs.getInt("forum_type")], //
+						ForumVisibility.values()[rs.getInt("forum_perm")], //
+						rs.getInt("forum_owner_id"));
 				}
 			}
 		} catch (Exception ex) {
-			LOG.warn("Could not get from database forum Id {}!", forum.getId(), ex);
-		}
-		
-		DAOFactory.getInstance().getTopicRepository().load(forum);
-		
-		loadChildren(forum);
-	}
-	
-	private void loadChildren(Forum forum) {
-		try (var con = ConnectionFactory.getInstance().getConnection();
-			var ps = con.prepareStatement("SELECT forum_id FROM forums WHERE forum_parent=?")) {
-			ps.setInt(1, forum.getId());
-			try (var rs = ps.executeQuery()) {
-				while (rs.next()) {
-					final var childForum = new Forum(rs.getInt("forum_id"), forum);
-					forum.getChildren().add(childForum);
-					ForumsBBSManager.getInstance().addForum(childForum);
-				}
-			}
-		} catch (Exception e) {
-			LOG.warn("Could not get from database child forums for forum Id {}!", forum.getId(), e);
+			LOG.warn("Error loading child forums for forum Id {}!", parent.getId(), ex);
 		}
 	}
 	
 	@Override
 	public void save(Forum forum) {
 		try (var con = ConnectionFactory.getInstance().getConnection();
-			var ps = con.prepareStatement(INSERT_FORUM)) {
-			ps.setInt(1, forum.getId());
-			ps.setString(2, forum.getName());
-			ps.setInt(3, forum.getParent().getId());
-			ps.setInt(4, forum.getPost());
-			ps.setInt(5, forum.getType().ordinal());
-			ps.setInt(6, forum.getVisibility().ordinal());
-			ps.setInt(7, forum.getOwnerId());
-			ps.execute();
+			var ps = con.prepareStatement(INSERT_FORUM, RETURN_GENERATED_KEYS)) {
+			ps.setString(1, forum.getName());
+			ps.setInt(2, forum.getParent().getId());
+			ps.setInt(3, forum.getPost());
+			ps.setInt(4, forum.getType().ordinal());
+			ps.setInt(5, forum.getVisibility().ordinal());
+			ps.setInt(6, forum.getOwnerId());
+			ps.executeUpdate();
+			
+			try (var rs = ps.getGeneratedKeys()) {
+				if (rs.next()) {
+					forum.setId(rs.getInt(1));
+				}
+			}
 		} catch (Exception ex) {
-			LOG.error("Could not save forum If {} in database!", forum.getId(), ex);
+			LOG.error("Error saving forum Id {} in database!", forum.getId(), ex);
 		}
 	}
 }

@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.bbs.service.ForumsBBSManager;
 import com.l2jserver.gameserver.idfactory.IdFactory;
 import com.l2jserver.gameserver.instancemanager.AuctionManager;
 import com.l2jserver.gameserver.instancemanager.ClanHallSiegeManager;
@@ -62,7 +61,7 @@ import com.l2jserver.gameserver.network.serverpackets.UserInfo;
 import com.l2jserver.gameserver.util.EnumIntBitmask;
 
 /**
- * This class loads the clan related data.
+ * Clan Table.
  */
 public class ClanTable {
 	
@@ -73,11 +72,6 @@ public class ClanTable {
 	private final Map<Integer, L2Clan> _clans = new ConcurrentHashMap<>();
 	
 	protected ClanTable() {
-		// forums has to be loaded before clan data, because of last forum id used should have also memo included
-		if (general().enableCommunityBoard()) {
-			ForumsBBSManager.getInstance().initRoot();
-		}
-		
 		L2Clan clan;
 		// Count the clans
 		int clanCount = 0;

@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.GeoData;
 import com.l2jserver.gameserver.ThreadPoolManager;
+import com.l2jserver.gameserver.agathion.repository.AgathionRepository;
 import com.l2jserver.gameserver.data.xml.impl.EnchantItemOptionsData;
 import com.l2jserver.gameserver.data.xml.impl.OptionData;
 import com.l2jserver.gameserver.datatables.ItemTable;
@@ -131,7 +132,7 @@ public final class L2ItemInstance extends L2Object {
 	private L2Augmentation _augmentation = null;
 	
 	/** Shadow item */
-	private int _mana = -1;
+	private int _mana;
 	
 	private boolean _consumingMana = false;
 	
@@ -172,7 +173,7 @@ public final class L2ItemInstance extends L2Object {
 	
 	private Elementals[] _elementals = null;
 	
-	private ScheduledFuture<?> itemLootShedule = null;
+	private ScheduledFuture<?> itemLootSchedule = null;
 	
 	private ScheduledFuture<?> _lifeTimeTask;
 	
@@ -181,6 +182,8 @@ public final class L2ItemInstance extends L2Object {
 	private int _shotsMask = 0;
 	
 	private final List<Options> _enchantOptions = new ArrayList<>();
+	
+	private int agathionEnergy;
 	
 	/**
 	 * Constructor of the L2ItemInstance from the objectId and the itemId.
@@ -204,12 +207,14 @@ public final class L2ItemInstance extends L2Object {
 		_mana = _item.getDuration();
 		_time = _item.getTime() == -1 ? -1 : System.currentTimeMillis() + ((long) _item.getTime() * 60 * 1000);
 		scheduleLifeTimeTask();
+		final var agathionInfo = AgathionRepository.getInstance().getByItemId(itemId);
+		agathionEnergy = agathionInfo == null ? 0 : agathionInfo.getMaxEnergy();
 	}
 	
 	/**
 	 * Constructor of the L2ItemInstance from the objetId and the description of the item given by the L2Item.
 	 * @param objectId : int designating the ID of the object in the world
-	 * @param item : L2Item containing informations of the item
+	 * @param item : L2Item containing information of the item
 	 */
 	public L2ItemInstance(int objectId, L2Item item) {
 		super(objectId);
@@ -225,6 +230,8 @@ public final class L2ItemInstance extends L2Object {
 		_mana = _item.getDuration();
 		_time = _item.getTime() == -1 ? -1 : System.currentTimeMillis() + ((long) _item.getTime() * 60 * 1000);
 		scheduleLifeTimeTask();
+		final var agathionInfo = AgathionRepository.getInstance().getByItemId(item.getId());
+		agathionEnergy = agathionInfo == null ? 0 : agathionInfo.getMaxEnergy();
 	}
 	
 	/**
@@ -392,8 +399,7 @@ public final class L2ItemInstance extends L2Object {
 	}
 	
 	/**
-	 * Sets the quantity of the item.<BR>
-	 * <BR>
+	 * Sets the quantity of the item.
 	 * @param count the new count to set
 	 */
 	public void setCount(long count) {
@@ -405,9 +411,6 @@ public final class L2ItemInstance extends L2Object {
 		_storedInDb = false;
 	}
 	
-	/**
-	 * @return Returns the count.
-	 */
 	public long getCount() {
 		return _count;
 	}
@@ -674,7 +677,7 @@ public final class L2ItemInstance extends L2Object {
 	 * @return boolean
 	 */
 	public boolean isDropable() {
-		return isAugmented() ? false : _item.isDropable();
+		return !isAugmented() && _item.isDropable();
 	}
 	
 	/**
@@ -690,7 +693,7 @@ public final class L2ItemInstance extends L2Object {
 	 * @return boolean
 	 */
 	public boolean isTradeable() {
-		return isAugmented() ? false : _item.isTradeable();
+		return !isAugmented() && _item.isTradeable();
 	}
 	
 	/**
@@ -698,7 +701,7 @@ public final class L2ItemInstance extends L2Object {
 	 * @return boolean
 	 */
 	public boolean isSellable() {
-		return isAugmented() ? false : _item.isSellable();
+		return !isAugmented() && _item.isSellable();
 	}
 	
 	/**
@@ -712,11 +715,8 @@ public final class L2ItemInstance extends L2Object {
 		}
 		if (!isPrivateWareHouse) {
 			// augmented not tradeable
-			if (!isTradeable() || isShadowItem()) {
-				return false;
-			}
+			return isTradeable() && !isShadowItem();
 		}
-		
 		return true;
 	}
 	
@@ -1243,59 +1243,46 @@ public final class L2ItemInstance extends L2Object {
 	}
 	
 	/**
-	 * Returns a L2ItemInstance stored in database from its objectID
-	 * @param ownerId
-	 * @param rs
-	 * @return L2ItemInstance
+	 * Restores an item from the database.
+	 * @param ownerId the owner Id
+	 * @param rs the result set
+	 * @return the item instance
 	 */
 	public static L2ItemInstance restoreFromDb(int ownerId, ResultSet rs) {
-		L2ItemInstance inst = null;
-		int objectId, itemId, loc_data, enchant_level, custom_type1, custom_type2, manaLeft;
-		long time, count;
-		ItemLocation loc;
 		try {
-			objectId = rs.getInt(1);
-			itemId = rs.getInt("item_id");
-			count = rs.getLong("count");
-			loc = ItemLocation.valueOf(rs.getString("loc"));
-			loc_data = rs.getInt("loc_data");
-			enchant_level = rs.getInt("enchant_level");
-			custom_type1 = rs.getInt("custom_type1");
-			custom_type2 = rs.getInt("custom_type2");
-			manaLeft = rs.getInt("mana_left");
-			time = rs.getLong("time");
+			final var objectId = rs.getInt(1);
+			final var itemId = rs.getInt("item_id");
+			final var template = ItemTable.getInstance().getTemplate(itemId);
+			if (template == null) {
+				LOG.error("Item Id {} not known, object Id {} by owner Id {}!", itemId, objectId, ownerId);
+				return null;
+			}
+			
+			final var item = new L2ItemInstance(objectId, template);
+			item._ownerId = ownerId;
+			item.setCount(rs.getLong("count"));
+			item._enchantLevel = rs.getInt("enchant_level");
+			item._type1 = rs.getInt("custom_type1");
+			item._type2 = rs.getInt("custom_type2");
+			item._loc = ItemLocation.valueOf(rs.getString("loc"));
+			item._locData = rs.getInt("loc_data");
+			item._existsInDb = true;
+			item._storedInDb = true;
+			// Support shadow weapons
+			item._mana = rs.getInt("mana_left");
+			item._time = rs.getLong("time");
+			// Support Agathion energy
+			item.agathionEnergy = rs.getInt("agathion_energy");
+			
+			// load augmentation and elemental enchant
+			if (item.isEquipable()) {
+				item.restoreAttributes();
+			}
+			return item;
 		} catch (Exception ex) {
 			LOG.warn("Could not restore an item owned by {} from database!", ownerId, ex);
 			return null;
 		}
-		
-		L2Item item = ItemTable.getInstance().getTemplate(itemId);
-		if (item == null) {
-			LOG.error("Item Id {} not known, object Id {} by owner Id {}!", itemId, objectId, ownerId);
-			return null;
-		}
-		
-		inst = new L2ItemInstance(objectId, item);
-		inst._ownerId = ownerId;
-		inst.setCount(count);
-		inst._enchantLevel = enchant_level;
-		inst._type1 = custom_type1;
-		inst._type2 = custom_type2;
-		inst._loc = loc;
-		inst._locData = loc_data;
-		inst._existsInDb = true;
-		inst._storedInDb = true;
-		
-		// Setup life time for shadow weapons
-		inst._mana = manaLeft;
-		inst._time = time;
-		
-		// load augmentation and elemental enchant
-		if (inst.isEquipable()) {
-			inst.restoreAttributes();
-		}
-		
-		return inst;
 	}
 	
 	/**
@@ -1395,7 +1382,7 @@ public final class L2ItemInstance extends L2Object {
 		}
 		
 		try (var con = ConnectionFactory.getInstance().getConnection();
-			var ps = con.prepareStatement("UPDATE items SET owner_id=?,count=?,loc=?,loc_data=?,enchant_level=?,custom_type1=?,custom_type2=?,mana_left=?,time=? " + "WHERE object_id = ?")) {
+			var ps = con.prepareStatement("UPDATE items SET owner_id=?, count=?, loc=?, loc_data=?, enchant_level=?, custom_type1=?, custom_type2=?, mana_left=?, time=?, agathion_energy=? WHERE object_id=?")) {
 			ps.setInt(1, _ownerId);
 			ps.setLong(2, getCount());
 			ps.setString(3, _loc.name());
@@ -1405,7 +1392,8 @@ public final class L2ItemInstance extends L2Object {
 			ps.setInt(7, getCustomType2());
 			ps.setInt(8, getMana());
 			ps.setLong(9, getTime());
-			ps.setInt(10, getObjectId());
+			ps.setInt(10, getAgathionRemainingEnergy());
+			ps.setInt(11, getObjectId());
 			ps.executeUpdate();
 			_existsInDb = true;
 			_storedInDb = true;
@@ -1422,7 +1410,7 @@ public final class L2ItemInstance extends L2Object {
 		}
 		
 		try (var con = ConnectionFactory.getInstance().getConnection();
-			var ps = con.prepareStatement("INSERT INTO items (owner_id,item_id,count,loc,loc_data,enchant_level,object_id,custom_type1,custom_type2,mana_left,time) " + "VALUES (?,?,?,?,?,?,?,?,?,?,?)")) {
+			var ps = con.prepareStatement("INSERT INTO items (owner_id, item_id, count, loc, loc_data, enchant_level, object_id, custom_type1, custom_type2, mana_left, time, agathion_energy) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")) {
 			ps.setInt(1, _ownerId);
 			ps.setInt(2, _itemId);
 			ps.setLong(3, getCount());
@@ -1434,6 +1422,7 @@ public final class L2ItemInstance extends L2Object {
 			ps.setInt(9, _type2);
 			ps.setInt(10, getMana());
 			ps.setLong(11, getTime());
+			ps.setInt(12, getAgathionRemainingEnergy());
 			
 			ps.executeUpdate();
 			_existsInDb = true;
@@ -1485,18 +1474,18 @@ public final class L2ItemInstance extends L2Object {
 	}
 	
 	public void resetOwnerTimer() {
-		if (itemLootShedule != null) {
-			itemLootShedule.cancel(true);
+		if (itemLootSchedule != null) {
+			itemLootSchedule.cancel(true);
 		}
-		itemLootShedule = null;
+		itemLootSchedule = null;
 	}
 	
-	public void setItemLootShedule(ScheduledFuture<?> sf) {
-		itemLootShedule = sf;
+	public void setItemLootSchedule(ScheduledFuture<?> sf) {
+		itemLootSchedule = sf;
 	}
 	
-	public ScheduledFuture<?> getItemLootShedule() {
-		return itemLootShedule;
+	public ScheduledFuture<?> getItemLootSchedule() {
+		return itemLootSchedule;
 	}
 	
 	public void setProtected(boolean isProtected) {
@@ -1669,11 +1658,7 @@ public final class L2ItemInstance extends L2Object {
 		if (general().saveDroppedItem()) {
 			ItemsOnGroundManager.getInstance().removeObject(this);
 		}
-		
-		if (!super.decayMe()) {
-			return false;
-		}
-		return true;
+		return super.decayMe();
 	}
 	
 	public boolean isQuestItem() {
@@ -1860,5 +1845,14 @@ public final class L2ItemInstance extends L2Object {
 			_lifeTimeTask.cancel(false);
 			_lifeTimeTask = null;
 		}
+	}
+	
+	public int getAgathionRemainingEnergy() {
+		return agathionEnergy;
+	}
+	
+	public void setAgathionRemainingEnergy(int agathionEnergy) {
+		this.agathionEnergy = agathionEnergy;
+		_storedInDb = false;
 	}
 }

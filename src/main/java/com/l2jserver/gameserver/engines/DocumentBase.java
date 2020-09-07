@@ -53,6 +53,7 @@ import com.l2jserver.gameserver.model.conditions.ConditionLogicOr;
 import com.l2jserver.gameserver.model.conditions.ConditionMinDistance;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerActiveEffectId;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerActiveSkillId;
+import com.l2jserver.gameserver.model.conditions.ConditionPlayerAgathionEnergy;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerAgathionId;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerCallPc;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerCanCreateBase;
@@ -89,6 +90,7 @@ import com.l2jserver.gameserver.model.conditions.ConditionPlayerLandingZone;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerLevel;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerLevelRange;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerMp;
+import com.l2jserver.gameserver.model.conditions.ConditionPlayerHasAgathion;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerPkCount;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerPledgeClass;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerRace;
@@ -243,8 +245,8 @@ public abstract class DocumentBase {
 			value = Double.parseDouble(valueString);
 		}
 		
-		final Condition applayCond = parseCondition(n.getFirstChild(), template);
-		final FuncTemplate ft = new FuncTemplate(attachCond, applayCond, functionName, order, stat, value);
+		final Condition applyCond = parseCondition(n.getFirstChild(), template);
+		final FuncTemplate ft = new FuncTemplate(attachCond, applyCond, functionName, order, stat, value);
 		if (template instanceof L2Item) {
 			((L2Item) template).attach(ft);
 		} else if (template instanceof AbstractEffect) {
@@ -267,13 +269,13 @@ public abstract class DocumentBase {
 		}
 		
 		final StatsSet parameters = parseParameters(n.getFirstChild(), template);
-		final Condition applayCond = parseCondition(n.getFirstChild(), template);
+		final Condition applyCond = parseCondition(n.getFirstChild(), template);
 		
 		if (template instanceof IIdentifiable) {
 			set.set("id", ((IIdentifiable) template).getId());
 		}
 		
-		final AbstractEffect effect = AbstractEffect.createEffect(attachCond, applayCond, set, parameters);
+		final AbstractEffect effect = AbstractEffect.createEffect(attachCond, applyCond, set, parameters);
 		parseTemplate(n, effect);
 		if (template instanceof L2Item) {
 			_log.severe("Item " + template + " with effects!!!");
@@ -756,6 +758,18 @@ public abstract class DocumentBase {
 					cond = joinAnd(cond, new ConditionCategoryType(array));
 					break;
 				}
+				case "hasagathion": {
+					cond = joinAnd(cond, new ConditionPlayerHasAgathion(Boolean.parseBoolean(a.getNodeValue())));
+					break;
+				}
+				case "agathionenergy": {
+					cond = joinAnd(cond, new ConditionPlayerAgathionEnergy(Integer.decode(getValue(a.getNodeValue(), null))));
+					break;
+				}
+				default: {
+					_log.severe("Unrecognized <player> condition " + a.getNodeName().toLowerCase() + " in " + _file);
+					break;
+				}
 			}
 		}
 		
@@ -887,13 +901,8 @@ public abstract class DocumentBase {
 					String values = getValue(a.getNodeValue(), template).trim();
 					String[] valuesSplit = values.split(",");
 					InstanceType[] types = new InstanceType[valuesSplit.length];
-					InstanceType type;
 					for (int j = 0; j < valuesSplit.length; j++) {
-						type = Enum.valueOf(InstanceType.class, valuesSplit[j]);
-						if (type == null) {
-							throw new IllegalArgumentException("Instance type not recognized: " + valuesSplit[j]);
-						}
-						types[j] = type;
+						types[j] = Enum.valueOf(InstanceType.class, valuesSplit[j]);
 					}
 					cond = joinAnd(cond, new ConditionTargetNpcType(types));
 					break;
@@ -1054,7 +1063,7 @@ public abstract class DocumentBase {
 			if (template instanceof Skill) {
 				return getTableValue(value);
 			} else if (template instanceof Integer) {
-				return getTableValue(value, ((Integer) template).intValue());
+				return getTableValue(value, (Integer) template);
 			} else {
 				throw new IllegalStateException();
 			}

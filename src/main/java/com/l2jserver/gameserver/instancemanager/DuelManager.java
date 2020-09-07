@@ -82,7 +82,7 @@ public final class DuelManager {
 	 * @param player
 	 * @param packet
 	 */
-	public void broadcastToOppositTeam(L2PcInstance player, L2GameServerPacket packet) {
+	public void broadcastToOpposingTeam(L2PcInstance player, L2GameServerPacket packet) {
 		if ((player == null) || !player.isInDuel()) {
 			return;
 		}
@@ -111,7 +111,7 @@ public final class DuelManager {
 			reason = SystemMessageId.C1_CANNOT_DUEL_BECAUSE_C1_IS_CURRENTLY_ENGAGED_IN_BATTLE;
 		} else if (target.isTransformed()) {
 			reason = SystemMessageId.C1_CANNOT_DUEL_WHILE_POLYMORPHED;
-		} else if (target.isDead() || target.isDead() || ((target.getCurrentHp() < (target.getMaxHp() / 2)) || (target.getCurrentMp() < (target.getMaxMp() / 2)))) {
+		} else if (target.isDead() || ((target.getCurrentHp() < (target.getMaxHp() / 2.0)) || (target.getCurrentMp() < (target.getMaxMp() / 2.0)))) {
 			reason = SystemMessageId.C1_CANNOT_DUEL_BECAUSE_C1_HP_OR_MP_IS_BELOW_50_PERCENT;
 		} else if (target.isInDuel()) {
 			reason = SystemMessageId.C1_CANNOT_DUEL_BECAUSE_C1_IS_ALREADY_ENGAGED_IN_A_DUEL;

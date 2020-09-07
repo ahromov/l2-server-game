@@ -377,7 +377,7 @@ public final class QuestState {
 			ps.setInt(1, _player.getObjectId());
 			ps.setString(2, var);
 			try (var rs = ps.executeQuery()) {
-				if (rs.first()) {
+				if (rs.next()) {
 					result = rs.getString(1);
 				}
 			}

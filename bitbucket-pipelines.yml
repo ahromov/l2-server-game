@@ -1,4 +1,4 @@
-image: maven:3.6.3-jdk-11-slim
+image: openjdk:14-alpine
 
 pipelines:
    branches:
@@ -7,7 +7,7 @@ pipelines:
             caches:
              - maven
             script:
-             - mvn install
+             - /bin/sh mvnw clean install
             artifacts:
              - target/*.zip
          - step:

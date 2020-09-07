@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 /.project
 /.classpath
 /.settings/
 /.idea/
 /target/
+=======
+.project
+.classpath
+.idea/
+*.iml
+target/
+>>>>>>> branch 'develop' of https://bitbucket.org/l2jserver/l2j-server-game.git
 logs/
 log/
 test-output/

@@ -18,65 +18,53 @@
  */
 package com.l2jserver.gameserver.network.serverpackets;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.l2jserver.gameserver.instancemanager.InstanceManager;
+import com.l2jserver.gameserver.instancemanager.MapRegionManager;
 import com.l2jserver.gameserver.model.PartyMatchWaitingList;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 /**
- * @author Gnacik
+ * ExListPartyMatchingWaitingRoom server packet.
+ * @author Zoey76
  */
 public class ExListPartyMatchingWaitingRoom extends L2GameServerPacket {
-	private final L2PcInstance _activeChar;
-	// private final int _page;
-	private final int _minlvl;
-	private final int _maxlvl;
-	private final int _mode;
-	private final List<L2PcInstance> _members;
 	
-	public ExListPartyMatchingWaitingRoom(L2PcInstance player, int page, int minlvl, int maxlvl, int mode) {
-		_activeChar = player;
-		// _page = page;
-		_minlvl = minlvl;
-		_maxlvl = maxlvl;
-		_mode = mode;
-		_members = new ArrayList<>();
+	// Maximum size supported by client 500.
+	private static final int TOTAL = 64;
+	
+	private final int totalMathingPlayers;
+	
+	private final List<L2PcInstance> players;
+	
+	public ExListPartyMatchingWaitingRoom(int page, int minLevel, int maxLevel, Set<Integer> classes, String filter) {
+		final var matchingPlayers = PartyMatchWaitingList.getInstance().findPlayers(minLevel, maxLevel, classes, filter);
+		this.totalMathingPlayers = matchingPlayers.size();
+		this.players = matchingPlayers.stream() //
+			.skip((page - 1) * TOTAL) //
+			.limit(page * TOTAL) //
+			.collect(Collectors.toList());
 	}
 	
 	@Override
 	protected void writeImpl() {
 		writeC(0xFE);
 		writeH(0x36);
-		if (_mode == 0) {
-			writeD(0);
-			writeD(0);
-			return;
-		}
-		
-		for (L2PcInstance cha : PartyMatchWaitingList.getInstance().getPlayers()) {
-			if ((cha == null) || (cha == _activeChar)) {
-				continue;
+		writeD(totalMathingPlayers);
+		writeD(players.size());
+		for (L2PcInstance player : players) {
+			writeS(player.getName());
+			writeD(player.getActiveClass());
+			writeD(player.getLevel());
+			writeD(MapRegionManager.getInstance().getMapRegion(player).getBbs());
+			final var instances = InstanceManager.getInstance().getAllInstanceTimes(player.getObjectId());
+			writeD(instances.size());
+			for (var id : instances.keySet()) {
+				writeD(id);
 			}
-			
-			if (!cha.isPartyWaiting()) {
-				PartyMatchWaitingList.getInstance().removePlayer(cha);
-				continue;
-			}
-			
-			else if ((cha.getLevel() < _minlvl) || (cha.getLevel() > _maxlvl)) {
-				continue;
-			}
-			
-			_members.add(cha);
-		}
-		
-		writeD(0x01); // Page?
-		writeD(_members.size());
-		for (L2PcInstance member : _members) {
-			writeS(member.getName());
-			writeD(member.getActiveClass());
-			writeD(member.getLevel());
 		}
 	}
 }

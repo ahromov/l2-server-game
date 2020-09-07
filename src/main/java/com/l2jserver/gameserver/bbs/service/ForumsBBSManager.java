@@ -18,98 +18,90 @@
  */
 package com.l2jserver.gameserver.bbs.service;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import static com.l2jserver.gameserver.bbs.model.ForumType.CLAN;
+import static com.l2jserver.gameserver.bbs.model.ForumVisibility.CLAN_MEMBER_ONLY;
+import static com.l2jserver.gameserver.config.Configuration.general;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.bbs.model.Forum;
 import com.l2jserver.gameserver.bbs.model.ForumType;
 import com.l2jserver.gameserver.bbs.model.ForumVisibility;
 import com.l2jserver.gameserver.dao.factory.impl.DAOFactory;
-import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
+import com.l2jserver.gameserver.model.L2Clan;
 
 /**
  * Forums BBS Manager.
  * @author Zoey76
  * @version 2.6.2.0
  */
-public class ForumsBBSManager extends BaseBBSManager {
+public class ForumsBBSManager {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ForumsBBSManager.class);
 	
-	private final List<Forum> table = new CopyOnWriteArrayList<>();
+	private static final Map<String, Forum> FORUMS_BY_NAME = new ConcurrentHashMap<>();
 	
-	private int lastId = 1;
+	private static final Map<Integer, Forum> FORUMS_BY_ID = new ConcurrentHashMap<>();
 	
 	protected ForumsBBSManager() {
-		try (var con = ConnectionFactory.getInstance().getConnection();
-			var s = con.createStatement();
-			var rs = s.executeQuery("SELECT forum_id FROM forums WHERE forum_type = 0")) {
-			while (rs.next()) {
-				addForum(new Forum(rs.getInt("forum_id"), null));
-			}
-		} catch (Exception ex) {
-			LOG.warn("Data error on Forum (root)!", ex);
-		}
+		// Do nothing.
 	}
 	
-	public void initRoot() {
-		table.forEach(f -> DAOFactory.getInstance().getForumRepository().findById(f));
-		LOG.info("Loaded " + table.size() + " forums. Last forum id used: " + lastId);
-	}
-	
-	public void addForum(Forum forum) {
-		if (forum == null) {
-			return;
-		}
-		
-		table.add(forum);
-		
-		if (forum.getId() > lastId) {
-			lastId = forum.getId();
-		}
-	}
-	
-	@Override
-	public void parsecmd(String command, L2PcInstance activeChar) {
+	public void load() {
+		FORUMS_BY_NAME.putAll(DAOFactory.getInstance().getForumRepository().getForums());
+		FORUMS_BY_ID.putAll(FORUMS_BY_NAME.values().stream().collect(Collectors.toMap(Forum::getId, f -> f)));
+		LOG.info("Loaded {} forums.", FORUMS_BY_NAME.size());
 	}
 	
 	public Forum getForumByName(String name) {
-		return table.stream().filter(f -> f.getName().equals(name)).findFirst().orElse(null);
+		return FORUMS_BY_NAME.get(name);
 	}
 	
-	public Forum createNewForum(String name, Forum parent, ForumType type, ForumVisibility visibility, int ownerId) {
-		final var id = ForumsBBSManager.getInstance().getANewID();
-		final var forum = new Forum(id, name, parent, type, visibility, ownerId);
-		
-		parent.addChildren(forum);
-		ForumsBBSManager.getInstance().addForum(forum);
+	public Forum getForumById(Integer id) {
+		return FORUMS_BY_ID.get(id);
+	}
+	
+	public Forum create(String name, Forum parent, ForumType type, ForumVisibility visibility, int ownerId) {
+		final var forum = new Forum(0, name, parent, type, visibility, ownerId);
+		parent.addChild(forum);
 		
 		DAOFactory.getInstance().getForumRepository().save(forum);
+		
+		FORUMS_BY_NAME.put(forum.getName(), forum);
+		FORUMS_BY_ID.put(forum.getId(), forum);
 		return forum;
 	}
 	
-	public int getANewID() {
-		return ++lastId;
+	public Forum load(int id, String name, Forum parent, ForumType type, ForumVisibility visibility, int ownerId) {
+		final var forum = new Forum(id, name, parent, type, visibility, ownerId);
+		parent.addChild(forum);
+		FORUMS_BY_NAME.put(forum.getName(), forum);
+		FORUMS_BY_ID.put(forum.getId(), forum);
+		return forum;
 	}
 	
-	public Forum getForumByID(int id) {
-		return table.stream().filter(f -> f.getId() == id).findFirst().orElse(null);
-	}
-	
-	@Override
-	public void parsewrite(String ar1, String ar2, String ar3, String ar4, String ar5, L2PcInstance activeChar) {
-		
+	public void onClanLevel(L2Clan clan) {
+		if ((clan.getLevel() >= 2) && general().enableCommunityBoard()) {
+			final var clanRootForum = ForumsBBSManager.getInstance().getForumByName("ClanRoot");
+			if (clanRootForum != null) {
+				var forum = clanRootForum.getChildByName(clan.getName());
+				if (forum == null) {
+					ForumsBBSManager.getInstance().create(clan.getName(), clanRootForum, CLAN, CLAN_MEMBER_ONLY, clan.getId());
+				}
+			}
+		}
 	}
 	
 	public static ForumsBBSManager getInstance() {
-		return SingletonHolder._instance;
+		return SingletonHolder.INSTANCE;
 	}
 	
 	private static class SingletonHolder {
-		protected static final ForumsBBSManager _instance = new ForumsBBSManager();
+		protected static final ForumsBBSManager INSTANCE = new ForumsBBSManager();
 	}
 }

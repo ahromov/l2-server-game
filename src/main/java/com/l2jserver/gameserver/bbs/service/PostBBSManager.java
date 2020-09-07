@@ -44,6 +44,10 @@ public class PostBBSManager extends BaseBBSManager {
 	
 	private final Map<Topic, List<Post>> _postByTopic = new ConcurrentHashMap<>();
 	
+	protected PostBBSManager() {
+		// Do nothing.
+	}
+	
 	public List<Post> getGPosttByTopic(Topic topic) {
 		var posts = _postByTopic.get(topic);
 		if (posts == null) {
@@ -58,39 +62,33 @@ public class PostBBSManager extends BaseBBSManager {
 	}
 	
 	public void addPostByTopic(Topic topic, List<Post> posts) {
-		if (_postByTopic.get(topic) == null) {
-			_postByTopic.put(topic, posts);
-		}
+		_postByTopic.putIfAbsent(topic, posts);
 	}
 	
 	@Override
 	public void parsecmd(String command, L2PcInstance activeChar) {
 		if (command.startsWith("_bbsposts;read;")) {
-			StringTokenizer st = new StringTokenizer(command, ";");
+			final var st = new StringTokenizer(command, ";");
 			st.nextToken();
 			st.nextToken();
-			int idf = Integer.parseInt(st.nextToken());
-			int idp = Integer.parseInt(st.nextToken());
-			String index = null;
-			if (st.hasMoreTokens()) {
-				index = st.nextToken();
-			}
-			int ind = 0;
-			if (index == null) {
-				ind = 1;
-			} else {
-				ind = Integer.parseInt(index);
-			}
+			final var forumId = Integer.parseInt(st.nextToken());
+			final var topicId = Integer.parseInt(st.nextToken());
+			final var index = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : 1;
 			
-			showPost((TopicBBSManager.getInstance().getTopicById(idp)), ForumsBBSManager.getInstance().getForumByID(idf), activeChar, ind);
+			final var forum = ForumsBBSManager.getInstance().getForumById(forumId);
+			final var topic = TopicBBSManager.getInstance().getTopicById(topicId);
+			showPost(topic, forum, activeChar, index);
 		} else if (command.startsWith("_bbsposts;edit;")) {
-			StringTokenizer st = new StringTokenizer(command, ";");
+			final var st = new StringTokenizer(command, ";");
 			st.nextToken();
 			st.nextToken();
-			int idf = Integer.parseInt(st.nextToken());
-			int idt = Integer.parseInt(st.nextToken());
-			int idp = Integer.parseInt(st.nextToken());
-			showEditPost((TopicBBSManager.getInstance().getTopicById(idt)), ForumsBBSManager.getInstance().getForumByID(idf), activeChar, idp);
+			final var forumId = Integer.parseInt(st.nextToken());
+			final var topicId = Integer.parseInt(st.nextToken());
+			final var postId = Integer.parseInt(st.nextToken());
+			
+			final var forum = ForumsBBSManager.getInstance().getForumById(forumId);
+			final var topic = TopicBBSManager.getInstance().getTopicById(topicId);
+			showEditPost(topic, forum, activeChar, postId);
 		} else {
 			CommunityBoardHandler.separateAndSend("<html><body><br><br><center>the command: " + command + " is not implemented yet</center><br><br></body></html>", activeChar);
 		}
@@ -145,7 +143,7 @@ public class PostBBSManager extends BaseBBSManager {
 		int idt = Integer.parseInt(st.nextToken());
 		int idp = Integer.parseInt(st.nextToken());
 		
-		Forum f = ForumsBBSManager.getInstance().getForumByID(idf);
+		Forum f = ForumsBBSManager.getInstance().getForumById(idf);
 		if (f == null) {
 			CommunityBoardHandler.separateAndSend("<html><body><br><br><center>the forum: " + idf + " does not exist !</center><br><br></body></html>", activeChar);
 		} else {
@@ -169,10 +167,10 @@ public class PostBBSManager extends BaseBBSManager {
 	}
 	
 	public static PostBBSManager getInstance() {
-		return SingletonHolder._instance;
+		return SingletonHolder.INSTANCE;
 	}
 	
 	private static class SingletonHolder {
-		protected static final PostBBSManager _instance = new PostBBSManager();
+		protected static final PostBBSManager INSTANCE = new PostBBSManager();
 	}
 }

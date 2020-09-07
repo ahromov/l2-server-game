@@ -115,11 +115,11 @@ public class Skill implements IIdentifiable {
 	private final AbnormalType _abnormalType;
 	/** Abnormal time: global effect duration time. */
 	private final int _abnormalTime;
-	/** Abnormal visual effect: the visual effect displayed ingame. */
+	/** Abnormal visual effect: the visual effect displayed in game. */
 	private AbnormalVisualEffect[] _abnormalVisualEffects = null;
-	/** Abnormal visual effect special: the visual effect displayed ingame. */
+	/** Abnormal visual effect special: the visual effect displayed in game. */
 	private AbnormalVisualEffect[] _abnormalVisualEffectsSpecial = null;
-	/** Abnormal visual effect event: the visual effect displayed ingame. */
+	/** Abnormal visual effect event: the visual effect displayed in game. */
 	private AbnormalVisualEffect[] _abnormalVisualEffectsEvent = null;
 	/** If {@code true} this skill's effect should stay after death. */
 	private final boolean _stayAfterDeath;
@@ -868,7 +868,7 @@ public class Skill implements IIdentifiable {
 		// Init to null the target of the skill
 		L2Character target = null;
 		
-		// Get the L2Objcet targeted by the user of the skill at this moment
+		// Get the object targeted by the user of the skill at this moment
 		L2Object objTarget = activeChar.getTarget();
 		// If the L2Object targeted is a L2Character, it becomes the L2Character target
 		if (objTarget instanceof L2Character) {
@@ -934,7 +934,7 @@ public class Skill implements IIdentifiable {
 	 * @param sourceInArena
 	 * @return
 	 */
-	public static final boolean checkForAreaOffensiveSkills(L2Character caster, L2Character target, Skill skill, boolean sourceInArena) {
+	public static boolean checkForAreaOffensiveSkills(L2Character caster, L2Character target, Skill skill, boolean sourceInArena) {
 		if ((target == null) || target.isDead() || (target == caster)) {
 			return false;
 		}
@@ -995,38 +995,30 @@ public class Skill implements IIdentifiable {
 				return false;
 			}
 		}
-		
-		if (!GeoData.getInstance().canSeeTarget(caster, target)) {
-			return false;
-		}
-		return true;
+		return GeoData.getInstance().canSeeTarget(caster, target);
 	}
 	
-	public static final boolean addSummon(L2Character caster, L2PcInstance owner, int radius, boolean isDead) {
+	public static boolean addSummon(L2Character caster, L2PcInstance owner, int radius, boolean isDead) {
 		if (!owner.hasSummon()) {
 			return false;
 		}
 		return addCharacter(caster, owner.getSummon(), radius, isDead);
 	}
 	
-	public static final boolean addCharacter(L2Character caster, L2Character target, int radius, boolean isDead) {
+	public static boolean addCharacter(L2Character caster, L2Character target, int radius, boolean isDead) {
 		if (isDead != target.isDead()) {
 			return false;
 		}
-		
-		if ((radius > 0) && !Util.checkIfInRange(radius, caster, target, true)) {
-			return false;
-		}
-		return true;
+		return (radius <= 0) || Util.checkIfInRange(radius, caster, target, true);
 	}
 	
 	public List<AbstractFunction> getStatFuncs(AbstractEffect effect, L2Character player) {
 		if (_funcTemplates == null) {
-			return Collections.<AbstractFunction> emptyList();
+			return Collections.emptyList();
 		}
 		
 		if (!(player instanceof L2Playable) && !(player instanceof L2Attackable)) {
-			return Collections.<AbstractFunction> emptyList();
+			return Collections.emptyList();
 		}
 		
 		final List<AbstractFunction> funcs = new ArrayList<>(_funcTemplates.size());
@@ -1308,11 +1300,7 @@ public class Skill implements IIdentifiable {
 	 * @param effect the effect to add
 	 */
 	public void addEffect(EffectScope effectScope, AbstractEffect effect) {
-		List<AbstractEffect> effects = _effectLists.get(effectScope);
-		if (effects == null) {
-			effects = new ArrayList<>(1);
-			_effectLists.put(effectScope, effects);
-		}
+		final var effects = _effectLists.computeIfAbsent(effectScope, k -> new ArrayList<>(1));
 		effects.add(effect);
 	}
 	
@@ -1390,7 +1378,7 @@ public class Skill implements IIdentifiable {
 		for (String prodList : prodLists) {
 			prodData = prodList.split(",");
 			if (prodData.length < 3) {
-				_log.warning("Extractable skills data: Error in Skill Id: " + skillId + " Level: " + skillLvl + " -> wrong seperator!");
+				_log.warning("Extractable skills data: Error in Skill Id: " + skillId + " Level: " + skillLvl + " -> wrong separator!");
 			}
 			List<ItemHolder> items = null;
 			double chance = 0;
@@ -1401,13 +1389,13 @@ public class Skill implements IIdentifiable {
 					final int prodId = Integer.parseInt(prodData[j]);
 					final int quantity = Integer.parseInt(prodData[j + 1]);
 					if ((prodId <= 0) || (quantity <= 0)) {
-						_log.warning("Extractable skills data: Error in Skill Id: " + skillId + " Level: " + skillLvl + " wrong production Id: " + prodId + " or wrond quantity: " + quantity + "!");
+						_log.warning("Extractable skills data: Error in Skill Id: " + skillId + " Level: " + skillLvl + " wrong production Id: " + prodId + " or wrong quantity: " + quantity + "!");
 					}
 					items.add(new ItemHolder(prodId, quantity));
 				}
 				chance = Double.parseDouble(prodData[length]);
 			} catch (Exception e) {
-				_log.warning("Extractable skills data: Error in Skill Id: " + skillId + " Level: " + skillLvl + " -> incomplete/invalid production data or wrong seperator!");
+				_log.warning("Extractable skills data: Error in Skill Id: " + skillId + " Level: " + skillLvl + " -> incomplete/invalid production data or wrong separator!");
 			}
 			products.add(new L2ExtractableProductItem(items, chance));
 		}
@@ -1430,28 +1418,26 @@ public class Skill implements IIdentifiable {
 			List<AbnormalVisualEffect> aves = null;
 			for (String ave2 : data) {
 				final AbnormalVisualEffect ave = AbnormalVisualEffect.valueOf(ave2);
-				if (ave != null) {
-					if (ave.isEvent()) {
-						if (avesEvent == null) {
-							avesEvent = new ArrayList<>(1);
-						}
-						avesEvent.add(ave);
-						continue;
+				if (ave.isEvent()) {
+					if (avesEvent == null) {
+						avesEvent = new ArrayList<>(1);
 					}
-					
-					if (ave.isSpecial()) {
-						if (avesSpecial == null) {
-							avesSpecial = new ArrayList<>(1);
-						}
-						avesSpecial.add(ave);
-						continue;
-					}
-					
-					if (aves == null) {
-						aves = new ArrayList<>(1);
-					}
-					aves.add(ave);
+					avesEvent.add(ave);
+					continue;
 				}
+
+				if (ave.isSpecial()) {
+					if (avesSpecial == null) {
+						avesSpecial = new ArrayList<>(1);
+					}
+					avesSpecial.add(ave);
+					continue;
+				}
+
+				if (aves == null) {
+					aves = new ArrayList<>(1);
+				}
+				aves.add(ave);
 			}
 			
 			if (avesEvent != null) {

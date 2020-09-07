@@ -200,7 +200,7 @@ public class Duel {
 					_duel.startDuel();
 				}
 			} catch (Exception e) {
-				LOG.error("There has been a problem while runing a duel start task!", e);
+				LOG.error("There has been a problem while running a duel start task!", e);
 			}
 		}
 	}
@@ -215,18 +215,13 @@ public class Duel {
 		@Override
 		public void run() {
 			try {
-				switch (_duel.checkEndDuelCondition()) {
-					case CONTINUE: {
-						ThreadPoolManager.getInstance().scheduleGeneral(this, 1000);
-						break;
-					}
-					default: {
-						endDuel();
-						break;
-					}
+				if (_duel.checkEndDuelCondition() == DuelResult.CONTINUE) {
+					ThreadPoolManager.getInstance().scheduleGeneral(this, 1000);
+				} else {
+					endDuel();
 				}
 			} catch (Exception e) {
-				LOG.error("There has been a problem while runing a duel task!", e);
+				LOG.error("There has been a problem while running a duel task!", e);
 			}
 		}
 	}
@@ -260,7 +255,7 @@ public class Duel {
 		
 		if (_partyDuel) {
 			// Close doors chickens cannot run from the destiny
-			for (L2DoorInstance door : InstanceManager.getInstance().getInstance(getDueldInstanceId()).getDoors()) {
+			for (L2DoorInstance door : InstanceManager.getInstance().getInstance(getDuelInstanceId()).getDoors()) {
 				if ((door != null) && door.getOpen()) {
 					door.closeMe();
 				}
@@ -310,11 +305,9 @@ public class Duel {
 	 */
 	public void restorePlayerConditions() {
 		// restore player conditions
-		ThreadPoolManager.getInstance().scheduleGeneral(() -> {
-			_playerConditions.values().forEach(c -> c.restoreCondition());
-		}, _partyDuel ? PARTY_DUEL_TELEPORT_BACK_TIME : 1000);
+		ThreadPoolManager.getInstance().scheduleGeneral(() -> _playerConditions.values().forEach(PlayerCondition::restoreCondition), _partyDuel ? PARTY_DUEL_TELEPORT_BACK_TIME : 1000);
 		
-		ThreadPoolManager.getInstance().scheduleGeneral(() -> clear(), _partyDuel ? PARTY_DUEL_TELEPORT_BACK_TIME : 1000);
+		ThreadPoolManager.getInstance().scheduleGeneral(this::clear, _partyDuel ? PARTY_DUEL_TELEPORT_BACK_TIME : 1000);
 	}
 	
 	/**
@@ -326,10 +319,10 @@ public class Duel {
 	}
 	
 	/**
-	 * Get duel instance id
-	 * @return id
+	 * Gets duel instance id.
+	 * @return id the duel id
 	 */
-	public int getDueldInstanceId() {
+	public int getDuelInstanceId() {
 		return _duelInstanceId;
 	}
 	
@@ -504,7 +497,7 @@ public class Duel {
 	 * Clear current duel from DuelManager
 	 */
 	private void clear() {
-		InstanceManager.getInstance().destroyInstance(getDueldInstanceId());
+		InstanceManager.getInstance().destroyInstance(getDuelInstanceId());
 		DuelManager.getInstance().removeDuel(this);
 	}
 	
@@ -630,14 +623,14 @@ public class Duel {
 		player.setTeam(Team.NONE);
 		
 		if (_partyDuel) {
-			boolean teamdefeated = true;
+			boolean teamDefeated = true;
 			
 			boolean isInTeamA = true;
 			
 			if (_teamA.contains(player)) {
 				for (L2PcInstance temp : _teamA) {
 					if (temp.getDuelState() == DuelState.DUELLING) {
-						teamdefeated = false;
+						teamDefeated = false;
 						break;
 					}
 				}
@@ -645,12 +638,12 @@ public class Duel {
 				isInTeamA = false;
 				for (L2PcInstance temp : _teamB) {
 					if (temp.getDuelState() == DuelState.DUELLING) {
-						teamdefeated = false;
+						teamDefeated = false;
 						break;
 					}
 				}
 			}
-			if (teamdefeated) {
+			if (teamDefeated) {
 				List<L2PcInstance> winners = (isInTeamA ? _teamB : _teamA);
 				for (L2PcInstance temp : winners) {
 					temp.setDuelState(DuelState.WINNER);

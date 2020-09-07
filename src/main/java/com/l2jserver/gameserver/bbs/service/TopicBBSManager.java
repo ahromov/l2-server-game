@@ -51,7 +51,7 @@ public class TopicBBSManager extends BaseBBSManager {
 	private final Map<Forum, Integer> maxId = new HashMap<>();
 	
 	protected TopicBBSManager() {
-		// Prevent external initialization.
+		// Do nothing.
 	}
 	
 	public void addTopic(Topic topic) {
@@ -86,13 +86,11 @@ public class TopicBBSManager extends BaseBBSManager {
 	@Override
 	public void parsewrite(String ar1, String ar2, String ar3, String ar4, String ar5, L2PcInstance activeChar) {
 		if (ar1.equals("crea")) {
-			final var forum = ForumsBBSManager.getInstance().getForumByID(Integer.parseInt(ar2));
+			final var forum = ForumsBBSManager.getInstance().getForumById(Integer.parseInt(ar2));
 			if (forum == null) {
 				CommunityBoardHandler.separateAndSend("<html><body><br><br><center>the forum: " + ar2 + " is not implemented yet</center><br><br></body></html>", activeChar);
 				return;
 			}
-			
-			DAOFactory.getInstance().getForumRepository().findById(forum);
 			
 			final var id = TopicBBSManager.getInstance().getMaxId(forum) + 1;
 			final var date = Calendar.getInstance().getTimeInMillis();
@@ -110,7 +108,7 @@ public class TopicBBSManager extends BaseBBSManager {
 			PostBBSManager.getInstance().addPostByTopic(topic, posts);
 			parsecmd("_bbsmemo", activeChar);
 		} else if (ar1.equals("del")) {
-			final var forum = ForumsBBSManager.getInstance().getForumByID(Integer.parseInt(ar2));
+			final var forum = ForumsBBSManager.getInstance().getForumById(Integer.parseInt(ar2));
 			if (forum == null) {
 				CommunityBoardHandler.separateAndSend("<html><body><br><br><center>the forum: " + ar2 + " does not exist !</center><br><br></body></html>", activeChar);
 				return;
@@ -155,20 +153,20 @@ public class TopicBBSManager extends BaseBBSManager {
 			} else {
 				ind = Integer.parseInt(index);
 			}
-			showTopics(ForumsBBSManager.getInstance().getForumByID(idf), activeChar, ind, idf);
+			showTopics(ForumsBBSManager.getInstance().getForumById(idf), activeChar, ind, idf);
 		} else if (command.startsWith("_bbstopics;crea")) {
 			StringTokenizer st = new StringTokenizer(command, ";");
 			st.nextToken();
 			st.nextToken();
 			int idf = Integer.parseInt(st.nextToken());
-			showNewTopic(ForumsBBSManager.getInstance().getForumByID(idf), activeChar, idf);
+			showNewTopic(ForumsBBSManager.getInstance().getForumById(idf), activeChar, idf);
 		} else if (command.startsWith("_bbstopics;del")) {
 			StringTokenizer st = new StringTokenizer(command, ";");
 			st.nextToken();
 			st.nextToken();
 			int idf = Integer.parseInt(st.nextToken());
 			int idt = Integer.parseInt(st.nextToken());
-			Forum f = ForumsBBSManager.getInstance().getForumByID(idf);
+			Forum f = ForumsBBSManager.getInstance().getForumById(idf);
 			if (f == null) {
 				CommunityBoardHandler.separateAndSend("<html><body><br><br><center>the forum: " + idf + " does not exist !</center><br><br></body></html>", activeChar);
 			} else {
@@ -219,8 +217,6 @@ public class TopicBBSManager extends BaseBBSManager {
 	}
 	
 	private void showMemoTopics(Forum forum, L2PcInstance activeChar, int index) {
-		DAOFactory.getInstance().getForumRepository().findById(forum);
-		
 		final StringBuilder html = StringUtil.startAppend(2000, "<html><body><br><br><table border=0 width=610><tr><td width=10></td><td width=600 align=left><a action=\"bypass _bbshome\">HOME</a>&nbsp;>&nbsp;<a action=\"bypass _bbsmemo\">Memo Form</a></td></tr></table><img src=\"L2UI.squareblank\" width=\"1\" height=\"10\"><center><table border=0 cellspacing=0 cellpadding=2 bgcolor=888888 width=610><tr><td FIXWIDTH=5></td><td FIXWIDTH=415 align=center>&$413;</td><td FIXWIDTH=120 align=center></td><td FIXWIDTH=70 align=center>&$418;</td></tr></table>");
 		final DateFormat dateFormat = DateFormat.getInstance();
 		

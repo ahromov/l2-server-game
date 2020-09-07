@@ -20,9 +20,8 @@ package com.l2jserver.gameserver.network.clientpackets;
 
 import static com.l2jserver.gameserver.config.Configuration.general;
 
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.l2jserver.gameserver.SevenSignsFestival;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -33,12 +32,14 @@ import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 import com.l2jserver.gameserver.taskmanager.AttackStanceTaskManager;
 
 /**
- * This class ...
+ * Logout client packet.
  * @version $Revision: 1.9.4.3 $ $Date: 2005/03/27 15:29:30 $
  */
 public final class Logout extends L2GameClientPacket {
+	
+	private static final Logger LOG_ACCOUNTING = LoggerFactory.getLogger("accounting");
+	
 	private static final String _C__00_LOGOUT = "[C] 00 Logout";
-	protected static final Logger _logAccounting = Logger.getLogger("accounting");
 	
 	@Override
 	protected void readImpl() {
@@ -105,11 +106,7 @@ public final class Logout extends L2GameClientPacket {
 		// Remove player from Boss Zone
 		player.removeFromBossZone();
 		
-		LogRecord record = new LogRecord(Level.INFO, "Disconnected");
-		record.setParameters(new Object[] {
-			getClient()
-		});
-		_logAccounting.log(record);
+		LOG_ACCOUNTING.info("Client {} logged out.", getClient());
 		
 		player.logout();
 	}

@@ -20,10 +20,12 @@ package com.l2jserver.gameserver.config;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.aeonbits.owner.Config.HotReloadType.ASYNC;
+import static org.aeonbits.owner.Config.LoadType.MERGE;
 
 import java.math.BigInteger;
 
 import org.aeonbits.owner.Config.HotReload;
+import org.aeonbits.owner.Config.LoadPolicy;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Mutable;
 import org.aeonbits.owner.Reloadable;
@@ -36,9 +38,11 @@ import com.l2jserver.gameserver.config.converter.HexIdConverter;
  * @version 2.6.1.0
  */
 @Sources({
+	"file:${L2J_HOME}/custom/game/config/hexid.txt",
 	"file:./config/hexid.txt",
 	"classpath:config/hexid.txt"
 })
+@LoadPolicy(MERGE)
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
 public interface HexIdConfiguration extends Mutable, Reloadable {
 	

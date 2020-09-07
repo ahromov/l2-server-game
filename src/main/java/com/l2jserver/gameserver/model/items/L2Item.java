@@ -315,6 +315,9 @@ public abstract class L2Item extends ListenersContainer implements IIdentifiable
 		return _displayId;
 	}
 	
+	/**
+	 * @return the ID of the item after applying the mask
+	 */
 	public abstract int getItemMask();
 	
 	/**
@@ -824,6 +827,9 @@ public abstract class L2Item extends ListenersContainer implements IIdentifiable
 		return getItemType() == EtcItemType.PET_COLLAR;
 	}
 	
+	/**
+	 * @return skill that player get when has equipped armor +4 or more
+	 */
 	public Skill getEnchant4Skill() {
 		return null;
 	}

@@ -20,26 +20,22 @@ package com.l2jserver.gameserver.network.loginserverpackets;
 
 import com.l2jserver.commons.network.BaseRecievePacket;
 
+/**
+ * InitLS response packet.
+ * @author Zoey76
+ * @version 2.6.2.0
+ */
 public class InitLS extends BaseRecievePacket {
-	private final int _rev;
-	private final byte[] _key;
 	
-	public int getRevision() {
-		return _rev;
-	}
+	private final byte[] _key;
 	
 	public byte[] getRSAKey() {
 		return _key;
 	}
 	
-	/**
-	 * @param decrypt
-	 */
 	public InitLS(byte[] decrypt) {
 		super(decrypt);
-		_rev = readD();
 		int size = readD();
 		_key = readB(size);
 	}
-	
 }

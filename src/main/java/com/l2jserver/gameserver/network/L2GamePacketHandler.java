@@ -26,9 +26,9 @@ import java.util.logging.Logger;
 import com.l2jserver.commons.util.Util;
 import com.l2jserver.gameserver.network.L2GameClient.GameClientState;
 import com.l2jserver.gameserver.network.clientpackets.*;
-import com.l2jserver.mmocore.IClientFactory;
-import com.l2jserver.mmocore.IMMOExecutor;
-import com.l2jserver.mmocore.IPacketHandler;
+import com.l2jserver.mmocore.ClientFactory;
+import com.l2jserver.mmocore.MMOExecutor;
+import com.l2jserver.mmocore.PacketHandler;
 import com.l2jserver.mmocore.MMOConnection;
 import com.l2jserver.mmocore.ReceivablePacket;
 
@@ -42,7 +42,7 @@ import com.l2jserver.mmocore.ReceivablePacket;
  * Note: If for a given exception a packet needs to be handled on more then one state, then it should be added to all these states.
  * @author KenM
  */
-public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, IClientFactory<L2GameClient>, IMMOExecutor<L2GameClient> {
+public final class L2GamePacketHandler implements PacketHandler<L2GameClient>, ClientFactory<L2GameClient>, MMOExecutor<L2GameClient> {
 	private static final Logger _log = Logger.getLogger(L2GamePacketHandler.class.getName());
 	
 	// implementation

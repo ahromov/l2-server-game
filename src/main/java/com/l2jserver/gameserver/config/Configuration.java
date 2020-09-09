@@ -95,6 +95,8 @@ public class Configuration {
 	
 	private static final CustomShopConfiguration customShop = ConfigFactory.create(CustomShopConfiguration.class);
 	
+	private static final BufferServiceConfiguration bufferService = ConfigFactory.create(BufferServiceConfiguration.class);
+	
 	private Configuration() {
 		// Do nothing.
 	}
@@ -231,4 +233,7 @@ public class Configuration {
 		return customShop;
 	}
 	
-} 
+	public static BufferServiceConfiguration bufferService() {
+		return bufferService;
+	}
+}

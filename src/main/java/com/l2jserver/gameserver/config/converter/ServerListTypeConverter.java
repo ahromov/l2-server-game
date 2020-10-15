@@ -42,35 +42,13 @@ public class ServerListTypeConverter implements Converter<Integer> {
 		int typeId = 0;
 		for (String serverType : serverTypes) {
 			switch (serverType.trim().toLowerCase()) {
-				default:
-				case "normal": {
-					typeId |= 0x01;
-					break;
-				}
-				case "relax": {
-					typeId |= 0x02;
-					break;
-				}
-				case "test": {
-					typeId |= 0x04;
-					break;
-				}
-				case "nolabel": {
-					typeId |= 0x08;
-					break;
-				}
-				case "restricted": {
-					typeId |= 0x10;
-					break;
-				}
-				case "event": {
-					typeId |= 0x20;
-					break;
-				}
-				case "free": {
-					typeId |= 0x40;
-					break;
-				}
+				case "normal" -> typeId |= 0x01;
+				case "relax" -> typeId |= 0x02;
+				case "test" -> typeId |= 0x04;
+				case "nolabel" -> typeId |= 0x08;
+				case "restricted" -> typeId |= 0x10;
+				case "event" -> typeId |= 0x20;
+				case "free" -> typeId |= 0x40;
 			}
 		}
 		return typeId;

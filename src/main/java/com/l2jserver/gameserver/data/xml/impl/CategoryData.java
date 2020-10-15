@@ -34,7 +34,8 @@ import com.l2jserver.gameserver.util.IXmlReader;
 
 /**
  * Loads the category data with Class or NPC IDs.
- * @author NosBit, xban1x
+ * @author NosBit
+ * @author xban1x
  */
 public final class CategoryData implements IXmlReader {
 	

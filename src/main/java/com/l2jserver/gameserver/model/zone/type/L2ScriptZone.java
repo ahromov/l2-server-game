@@ -23,7 +23,7 @@ import com.l2jserver.gameserver.model.zone.L2ZoneType;
 import com.l2jserver.gameserver.model.zone.ZoneId;
 
 /**
- * A scripted zone... Creation of such a zone should require somekind of jython script reference which can handle onEnter() / onExit()
+ * A scripted zone... Creation of such a zone should require some kind of script reference which can handle onEnter() / onExit()
  * @author durgus
  */
 public class L2ScriptZone extends L2ZoneType {

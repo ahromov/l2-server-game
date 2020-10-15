@@ -36,10 +36,6 @@ import com.l2jserver.gameserver.network.serverpackets.NpcHtmlMessage;
 public class L2DungeonGatekeeperInstance extends L2Npc {
 	private static final Logger LOG = LoggerFactory.getLogger(L2DungeonGatekeeperInstance.class);
 	
-	/**
-	 * Creates a dungeon gatekeeper.
-	 * @param template the dungeon gatekeeper NPC template
-	 */
 	public L2DungeonGatekeeperInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2DungeonGatekeeperInstance);
@@ -144,13 +140,12 @@ public class L2DungeonGatekeeperInstance extends L2Npc {
 	
 	@Override
 	public String getHtmlPath(int npcId, int val) {
-		String pom = "";
+		String pom;
 		if (val == 0) {
 			pom = "" + npcId;
 		} else {
 			pom = npcId + "-" + val;
 		}
-		
 		return "data/html/teleporter/" + pom + ".htm";
 	}
 }

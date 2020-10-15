@@ -89,12 +89,8 @@ public final class SpawnTable implements IXmlReader {
 			return false;
 		}
 		
-		if (npcTemplate.isType("L2SiegeGuard") || npcTemplate.isType("L2RaidBoss")) {
-			// Don't spawn
-			return false;
-		}
-		
-		return true;
+		// Don't spawn
+		return !npcTemplate.isType("L2SiegeGuard") && !npcTemplate.isType("L2RaidBoss");
 	}
 	
 	@Override
@@ -136,15 +132,10 @@ public final class SpawnTable implements IXmlReader {
 									if (c.getNodeName().equals("#text")) {
 										continue;
 									}
-									int val;
-									switch (c.getNodeName()) {
-										case "disableRandomAnimation":
-										case "disableRandomWalk":
-											val = Boolean.parseBoolean(c.getTextContent()) ? 1 : 0;
-											break;
-										default:
-											val = Integer.parseInt(c.getTextContent());
-									}
+									int val = switch (c.getNodeName()) {
+										case "disableRandomAnimation", "disableRandomWalk" -> Boolean.parseBoolean(c.getTextContent()) ? 1 : 0;
+										default -> Integer.parseInt(c.getTextContent());
+									};
 									map.put(c.getNodeName(), val);
 								}
 							}
@@ -281,17 +272,18 @@ public final class SpawnTable implements IXmlReader {
 			// Register AI Data for this spawn
 			NpcPersonalAIData.getInstance().storeData(spawnDat, AIData);
 			switch (spawnInfo.getInt("periodOfDay", 0)) {
-				case 0: // default
-					ret += spawnDat.init();
-					break;
-				case 1: // Day
+				// default
+				case 0 -> ret += spawnDat.init();
+				// Day
+				case 1 -> {
 					DayNightSpawnManager.getInstance().addDayCreature(spawnDat);
 					ret = 1;
-					break;
-				case 2: // Night
+				}
+				// Night
+				case 2 -> {
 					DayNightSpawnManager.getInstance().addNightCreature(spawnDat);
 					ret = 1;
-					break;
+				}
 			}
 			
 			addSpawn(spawnDat);

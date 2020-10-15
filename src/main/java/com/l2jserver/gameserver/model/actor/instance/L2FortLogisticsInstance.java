@@ -27,7 +27,8 @@ import com.l2jserver.gameserver.network.serverpackets.ActionFailed;
 import com.l2jserver.gameserver.network.serverpackets.NpcHtmlMessage;
 
 /**
- * @author Vice, Zoey76
+ * @author Vice
+ * @author Zoey76
  */
 public class L2FortLogisticsInstance extends L2MerchantInstance {
 	private static final int[] SUPPLY_BOX_IDS = {
@@ -54,10 +55,6 @@ public class L2FortLogisticsInstance extends L2MerchantInstance {
 		36363
 	};
 	
-	/**
-	 * Creates a fort logistics.
-	 * @param template the fort logistics NPC template
-	 */
 	public L2FortLogisticsInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2FortLogisticsInstance);
@@ -173,14 +170,12 @@ public class L2FortLogisticsInstance extends L2MerchantInstance {
 	
 	@Override
 	public String getHtmlPath(int npcId, int val) {
-		String pom = "";
-		
+		String pom;
 		if (val == 0) {
 			pom = "logistics";
 		} else {
 			pom = "logistics-" + val;
 		}
-		
 		return "data/html/fortress/" + pom + ".htm";
 	}
 	

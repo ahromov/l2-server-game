@@ -31,10 +31,6 @@ import com.l2jserver.gameserver.model.skills.Skill;
 public class ConditionPlayerTransformationId extends Condition {
 	private final int _id;
 	
-	/**
-	 * Instantiates a new condition player is transformed.
-	 * @param id the transformation Id.
-	 */
 	public ConditionPlayerTransformationId(int id) {
 		_id = id;
 	}

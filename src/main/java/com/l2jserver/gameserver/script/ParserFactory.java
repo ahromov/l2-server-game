@@ -20,5 +20,4 @@ package com.l2jserver.gameserver.script;
 
 public abstract class ParserFactory {
 	public abstract Parser create();
-	
 }

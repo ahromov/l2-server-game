@@ -87,8 +87,8 @@ public class L2Party extends AbstractPlayerGroup {
 	private final List<L2PcInstance> _members = new CopyOnWriteArrayList<>();
 	private boolean _pendingInvitation = false;
 	private long _pendingInviteTimeout;
-	private int _partyLvl = 0;
-	private volatile PartyDistributionType _distributionType = PartyDistributionType.FINDERS_KEEPERS;
+	private int _partyLvl;
+	private volatile PartyDistributionType _distributionType;
 	private volatile PartyDistributionType _changeRequestDistributionType;
 	private volatile Future<?> _changeDistributionTypeRequestTask = null;
 	private volatile Set<Integer> _changeDistributionTypeAnswers = null;
@@ -441,12 +441,10 @@ public class L2Party extends AbstractPlayerGroup {
 	 */
 	public void disbandParty() {
 		_disbanding = true;
-		if (_members != null) {
-			broadcastPacket(SystemMessage.getSystemMessage(SystemMessageId.PARTY_DISPERSED));
-			for (L2PcInstance member : _members) {
-				if (member != null) {
-					removePartyMember(member, messageType.None);
-				}
+		broadcastPacket(SystemMessage.getSystemMessage(SystemMessageId.PARTY_DISPERSED));
+		for (L2PcInstance member : _members) {
+			if (member != null) {
+				removePartyMember(member, messageType.None);
 			}
 		}
 	}
@@ -682,9 +680,9 @@ public class L2Party extends AbstractPlayerGroup {
 		}
 	}
 	
-	private final long calculateExpSpPartyCutoff(L2PcInstance player, int topLvl, long addExp, int addSp, boolean vit) {
+	private long calculateExpSpPartyCutoff(L2PcInstance player, int topLvl, long addExp, int addSp, boolean vit) {
 		long xp = addExp;
-		int sp = addSp;
+		int sp;
 		if (character().getPartyXpCutoffMethod().equalsIgnoreCase("highfive")) {
 			int i = 0;
 			final int lvlDiff = topLvl - player.getLevel();

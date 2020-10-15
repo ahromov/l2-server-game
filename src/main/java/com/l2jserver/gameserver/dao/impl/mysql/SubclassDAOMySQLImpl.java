@@ -34,7 +34,7 @@ public class SubclassDAOMySQLImpl implements SubclassDAO {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(SubclassDAOMySQLImpl.class);
 	
-	private static final String SELECT = "SELECT class_id,exp,sp,level,class_index FROM character_subclasses WHERE charId=? ORDER BY class_index ASC";
+	private static final String SELECT = "SELECT class_id,exp,sp,level,class_index FROM character_subclasses WHERE charId=? ORDER BY class_index";
 	
 	private static final String INSERT = "INSERT INTO character_subclasses (charId,class_id,exp,sp,level,class_index) VALUES (?,?,?,?,?,?)";
 	

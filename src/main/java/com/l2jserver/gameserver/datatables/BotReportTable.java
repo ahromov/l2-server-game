@@ -116,7 +116,7 @@ public final class BotReportTable {
 	private void loadReportedCharData() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var st = con.createStatement();
-			var rset = st.executeQuery(SQL_LOAD_REPORTED_CHAR_DATA)) {
+			var rs = st.executeQuery(SQL_LOAD_REPORTED_CHAR_DATA)) {
 			long lastResetTime = 0;
 			try {
 				String[] hour = general().getBotReportPointsResetHour().split(":");
@@ -133,16 +133,16 @@ public final class BotReportTable {
 				
 			}
 			
-			while (rset.next()) {
-				int botId = rset.getInt(COLUMN_BOT_ID);
-				int reporter = rset.getInt(COLUMN_REPORTER_ID);
-				long date = rset.getLong(COLUMN_REPORT_TIME);
+			while (rs.next()) {
+				int botId = rs.getInt(COLUMN_BOT_ID);
+				int reporter = rs.getInt(COLUMN_REPORTER_ID);
+				long date = rs.getLong(COLUMN_REPORT_TIME);
 				if (_reports.containsKey(botId)) {
 					_reports.get(botId).addReporter(reporter, date);
 				} else {
 					ReportedCharData rcd = new ReportedCharData();
 					rcd.addReporter(reporter, date);
-					_reports.put(rset.getInt(COLUMN_BOT_ID), rcd);
+					_reports.put(rs.getInt(COLUMN_BOT_ID), rcd);
 				}
 				
 				if (date > lastResetTime) {
@@ -242,7 +242,7 @@ public final class BotReportTable {
 			}
 			
 			if (rcd != null) {
-				if (rcd.alredyReportedBy(reporterId)) {
+				if (rcd.alreadyReportedBy(reporterId)) {
 					reporter.sendPacket(YOU_CANNOT_REPORT_CHAR_AT_THIS_TIME_1);
 					return false;
 				}
@@ -259,7 +259,7 @@ public final class BotReportTable {
 					return false;
 				}
 				
-				long reuse = (System.currentTimeMillis() - rcdRep.getLastReporTime());
+				long reuse = (System.currentTimeMillis() - rcdRep.getLastReportTime());
 				if (reuse < general().getBotReportDelay()) {
 					SystemMessage sm = SystemMessage.getSystemMessage(YOU_CAN_REPORT_IN_S1_MINS_YOU_HAVE_S2_POINTS_LEFT);
 					sm.addInt((int) (reuse / 60000));
@@ -301,9 +301,9 @@ public final class BotReportTable {
 	}
 	
 	/**
-	 * Find the punishs to apply to the given bot and triggers the punish method.
+	 * Find the punishment to apply to the given bot and triggers the punish method.
 	 * @param bot (L2PcInstance to be punished)
-	 * @param rcd (RepotedCharData linked to this bot)
+	 * @param rcd (ReportedCharData linked to this bot)
 	 */
 	private void handleReport(L2PcInstance bot, final ReportedCharData rcd) {
 		// Report count punishment
@@ -326,10 +326,7 @@ public final class BotReportTable {
 		if (ph != null) {
 			ph._punish.applyEffects(bot, bot);
 			if (ph._systemMessageId > -1) {
-				SystemMessageId id = SystemMessageId.getSystemMessageId(ph._systemMessageId);
-				if (id != null) {
-					bot.sendPacket(id);
-				}
+				bot.sendPacket(SystemMessageId.getSystemMessageId(ph._systemMessageId));
 			}
 		}
 	}
@@ -346,7 +343,7 @@ public final class BotReportTable {
 		if (sk != null) {
 			_punishments.put(neededReports, new PunishHolder(sk, sysMsg));
 		} else {
-			LOG.warn("Could not add punishment for ^* report(s): Skill {}-{} does not exist!", neededReports, skillId, skillLevel);
+			LOG.warn("Could not add punishment for {} report(s): Skill {}-{} does not exist!", neededReports, skillId, skillLevel);
 		}
 	}
 	
@@ -410,7 +407,7 @@ public final class BotReportTable {
 	/**
 	 * Represents the info about a reporter
 	 */
-	private final class ReporterCharData {
+	private static final class ReporterCharData {
 		private long _lastReport;
 		private byte _reportPoints;
 		
@@ -424,7 +421,7 @@ public final class BotReportTable {
 			_lastReport = time;
 		}
 		
-		long getLastReporTime() {
+		long getLastReportTime() {
 			return _lastReport;
 		}
 		
@@ -440,7 +437,7 @@ public final class BotReportTable {
 	/**
 	 * Represents the info about a reported character
 	 */
-	private final class ReportedCharData {
+	private static final class ReportedCharData {
 		Map<Integer, Long> _reporters;
 		
 		ReportedCharData() {
@@ -451,7 +448,7 @@ public final class BotReportTable {
 			return _reporters.size();
 		}
 		
-		boolean alredyReportedBy(int objectId) {
+		boolean alreadyReportedBy(int objectId) {
 			return _reporters.containsKey(objectId);
 		}
 		
@@ -506,7 +503,7 @@ public final class BotReportTable {
 		}
 	}
 	
-	class PunishHolder {
+	static class PunishHolder {
 		final Skill _punish;
 		final int _systemMessageId;
 		

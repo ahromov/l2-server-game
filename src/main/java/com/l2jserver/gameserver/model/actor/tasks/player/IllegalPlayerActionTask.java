@@ -51,22 +51,17 @@ public final class IllegalPlayerActionTask implements Runnable {
 		_actor = actor;
 		
 		switch (punishment) {
-			case KICK: {
-				_actor.sendMessage("You will be kicked for illegal action, GM informed.");
-				break;
-			}
-			case KICK_BAN: {
+			case KICK -> _actor.sendMessage("You will be kicked for illegal action, GM informed.");
+			case KICK_BAN -> {
 				if (!_actor.isGM()) {
 					_actor.setAccessLevel(-1);
 					_actor.setAccountAccesslevel(-1);
 				}
 				_actor.sendMessage("You are banned for illegal action, GM informed.");
-				break;
 			}
-			case JAIL: {
+			case JAIL -> {
 				_actor.sendMessage("Illegal action performed!");
 				_actor.sendMessage("You will be teleported to GM Consultation Service area and jailed.");
-				break;
 			}
 		}
 	}
@@ -79,21 +74,11 @@ public final class IllegalPlayerActionTask implements Runnable {
 		AdminData.getInstance().broadcastMessageToGMs(_message);
 		if (!_actor.isGM()) {
 			switch (_punishment) {
-				case BROADCAST: {
-					return;
+				case BROADCAST -> {
 				}
-				case KICK: {
-					_actor.logout(false);
-					break;
-				}
-				case KICK_BAN: {
-					PunishmentManager.getInstance().startPunishment(new PunishmentTask(_actor.getObjectId(), PunishmentAffect.CHARACTER, PunishmentType.BAN, System.currentTimeMillis() + general().getDefaultPunishParam(), _message, getClass().getSimpleName()));
-					break;
-				}
-				case JAIL: {
-					PunishmentManager.getInstance().startPunishment(new PunishmentTask(_actor.getObjectId(), PunishmentAffect.CHARACTER, PunishmentType.JAIL, System.currentTimeMillis() + general().getDefaultPunishParam(), _message, getClass().getSimpleName()));
-					break;
-				}
+				case KICK -> _actor.logout(false);
+				case KICK_BAN -> PunishmentManager.getInstance().startPunishment(new PunishmentTask(_actor.getObjectId(), PunishmentAffect.CHARACTER, PunishmentType.BAN, System.currentTimeMillis() + general().getDefaultPunishParam(), _message, getClass().getSimpleName()));
+				case JAIL -> PunishmentManager.getInstance().startPunishment(new PunishmentTask(_actor.getObjectId(), PunishmentAffect.CHARACTER, PunishmentType.JAIL, System.currentTimeMillis() + general().getDefaultPunishParam(), _message, getClass().getSimpleName()));
 			}
 		}
 	}

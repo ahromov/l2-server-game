@@ -30,7 +30,7 @@ import com.l2jserver.gameserver.model.interfaces.IIdentifiable;
  * <li>race : The race of this class</li>
  * <li>parent : The parent ClassId or null if this class is the root</li>
  * </ul>
- * @version $Revision: 1.4.4.4 $ $Date: 2005/03/27 15:29:33 $
+ * @since 2005/03/27 15:29:33
  */
 public enum ClassId implements IIdentifiable {
 	fighter(0x00, false, Race.HUMAN, null),	
@@ -218,7 +218,7 @@ public enum ClassId implements IIdentifiable {
 	 * @param race the race related to the class.
 	 * @param pParent the parent class Id.
 	 */
-	private ClassId(int pId, boolean pIsMage, Race race, ClassId pParent) {
+	ClassId(int pId, boolean pIsMage, Race race, ClassId pParent) {
 		_id = pId;
 		_isMage = pIsMage;
 		_isSummoner = false;
@@ -234,7 +234,7 @@ public enum ClassId implements IIdentifiable {
 	 * @param race the race related to the class.
 	 * @param pParent the parent class Id.
 	 */
-	private ClassId(int pId, boolean pIsMage, boolean pIsSummoner, Race race, ClassId pParent) {
+	ClassId(int pId, boolean pIsMage, boolean pIsSummoner, Race race, ClassId pParent) {
 		_id = pId;
 		_isMage = pIsMage;
 		_isSummoner = pIsSummoner;
@@ -308,9 +308,6 @@ public enum ClassId implements IIdentifiable {
 		return _parent.level() + 1;
 	}
 	
-	/**
-	 * @return its parent Class Id
-	 */
 	public final ClassId getParent() {
 		return _parent;
 	}

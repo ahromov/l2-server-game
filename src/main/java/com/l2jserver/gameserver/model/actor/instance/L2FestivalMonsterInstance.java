@@ -33,10 +33,6 @@ import com.l2jserver.gameserver.network.serverpackets.InventoryUpdate;
 public class L2FestivalMonsterInstance extends L2MonsterInstance {
 	protected int _bonusMultiplier = 1;
 	
-	/**
-	 * Creates a festival monster.
-	 * @param template the festival monster NPC template
-	 */
 	public L2FestivalMonsterInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2FestivalMonsterInstance);
@@ -51,11 +47,7 @@ public class L2FestivalMonsterInstance extends L2MonsterInstance {
 	 */
 	@Override
 	public boolean isAutoAttackable(L2Character attacker) {
-		if (attacker instanceof L2FestivalMonsterInstance) {
-			return false;
-		}
-		
-		return true;
+		return !(attacker instanceof L2FestivalMonsterInstance);
 	}
 	
 	/**
@@ -84,13 +76,11 @@ public class L2FestivalMonsterInstance extends L2MonsterInstance {
 	 */
 	@Override
 	public void doItemDrop(L2Character lastAttacker) {
-		L2PcInstance killingChar = null;
-		
 		if (!(lastAttacker instanceof L2PcInstance)) {
 			return;
 		}
 		
-		killingChar = (L2PcInstance) lastAttacker;
+		final var killingChar = (L2PcInstance) lastAttacker;
 		L2Party associatedParty = killingChar.getParty();
 		
 		if (associatedParty == null) {

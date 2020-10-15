@@ -36,7 +36,7 @@ public enum PartyDistributionType {
 	 * @param id the id used by packets.
 	 * @param sysStringId the sysstring id
 	 */
-	private PartyDistributionType(int id, int sysStringId) {
+	PartyDistributionType(int id, int sysStringId) {
 		_id = id;
 		_sysStringId = sysStringId;
 	}

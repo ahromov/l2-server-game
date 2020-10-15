@@ -21616,7 +21616,7 @@ public final class NpcStringId {
 	/**
 	 * Map containing all NpcStringId<br>
 	 */
-	private static Map<Integer, NpcStringId> VALUES = new HashMap<>();
+	private static final Map<Integer, NpcStringId> VALUES = new HashMap<>();
 	
 	static {
 		HELLO_I_AM_S1_YOU_ARE_S2_RIGHT_HEHEHE = new NpcStringId(1);

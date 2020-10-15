@@ -27,8 +27,10 @@ import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.model.Location;
 
 /**
- * Abstract zone with spawn locations
- * @author DS, Nyaran (rework 10/07/2011)
+ * Abstract respawn zone.
+ * @author DS
+ * @author Nyaran
+ * @since 2011/07/10
  */
 public abstract class L2ZoneRespawn extends L2ZoneType {
 	private List<Location> _spawnLocs = null;
@@ -45,17 +47,10 @@ public abstract class L2ZoneRespawn extends L2ZoneType {
 			addSpawn(x, y, z);
 		} else {
 			switch (type) {
-				case "other":
-					addOtherSpawn(x, y, z);
-					break;
-				case "chaotic":
-					addChaoticSpawn(x, y, z);
-					break;
-				case "banish":
-					addBanishSpawn(x, y, z);
-					break;
-				default:
-					_log.warning(getClass().getSimpleName() + ": Unknown location type: " + type);
+				case "other" -> addOtherSpawn(x, y, z);
+				case "chaotic" -> addChaoticSpawn(x, y, z);
+				case "banish" -> addBanishSpawn(x, y, z);
+				default -> _log.warning(getClass().getSimpleName() + ": Unknown location type: " + type);
 			}
 		}
 	}

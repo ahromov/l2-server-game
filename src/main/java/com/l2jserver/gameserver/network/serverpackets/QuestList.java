@@ -34,7 +34,7 @@ public class QuestList extends L2GameServerPacket {
 		 * {
 		 * 		1 byte - 0x80
 		 * 		2 byte - Number of Quests
-		 * 		for Quest in AvailibleQuests
+		 * 		for Quest in AvailableQuests
 		 * 		{
 		 * 			4 byte - Quest ID
 		 * 			4 byte - Quest Status

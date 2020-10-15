@@ -29,10 +29,9 @@ public class IntList {
 			return getIntegerList(range.split(","));
 		}
 		
-		int[] list = {
+		return new int[] {
 			getInt(range)
 		};
-		return list;
 	}
 	
 	private static int getInt(String number) {

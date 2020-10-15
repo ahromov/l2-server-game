@@ -45,10 +45,6 @@ import com.l2jserver.gameserver.util.StringUtil;
 public class L2NpcInstance extends L2Npc {
 	private static final Logger LOG = LoggerFactory.getLogger(L2NpcInstance.class);
 	
-	/**
-	 * Creates a NPC.
-	 * @param template the NPC template
-	 */
 	public L2NpcInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2NpcInstance);

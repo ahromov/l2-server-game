@@ -34,12 +34,6 @@ public class ZoneNPoly extends L2ZoneForm {
 	private final int _z1;
 	private final int _z2;
 	
-	/**
-	 * @param x
-	 * @param y
-	 * @param z1
-	 * @param z2
-	 */
 	public ZoneNPoly(int[] x, int[] y, int z1, int z2) {
 		_p = new Polygon(x, y, x.length);
 		
@@ -73,7 +67,7 @@ public class ZoneNPoly extends L2ZoneForm {
 		return Math.sqrt(shortestDist);
 	}
 	
-	// getLowZ() / getHighZ() - These two functions were added to cope with the demand of the new fishing algorithms, wich are now able to correctly place the hook in the water, thanks to getHighZ(). getLowZ() was added, considering potential future modifications.
+	// getLowZ() / getHighZ() - These two functions were added to cope with the demand of the new fishing algorithms, which are now able to correctly place the hook in the water, thanks to getHighZ(). getLowZ() was added, considering potential future modifications.
 	@Override
 	public int getLowZ() {
 		return _z1;
@@ -97,10 +91,10 @@ public class ZoneNPoly extends L2ZoneForm {
 			}
 			int vx = _x[nextIndex] - _x[i];
 			int vy = _y[nextIndex] - _y[i];
-			float lenght = (float) Math.sqrt((vx * vx) + (vy * vy));
-			lenght /= STEP;
-			for (int o = 1; o <= lenght; o++) {
-				float k = o / lenght;
+			float length = (float) Math.sqrt((vx * vx) + (vy * vy));
+			length /= STEP;
+			for (int o = 1; o <= length; o++) {
+				float k = o / length;
 				dropDebugItem(Inventory.ADENA_ID, 1, (int) (_x[i] + (k * vx)), (int) (_y[i] + (k * vy)), z);
 			}
 		}

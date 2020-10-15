@@ -100,7 +100,7 @@ public class RequestUnEquipItem extends L2GameClientPacket {
 		
 		// This can be 0 if the user pressed the right mouse button twice very fast.
 		if (unequipped.length > 0) {
-			SystemMessage sm = null;
+			SystemMessage sm;
 			if (unequipped[0].getEnchantLevel() > 0) {
 				sm = SystemMessage.getSystemMessage(SystemMessageId.EQUIPMENT_S1_S2_REMOVED);
 				sm.addInt(unequipped[0].getEnchantLevel());

@@ -55,46 +55,19 @@ public class TaskRaidPointsReset extends Task {
 			for (L2Clan c : ClanTable.getInstance().getClans()) {
 				for (Entry<Integer, Integer> entry : rankList.entrySet()) {
 					if ((entry.getValue() <= 100) && c.isMember(entry.getKey())) {
-						int reputation = 0;
-						switch (entry.getValue()) {
-							case 1:
-								reputation = clan().get1stRaidRankingPoints();
-								break;
-							case 2:
-								reputation = clan().get2ndRaidRankingPoints();
-								break;
-							case 3:
-								reputation = clan().get3rdRaidRankingPoints();
-								break;
-							case 4:
-								reputation = clan().get4thRaidRankingPoints();
-								break;
-							case 5:
-								reputation = clan().get5thRaidRankingPoints();
-								break;
-							case 6:
-								reputation = clan().get6thRaidRankingPoints();
-								break;
-							case 7:
-								reputation = clan().get7thRaidRankingPoints();
-								break;
-							case 8:
-								reputation = clan().get8thRaidRankingPoints();
-								break;
-							case 9:
-								reputation = clan().get9thRaidRankingPoints();
-								break;
-							case 10:
-								reputation = clan().get10thRaidRankingPoints();
-								break;
-							default:
-								if (entry.getValue() <= 50) {
-									reputation = clan().getUpTo50thRaidRankingPoints();
-								} else {
-									reputation = clan().getUpTo100thRaidRankingPoints();
-								}
-								break;
-						}
+						int reputation = switch (entry.getValue()) {
+							case 1 -> clan().get1stRaidRankingPoints();
+							case 2 -> clan().get2ndRaidRankingPoints();
+							case 3 -> clan().get3rdRaidRankingPoints();
+							case 4 -> clan().get4thRaidRankingPoints();
+							case 5 -> clan().get5thRaidRankingPoints();
+							case 6 -> clan().get6thRaidRankingPoints();
+							case 7 -> clan().get7thRaidRankingPoints();
+							case 8 -> clan().get8thRaidRankingPoints();
+							case 9 -> clan().get9thRaidRankingPoints();
+							case 10 -> clan().get10thRaidRankingPoints();
+							default -> entry.getValue() <= 50 ? clan().getUpTo50thRaidRankingPoints() : clan().getUpTo100thRaidRankingPoints();
+						};
 						c.addReputationScore(reputation, true);
 					}
 				}

@@ -23,6 +23,7 @@ import static com.l2jserver.gameserver.config.Configuration.server;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -72,9 +73,7 @@ public class DocumentEngine {
 		
 		final var files = dir.listFiles(new XMLFilter());
 		if (files != null) {
-			for (File f : files) {
-				hash.add(f);
-			}
+			Collections.addAll(hash, files);
 		}
 	}
 	

@@ -24,17 +24,13 @@ import com.l2jserver.gameserver.model.skills.Skill;
 import com.l2jserver.gameserver.model.zone.ZoneId;
 
 /**
- * The Class ConditionPlayerLandingZone.
+ * Landing zone condition.
  * @author kerberos
  */
 public class ConditionPlayerLandingZone extends Condition {
 	
 	private final boolean _val;
 	
-	/**
-	 * Instantiates a new condition player landing zone.
-	 * @param val the val
-	 */
 	public ConditionPlayerLandingZone(boolean val) {
 		_val = val;
 	}

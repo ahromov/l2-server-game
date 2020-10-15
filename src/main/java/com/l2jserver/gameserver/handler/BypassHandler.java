@@ -22,7 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author nBd, UnAfraid
+ * @author nBd
+ * @author UnAfraid
  */
 public class BypassHandler implements IHandler<IBypassHandler, String> {
 	private final Map<String, IBypassHandler> _datatable;

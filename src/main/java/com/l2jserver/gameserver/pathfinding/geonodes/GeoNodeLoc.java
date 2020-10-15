@@ -93,9 +93,6 @@ public class GeoNodeLoc extends AbstractNodeLoc {
 		if (_y != other._y) {
 			return false;
 		}
-		if (_z != other._z) {
-			return false;
-		}
-		return true;
+		return _z == other._z;
 	}
 }

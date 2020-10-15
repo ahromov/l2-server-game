@@ -190,11 +190,7 @@ public class EnterWorld extends L2GameClientPacket {
 				activeChar.refreshOverloaded();
 			}
 			
-			if (general().gmStartupAutoList() && AdminData.getInstance().hasAccess("admin_gmliston", activeChar.getAccessLevel())) {
-				AdminData.getInstance().addGm(activeChar, false);
-			} else {
-				AdminData.getInstance().addGm(activeChar, true);
-			}
+			AdminData.getInstance().addGm(activeChar, !general().gmStartupAutoList() || !AdminData.getInstance().hasAccess("admin_gmliston", activeChar.getAccessLevel()));
 			
 			if (general().gmGiveSpecialSkills()) {
 				SkillTreesData.getInstance().addSkills(activeChar, false);
@@ -362,7 +358,7 @@ public class EnterWorld extends L2GameClientPacket {
 		// Wedding Checks
 		if (customs().allowWedding()) {
 			engage(activeChar);
-			notifyPartner(activeChar, activeChar.getPartnerId());
+			notifyPartner(activeChar.getPartnerId());
 		}
 		
 		if (activeChar.isCursedWeaponEquipped()) {
@@ -513,7 +509,7 @@ public class EnterWorld extends L2GameClientPacket {
 		final int chaId = cha.getObjectId();
 		for (Couple cl : CoupleManager.getInstance().getCouples()) {
 			if ((cl.getPlayer1Id() == chaId) || (cl.getPlayer2Id() == chaId)) {
-				if (cl.getMaried()) {
+				if (cl.getMarried()) {
 					cha.setMarried(true);
 				}
 				
@@ -528,8 +524,8 @@ public class EnterWorld extends L2GameClientPacket {
 		}
 	}
 	
-	private static void notifyPartner(L2PcInstance cha, int partnerId) {
-		final L2PcInstance partner = L2World.getInstance().getPlayer(cha.getPartnerId());
+	private static void notifyPartner(int partnerId) {
+		final L2PcInstance partner = L2World.getInstance().getPlayer(partnerId);
 		if (partner != null) {
 			partner.sendMessage("Your partner has logged in.");
 		}

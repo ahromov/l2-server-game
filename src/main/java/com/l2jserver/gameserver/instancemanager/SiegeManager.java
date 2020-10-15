@@ -73,10 +73,10 @@ public final class SiegeManager {
 	
 	/**
 	 * @param clan The L2Clan of the player
-	 * @param castleid
+	 * @param castleId
 	 * @return true if the clan is registered or owner of a castle
 	 */
-	public boolean checkIsRegistered(L2Clan clan, int castleid) {
+	public boolean checkIsRegistered(L2Clan clan, int castleId) {
 		if (clan == null) {
 			return false;
 		}
@@ -89,11 +89,10 @@ public final class SiegeManager {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("SELECT clan_id FROM siege_clans where clan_id=? and castle_id=?")) {
 			ps.setInt(1, clan.getId());
-			ps.setInt(2, castleid);
+			ps.setInt(2, castleId);
 			try (var rs = ps.executeQuery()) {
-				while (rs.next()) {
+				if (rs.next()) {
 					register = true;
-					break;
 				}
 			}
 		} catch (Exception ex) {

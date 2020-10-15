@@ -23,15 +23,11 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerSouls.
+ * Souls condition.
  */
 public class ConditionPlayerSouls extends Condition {
 	private final int _souls;
 	
-	/**
-	 * Instantiates a new condition player souls.
-	 * @param souls the souls
-	 */
 	public ConditionPlayerSouls(int souls) {
 		_souls = souls;
 	}

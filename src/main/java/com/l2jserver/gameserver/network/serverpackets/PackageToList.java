@@ -23,7 +23,8 @@ import java.util.Map.Entry;
 
 /**
  * @author -Wooden-
- * @author UnAfraid, mrTJO
+ * @author UnAfraid
+ * @author mrTJO
  */
 public class PackageToList extends L2GameServerPacket {
 	private final Map<Integer, String> _players;

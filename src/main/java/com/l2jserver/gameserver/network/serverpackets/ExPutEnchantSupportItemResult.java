@@ -24,9 +24,6 @@ package com.l2jserver.gameserver.network.serverpackets;
 public class ExPutEnchantSupportItemResult extends L2GameServerPacket {
 	private final int _result;
 	
-	/**
-	 * @param result
-	 */
 	public ExPutEnchantSupportItemResult(int result) {
 		_result = result;
 	}

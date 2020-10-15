@@ -117,7 +117,7 @@ public final class EnchantScroll extends AbstractEnchantItem {
 	 */
 	public double getChance(L2PcInstance player, L2ItemInstance enchantItem) {
 		if (EnchantItemGroupsData.getInstance().getScrollGroup(_scrollGroupId) == null) {
-			_log.log(Level.WARNING, getClass().getSimpleName() + ": Unexistent enchant scroll group specified for enchant scroll: " + getId());
+			_log.log(Level.WARNING, getClass().getSimpleName() + ": Nonexistent enchant scroll group specified for enchant scroll: " + getId());
 			return -1;
 		}
 		
@@ -156,10 +156,10 @@ public final class EnchantScroll extends AbstractEnchantItem {
 			final EnchantItemGroup group = EnchantItemGroupsData.getInstance().getItemGroup(enchantItem.getItem(), _scrollGroupId);
 			final StatsSet set = new StatsSet();
 			if (isBlessed()) {
-				set.set("isBlessed", isBlessed());
+				set.set("isBlessed", true);
 			}
 			if (isSafe()) {
-				set.set("isSafe", isSafe());
+				set.set("isSafe", true);
 			}
 			set.set("chance", Util.formatDouble(chance, "#.##"));
 			if (bonusRate > 0) {

@@ -22,7 +22,8 @@ import com.l2jserver.gameserver.handler.CommunityBoardHandler;
 
 /**
  * RequestBBSwrite client packet implementation.
- * @author -Wooden-, Zoey76
+ * @author -Wooden-
+ * @author Zoey76
  */
 public final class RequestBBSwrite extends L2GameClientPacket {
 	private static final String _C__24_REQUESTBBSWRITE = "[C] 24 RequestBBSwrite";

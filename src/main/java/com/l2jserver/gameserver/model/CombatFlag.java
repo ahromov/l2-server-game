@@ -38,7 +38,7 @@ public class CombatFlag {
 	private final Location _location;
 	private final int _itemId;
 	
-	public CombatFlag(int fort_id, int x, int y, int z, int heading, int item_id) {
+	public CombatFlag(int fortId, int x, int y, int z, int heading, int item_id) {
 		_location = new Location(x, y, z, heading);
 		_itemId = item_id;
 	}

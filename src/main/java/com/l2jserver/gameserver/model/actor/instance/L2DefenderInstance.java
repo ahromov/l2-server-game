@@ -48,10 +48,6 @@ public class L2DefenderInstance extends L2Attackable {
 	private Fort _fort = null; // the fortress which the instance should defend
 	private SiegableHall _hall = null; // the siegable hall which the instance should defend
 	
-	/**
-	 * Creates a defender.
-	 * @param template the defender NPC template
-	 */
 	public L2DefenderInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2DefenderInstance);
@@ -95,9 +91,7 @@ public class L2DefenderInstance extends L2Attackable {
 			int activeSiegeId = (_fort != null ? _fort.getResidenceId() : (_castle != null ? _castle.getResidenceId() : (_hall != null ? _hall.getId() : 0)));
 			
 			// Check if player is an enemy of this defender npc
-			if ((player != null) && (((player.getSiegeState() == 2) && !player.isRegisteredOnThisSiegeField(activeSiegeId)) || ((player.getSiegeState() == 1) && !TerritoryWarManager.getInstance().isAllyField(player, activeSiegeId)) || (player.getSiegeState() == 0))) {
-				return true;
-			}
+			return (player != null) && (((player.getSiegeState() == 2) && !player.isRegisteredOnThisSiegeField(activeSiegeId)) || ((player.getSiegeState() == 1) && !TerritoryWarManager.getInstance().isAllyField(player, activeSiegeId)) || (player.getSiegeState() == 0));
 		}
 		return false;
 	}
@@ -163,7 +157,7 @@ public class L2DefenderInstance extends L2Attackable {
 			player.setTarget(this);
 		} else if (interact) {
 			if (isAutoAttackable(player) && !isAlikeDead()) {
-				if (Math.abs(player.getZ() - getZ()) < 600) // this max heigth difference might need some tweaking
+				if (Math.abs(player.getZ() - getZ()) < 600) // this max height difference might need some tweaking
 				{
 					player.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, this);
 				}

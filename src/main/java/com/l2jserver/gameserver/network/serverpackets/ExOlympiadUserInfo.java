@@ -27,10 +27,10 @@ import com.l2jserver.gameserver.model.olympiad.Participant;
 public class ExOlympiadUserInfo extends L2GameServerPacket {
 	private final L2PcInstance _player;
 	private Participant _par = null;
-	private int _curHp;
-	private int _maxHp;
-	private int _curCp;
-	private int _maxCp;
+	private final int _curHp;
+	private final int _maxHp;
+	private final int _curCp;
+	private final int _maxCp;
 	
 	public ExOlympiadUserInfo(L2PcInstance player) {
 		_player = player;

@@ -25,10 +25,7 @@ import com.l2jserver.gameserver.network.serverpackets.ActionFailed;
 import com.l2jserver.gameserver.network.serverpackets.NpcHtmlMessage;
 
 public class L2DawnPriestInstance extends L2SignsPriestInstance {
-	/**
-	 * Creates a dawn priest.
-	 * @param template the dawn priest NPC template
-	 */
+	
 	public L2DawnPriestInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2DawnPriestInstance);

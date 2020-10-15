@@ -47,7 +47,7 @@ public class ExShowFortressMapInfo extends L2GameServerPacket {
 		List<FortSiegeSpawn> commanders = FortSiegeManager.getInstance().getCommanderSpawnList(_fortress.getResidenceId());
 		if ((commanders != null) && (commanders.size() != 0) && _fortress.getSiege().isInProgress()) {
 			switch (commanders.size()) {
-				case 3: {
+				case 3 -> {
 					for (FortSiegeSpawn spawn : commanders) {
 						if (isSpawned(spawn.getId())) {
 							writeD(0);
@@ -55,10 +55,9 @@ public class ExShowFortressMapInfo extends L2GameServerPacket {
 							writeD(1);
 						}
 					}
-					break;
 				}
-				case 4: // TODO: change 4 to 5 once control room supported
-				{
+				// TODO: change 4 to 5 once control room supported
+				case 4 -> {
 					int count = 0;
 					for (FortSiegeSpawn spawn : commanders) {
 						count++;
@@ -71,7 +70,6 @@ public class ExShowFortressMapInfo extends L2GameServerPacket {
 							writeD(1);
 						}
 					}
-					break;
 				}
 			}
 		} else {
@@ -81,10 +79,6 @@ public class ExShowFortressMapInfo extends L2GameServerPacket {
 		}
 	}
 	
-	/**
-	 * @param npcId
-	 * @return
-	 */
 	private boolean isSpawned(int npcId) {
 		boolean ret = false;
 		for (L2Spawn spawn : _fortress.getSiege().getCommanders()) {

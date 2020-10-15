@@ -41,7 +41,11 @@ import com.l2jserver.gameserver.model.clientstrings.Builder;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 /**
- * @author Noctarius, Nille02, crion, Forsaiken, Zealar
+ * @author Noctarius
+ * @author Nille02
+ * @author crion
+ * @author Forsaiken
+ * @author Zealar
  */
 public final class SystemMessageId {
 	private static final Logger _log = Logger.getLogger(SystemMessageId.class.getName());
@@ -49,9 +53,9 @@ public final class SystemMessageId {
 	public static final SystemMessageId[] EMPTY_ARRAY = new SystemMessageId[0];
 	
 	/**
-	 * Map containing all SystemMessageIds<br>
+	 * Map containing all SystemMessageIds.
 	 */
-	private static Map<Integer, SystemMessageId> VALUES = new HashMap<>(2524);
+	private static final Map<Integer, SystemMessageId> VALUES = new HashMap<>(2524);
 	
 	/**
 	 * ID: 0<br>
@@ -15294,10 +15298,6 @@ public final class SystemMessageId {
 								SystemMessageId smId;
 								if (node != null) {
 									smId = getSystemMessageId(Integer.parseInt(node.getNodeValue()));
-									if (smId == null) {
-										_log.log(Level.WARNING, "SystemMessageId: Unknown SMID '" + node.getNodeValue() + "', lang '" + lang + "'.");
-										continue;
-									}
 								} else {
 									node = nnmb.getNamedItem("name");
 									smId = getSystemMessageId(node.getNodeValue());

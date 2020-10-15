@@ -68,7 +68,7 @@ public class LongTimeEvent extends Quest {
 	// Drop data for event
 	private final List<GeneralDropItem> _dropList = new ArrayList<>();
 	
-	private class NpcSpawn {
+	private static class NpcSpawn {
 		protected final Location loc;
 		protected final int npcId;
 		
@@ -229,7 +229,7 @@ public class LongTimeEvent extends Quest {
 		}
 		
 		// Add spawns
-		Long millisToEventEnd = _eventPeriod.getEndDate().getTime() - currentTime;
+		long millisToEventEnd = _eventPeriod.getEndDate().getTime() - currentTime;
 		if (_spawnList != null) {
 			for (NpcSpawn spawn : _spawnList) {
 				addSpawn(spawn.npcId, spawn.loc.getX(), spawn.loc.getY(), spawn.loc.getZ(), spawn.loc.getHeading(), false, millisToEventEnd, false);

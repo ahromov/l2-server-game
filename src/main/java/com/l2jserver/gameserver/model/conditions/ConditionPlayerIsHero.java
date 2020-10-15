@@ -23,15 +23,11 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerIsHero.
+ * Hero condition.
  */
 public class ConditionPlayerIsHero extends Condition {
 	private final boolean _val;
 	
-	/**
-	 * Instantiates a new condition player is hero.
-	 * @param val the val
-	 */
 	public ConditionPlayerIsHero(boolean val) {
 		_val = val;
 	}

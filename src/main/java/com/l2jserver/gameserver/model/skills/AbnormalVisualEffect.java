@@ -20,7 +20,8 @@ package com.l2jserver.gameserver.model.skills;
 
 /**
  * Abnormal Visual Effect enumerated.
- * @author DrHouse, Zoey76
+ * @author DrHouse
+ * @author Zoey76
  */
 public enum AbnormalVisualEffect {
 	NONE(0x0000000, 0),
@@ -92,7 +93,7 @@ public enum AbnormalVisualEffect {
 	/** Type: 0 Normal, 1 Special, 2 Event. */
 	private final int _type;
 	
-	private AbnormalVisualEffect(int mask, int type) {
+	AbnormalVisualEffect(int mask, int type) {
 		_mask = mask;
 		_type = type;
 	}

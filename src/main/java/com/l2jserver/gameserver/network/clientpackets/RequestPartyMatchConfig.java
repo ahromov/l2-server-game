@@ -25,12 +25,11 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.network.serverpackets.ActionFailed;
 import com.l2jserver.gameserver.network.serverpackets.ExPartyRoomMember;
-import com.l2jserver.gameserver.network.serverpackets.ListPartyWating;
+import com.l2jserver.gameserver.network.serverpackets.ListPartyWaiting;
 import com.l2jserver.gameserver.network.serverpackets.PartyMatchDetail;
 
 /**
- * This class ...
- * @version $Revision: 1.1.4.2 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class RequestPartyMatchConfig extends L2GameClientPacket {
 	private static final String _C__7F_REQUESTPARTYMATCHCONFIG = "[C] 7F RequestPartyMatchConfig";
@@ -81,9 +80,7 @@ public final class RequestPartyMatchConfig extends L2GameClientPacket {
 			PartyMatchWaitingList.getInstance().addPlayer(_activeChar);
 			
 			// Send Room list
-			ListPartyWating matchList = new ListPartyWating(_activeChar, _auto, _loc, _lvl);
-			
-			_activeChar.sendPacket(matchList);
+			_activeChar.sendPacket(new ListPartyWaiting(_activeChar, _auto, _loc, _lvl));
 		}
 	}
 	

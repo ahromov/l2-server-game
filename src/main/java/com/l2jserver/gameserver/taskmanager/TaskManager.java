@@ -188,16 +188,16 @@ public final class TaskManager {
 	private void startAllTasks() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var statement = con.prepareStatement(SQL_STATEMENTS[0]);
-			var rset = statement.executeQuery()) {
-			while (rset.next()) {
-				Task task = _tasks.get(rset.getString("task").trim().toLowerCase().hashCode());
+			var rs = statement.executeQuery()) {
+			while (rs.next()) {
+				Task task = _tasks.get(rs.getString("task").trim().toLowerCase().hashCode());
 				if (task == null) {
 					continue;
 				}
 				
-				final TaskTypes type = TaskTypes.valueOf(rset.getString("type"));
+				final TaskTypes type = TaskTypes.valueOf(rs.getString("type"));
 				if (type != TYPE_NONE) {
-					ExecutedTask current = new ExecutedTask(task, type, rset);
+					ExecutedTask current = new ExecutedTask(task, type, rs);
 					if (launchTask(current)) {
 						_currentTasks.add(current);
 					}
@@ -217,12 +217,12 @@ public final class TaskManager {
 				task.run();
 				return false;
 			case TYPE_SHEDULED:
-				delay = Long.valueOf(task.getParams()[0]);
+				delay = Long.parseLong(task.getParams()[0]);
 				task.scheduled = scheduler.scheduleGeneral(task, delay);
 				return true;
 			case TYPE_FIXED_SHEDULED:
-				delay = Long.valueOf(task.getParams()[0]);
-				interval = Long.valueOf(task.getParams()[1]);
+				delay = Long.parseLong(task.getParams()[0]);
+				interval = Long.parseLong(task.getParams()[1]);
 				task.scheduled = scheduler.scheduleGeneralAtFixedRate(task, delay, interval);
 				return true;
 			case TYPE_TIME:
@@ -245,7 +245,7 @@ public final class TaskManager {
 				}
 				break;
 			case TYPE_GLOBAL_TASK:
-				interval = DAYS.toMillis(Long.valueOf(task.getParams()[0]));
+				interval = DAYS.toMillis(Long.parseLong(task.getParams()[0]));
 				String[] hour = task.getParams()[1].split(":");
 				
 				if (hour.length != 3) {
@@ -262,7 +262,7 @@ public final class TaskManager {
 					min.set(Calendar.MINUTE, Integer.parseInt(hour[1]));
 					min.set(Calendar.SECOND, Integer.parseInt(hour[2]));
 				} catch (Exception ex) {
-					LOG.warn("Bad parameter on task Id {}!" + task.getId(), ex);
+					LOG.warn("Bad parameter on task Id {}!", task.getId(), ex);
 					return false;
 				}
 				

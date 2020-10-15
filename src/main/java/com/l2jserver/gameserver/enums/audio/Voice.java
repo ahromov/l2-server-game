@@ -72,11 +72,11 @@ public enum Voice implements IAudio {
 	
 	private final PlaySound _playSound;
 	
-	private Voice(String soundName) {
+	Voice(String soundName) {
 		_playSound = PlaySound.createVoice(soundName, 0);
 	}
 	
-	private Voice(String soundName, int delay) {
+	Voice(String soundName, int delay) {
 		_playSound = PlaySound.createVoice(soundName, delay);
 	}
 	

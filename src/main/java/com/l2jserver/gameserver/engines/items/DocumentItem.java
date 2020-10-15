@@ -34,15 +34,13 @@ import com.l2jserver.gameserver.model.conditions.Condition;
 import com.l2jserver.gameserver.model.items.L2Item;
 
 /**
- * @author mkizub, JIV
+ * @author mkizub
+ * @author JIV
  */
 public final class DocumentItem extends DocumentBase {
 	private Item _currentItem = null;
 	private final List<L2Item> _itemsInFile = new ArrayList<>();
 	
-	/**
-	 * @param file
-	 */
 	public DocumentItem(File file) {
 		super(file);
 	}

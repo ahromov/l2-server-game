@@ -26,13 +26,12 @@ import com.l2jserver.gameserver.network.L2GameClient;
 import com.l2jserver.gameserver.network.serverpackets.L2GameServerPacket;
 
 /**
- * This class ...
- * @version $Revision: 1.9.2.3.2.4 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class AuthLogin extends L2GameClientPacket {
 	private static final String _C__2B_AUTHLOGIN = "[C] 2B AuthLogin";
 	
-	// loginName + keys must match what the loginserver used.
+	// loginName + keys must match what the login server used.
 	private String _loginName;
 	/*
 	 * private final long _key1; private final long _key2; private final long _key3; private final long _key4;

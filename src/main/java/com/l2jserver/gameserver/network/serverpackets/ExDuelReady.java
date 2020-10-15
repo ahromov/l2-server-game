@@ -20,7 +20,8 @@ package com.l2jserver.gameserver.network.serverpackets;
 
 /**
  * Duel Ready packet implementation.
- * @author KenM, Zoey76
+ * @author KenM
+ * @author Zoey76
  */
 public class ExDuelReady extends L2GameServerPacket {
 	public static final ExDuelReady PLAYER_DUEL = new ExDuelReady(false);

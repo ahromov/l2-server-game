@@ -32,7 +32,8 @@ import com.l2jserver.gameserver.instancemanager.MailManager;
 import com.l2jserver.gameserver.model.itemcontainer.Mail;
 
 /**
- * @author Migi, DS
+ * @author Migi
+ * @author DS
  */
 public class Message {
 	private static final int EXPIRATION = 360; // 15 days
@@ -144,7 +145,7 @@ public class Message {
 		_unloadTask = ThreadPoolManager.getInstance().scheduleGeneral(new AttachmentsUnloadTask(this), UNLOAD_ATTACHMENTS_INTERVAL + Rnd.get(UNLOAD_ATTACHMENTS_INTERVAL));
 	}
 	
-	public static final PreparedStatement getStatement(Message msg, Connection con) throws SQLException {
+	public static PreparedStatement getStatement(Message msg, Connection con) throws SQLException {
 		PreparedStatement stmt = con.prepareStatement("INSERT INTO messages (messageId, senderId, receiverId, subject, content, expiration, reqAdena, hasAttachments, isUnread, isDeletedBySender, isDeletedByReceiver, sendBySystem, isReturned) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		
 		stmt.setInt(1, msg._messageId);

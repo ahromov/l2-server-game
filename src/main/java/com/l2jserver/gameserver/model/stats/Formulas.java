@@ -499,18 +499,16 @@ public final class Formulas {
 		double defence = target.getPDef(attacker);
 		
 		switch (shld) {
-			case Formulas.SHIELD_DEFENSE_SUCCEED: {
+			case Formulas.SHIELD_DEFENSE_SUCCEED -> {
 				defence += target.getShldDef();
-				break;
 			}
-			case Formulas.SHIELD_DEFENSE_PERFECT_BLOCK: // perfect block
-			{
+			case Formulas.SHIELD_DEFENSE_PERFECT_BLOCK -> {
 				return 1;
 			}
 		}
 		
 		final boolean isPvP = attacker.isPlayable() && target.isPlayable();
-		double damage = 0;
+		double damage;
 		double proximityBonus = attacker.isBehindTarget() ? 1.2 : attacker.isInFrontOfTarget() ? 1 : 1.1; // Behind: +20% - Side: +10% (TODO: values are unconfirmed, possibly custom, remove or update when confirmed);
 		double ssboost = ss ? 1.458 : 1;
 		double pvpBonus = 1;
@@ -580,18 +578,16 @@ public final class Formulas {
 		double defence = target.getPDef(attacker);
 		
 		switch (shld) {
-			case Formulas.SHIELD_DEFENSE_SUCCEED: {
+			case Formulas.SHIELD_DEFENSE_SUCCEED -> {
 				defence += target.getShldDef();
-				break;
 			}
-			case Formulas.SHIELD_DEFENSE_PERFECT_BLOCK: // perfect block
-			{
+			case Formulas.SHIELD_DEFENSE_PERFECT_BLOCK -> {
 				return 1;
 			}
 		}
 		
 		boolean isPvP = attacker.isPlayable() && target.isPlayer();
-		double damage = 0;
+		double damage;
 		double proximityBonus = attacker.isBehindTarget() ? 1.2 : attacker.isInFrontOfTarget() ? 1 : 1.1; // Behind: +20% - Side: +10%
 		double ssboost = ss ? 1.458 : 1;
 		double pvpBonus = 1;
@@ -668,14 +664,12 @@ public final class Formulas {
 		double defence = target.getPDef(attacker);
 		
 		switch (shld) {
-			case SHIELD_DEFENSE_SUCCEED: {
+			case SHIELD_DEFENSE_SUCCEED -> {
 				if (!character().shieldBlocks()) {
 					defence += target.getShldDef();
 				}
-				break;
 			}
-			case SHIELD_DEFENSE_PERFECT_BLOCK: // perfect block
-			{
+			case SHIELD_DEFENSE_PERFECT_BLOCK -> {
 				return 1;
 			}
 		}
@@ -749,21 +743,19 @@ public final class Formulas {
 		double defence = target.getPDef(attacker);
 		
 		switch (shld) {
-			case SHIELD_DEFENSE_SUCCEED: {
+			case SHIELD_DEFENSE_SUCCEED -> {
 				if (!character().shieldBlocks()) {
 					defence += target.getShldDef();
 				}
-				break;
 			}
-			case SHIELD_DEFENSE_PERFECT_BLOCK: // perfect block
-			{
+			case SHIELD_DEFENSE_PERFECT_BLOCK -> {
 				return 1.;
 			}
 		}
 		
 		final boolean isPvP = attacker.isPlayable() && target.isPlayable();
 		double proximityBonus = attacker.isBehindTarget() ? 1.2 : attacker.isInFrontOfTarget() ? 1 : 1.1; // Behind: +20% - Side: +10% (TODO: values are unconfirmed, possibly custom, remove or update when confirmed)
-		double damage = 0;
+		double damage;
 		double ssBoost = ss ? 2 : 1;
 		double pvpBonus = 1;
 		
@@ -815,11 +807,10 @@ public final class Formulas {
 	public static double calcMagicDam(L2Character attacker, L2Character target, Skill skill, byte shld, boolean sps, boolean bss, boolean mcrit, double power) {
 		double mDef = target.getMDef(attacker, skill);
 		switch (shld) {
-			case SHIELD_DEFENSE_SUCCEED: {
+			case SHIELD_DEFENSE_SUCCEED -> {
 				mDef += target.getShldDef();
-				break;
 			}
-			case SHIELD_DEFENSE_PERFECT_BLOCK: {
+			case SHIELD_DEFENSE_PERFECT_BLOCK -> {
 				return 1;
 			}
 		}
@@ -1073,7 +1064,7 @@ public final class Formulas {
 	 */
 	public static byte calcShldUse(L2Character attacker, L2Character target, Skill skill, boolean sendSysMsg) {
 		L2Item item = target.getSecondaryWeaponItem();
-		if ((item == null) || !(item instanceof L2Armor) || (((L2Armor) item).getItemType() == ArmorType.SIGIL)) {
+		if (!(item instanceof L2Armor) || (((L2Armor) item).getItemType() == ArmorType.SIGIL)) {
 			return 0;
 		}
 		
@@ -1105,12 +1096,8 @@ public final class Formulas {
 			L2PcInstance enemy = target.getActingPlayer();
 			
 			switch (shldSuccess) {
-				case SHIELD_DEFENSE_SUCCEED:
-					enemy.sendPacket(SystemMessageId.SHIELD_DEFENCE_SUCCESSFULL);
-					break;
-				case SHIELD_DEFENSE_PERFECT_BLOCK:
-					enemy.sendPacket(SystemMessageId.YOUR_EXCELLENT_SHIELD_DEFENSE_WAS_A_SUCCESS);
-					break;
+				case SHIELD_DEFENSE_SUCCEED -> enemy.sendPacket(SystemMessageId.SHIELD_DEFENCE_SUCCESSFULL);
+				case SHIELD_DEFENSE_PERFECT_BLOCK -> enemy.sendPacket(SystemMessageId.YOUR_EXCELLENT_SHIELD_DEFENSE_WAS_A_SUCCESS);
 			}
 		}
 		return shldSuccess;
@@ -1181,27 +1168,15 @@ public final class Formulas {
 			magicLevel = target.getLevel() + 3;
 		}
 		
-		int targetBaseStat = 0;
-		switch (skill.getBasicProperty()) {
-			case STR:
-				targetBaseStat = target.getSTR();
-				break;
-			case DEX:
-				targetBaseStat = target.getDEX();
-				break;
-			case CON:
-				targetBaseStat = target.getCON();
-				break;
-			case INT:
-				targetBaseStat = target.getINT();
-				break;
-			case MEN:
-				targetBaseStat = target.getMEN();
-				break;
-			case WIT:
-				targetBaseStat = target.getWIT();
-				break;
-		}
+		int targetBaseStat = switch (skill.getBasicProperty()) {
+			case STR -> target.getSTR();
+			case DEX -> target.getDEX();
+			case CON -> target.getCON();
+			case INT -> target.getINT();
+			case MEN -> target.getMEN();
+			case WIT -> target.getWIT();
+			default -> 0;
+		};
 		
 		final double baseMod = ((((((magicLevel - target.getLevel()) + 3) * skill.getLvlBonusRate()) + activateRate) + 30.0) - targetBaseStat);
 		final double elementMod = calcAttributeBonus(attacker, target, skill);
@@ -1432,17 +1407,11 @@ public final class Formulas {
 		}
 		
 		if (actor.isPlayer()) {
-			double initVal = 0;
-			switch (val) {
-				case 1: {
-					initVal = (BaseStats.STR).calcBonus(actor);
-					break;
-				}
-				case 4: {
-					initVal = (BaseStats.INT).calcBonus(actor);
-					break;
-				}
-			}
+			double initVal = switch (val) {
+				case 1 -> (BaseStats.STR).calcBonus(actor);
+				case 4 -> (BaseStats.INT).calcBonus(actor);
+				default -> 0;
+			};
 			initVal *= actor.getStat().calcStat(Stats.SKILL_CRITICAL_PROBABILITY, 1, null, null);
 			return (Rnd.get(100) < initVal);
 		}
@@ -1477,8 +1446,8 @@ public final class Formulas {
 			return 1;
 		}
 		
-		double attack_attribute_mod = 0;
-		double defence_attribute_mod = 0;
+		double attack_attribute_mod;
+		double defence_attribute_mod;
 		
 		if (attack_attribute >= 450) {
 			if (defence_attribute >= 450) {
@@ -1664,7 +1633,7 @@ public final class Formulas {
 	public static List<BuffInfo> calcCancelEffects(L2Character activeChar, L2Character target, Skill skill, DispelCategory slot, int rate, int max) {
 		final List<BuffInfo> canceled = new ArrayList<>(max);
 		switch (slot) {
-			case BUFF: {
+			case BUFF -> {
 				// Resist Modifier.
 				int cancelMagicLvl = skill.getMagicLevel();
 				final double vuln = target.calcStat(Stats.CANCEL_VULN, 0, target, null);
@@ -1703,7 +1672,7 @@ public final class Formulas {
 				}
 				break;
 			}
-			case DEBUFF: {
+			case DEBUFF -> {
 				final List<BuffInfo> debuffs = new ArrayList<>(target.getEffectList().getDebuffs());
 				for (int i = debuffs.size() - 1; i >= 0; i--) {
 					BuffInfo info = debuffs.get(i);
@@ -1714,7 +1683,6 @@ public final class Formulas {
 						}
 					}
 				}
-				break;
 			}
 		}
 		return canceled;
@@ -1725,7 +1693,7 @@ public final class Formulas {
 		final List<BuffInfo> canceled = new ArrayList<>(max);
 		final int cancelMagicLvl = skill.getMagicLevel();
 		switch (slot) {
-			case BUFF: {
+			case BUFF -> {
 				// Prevent initialization.
 				final List<BuffInfo> buffs = target.getEffectList().hasBuffs() ? new ArrayList<>(target.getEffectList().getBuffs()) : new ArrayList<>(max);
 				if (target.getEffectList().hasDances()) {
@@ -1750,9 +1718,8 @@ public final class Formulas {
 						break;
 					}
 				}
-				break;
 			}
-			case DEBUFF: {
+			case DEBUFF -> {
 				final List<BuffInfo> debuffs = new ArrayList<>(target.getEffectList().getDebuffs());
 				for (int i = debuffs.size() - 1; i >= 0; i--) {
 					BuffInfo info = debuffs.get(i);
@@ -1763,7 +1730,6 @@ public final class Formulas {
 						}
 					}
 				}
-				break;
 			}
 		}
 		return canceled;
@@ -1882,19 +1848,17 @@ public final class Formulas {
 		}
 		
 		switch (traitType.getType()) {
-			case 2: {
+			case 2 -> {
 				if (!attacker.getStat().hasAttackTrait(traitType) || !target.getStat().hasDefenceTrait(traitType)) {
 					return 1.0;
 				}
-				break;
 			}
-			case 3: {
+			case 3 -> {
 				if (ignoreResistance) {
 					return 1.0;
 				}
-				break;
 			}
-			default: {
+			default -> {
 				return 1.0;
 			}
 		}

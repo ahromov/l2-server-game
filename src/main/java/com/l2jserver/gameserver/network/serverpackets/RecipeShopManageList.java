@@ -27,7 +27,7 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 public class RecipeShopManageList extends L2GameServerPacket {
 	private final L2PcInstance _seller;
 	private final boolean _isDwarven;
-	private L2RecipeList[] _recipes;
+	private final L2RecipeList[] _recipes;
 	
 	public RecipeShopManageList(L2PcInstance seller, boolean isDwarven) {
 		_seller = seller;

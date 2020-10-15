@@ -76,7 +76,7 @@ public abstract class AbstractNpcInfo extends L2GameServerPacket {
 		private int _allyCrest = 0;
 		private int _allyId = 0;
 		private int _clanId = 0;
-		private int _displayEffect = 0;
+		private final int _displayEffect;
 		
 		public NpcInfo(L2Npc cha, L2Character attacker) {
 			super(cha);
@@ -253,9 +253,9 @@ public abstract class AbstractNpcInfo extends L2GameServerPacket {
 			writeD(_trap.isInvisible() ? _trap.getAbnormalVisualEffects() | AbnormalVisualEffect.STEALTH.getMask() : _trap.getAbnormalVisualEffects());
 			writeD(0x00); // clan id
 			writeD(0x00); // crest id
-			writeD(0000); // C2
-			writeD(0000); // C2
-			writeC(0000); // C2
+			writeD(0x00); // C2
+			writeD(0x00); // C2
+			writeC(0x00); // C2
 			
 			writeC(_trap.getTeam().getId());
 			
@@ -264,7 +264,7 @@ public abstract class AbstractNpcInfo extends L2GameServerPacket {
 			writeD(0x00); // C4
 			writeD(0x00); // C6
 			writeD(0x00);
-			writeD(0);// CT1.5 Pet form and skills
+			writeD(0x00);// CT1.5 Pet form and skills
 			writeC(0x01);
 			writeC(0x01);
 			writeD(0x00);

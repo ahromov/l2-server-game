@@ -66,15 +66,15 @@ public class TerritoryTable {
 		_territory.clear();
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var stmt = con.createStatement();
-			var rset = stmt.executeQuery("SELECT * FROM locations WHERE loc_id>0")) {
-			while (rset.next()) {
-				int terrId = rset.getInt("loc_id");
+			var rs = stmt.executeQuery("SELECT * FROM locations WHERE loc_id>0")) {
+			while (rs.next()) {
+				int terrId = rs.getInt("loc_id");
 				L2Territory terr = _territory.get(terrId);
 				if (terr == null) {
 					terr = new L2Territory(terrId);
 					_territory.put(terrId, terr);
 				}
-				terr.add(rset.getInt("loc_x"), rset.getInt("loc_y"), rset.getInt("loc_zmin"), rset.getInt("loc_zmax"), rset.getInt("proc"));
+				terr.add(rs.getInt("loc_x"), rs.getInt("loc_y"), rs.getInt("loc_zmin"), rs.getInt("loc_zmax"), rs.getInt("proc"));
 			}
 			LOG.info("Loaded {} territories from database.", _territory.size());
 		} catch (Exception ex) {

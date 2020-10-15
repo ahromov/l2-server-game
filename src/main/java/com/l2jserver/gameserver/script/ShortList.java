@@ -29,10 +29,9 @@ public class ShortList {
 			return getShortList(range.split(","));
 		}
 		
-		short[] list = {
+		return new short[] {
 			getShort(range)
 		};
-		return list;
 	}
 	
 	private static short getShort(String number) {

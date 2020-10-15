@@ -27,7 +27,7 @@ import com.l2jserver.gameserver.network.serverpackets.ExPartyRoomMember;
 import com.l2jserver.gameserver.network.serverpackets.PartyMatchDetail;
 
 /**
- * author: Gnacik
+ * @author Gnacik
  */
 public class RequestPartyMatchList extends L2GameClientPacket {
 	private static final String _C__80_REQUESTPARTYMATCHLIST = "[C] 80 RequestPartyMatchList";

@@ -23,22 +23,18 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerFlyMounted.
+ * Fly mounted condition.
  * @author kerberos
  */
 public class ConditionPlayerFlyMounted extends Condition {
 	private final boolean _val;
 	
-	/**
-	 * Instantiates a new condition player fly mounted.
-	 * @param val the val
-	 */
 	public ConditionPlayerFlyMounted(boolean val) {
 		_val = val;
 	}
 	
 	@Override
 	public boolean testImpl(L2Character effector, L2Character effected, Skill skill, L2Item item) {
-		return (effector.getActingPlayer() != null) ? effector.getActingPlayer().isFlyingMounted() == _val : true;
+		return effector.getActingPlayer() == null || effector.getActingPlayer().isFlyingMounted() == _val;
 	}
 }

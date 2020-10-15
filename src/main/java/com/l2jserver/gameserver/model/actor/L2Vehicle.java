@@ -63,10 +63,6 @@ public abstract class L2Vehicle extends L2Character {
 	protected VehiclePathPoint[] _currentPath = null;
 	protected int _runState = 0;
 	
-	/**
-	 * Creates an abstract vehicle.
-	 * @param template the vehicle template
-	 */
 	public L2Vehicle(L2CharTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2Vehicle);
@@ -200,7 +196,7 @@ public abstract class L2Vehicle extends L2Character {
 	}
 	
 	public void oustPlayers() {
-		_passengers.forEach(p -> oustPlayer(p));
+		_passengers.forEach(this::oustPlayer);
 		_passengers.clear();
 	}
 	
@@ -257,7 +253,7 @@ public abstract class L2Vehicle extends L2Character {
 	 */
 	public void payForRide(int itemId, int count, int oustX, int oustY, int oustZ) {
 		final Collection<L2PcInstance> passengers = getKnownList().getKnownPlayersInRadius(1000);
-		if ((passengers != null) && !passengers.isEmpty()) {
+		if (!passengers.isEmpty()) {
 			L2ItemInstance ticket;
 			InventoryUpdate iu;
 			for (L2PcInstance player : passengers) {
@@ -346,22 +342,22 @@ public abstract class L2Vehicle extends L2Character {
 			if (isMoving()) {
 				stopMove(null);
 			}
-		} catch (Exception e) {
-			LOG.warn("Failed stopMove(). {}", e);
+		} catch (Exception ex) {
+			LOG.warn("Failed stopMove().", ex);
 		}
 		
 		try {
 			oustPlayers();
-		} catch (Exception e) {
-			LOG.warn("Failed oustPlayers(). {}", e);
+		} catch (Exception ex) {
+			LOG.warn("Failed oustPlayers().", ex);
 		}
 		
 		final L2WorldRegion oldRegion = getWorldRegion();
 		
 		try {
 			decayMe();
-		} catch (Exception e) {
-			LOG.warn("Failed decayMe(). {}", e);
+		} catch (Exception ex) {
+			LOG.warn("Failed decayMe().", ex);
 		}
 		
 		if (oldRegion != null) {
@@ -370,8 +366,8 @@ public abstract class L2Vehicle extends L2Character {
 		
 		try {
 			getKnownList().removeAllKnownObjects();
-		} catch (Exception e) {
-			LOG.warn("Failed cleaning knownlist. {}", e);
+		} catch (Exception ex) {
+			LOG.warn("Failed cleaning knownlist.", ex);
 		}
 		
 		// Remove L2Object object from _allObjects of L2World

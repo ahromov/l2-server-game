@@ -24,26 +24,17 @@ import com.l2jserver.gameserver.model.skills.BuffInfo;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionTargetActiveEffectId.
+ * Target active effect Id condition.
  */
 public class ConditionTargetActiveEffectId extends Condition {
 	private final int _effectId;
 	private final int _effectLvl;
 	
-	/**
-	 * Instantiates a new condition target active effect id.
-	 * @param effectId the effect id
-	 */
 	public ConditionTargetActiveEffectId(int effectId) {
 		_effectId = effectId;
 		_effectLvl = -1;
 	}
 	
-	/**
-	 * Instantiates a new condition target active effect id.
-	 * @param effectId the effect id
-	 * @param effectLevel the effect level
-	 */
 	public ConditionTargetActiveEffectId(int effectId, int effectLevel) {
 		_effectId = effectId;
 		_effectLvl = effectLevel;
@@ -52,9 +43,6 @@ public class ConditionTargetActiveEffectId extends Condition {
 	@Override
 	public boolean testImpl(L2Character effector, L2Character effected, Skill skill, L2Item item) {
 		final BuffInfo info = effected.getEffectList().getBuffInfoBySkillId(_effectId);
-		if ((info != null) && ((_effectLvl == -1) || (_effectLvl <= info.getSkill().getLevel()))) {
-			return true;
-		}
-		return false;
+		return (info != null) && ((_effectLvl == -1) || (_effectLvl <= info.getSkill().getLevel()));
 	}
 }

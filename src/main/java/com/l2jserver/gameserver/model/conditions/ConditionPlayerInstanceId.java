@@ -27,15 +27,11 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerInstanceId.
+ * Instance Id condition.
  */
 public class ConditionPlayerInstanceId extends Condition {
 	private final ArrayList<Integer> _instanceIds;
 	
-	/**
-	 * Instantiates a new condition player instance id.
-	 * @param instanceIds the instance ids
-	 */
 	public ConditionPlayerInstanceId(ArrayList<Integer> instanceIds) {
 		_instanceIds = instanceIds;
 	}

@@ -217,7 +217,7 @@ public class MultiSellChoose extends L2GameClientPacket {
 				
 				List<L2Augmentation> augmentation = new ArrayList<>();
 				Elementals[] elemental = null;
-				/** All ok, remove items and add final product */
+				// All ok, remove items and add final product
 				for (Ingredient e : entry.getIngredients()) {
 					if (e.getItemId() < 0) {
 						if (!MultisellData.takeSpecialIngredient(e.getItemId(), e.getItemCount() * _amount, player)) {
@@ -342,7 +342,7 @@ public class MultiSellChoose extends L2GameClientPacket {
 						if (e.isStackable()) {
 							inv.addItem("Multisell", e.getItemId(), e.getItemCount() * _amount, player, player.getTarget());
 						} else {
-							L2ItemInstance product = null;
+							L2ItemInstance product;
 							for (int i = 0; i < (e.getItemCount() * _amount); i++) {
 								product = inv.addItem("Multisell", e.getItemId(), 1, player, player.getTarget());
 								if ((product != null) && list.getMaintainEnchantment()) {

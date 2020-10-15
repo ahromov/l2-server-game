@@ -27,10 +27,7 @@ import com.l2jserver.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2jserver.gameserver.util.Evolve;
 
 public class L2PetManagerInstance extends L2MerchantInstance {
-	/**
-	 * Creates a pet manager.
-	 * @param template the pet manager NPC template.
-	 */
+	
 	public L2PetManagerInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2PetManagerInstance);
@@ -38,14 +35,12 @@ public class L2PetManagerInstance extends L2MerchantInstance {
 	
 	@Override
 	public String getHtmlPath(int npcId, int val) {
-		String pom = "";
-		
+		String pom;
 		if (val == 0) {
 			pom = "" + npcId;
 		} else {
 			pom = npcId + "-" + val;
 		}
-		
 		return "data/html/petmanager/" + pom + ".htm";
 	}
 	
@@ -72,74 +67,45 @@ public class L2PetManagerInstance extends L2MerchantInstance {
 			String[] params = command.split(" ");
 			int val = Integer.parseInt(params[1]);
 			switch (val) {
-				case 1:
-					exchange(player, 7585, 6650);
-					break;
-				case 2:
-					exchange(player, 7583, 6648);
-					break;
-				case 3:
-					exchange(player, 7584, 6649);
-					break;
+				case 1 -> exchange(player, 7585, 6650);
+				case 2 -> exchange(player, 7583, 6648);
+				case 3 -> exchange(player, 7584, 6649);
 			}
-			return;
 		} else if (command.startsWith("evolve")) {
 			String[] params = command.split(" ");
 			int val = Integer.parseInt(params[1]);
-			boolean ok = false;
-			switch (val) {
-				// Info evolve(player, "curent pet summon item", "new pet summon item", "lvl required to evolve")
-				// To ignore evolve just put value 0 where do you like example: evolve(player, 0, 9882, 55);
-				case 1:
-					ok = Evolve.doEvolve(player, this, 2375, 9882, 55);
-					break;
-				case 2:
-					ok = Evolve.doEvolve(player, this, 9882, 10426, 70);
-					break;
-				case 3:
-					ok = Evolve.doEvolve(player, this, 6648, 10311, 55);
-					break;
-				case 4:
-					ok = Evolve.doEvolve(player, this, 6650, 10313, 55);
-					break;
-				case 5:
-					ok = Evolve.doEvolve(player, this, 6649, 10312, 55);
-					break;
-			}
+			boolean ok = switch (val) {
+				case 1 -> Evolve.doEvolve(player, this, 2375, 9882, 55);
+				case 2 -> Evolve.doEvolve(player, this, 9882, 10426, 70);
+				case 3 -> Evolve.doEvolve(player, this, 6648, 10311, 55);
+				case 4 -> Evolve.doEvolve(player, this, 6650, 10313, 55);
+				case 5 -> Evolve.doEvolve(player, this, 6649, 10312, 55);
+				default -> false;
+			};
+			// Info evolve(player, "current pet summon item", "new pet summon item", "lvl required to evolve")
+			// To ignore evolve just put value 0 where do you like example: evolve(player, 0, 9882, 55);
 			if (!ok) {
 				final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 				html.setFile(player.getHtmlPrefix(), "data/html/petmanager/evolve_no.htm");
 				player.sendPacket(html);
 			}
-			return;
 		} else if (command.startsWith("restore")) {
 			String[] params = command.split(" ");
 			int val = Integer.parseInt(params[1]);
-			boolean ok = false;
-			switch (val) {
-				// Info evolve(player, "curent pet summon item", "new pet summon item", "lvl required to evolve")
-				case 1:
-					ok = Evolve.doRestore(player, this, 10307, 9882, 55);
-					break;
-				case 2:
-					ok = Evolve.doRestore(player, this, 10611, 10426, 70);
-					break;
-				case 3:
-					ok = Evolve.doRestore(player, this, 10308, 4422, 55);
-					break;
-				case 4:
-					ok = Evolve.doRestore(player, this, 10309, 4423, 55);
-					break;
-				case 5:
-					ok = Evolve.doRestore(player, this, 10310, 4424, 55);
-					break;
-			}
+			boolean ok = switch (val) {
+				case 1 -> Evolve.doRestore(player, this, 10307, 9882, 55);
+				case 2 -> Evolve.doRestore(player, this, 10611, 10426, 70);
+				case 3 -> Evolve.doRestore(player, this, 10308, 4422, 55);
+				case 4 -> Evolve.doRestore(player, this, 10309, 4423, 55);
+				case 5 -> Evolve.doRestore(player, this, 10310, 4424, 55);
+				default -> false;
+			};
+			// Info evolve(player, "current pet summon item", "new pet summon item", "lvl required to evolve")
 			if (!ok) {
 				final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 				html.setFile(player.getHtmlPrefix(), "data/html/petmanager/restore_no.htm");
 				player.sendPacket(html);
 			}
-			return;
 		} else {
 			super.onBypassFeedback(player, command);
 		}

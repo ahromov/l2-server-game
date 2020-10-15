@@ -37,7 +37,7 @@ public class L2PetData {
 	private final int _npcId;
 	private final int _itemId;
 	private int _hungryLimit = 1;
-	private int _minlvl = Byte.MAX_VALUE;
+	private int _minLvl = Byte.MAX_VALUE;
 	private boolean _syncLevel = false;
 	private final List<Integer> _food = new ArrayList<>();
 	
@@ -65,8 +65,8 @@ public class L2PetData {
 	 * @param data the pet's data.
 	 */
 	public void addNewStat(int level, L2PetLevelData data) {
-		if (_minlvl > level) {
-			_minlvl = level;
+		if (_minLvl > level) {
+			_minLvl = level;
 		}
 		_levelStats.put(level, data);
 	}
@@ -89,7 +89,7 @@ public class L2PetData {
 	/**
 	 * @return {@code true} if pet synchronizes it's level with his master's
 	 */
-	public boolean isSynchLevel() {
+	public boolean isSyncLevel() {
 		return _syncLevel;
 	}
 	
@@ -97,7 +97,7 @@ public class L2PetData {
 	 * @return the pet's minimum level.
 	 */
 	public int getMinLevel() {
-		return _minlvl;
+		return _minLvl;
 	}
 	
 	/**
@@ -127,8 +127,6 @@ public class L2PetData {
 	public void setSyncLevel(boolean val) {
 		_syncLevel = val;
 	}
-	
-	// SKILS
 	
 	/**
 	 * @param skillId the skill Id to add.

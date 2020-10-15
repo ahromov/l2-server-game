@@ -76,11 +76,11 @@ public abstract class AbstractMessagePacket<T extends AbstractMessagePacket<?>> 
 		}
 		
 		public int getIntValue() {
-			return ((Integer) _value).intValue();
+			return (Integer) _value;
 		}
 		
 		public long getLongValue() {
-			return ((Long) _value).longValue();
+			return (Long) _value;
 		}
 		
 		public int[] getIntArrayValue() {
@@ -127,7 +127,7 @@ public abstract class AbstractMessagePacket<T extends AbstractMessagePacket<?>> 
 		return _smId;
 	}
 	
-	private final void append(SMParam param) {
+	private void append(SMParam param) {
 		if (_paramIndex >= _params.length) {
 			_params = Arrays.copyOf(_params, _paramIndex + 1);
 			_smId.setParamCount(_paramIndex + 1);
@@ -318,42 +318,19 @@ public abstract class AbstractMessagePacket<T extends AbstractMessagePacket<?>> 
 			
 			writeD(param.getType());
 			switch (param.getType()) {
-				case TYPE_TEXT:
-				case TYPE_PLAYER_NAME: {
-					writeS(param.getStringValue());
-					break;
-				}
-				
-				case TYPE_LONG_NUMBER: {
-					writeQ(param.getLongValue());
-					break;
-				}
-				
-				case TYPE_ITEM_NAME:
-				case TYPE_CASTLE_NAME:
-				case TYPE_INT_NUMBER:
-				case TYPE_NPC_NAME:
-				case TYPE_ELEMENT_NAME:
-				case TYPE_SYSTEM_STRING:
-				case TYPE_INSTANCE_NAME:
-				case TYPE_DOOR_NAME: {
-					writeD(param.getIntValue());
-					break;
-				}
-				
-				case TYPE_SKILL_NAME: {
+				case TYPE_TEXT, TYPE_PLAYER_NAME -> writeS(param.getStringValue());
+				case TYPE_LONG_NUMBER -> writeQ(param.getLongValue());
+				case TYPE_ITEM_NAME, TYPE_CASTLE_NAME, TYPE_INT_NUMBER, TYPE_NPC_NAME, TYPE_ELEMENT_NAME, TYPE_SYSTEM_STRING, TYPE_INSTANCE_NAME, TYPE_DOOR_NAME -> writeD(param.getIntValue());
+				case TYPE_SKILL_NAME -> {
 					final int[] array = param.getIntArrayValue();
 					writeD(array[0]); // SkillId
 					writeD(array[1]); // SkillLevel
-					break;
 				}
-				
-				case TYPE_ZONE_NAME: {
+				case TYPE_ZONE_NAME -> {
 					final int[] array = param.getIntArrayValue();
 					writeD(array[0]); // x
 					writeD(array[1]); // y
 					writeD(array[2]); // z
-					break;
 				}
 			}
 		}
@@ -367,42 +344,19 @@ public abstract class AbstractMessagePacket<T extends AbstractMessagePacket<?>> 
 		
 		for (SMParam param : _params) {
 			switch (param.getType()) {
-				case TYPE_TEXT:
-				case TYPE_PLAYER_NAME: {
-					out.println(param.getStringValue());
-					break;
-				}
-				
-				case TYPE_LONG_NUMBER: {
-					out.println(param.getLongValue());
-					break;
-				}
-				
-				case TYPE_ITEM_NAME:
-				case TYPE_CASTLE_NAME:
-				case TYPE_INT_NUMBER:
-				case TYPE_NPC_NAME:
-				case TYPE_ELEMENT_NAME:
-				case TYPE_SYSTEM_STRING:
-				case TYPE_INSTANCE_NAME:
-				case TYPE_DOOR_NAME: {
-					out.println(param.getIntValue());
-					break;
-				}
-				
-				case TYPE_SKILL_NAME: {
+				case TYPE_TEXT, TYPE_PLAYER_NAME -> out.println(param.getStringValue());
+				case TYPE_LONG_NUMBER -> out.println(param.getLongValue());
+				case TYPE_ITEM_NAME, TYPE_CASTLE_NAME, TYPE_INT_NUMBER, TYPE_NPC_NAME, TYPE_ELEMENT_NAME, TYPE_SYSTEM_STRING, TYPE_INSTANCE_NAME, TYPE_DOOR_NAME -> out.println(param.getIntValue());
+				case TYPE_SKILL_NAME -> {
 					final int[] array = param.getIntArrayValue();
 					out.println(array[0]); // SkillId
 					out.println(array[1]); // SkillLevel
-					break;
 				}
-				
-				case TYPE_ZONE_NAME: {
+				case TYPE_ZONE_NAME -> {
 					final int[] array = param.getIntArrayValue();
 					out.println(array[0]); // x
 					out.println(array[1]); // y
 					out.println(array[2]); // z
-					break;
 				}
 			}
 		}
@@ -424,74 +378,40 @@ public abstract class AbstractMessagePacket<T extends AbstractMessagePacket<?>> 
 		for (int i = 0; i < _paramIndex; i++) {
 			param = _params[i];
 			switch (param.getType()) {
-				case TYPE_TEXT:
-				case TYPE_PLAYER_NAME: {
-					params[i] = param.getValue();
-					break;
-				}
-				
-				case TYPE_LONG_NUMBER: {
-					params[i] = param.getValue();
-					break;
-				}
-				
-				case TYPE_ITEM_NAME: {
+				case TYPE_TEXT, TYPE_PLAYER_NAME -> params[i] = param.getValue();
+				case TYPE_LONG_NUMBER -> params[i] = param.getValue();
+				case TYPE_ITEM_NAME -> {
 					final L2Item item = ItemTable.getInstance().getTemplate(param.getIntValue());
 					params[i] = item == null ? "Unknown" : item.getName();
-					break;
 				}
-				
-				case TYPE_CASTLE_NAME: {
+				case TYPE_CASTLE_NAME -> {
 					final Castle castle = CastleManager.getInstance().getCastleById(param.getIntValue());
 					params[i] = castle == null ? "Unknown" : castle.getName();
-					break;
 				}
-				
-				case TYPE_INT_NUMBER: {
-					params[i] = param.getValue();
-					break;
-				}
-				
-				case TYPE_NPC_NAME: {
+				case TYPE_INT_NUMBER -> params[i] = param.getValue();
+				case TYPE_NPC_NAME -> {
 					final L2NpcTemplate template = NpcData.getInstance().getTemplate(param.getIntValue());
 					params[i] = template == null ? "Unknown" : template.getName();
-					break;
 				}
-				
-				case TYPE_ELEMENT_NAME: {
-					params[i] = Elementals.getElementName((byte) param.getIntValue());
-					break;
-				}
-				
-				case TYPE_SYSTEM_STRING: {
-					params[i] = "SYS-S-" + param.getIntValue(); // writeD(param.getIntValue());
-					break;
-				}
-				
-				case TYPE_INSTANCE_NAME: {
+				case TYPE_ELEMENT_NAME -> params[i] = Elementals.getElementName((byte) param.getIntValue());
+				case TYPE_SYSTEM_STRING -> params[i] = "SYS-S-" + param.getIntValue(); // writeD(param.getIntValue());
+				case TYPE_INSTANCE_NAME -> {
 					final String instanceName = InstanceManager.getInstance().getInstanceIdName(param.getIntValue());
 					params[i] = instanceName == null ? "Unknown" : instanceName;
-					break;
 				}
-				
-				case TYPE_DOOR_NAME: {
+				case TYPE_DOOR_NAME -> {
 					final L2DoorInstance door = DoorData.getInstance().getDoor(param.getIntValue());
 					params[i] = door == null ? "Unknown" : door.getName();
-					break;
 				}
-				
-				case TYPE_SKILL_NAME: {
+				case TYPE_SKILL_NAME -> {
 					final int[] array = param.getIntArrayValue();
 					final Skill skill = SkillData.getInstance().getSkill(array[0], array[1]);
 					params[i] = skill == null ? "Unknown" : skill.getName();
-					break;
 				}
-				
-				case TYPE_ZONE_NAME: {
+				case TYPE_ZONE_NAME -> {
 					final int[] array = param.getIntArrayValue();
 					final L2ZoneType zone = ZoneManager.getInstance().getZone(array[0], array[1], array[2], L2ZoneType.class);
 					params[i] = zone == null ? "Unknown ZONE-N-" + Arrays.toString(array) : zone.getName();
-					break;
 				}
 			}
 			i++;

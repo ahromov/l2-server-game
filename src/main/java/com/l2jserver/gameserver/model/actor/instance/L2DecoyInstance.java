@@ -39,20 +39,14 @@ public class L2DecoyInstance extends L2Decoy {
 	private Future<?> _DecoyLifeTask;
 	private Future<?> _HateSpam;
 	
-	/**
-	 * Creates a decoy.
-	 * @param template the decoy NPC template
-	 * @param owner the owner
-	 * @param totalLifeTime the total life time
-	 */
 	public L2DecoyInstance(L2NpcTemplate template, L2PcInstance owner, int totalLifeTime) {
 		super(template, owner);
 		setInstanceType(InstanceType.L2DecoyInstance);
 		_totalLifeTime = totalLifeTime;
 		_timeRemaining = _totalLifeTime;
-		int skilllevel = getTemplate().getDisplayId() - 13070;
+		int skillLevel = getTemplate().getDisplayId() - 13070;
 		_DecoyLifeTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new DecoyLifetime(getOwner(), this), 1000, 1000);
-		_HateSpam = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new HateSpam(this, SkillData.getInstance().getSkill(5272, skilllevel)), 2000, 5000);
+		_HateSpam = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new HateSpam(this, SkillData.getInstance().getSkill(5272, skillLevel)), 2000, 5000);
 	}
 	
 	@Override
@@ -97,8 +91,8 @@ public class L2DecoyInstance extends L2Decoy {
 				if (newTimeRemaining < 0) {
 					_Decoy.unSummon(_activeChar);
 				}
-			} catch (Exception e) {
-				LOG.error("Decoy Error: {}", e);
+			} catch (Exception ex) {
+				LOG.error("Error running decoy lifetime task!", ex);
 			}
 		}
 	}
@@ -118,8 +112,8 @@ public class L2DecoyInstance extends L2Decoy {
 			try {
 				_activeChar.setTarget(_activeChar);
 				_activeChar.doCast(_skill);
-			} catch (Throwable e) {
-				LOG.error("Decoy Error: {}", e);
+			} catch (Throwable ex) {
+				LOG.error("Error running decoy hate spam task!", ex);
 			}
 		}
 	}

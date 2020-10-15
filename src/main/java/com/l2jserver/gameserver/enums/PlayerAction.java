@@ -27,7 +27,7 @@ public enum PlayerAction {
 	
 	private final int _mask;
 	
-	private PlayerAction() {
+	PlayerAction() {
 		_mask = (1 << ordinal());
 	}
 	

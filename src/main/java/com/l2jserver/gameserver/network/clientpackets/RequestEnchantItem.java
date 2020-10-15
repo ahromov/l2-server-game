@@ -153,13 +153,12 @@ public final class RequestEnchantItem extends L2GameClientPacket {
 			
 			final EnchantResultType resultType = scrollTemplate.calculateSuccess(activeChar, item, supportTemplate);
 			switch (resultType) {
-				case ERROR: {
+				case ERROR -> {
 					activeChar.sendPacket(SystemMessageId.INAPPROPRIATE_ENCHANT_CONDITION);
 					activeChar.setActiveEnchantItemId(L2PcInstance.ID_NONE);
 					activeChar.sendPacket(new EnchantResult(2, 0, 0));
-					break;
 				}
-				case SUCCESS: {
+				case SUCCESS -> {
 					L2Item it = item.getItem();
 					// Increase enchant level only if scroll's base template has chance, some armors can success over +20 but they shouldn't have increased.
 					if (scrollTemplate.getChance(activeChar, item) > 0) {
@@ -196,9 +195,8 @@ public final class RequestEnchantItem extends L2GameClientPacket {
 							activeChar.sendSkillList();
 						}
 					}
-					break;
 				}
-				case FAILURE: {
+				case FAILURE -> {
 					if (scrollTemplate.isSafe()) {
 						// safe enchant - remain old value
 						activeChar.sendPacket(SystemMessageId.SAFE_ENCHANT_FAILED);
@@ -261,7 +259,7 @@ public final class RequestEnchantItem extends L2GameClientPacket {
 							final int crystalId = item.getItem().getCrystalItemId();
 							if ((crystalId != 0) && item.getItem().isCrystallizable()) {
 								int count = item.getCrystalCount() - ((item.getItem().getCrystalCount() + 1) / 2);
-								count = count < 1 ? 1 : count;
+								count = Math.max(count, 1);
 								activeChar.getInventory().addItem("Enchant", crystalId, count, activeChar, item);
 								
 								final SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.EARNED_S2_S1_S);
@@ -278,7 +276,6 @@ public final class RequestEnchantItem extends L2GameClientPacket {
 							}
 						}
 					}
-					break;
 				}
 			}
 			

@@ -27,7 +27,7 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
  */
 public final class PledgeShowMemberListUpdate extends L2GameServerPacket {
 	private final int _pledgeType;
-	private int _hasSponsor;
+	private final int _hasSponsor;
 	private final String _name;
 	private final int _level;
 	private final int _classId;

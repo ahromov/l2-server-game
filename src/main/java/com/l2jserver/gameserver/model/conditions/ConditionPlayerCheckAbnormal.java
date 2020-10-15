@@ -32,20 +32,11 @@ public class ConditionPlayerCheckAbnormal extends Condition {
 	private final AbnormalType _type;
 	private final int _level;
 	
-	/**
-	 * Instantiates a new condition player check abnormal.
-	 * @param type the abnormal type
-	 */
 	public ConditionPlayerCheckAbnormal(AbnormalType type) {
 		_type = type;
 		_level = -1;
 	}
 	
-	/**
-	 * Instantiates a new condition player check abnormal.
-	 * @param type the abnormal type
-	 * @param level the abnormal level
-	 */
 	public ConditionPlayerCheckAbnormal(AbnormalType type, int level) {
 		_type = type;
 		_level = level;

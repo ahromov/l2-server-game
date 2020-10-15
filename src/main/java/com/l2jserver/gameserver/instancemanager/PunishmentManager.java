@@ -55,15 +55,15 @@ public final class PunishmentManager {
 		
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var st = con.createStatement();
-			var rset = st.executeQuery("SELECT * FROM punishments")) {
-			while (rset.next()) {
-				final int id = rset.getInt("id");
-				final String key = rset.getString("key");
-				final PunishmentAffect affect = PunishmentAffect.getByName(rset.getString("affect"));
-				final PunishmentType type = PunishmentType.getByName(rset.getString("type"));
-				final long expirationTime = rset.getLong("expiration");
-				final String reason = rset.getString("reason");
-				final String punishedBy = rset.getString("punishedBy");
+			var rs = st.executeQuery("SELECT * FROM punishments")) {
+			while (rs.next()) {
+				final int id = rs.getInt("id");
+				final String key = rs.getString("key");
+				final PunishmentAffect affect = PunishmentAffect.getByName(rs.getString("affect"));
+				final PunishmentType type = PunishmentType.getByName(rs.getString("type"));
+				final long expirationTime = rs.getLong("expiration");
+				final String reason = rs.getString("reason");
+				final String punishedBy = rs.getString("punishedBy");
 				if ((type != null) && (affect != null)) {
 					if ((expirationTime > 0) && (System.currentTimeMillis() > expirationTime)) // expired task.
 					{

@@ -45,27 +45,19 @@ public final class RequestExCubeGameChangeTeam extends L2GameClientPacket {
 			return;
 		}
 		L2PcInstance player = getClient().getActiveChar();
-		
 		switch (_team) {
-			case 0:
-			case 1:
-				// Change Player Team
-				HandysBlockCheckerManager.getInstance().changePlayerToTeam(player, _arena, _team);
-				break;
-			case -1:
+			// Change Player Team
+			case 0, 1 -> HandysBlockCheckerManager.getInstance().changePlayerToTeam(player, _arena, _team);
 			// Remove Player (me)
-			{
+			case -1 -> {
 				int team = HandysBlockCheckerManager.getInstance().getHolder(_arena).getPlayerTeam(player);
 				// client sends two times this packet if click on exit
 				// client did not send this packet on restart
 				if (team > -1) {
 					HandysBlockCheckerManager.getInstance().removePlayer(player, _arena, team);
 				}
-				break;
 			}
-			default:
-				_log.warning("Wrong Cube Game Team ID: " + _team);
-				break;
+			default -> _log.warning("Wrong Cube Game Team ID: " + _team);
 		}
 	}
 	

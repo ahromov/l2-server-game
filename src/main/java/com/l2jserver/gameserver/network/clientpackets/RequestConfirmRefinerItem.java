@@ -25,7 +25,7 @@ import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.network.serverpackets.ExPutIntensiveResultForVariationMake;
 
 /**
- * Fromat(ch) dd
+ * Format(ch) dd
  * @author -Wooden-
  */
 public class RequestConfirmRefinerItem extends AbstractRefinePacket {

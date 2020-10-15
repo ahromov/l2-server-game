@@ -18,10 +18,10 @@
  */
 package com.l2jserver.gameserver.network.serverpackets;
 
-public final class MagicSkillCanceld extends L2GameServerPacket {
+public final class MagicSkillCanceled extends L2GameServerPacket {
 	private final int _objectId;
 	
-	public MagicSkillCanceld(int objectId) {
+	public MagicSkillCanceled(int objectId) {
 		_objectId = objectId;
 	}
 	

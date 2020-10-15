@@ -51,9 +51,9 @@ public class AccountVariables extends AbstractVariables {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var st = con.prepareStatement(SELECT_QUERY)) {
 			st.setString(1, _accountName);
-			try (var rset = st.executeQuery()) {
-				while (rset.next()) {
-					set(rset.getString("var"), rset.getString("value"));
+			try (var rs = st.executeQuery()) {
+				while (rs.next()) {
+					set(rs.getString("var"), rs.getString("value"));
 				}
 			}
 		} catch (Exception e) {

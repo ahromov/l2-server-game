@@ -26,7 +26,7 @@ import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 /**
- * Target My Party Except Me condition implementation.
+ * Target My Party Except Me condition.
  * @author Adry_85
  */
 public class ConditionTargetMyPartyExceptMe extends Condition {

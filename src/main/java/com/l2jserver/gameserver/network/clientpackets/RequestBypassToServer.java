@@ -242,11 +242,11 @@ public final class RequestBypassToServer extends L2GameClientPacket {
 			if (activeChar.isGM()) {
 				StringBuilder sb = new StringBuilder(200);
 				sb.append("<html><body>");
-				sb.append("Bypass error: " + e + "<br1>");
-				sb.append("Bypass command: " + _command + "<br1>");
+				sb.append("Bypass error: ").append(e).append("<br1>");
+				sb.append("Bypass command: ").append(_command).append("<br1>");
 				sb.append("StackTrace:<br1>");
 				for (StackTraceElement ste : e.getStackTrace()) {
-					sb.append(ste.toString() + "<br1>");
+					sb.append(ste.toString()).append("<br1>");
 				}
 				sb.append("</body></html>");
 				// item html

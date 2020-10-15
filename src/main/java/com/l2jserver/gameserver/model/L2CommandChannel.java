@@ -42,10 +42,6 @@ public class L2CommandChannel extends AbstractPlayerGroup {
 	private L2PcInstance _commandLeader;
 	private int _channelLvl;
 	
-	/**
-	 * Create a new command channel and add the leader's party to it.
-	 * @param leader the leader of this command channel
-	 */
 	public L2CommandChannel(L2PcInstance leader) {
 		_commandLeader = leader;
 		L2Party party = leader.getParty();
@@ -64,7 +60,7 @@ public class L2CommandChannel extends AbstractPlayerGroup {
 		if (party == null) {
 			return;
 		}
-		// Update the CCinfo for existing players
+		// Update the command channel info for existing players
 		broadcastPacket(new ExMPCCPartyInfoUpdate(party, 1));
 		
 		_parties.add(party);
@@ -98,23 +94,18 @@ public class L2CommandChannel extends AbstractPlayerGroup {
 			broadcastPacket(SystemMessage.getSystemMessage(SystemMessageId.COMMAND_CHANNEL_DISBANDED));
 			disbandChannel();
 		} else {
-			// Update the CCinfo for existing players
+			// Update the command channel info for existing players
 			broadcastPacket(new ExMPCCPartyInfoUpdate(party, 0));
 		}
 	}
 	
-	/**
-	 * Disband this command channel.
-	 */
 	public void disbandChannel() {
-		if (_parties != null) {
-			for (L2Party party : _parties) {
-				if (party != null) {
-					removeParty(party);
-				}
+		for (L2Party party : _parties) {
+			if (party != null) {
+				removeParty(party);
 			}
-			_parties.clear();
 		}
+		_parties.clear();
 	}
 	
 	/**
@@ -131,10 +122,7 @@ public class L2CommandChannel extends AbstractPlayerGroup {
 		return count;
 	}
 	
-	/**
-	 * @return a list of all parties in this command channel
-	 */
-	public List<L2Party> getPartys() {
+	public List<L2Party> getParties() {
 		return _parties;
 	}
 	
@@ -144,7 +132,7 @@ public class L2CommandChannel extends AbstractPlayerGroup {
 	@Override
 	public List<L2PcInstance> getMembers() {
 		final List<L2PcInstance> members = new LinkedList<>();
-		for (L2Party party : getPartys()) {
+		for (L2Party party : getParties()) {
 			members.addAll(party.getMembers());
 		}
 		return members;
@@ -192,11 +180,9 @@ public class L2CommandChannel extends AbstractPlayerGroup {
 	 */
 	@Override
 	public boolean containsPlayer(L2PcInstance player) {
-		if ((_parties != null) && !_parties.isEmpty()) {
-			for (L2Party party : _parties) {
-				if (party.containsPlayer(player)) {
-					return true;
-				}
+		for (L2Party party : _parties) {
+			if (party.containsPlayer(player)) {
+				return true;
 			}
 		}
 		return false;
@@ -208,11 +194,9 @@ public class L2CommandChannel extends AbstractPlayerGroup {
 	 */
 	@Override
 	public boolean forEachMember(Function<L2PcInstance, Boolean> function) {
-		if ((_parties != null) && !_parties.isEmpty()) {
-			for (L2Party party : _parties) {
-				if (!party.forEachMember(function)) {
-					return false;
-				}
+		for (L2Party party : _parties) {
+			if (!party.forEachMember(function)) {
+				return false;
 			}
 		}
 		return true;

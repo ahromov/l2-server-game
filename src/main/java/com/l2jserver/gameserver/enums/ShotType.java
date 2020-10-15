@@ -29,7 +29,7 @@ public enum ShotType {
 	
 	private final int _mask;
 	
-	private ShotType() {
+	ShotType() {
 		_mask = (1 << ordinal());
 	}
 	

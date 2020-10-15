@@ -149,10 +149,7 @@ public final class L2TrapInstance extends L2Npc {
 			return true;
 		}
 		
-		if (_owner.isInParty() && cha.isInParty() && (_owner.getParty().getLeaderObjectId() == cha.getParty().getLeaderObjectId())) {
-			return true;
-		}
-		return false;
+		return _owner.isInParty() && cha.isInParty() && (_owner.getParty().getLeaderObjectId() == cha.getParty().getLeaderObjectId());
 	}
 	
 	public boolean checkTarget(L2Character target) {
@@ -189,9 +186,7 @@ public final class L2TrapInstance extends L2Npc {
 			}
 			
 			final L2PcInstance player = target.getActingPlayer();
-			if ((player == null) || ((player.getPvpFlag() == 0) && (player.getKarma() == 0))) {
-				return false;
-			}
+			return (player != null) && ((player.getPvpFlag() != 0) || (player.getKarma() != 0));
 		}
 		return true;
 	}

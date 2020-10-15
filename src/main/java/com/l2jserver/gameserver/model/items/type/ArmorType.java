@@ -27,16 +27,12 @@ public enum ArmorType implements ItemType {
 	HEAVY,
 	MAGIC,
 	SIGIL,
-	
 	// L2J CUSTOM
 	SHIELD;
 	
 	final int _mask;
 	
-	/**
-	 * Constructor of the ArmorType.
-	 */
-	private ArmorType() {
+	ArmorType() {
 		_mask = 1 << (ordinal() + WeaponType.values().length);
 	}
 	

@@ -23,15 +23,11 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerPkCount.
+ * PK count condition.
  */
 public class ConditionPlayerPkCount extends Condition {
 	public final int _pk;
 	
-	/**
-	 * Instantiates a new condition player pk count.
-	 * @param pk the pk
-	 */
 	public ConditionPlayerPkCount(int pk) {
 		_pk = pk;
 	}

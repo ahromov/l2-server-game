@@ -53,7 +53,7 @@ public class QuestTimer {
 	private final L2Npc _npc;
 	private final L2PcInstance _player;
 	private final boolean _isRepeating;
-	private ScheduledFuture<?> _schedular;
+	private final ScheduledFuture<?> _scheduler;
 	
 	public QuestTimer(Quest quest, String name, long time, L2Npc npc, L2PcInstance player, boolean repeating) {
 		_name = name;
@@ -62,9 +62,9 @@ public class QuestTimer {
 		_npc = npc;
 		_isRepeating = repeating;
 		if (repeating) {
-			_schedular = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new ScheduleTimerTask(), time, time); // Prepare auto end task
+			_scheduler = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new ScheduleTimerTask(), time, time); // Prepare auto end task
 		} else {
-			_schedular = ThreadPoolManager.getInstance().scheduleGeneral(new ScheduleTimerTask(), time); // Prepare auto end task
+			_scheduler = ThreadPoolManager.getInstance().scheduleGeneral(new ScheduleTimerTask(), time); // Prepare auto end task
 		}
 	}
 	
@@ -81,8 +81,8 @@ public class QuestTimer {
 	 */
 	public void cancel() {
 		_isActive = false;
-		if (_schedular != null) {
-			_schedular.cancel(false);
+		if (_scheduler != null) {
+			_scheduler.cancel(false);
 		}
 	}
 	

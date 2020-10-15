@@ -24,7 +24,8 @@ import com.l2jserver.gameserver.instancemanager.MailManager;
 import com.l2jserver.gameserver.model.entity.Message;
 
 /**
- * @author Migi, DS
+ * @author Migi
+ * @author DS
  */
 public class ExShowReceivedPostList extends L2GameServerPacket {
 	private final List<Message> _inbox;

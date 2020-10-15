@@ -65,13 +65,9 @@ public class L2CastleDoormenInstance extends L2DoormenInstance {
 			SiegableHall hall = getConquerableHall();
 			// save in variable because it's a costly call
 			if (hall != null) {
-				if (player.getClanId() == hall.getOwnerId()) {
-					return true;
-				}
+				return player.getClanId() == hall.getOwnerId();
 			} else if (getCastle() != null) {
-				if (player.getClanId() == getCastle().getOwnerId()) {
-					return true;
-				}
+				return player.getClanId() == getCastle().getOwnerId();
 			}
 		}
 		return false;

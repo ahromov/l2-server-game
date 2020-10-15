@@ -397,7 +397,7 @@ public final class L2World {
 	 * <li>Define the target list of a skill</li>
 	 * <li>Define the target list of a polearme attack</li>
 	 * @param object L2object that determine the center of the circular area
-	 * @param radius Radius of the spheric area
+	 * @param radius Radius of the spherical area
 	 * @return
 	 */
 	public List<L2Object> getVisibleObjects3D(L2Object object, int radius) {

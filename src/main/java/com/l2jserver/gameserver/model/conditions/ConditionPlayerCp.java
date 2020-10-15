@@ -23,16 +23,12 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerCp.
+ * CP condition.
  */
 public class ConditionPlayerCp extends Condition {
 	
 	private final int _cp;
 	
-	/**
-	 * Instantiates a new condition player cp.
-	 * @param cp the cp
-	 */
 	public ConditionPlayerCp(int cp) {
 		_cp = cp;
 	}

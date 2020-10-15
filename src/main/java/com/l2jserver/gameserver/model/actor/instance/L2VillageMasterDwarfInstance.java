@@ -23,10 +23,7 @@ import com.l2jserver.gameserver.model.actor.templates.L2NpcTemplate;
 import com.l2jserver.gameserver.model.base.PlayerClass;
 
 public final class L2VillageMasterDwarfInstance extends L2VillageMasterInstance {
-	/**
-	 * Creates a village master.
-	 * @param template the village master NPC template
-	 */
+	
 	public L2VillageMasterDwarfInstance(L2NpcTemplate template) {
 		super(template);
 	}
@@ -36,7 +33,6 @@ public final class L2VillageMasterDwarfInstance extends L2VillageMasterInstance 
 		if (pclass == null) {
 			return false;
 		}
-		
 		return pclass.isOfRace(Race.DWARF);
 	}
 }

@@ -19,7 +19,7 @@
 package com.l2jserver.gameserver.network.clientpackets;
 
 import static com.l2jserver.gameserver.config.Configuration.character;
-import static com.l2jserver.gameserver.model.L2Clan.PENALTY_TYPE_CLAN_LEAVED;
+import static com.l2jserver.gameserver.model.L2Clan.PENALTY_TYPE_CLAN_LEFT;
 import static java.util.concurrent.TimeUnit.DAYS;
 
 import com.l2jserver.gameserver.model.L2Clan;
@@ -64,7 +64,7 @@ public final class AllyLeave extends L2GameClientPacket {
 		clan.setAllyId(0);
 		clan.setAllyName(null);
 		clan.changeAllyCrest(0, true);
-		clan.setAllyPenaltyExpiryTime(System.currentTimeMillis() + DAYS.toMillis(character().getDaysBeforeJoiningAllianceAfterLeaving()), PENALTY_TYPE_CLAN_LEAVED);
+		clan.setAllyPenaltyExpiryTime(System.currentTimeMillis() + DAYS.toMillis(character().getDaysBeforeJoiningAllianceAfterLeaving()), PENALTY_TYPE_CLAN_LEFT);
 		clan.updateClanInDB();
 		player.sendPacket(SystemMessageId.YOU_HAVE_WITHDRAWN_FROM_ALLIANCE);
 	}

@@ -30,9 +30,6 @@ import com.l2jserver.gameserver.model.actor.instance.L2DefenderInstance;
 public final class L2SpecialSiegeGuardAI extends L2SiegeGuardAI {
 	private final List<Integer> _allied = new ArrayList<>();
 	
-	/**
-	 * @param creature
-	 */
 	public L2SpecialSiegeGuardAI(L2DefenderInstance creature) {
 		super(creature);
 	}

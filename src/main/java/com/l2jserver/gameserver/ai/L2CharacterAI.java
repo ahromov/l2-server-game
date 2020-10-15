@@ -63,14 +63,7 @@ import com.l2jserver.gameserver.taskmanager.AttackStanceTaskManager;
 import com.l2jserver.gameserver.util.Util;
 
 /**
- * This class manages AI of L2Character.<br>
- * L2CharacterAI :
- * <ul>
- * <li>L2AttackableAI</li>
- * <li>L2DoorAI</li>
- * <li>L2PlayerAI</li>
- * <li>L2SummonAI</li>
- * </ul>
+ * Creatures AI.
  */
 public class L2CharacterAI extends AbstractAI {
 	public static class IntentionCommand {
@@ -510,7 +503,7 @@ public class L2CharacterAI extends AbstractAI {
 	 * <li>Stop the actor movement server side AND client side by sending Server->Client packet StopMove/StopRotation (broadcast)</li>
 	 * <li>Break an attack and send Server->Client ActionFailed packet and a System Message to the L2Character</li>
 	 * <li>Break a cast and send Server->Client ActionFailed packet and a System Message to the L2Character</li>
-	 * <li>Launch actions corresponding to the Event onAttacked (only for L2AttackableAI after the stunning periode)</li>
+	 * <li>Launch actions corresponding to the Event onAttacked (only for L2AttackableAI after the stunning period)</li>
 	 * </ul>
 	 */
 	@Override
@@ -527,7 +520,7 @@ public class L2CharacterAI extends AbstractAI {
 		// Stop the actor movement server side AND client side by sending Server->Client packet StopMove/StopRotation (broadcast)
 		clientStopMoving(null);
 		
-		// Launch actions corresponding to the Event onAttacked (only for L2AttackableAI after the stunning periode)
+		// Launch actions corresponding to the Event onAttacked (only for L2AttackableAI after the stunning period)
 		onEvtAttacked(attacker);
 	}
 	
@@ -545,7 +538,7 @@ public class L2CharacterAI extends AbstractAI {
 		// Stop the actor movement server side AND client side by sending Server->Client packet StopMove/StopRotation (broadcast)
 		clientStopMoving(null);
 		
-		// Launch actions corresponding to the Event onAttacked (only for L2AttackableAI after the stunning periode)
+		// Launch actions corresponding to the Event onAttacked (only for L2AttackableAI after the stunning period)
 		onEvtAttacked(attacker);
 	}
 	
@@ -1068,11 +1061,11 @@ public class L2CharacterAI extends AbstractAI {
 	 * <li>L2PLayerAI, L2SummonAI</li>
 	 * </ul>
 	 * @param target The targeted L2Object
-	 * @return True if the target is lost or dead (false if fakedeath)
+	 * @return True if the target is lost or dead (false if fake death)
 	 */
 	protected boolean checkTargetLostOrDead(L2Character target) {
 		if ((target == null) || target.isAlikeDead()) {
-			// check if player is fakedeath
+			// check if player is fake death
 			if ((target instanceof L2PcInstance) && ((L2PcInstance) target).isFakeDeath()) {
 				target.stopFakeDeath(true);
 				return false;
@@ -1101,7 +1094,7 @@ public class L2CharacterAI extends AbstractAI {
 	 * @return True if the target is lost
 	 */
 	protected boolean checkTargetLost(L2Object target) {
-		// check if player is fakedeath
+		// check if player is fake death
 		if (target instanceof L2PcInstance) {
 			L2PcInstance target2 = (L2PcInstance) target; // convert object to chara
 			
@@ -1131,12 +1124,10 @@ public class L2CharacterAI extends AbstractAI {
 		public boolean cannotMoveOnLand = false;
 		public List<Skill> generalSkills = new ArrayList<>();
 		public List<Skill> buffSkills = new ArrayList<>();
-		public int lastBuffTick = 0;
 		public List<Skill> debuffSkills = new ArrayList<>();
 		public int lastDebuffTick = 0;
 		public List<Skill> cancelSkills = new ArrayList<>();
 		public List<Skill> healSkills = new ArrayList<>();
-		// public List<L2Skill> trickSkills = new ArrayList<>();
 		public List<Skill> generalDisablers = new ArrayList<>();
 		public List<Skill> sleepSkills = new ArrayList<>();
 		public List<Skill> rootSkills = new ArrayList<>();
@@ -1152,36 +1143,17 @@ public class L2CharacterAI extends AbstractAI {
 		
 		public void init() {
 			switch (((L2NpcTemplate) _actor.getTemplate()).getAIType()) {
-				case FIGHTER:
-					isFighter = true;
-					break;
-				case MAGE:
-					isMage = true;
-					break;
-				case CORPSE:
-				case BALANCED:
-					isBalanced = true;
-					break;
-				case ARCHER:
-					isArcher = true;
-					break;
-				case HEALER:
-					isHealer = true;
-					break;
-				default:
-					isFighter = true;
-					break;
+				case MAGE -> isMage = true;
+				case CORPSE, BALANCED -> isBalanced = true;
+				case ARCHER -> isArcher = true;
+				case HEALER -> isHealer = true;
+				default -> isFighter = true;
 			}
 			// water movement analysis
 			if (_actor.isNpc()) {
 				switch (_actor.getId()) {
-					case 20314: // great white shark
-					case 20849: // Light Worm
-						cannotMoveOnLand = true;
-						break;
-					default:
-						cannotMoveOnLand = false;
-						break;
+					case 20314, 20849 -> cannotMoveOnLand = true;
+					default -> cannotMoveOnLand = false;
 				}
 			}
 			// skill analysis
@@ -1213,16 +1185,8 @@ public class L2CharacterAI extends AbstractAI {
 					// EffectTemplate... petrification is totally different for
 					// AI than paralyze
 					switch (sk.getId()) {
-						case 367:
-						case 4111:
-						case 4383:
-						case 4616:
-						case 4578:
-							sleepSkills.add(sk);
-							break;
-						default:
-							generalDisablers.add(sk);
-							break;
+						case 367, 4111, 4383, 4616, 4578 -> sleepSkills.add(sk);
+						default -> generalDisablers.add(sk);
 					}
 				} else if (sk.hasEffectType(L2EffectType.ROOT)) {
 					rootSkills.add(sk);
@@ -1307,16 +1271,11 @@ public class L2CharacterAI extends AbstractAI {
 					isFighter = true;
 				}
 			}
-			if (target.getRunSpeed() < (_actor.getRunSpeed() - 3)) {
-				isSlower = true;
-			} else {
-				isSlower = false;
-			}
-			if ((target.getMDef(null, null) * 1.2) > _actor.getMAtk(null, null)) {
-				isMagicResistant = true;
-			} else {
-				isMagicResistant = false;
-			}
+			
+			isSlower = target.getRunSpeed() < (_actor.getRunSpeed() - 3);
+			
+			isMagicResistant = (target.getMDef(null, null) * 1.2) > _actor.getMAtk(null, null);
+			
 			if (target.getBuffCount() < 4) {
 				isCanceled = true;
 			}
@@ -1337,7 +1296,7 @@ public class L2CharacterAI extends AbstractAI {
 	public boolean canAOE(Skill sk) {
 		if (sk.hasEffectType(L2EffectType.DISPEL)) {
 			if ((sk.getTargetType() == L2TargetType.AURA) || (sk.getTargetType() == L2TargetType.BEHIND_AURA) || (sk.getTargetType() == L2TargetType.FRONT_AURA) || (sk.getTargetType() == L2TargetType.AURA_CORPSE_MOB) || (sk.getTargetType() == L2TargetType.AURA_UNDEAD_ENEMY)) {
-				boolean cancast = true;
+				boolean canCast = true;
 				for (L2Character target : _actor.getKnownList().getKnownCharactersInRadius(sk.getAffectRange())) {
 					if (!GeoData.getInstance().canSeeTarget(_actor, target)) {
 						continue;
@@ -1351,14 +1310,14 @@ public class L2CharacterAI extends AbstractAI {
 					}
 					
 					if (target.isAffectedBySkill(sk.getId())) {
-						cancast = false;
+						canCast = false;
 					}
 				}
-				if (cancast) {
+				if (canCast) {
 					return true;
 				}
 			} else if ((sk.getTargetType() == L2TargetType.AREA) || (sk.getTargetType() == L2TargetType.BEHIND_AREA) || (sk.getTargetType() == L2TargetType.FRONT_AREA)) {
-				boolean cancast = true;
+				boolean canCast = true;
 				for (L2Character target : getAttackTarget().getKnownList().getKnownCharactersInRadius(sk.getAffectRange())) {
 					if (!GeoData.getInstance().canSeeTarget(_actor, target) || (target == null)) {
 						continue;
@@ -1372,16 +1331,16 @@ public class L2CharacterAI extends AbstractAI {
 					}
 					
 					if (!target.getEffectList().isEmpty()) {
-						cancast = true;
+						canCast = true;
 					}
 				}
-				if (cancast) {
+				if (canCast) {
 					return true;
 				}
 			}
 		} else {
 			if ((sk.getTargetType() == L2TargetType.AURA) || (sk.getTargetType() == L2TargetType.BEHIND_AURA) || (sk.getTargetType() == L2TargetType.FRONT_AURA) || (sk.getTargetType() == L2TargetType.AURA_CORPSE_MOB) || (sk.getTargetType() == L2TargetType.AURA_UNDEAD_ENEMY)) {
-				boolean cancast = false;
+				boolean canCast = false;
 				for (L2Character target : _actor.getKnownList().getKnownCharactersInRadius(sk.getAffectRange())) {
 					if (!GeoData.getInstance().canSeeTarget(_actor, target)) {
 						continue;
@@ -1395,14 +1354,14 @@ public class L2CharacterAI extends AbstractAI {
 					}
 					
 					if (!target.getEffectList().isEmpty()) {
-						cancast = true;
+						canCast = true;
 					}
 				}
-				if (cancast) {
+				if (canCast) {
 					return true;
 				}
 			} else if ((sk.getTargetType() == L2TargetType.AREA) || (sk.getTargetType() == L2TargetType.BEHIND_AREA) || (sk.getTargetType() == L2TargetType.FRONT_AREA)) {
-				boolean cancast = true;
+				boolean canCast = true;
 				for (L2Character target : getAttackTarget().getKnownList().getKnownCharactersInRadius(sk.getAffectRange())) {
 					if (!GeoData.getInstance().canSeeTarget(_actor, target)) {
 						continue;
@@ -1416,10 +1375,10 @@ public class L2CharacterAI extends AbstractAI {
 					}
 					
 					if (target.isAffectedBySkill(sk.getId())) {
-						cancast = false;
+						canCast = false;
 					}
 				}
-				if (cancast) {
+				if (canCast) {
 					return true;
 				}
 			}

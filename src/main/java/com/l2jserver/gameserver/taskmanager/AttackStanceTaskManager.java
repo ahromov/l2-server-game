@@ -33,24 +33,18 @@ import com.l2jserver.gameserver.network.serverpackets.AutoAttackStop;
 
 /**
  * Attack stance task manager.
- * @author Luca Baldi, Zoey76
+ * @author Luca Baldi
+ * @author Zoey76
  */
 public class AttackStanceTaskManager {
 	protected static final Logger _log = Logger.getLogger(AttackStanceTaskManager.class.getName());
 	
 	protected static final Map<L2Character, Long> _attackStanceTasks = new ConcurrentHashMap<>();
 	
-	/**
-	 * Instantiates a new attack stance task manager.
-	 */
 	protected AttackStanceTaskManager() {
 		ThreadPoolManager.getInstance().scheduleAiAtFixedRate(new FightModeScheduler(), 0, 1000);
 	}
 	
-	/**
-	 * Adds the attack stance task.
-	 * @param actor the actor
-	 */
 	public void addAttackStanceTask(L2Character actor) {
 		if (actor != null) {
 			if (actor.isPlayable()) {
@@ -65,10 +59,6 @@ public class AttackStanceTaskManager {
 		}
 	}
 	
-	/**
-	 * Removes the attack stance task.
-	 * @param actor the actor
-	 */
 	public void removeAttackStanceTask(L2Character actor) {
 		if (actor != null) {
 			if (actor.isSummon()) {
@@ -93,7 +83,7 @@ public class AttackStanceTaskManager {
 		return false;
 	}
 	
-	protected class FightModeScheduler implements Runnable {
+	protected static class FightModeScheduler implements Runnable {
 		@Override
 		public void run() {
 			long current = System.currentTimeMillis();
@@ -122,10 +112,6 @@ public class AttackStanceTaskManager {
 		}
 	}
 	
-	/**
-	 * Gets the single instance of AttackStanceTaskManager.
-	 * @return single instance of AttackStanceTaskManager
-	 */
 	public static AttackStanceTaskManager getInstance() {
 		return SingletonHolder._instance;
 	}

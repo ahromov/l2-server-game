@@ -31,7 +31,8 @@ import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 /**
  * Format: (ch) d
- * @author -Wooden-, Tryskell
+ * @author -Wooden-
+ * @author Tryskell
  */
 public final class AnswerJoinPartyRoom extends L2GameClientPacket {
 	private static final String _C__D0_30_ANSWERJOINPARTYROOM = "[C] D0:30 AnswerJoinPartyRoom";

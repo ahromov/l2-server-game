@@ -153,7 +153,7 @@ public enum CategoryType {
 	 * @param categoryName
 	 * @return A {@code CategoryType} if category was found, {@code null} if category was not found
 	 */
-	public static final CategoryType findByName(String categoryName) {
+	public static CategoryType findByName(String categoryName) {
 		for (CategoryType type : values()) {
 			if (type.name().equalsIgnoreCase(categoryName)) {
 				return type;

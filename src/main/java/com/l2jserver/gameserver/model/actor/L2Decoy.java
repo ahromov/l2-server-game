@@ -18,8 +18,6 @@
  */
 package com.l2jserver.gameserver.model.actor;
 
-import java.util.Collection;
-
 import com.l2jserver.gameserver.enums.InstanceType;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.actor.templates.L2CharTemplate;
@@ -34,11 +32,6 @@ import com.l2jserver.gameserver.taskmanager.DecayTaskManager;
 public abstract class L2Decoy extends L2Character {
 	private final L2PcInstance _owner;
 	
-	/**
-	 * Creates an abstract decoy.
-	 * @param template the decoy template
-	 * @param owner the owner
-	 */
 	public L2Decoy(L2CharTemplate template, L2PcInstance owner) {
 		super(template);
 		setInstanceType(InstanceType.L2Decoy);
@@ -55,9 +48,7 @@ public abstract class L2Decoy extends L2Character {
 	
 	@Override
 	public void updateAbnormalEffect() {
-		Collection<L2PcInstance> plrs = getKnownList().getKnownPlayers().values();
-		
-		for (L2PcInstance player : plrs) {
+		for (L2PcInstance player : getKnownList().getKnownPlayers().values()) {
 			if (player != null) {
 				player.sendPacket(new CharInfo(this));
 			}

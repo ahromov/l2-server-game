@@ -21,8 +21,9 @@ package com.l2jserver.gameserver.network.serverpackets;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 /**
- * update 27.8.10
- * @author kerberos, JIV
+ * @author kerberos
+ * @author JIV
+ * @since 08/27/2010
  */
 public class ExStopMoveInAirShip extends L2GameServerPacket {
 	private final L2PcInstance _activeChar;

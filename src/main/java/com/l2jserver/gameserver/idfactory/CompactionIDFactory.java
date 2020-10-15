@@ -73,7 +73,7 @@ public class CompactionIDFactory extends IdFactory {
 					ps.setInt(1, _curOID);
 					ps.setInt(2, id);
 					try (var rs = ps.executeQuery()) {
-						while (rs.next()) {
+						if (rs.next()) {
 							int badId = rs.getInt(1);
 							LOG.error("Bad Id {} in DB found by {}!", badId, check);
 							throw new RuntimeException();

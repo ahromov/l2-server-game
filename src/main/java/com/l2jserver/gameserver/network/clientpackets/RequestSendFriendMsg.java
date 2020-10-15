@@ -39,12 +39,12 @@ public final class RequestSendFriendMsg extends L2GameClientPacket {
 	private static final Logger LOG_CHAT = LoggerFactory.getLogger("chat");
 	
 	private String _message;
-	private String _reciever;
+	private String _receiver;
 	
 	@Override
 	protected void readImpl() {
 		_message = readS();
-		_reciever = readS();
+		_receiver = readS();
 	}
 	
 	@Override
@@ -58,17 +58,17 @@ public final class RequestSendFriendMsg extends L2GameClientPacket {
 			return;
 		}
 		
-		final L2PcInstance targetPlayer = L2World.getInstance().getPlayer(_reciever);
+		final L2PcInstance targetPlayer = L2World.getInstance().getPlayer(_receiver);
 		if ((targetPlayer == null) || !targetPlayer.isFriend(activeChar.getObjectId())) {
 			activeChar.sendPacket(SystemMessageId.TARGET_IS_NOT_FOUND_IN_THE_GAME);
 			return;
 		}
 		
 		if (general().logChat()) {
-			LOG_CHAT.info("PRIV_MSG {} says [{}] to {}.", activeChar.getName(), _message, _reciever);
+			LOG_CHAT.info("PRIV_MSG {} says [{}] to {}.", activeChar.getName(), _message, _receiver);
 		}
 		
-		targetPlayer.sendPacket(new L2FriendSay(activeChar.getName(), _reciever, _message));
+		targetPlayer.sendPacket(new L2FriendSay(activeChar.getName(), _receiver, _message));
 	}
 	
 	@Override

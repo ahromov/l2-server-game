@@ -30,10 +30,6 @@ import com.l2jserver.gameserver.model.actor.templates.L2NpcTemplate;
 public final class L2ChestInstance extends L2MonsterInstance {
 	private volatile boolean _specialDrop;
 	
-	/**
-	 * Creates a chest.
-	 * @param template the chest NPC template
-	 */
 	public L2ChestInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2ChestInstance);

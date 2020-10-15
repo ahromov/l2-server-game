@@ -465,7 +465,6 @@ public final class Fort extends AbstractResidence {
 			door.setCurrentHp(door.getMaxHp() + hp);
 			
 			saveDoorUpgrade(doorId, hp, pDef, mDef);
-			return;
 		}
 	}
 	

@@ -5,9 +5,9 @@
 			<xs:sequence>
 				<xs:element name="schedule" maxOccurs="unbounded">
 					<xs:complexType>
-						<xs:attribute type="xs:string" name="day" use="optional" />
-						<xs:attribute type="xs:byte" name="hour" use="optional" />
-						<xs:attribute type="xs:byte" name="maxConcurrent" use="optional" />
+						<xs:attribute type="xs:string" name="day" />
+						<xs:attribute type="xs:byte" name="hour" />
+						<xs:attribute type="xs:byte" name="maxConcurrent" />
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>

@@ -53,7 +53,7 @@ public class OlympiadGameClassed extends OlympiadGameNormal {
 		return COMP_DONE_WEEK_CLASSED;
 	}
 	
-	protected static final OlympiadGameClassed createGame(int id, List<List<Integer>> classList) {
+	protected static OlympiadGameClassed createGame(int id, List<List<Integer>> classList) {
 		if ((classList == null) || classList.isEmpty()) {
 			return null;
 		}

@@ -52,9 +52,9 @@ import com.l2jserver.gameserver.util.Util;
  * @author -Nemesiss-
  */
 public class GeoPathFinding extends PathFinding {
-	private static Logger _log = Logger.getLogger(GeoPathFinding.class.getName());
-	private static Map<Short, ByteBuffer> _pathNodes = new HashMap<>();
-	private static Map<Short, IntBuffer> _pathNodesIndex = new HashMap<>();
+	private static final Logger _log = Logger.getLogger(GeoPathFinding.class.getName());
+	private static final Map<Short, ByteBuffer> _pathNodes = new HashMap<>();
+	private static final Map<Short, IntBuffer> _pathNodesIndex = new HashMap<>();
 	
 	public static GeoPathFinding getInstance() {
 		return SingletonHolder._instance;

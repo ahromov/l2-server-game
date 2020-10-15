@@ -25,15 +25,11 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerTvTEvent.
+ * TvT Event condition.
  */
 public class ConditionPlayerTvTEvent extends Condition {
 	private final boolean _val;
 	
-	/**
-	 * Instantiates a new condition player tv t event.
-	 * @param val the val
-	 */
 	public ConditionPlayerTvTEvent(boolean val) {
 		_val = val;
 	}

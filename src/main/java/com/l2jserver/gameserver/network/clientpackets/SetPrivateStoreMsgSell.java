@@ -23,8 +23,7 @@ import com.l2jserver.gameserver.network.serverpackets.PrivateStoreMsgSell;
 import com.l2jserver.gameserver.util.Util;
 
 /**
- * This class ...
- * @version $Revision: 1.2.4.2 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public class SetPrivateStoreMsgSell extends L2GameClientPacket {
 	private static final String _C__97_SETPRIVATESTOREMSGSELL = "[C] 97 SetPrivateStoreMsgSell";

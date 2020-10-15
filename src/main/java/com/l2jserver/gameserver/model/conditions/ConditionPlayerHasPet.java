@@ -18,7 +18,7 @@
  */
 package com.l2jserver.gameserver.model.conditions;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.instance.L2PetInstance;
@@ -27,16 +27,12 @@ import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerHasPet.
+ * Has pet condition.
  */
 public class ConditionPlayerHasPet extends Condition {
-	private final ArrayList<Integer> _controlItemIds;
+	private final List<Integer> _controlItemIds;
 	
-	/**
-	 * Instantiates a new condition player has pet.
-	 * @param itemIds the item ids
-	 */
-	public ConditionPlayerHasPet(ArrayList<Integer> itemIds) {
+	public ConditionPlayerHasPet(List<Integer> itemIds) {
 		if ((itemIds.size() == 1) && (itemIds.get(0) == 0)) {
 			_controlItemIds = null;
 		} else {

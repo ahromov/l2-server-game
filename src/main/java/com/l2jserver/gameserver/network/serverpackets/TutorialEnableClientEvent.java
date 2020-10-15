@@ -19,7 +19,7 @@
 package com.l2jserver.gameserver.network.serverpackets;
 
 public class TutorialEnableClientEvent extends L2GameServerPacket {
-	private int _eventId = 0;
+	private final int _eventId;
 	
 	public TutorialEnableClientEvent(int event) {
 		_eventId = event;

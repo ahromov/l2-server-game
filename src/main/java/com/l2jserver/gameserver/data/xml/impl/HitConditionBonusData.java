@@ -29,7 +29,7 @@ import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.util.IXmlReader;
 
 /**
- * This class load, holds and calculates the hit condition bonuses.
+ * Hit condition bonuses parser.
  * @author Nik
  */
 public final class HitConditionBonusData implements IXmlReader {
@@ -72,34 +72,13 @@ public final class HitConditionBonusData implements IXmlReader {
 		for (Node d = doc.getFirstChild().getFirstChild(); d != null; d = d.getNextSibling()) {
 			NamedNodeMap attrs = d.getAttributes();
 			switch (d.getNodeName()) {
-				case "front": {
-					frontBonus = parseInteger(attrs, "val");
-					break;
-				}
-				case "side": {
-					sideBonus = parseInteger(attrs, "val");
-					break;
-				}
-				case "back": {
-					backBonus = parseInteger(attrs, "val");
-					break;
-				}
-				case "high": {
-					highBonus = parseInteger(attrs, "val");
-					break;
-				}
-				case "low": {
-					lowBonus = parseInteger(attrs, "val");
-					break;
-				}
-				case "dark": {
-					darkBonus = parseInteger(attrs, "val");
-					break;
-				}
-				case "rain": {
-					rainBonus = parseInteger(attrs, "val");
-					break;
-				}
+				case "front" -> frontBonus = parseInteger(attrs, "val");
+				case "side" -> sideBonus = parseInteger(attrs, "val");
+				case "back" -> backBonus = parseInteger(attrs, "val");
+				case "high" -> highBonus = parseInteger(attrs, "val");
+				case "low" -> lowBonus = parseInteger(attrs, "val");
+				case "dark" -> darkBonus = parseInteger(attrs, "val");
+				case "rain" -> rainBonus = parseInteger(attrs, "val");
 			}
 		}
 	}

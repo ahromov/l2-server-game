@@ -84,7 +84,7 @@ public final class DimensionalRiftRoom {
 		return Rnd.get(_yMin, _yMax);
 	}
 	
-	public Location getTeleportCoorinates() {
+	public Location getTeleportCoordinates() {
 		return _teleportCoords;
 	}
 	

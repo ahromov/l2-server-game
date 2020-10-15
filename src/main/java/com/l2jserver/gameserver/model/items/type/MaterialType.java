@@ -50,5 +50,5 @@ public enum MaterialType {
 	FISH,
 	RUNE_XP,
 	RUNE_SP,
-	RUNE_REMOVE_PENALTY;
+	RUNE_REMOVE_PENALTY
 }

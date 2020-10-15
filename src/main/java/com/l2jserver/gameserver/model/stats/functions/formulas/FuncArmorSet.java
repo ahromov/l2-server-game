@@ -58,24 +58,12 @@ public class FuncArmorSet extends AbstractFunction {
 				L2ArmorSet set = ArmorSetsData.getInstance().getSet(chest.getId());
 				if ((set != null) && set.containAll(player)) {
 					switch (getStat()) {
-						case STAT_STR:
-							value += set.getSTR();
-							break;
-						case STAT_DEX:
-							value += set.getDEX();
-							break;
-						case STAT_INT:
-							value += set.getINT();
-							break;
-						case STAT_MEN:
-							value += set.getMEN();
-							break;
-						case STAT_CON:
-							value += set.getCON();
-							break;
-						case STAT_WIT:
-							value += set.getWIT();
-							break;
+						case STAT_STR -> value += set.getSTR();
+						case STAT_DEX -> value += set.getDEX();
+						case STAT_INT -> value += set.getINT();
+						case STAT_MEN -> value += set.getMEN();
+						case STAT_CON -> value += set.getCON();
+						case STAT_WIT -> value += set.getWIT();
 					}
 				}
 			}

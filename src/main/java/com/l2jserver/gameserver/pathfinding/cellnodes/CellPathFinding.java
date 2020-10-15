@@ -38,11 +38,13 @@ import com.l2jserver.gameserver.pathfinding.PathFinding;
 import com.l2jserver.gameserver.util.StringUtil;
 
 /**
- * @author Sami, DS Credits to Diamond
+ * @author Sami
+ * @author Diamond
+ * @author DS
  */
 public class CellPathFinding extends PathFinding {
 	private static final Logger _log = Logger.getLogger(CellPathFinding.class.getName());
-	private BufferInfo[] _allBuffers;
+	private final BufferInfo[] _allBuffers;
 	private int _findSuccess = 0;
 	private int _findFails = 0;
 	private int _postFilterUses = 0;
@@ -117,7 +119,7 @@ public class CellPathFinding extends PathFinding {
 			}
 		}
 		
-		List<AbstractNodeLoc> path = null;
+		List<AbstractNodeLoc> path;
 		try {
 			CellNode result = buffer.findPath(gx, gy, gz, gtx, gty, gtz);
 			
@@ -235,7 +237,7 @@ public class CellPathFinding extends PathFinding {
 		return path;
 	}
 	
-	private final CellNodeBuffer alloc(int size, boolean playable) {
+	private CellNodeBuffer alloc(int size, boolean playable) {
 		CellNodeBuffer current = null;
 		for (BufferInfo i : _allBuffers) {
 			if (i.mapSize >= size) {
@@ -277,7 +279,7 @@ public class CellPathFinding extends PathFinding {
 		return current;
 	}
 	
-	private final void dropDebugItem(int itemId, int num, AbstractNodeLoc loc) {
+	private void dropDebugItem(int itemId, int num, AbstractNodeLoc loc) {
 		final L2ItemInstance item = new L2ItemInstance(IdFactory.getInstance().getNextId(), itemId);
 		item.setCount(num);
 		item.spawnMe(loc.getX(), loc.getY(), loc.getZ());

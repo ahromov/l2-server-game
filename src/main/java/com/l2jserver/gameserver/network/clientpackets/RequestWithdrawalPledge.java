@@ -28,8 +28,7 @@ import com.l2jserver.gameserver.network.serverpackets.PledgeShowMemberListDelete
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 /**
- * This class ...
- * @version $Revision: 1.3.2.1.2.3 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class RequestWithdrawalPledge extends L2GameClientPacket {
 	private static final String _C__28_REQUESTWITHDRAWALPLEDGE = "[C] 28 RequestWithdrawalPledge";

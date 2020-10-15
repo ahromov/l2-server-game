@@ -25,14 +25,15 @@ import com.l2jserver.gameserver.util.Util;
 
 /**
  * Exist NPC condition.
- * @author UnAfraid, Zoey76
+ * @author UnAfraid
+ * @author Zoey76
  */
 public class ConditionPlayerRangeFromNpc extends Condition {
-	/** NPC Ids. */
+	
 	private final int[] _npcIds;
-	/** Radius to check. */
+	
 	private final int _radius;
-	/** Expected value. */
+	
 	private final boolean _val;
 	
 	public ConditionPlayerRangeFromNpc(int[] npcIds, int radius, boolean val) {

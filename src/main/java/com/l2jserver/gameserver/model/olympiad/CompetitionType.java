@@ -29,7 +29,7 @@ public enum CompetitionType {
 	
 	private final String _name;
 	
-	private CompetitionType(String name) {
+	CompetitionType(String name) {
 		_name = name;
 	}
 	

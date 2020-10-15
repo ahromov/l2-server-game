@@ -18,7 +18,7 @@
  */
 package com.l2jserver.gameserver.model.conditions;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.l2jserver.gameserver.model.L2Clan;
 import com.l2jserver.gameserver.model.actor.L2Character;
@@ -26,24 +26,16 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerHasClanHall.
+ * Has clan hall condition.
  * @author MrPoke
  */
 public final class ConditionPlayerHasClanHall extends Condition {
-	private final ArrayList<Integer> _clanHall;
+	private final List<Integer> _clanHalls;
 	
-	/**
-	 * Instantiates a new condition player has clan hall.
-	 * @param clanHall the clan hall
-	 */
-	public ConditionPlayerHasClanHall(ArrayList<Integer> clanHall) {
-		_clanHall = clanHall;
+	public ConditionPlayerHasClanHall(List<Integer> clanHalls) {
+		_clanHalls = clanHalls;
 	}
 	
-	/**
-	 * Test impl.
-	 * @return true, if successful
-	 */
 	@Override
 	public boolean testImpl(L2Character effector, L2Character effected, Skill skill, L2Item item) {
 		if (effector.getActingPlayer() == null) {
@@ -52,13 +44,13 @@ public final class ConditionPlayerHasClanHall extends Condition {
 		
 		final L2Clan clan = effector.getActingPlayer().getClan();
 		if (clan == null) {
-			return ((_clanHall.size() == 1) && (_clanHall.get(0) == 0));
+			return ((_clanHalls.size() == 1) && (_clanHalls.get(0) == 0));
 		}
 		
 		// All Clan Hall
-		if ((_clanHall.size() == 1) && (_clanHall.get(0) == -1)) {
+		if ((_clanHalls.size() == 1) && (_clanHalls.get(0) == -1)) {
 			return clan.getHideoutId() > 0;
 		}
-		return _clanHall.contains(clan.getHideoutId());
+		return _clanHalls.contains(clan.getHideoutId());
 	}
 }

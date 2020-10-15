@@ -112,7 +112,7 @@ public enum InstanceType {
 	private final long _maskL;
 	private final long _maskH;
 	
-	private InstanceType(InstanceType parent) {
+	InstanceType(InstanceType parent) {
 		_parent = parent;
 		
 		final int high = ordinal() - (Long.SIZE - 1);

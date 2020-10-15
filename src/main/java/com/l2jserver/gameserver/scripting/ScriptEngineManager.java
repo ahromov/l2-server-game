@@ -139,12 +139,12 @@ public final class ScriptEngineManager {
 		return null;
 	}
 	
-	public void executeScript(File file) throws Exception {
+	public void executeScript(File file) {
 		final Class<?> clazz = compileScript(file);
 		runMain(clazz);
 	}
 	
-	public void executeScript(String file) throws Exception {
+	public void executeScript(String file) {
 		executeScript(new File(server().getScriptRoot(), file));
 	}
 	

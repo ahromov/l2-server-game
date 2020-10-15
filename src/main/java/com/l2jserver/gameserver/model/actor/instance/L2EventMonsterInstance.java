@@ -35,10 +35,6 @@ public class L2EventMonsterInstance extends L2MonsterInstance {
 	// TODO: Some mobs need protect drop for spawner
 	public boolean drop_on_ground = false;
 	
-	/**
-	 * Creates an event monster.
-	 * @param template the event monster NPC template
-	 */
 	public L2EventMonsterInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2EventMobInstance);

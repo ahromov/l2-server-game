@@ -22,8 +22,6 @@ import com.l2jserver.gameserver.enums.InstanceType;
 import com.l2jserver.gameserver.model.actor.templates.L2NpcTemplate;
 
 /**
- * This class ...
- * @version $Revision: $ $Date: $
  * @author LBaldi
  */
 public class L2AdventurerInstance extends L2NpcInstance {
@@ -34,14 +32,12 @@ public class L2AdventurerInstance extends L2NpcInstance {
 	
 	@Override
 	public String getHtmlPath(int npcId, int val) {
-		String pom = "";
-		
+		String pom;
 		if (val == 0) {
 			pom = "" + npcId;
 		} else {
 			pom = npcId + "-" + val;
 		}
-		
 		return "data/html/adventurer_guildsman/" + pom + ".htm";
 	}
 }

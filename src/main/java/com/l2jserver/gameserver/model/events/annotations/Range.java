@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Range {
-	public int from();
+	int from();
 	
-	public int to();
+	int to();
 }

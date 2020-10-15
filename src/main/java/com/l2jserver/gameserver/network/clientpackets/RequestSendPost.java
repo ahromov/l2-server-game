@@ -22,6 +22,8 @@ import static com.l2jserver.gameserver.config.Configuration.character;
 import static com.l2jserver.gameserver.config.Configuration.general;
 import static com.l2jserver.gameserver.model.itemcontainer.Inventory.ADENA_ID;
 
+import java.util.Objects;
+
 import com.l2jserver.gameserver.data.sql.impl.CharNameTable;
 import com.l2jserver.gameserver.data.xml.impl.AdminData;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
@@ -42,7 +44,8 @@ import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 import com.l2jserver.gameserver.util.StringUtil;
 
 /**
- * @author Migi, DS
+ * @author Migi
+ * @author DS
  */
 public final class RequestSendPost extends L2GameClientPacket {
 	private static final String _C__D0_66_REQUESTSENDPOST = "[C] D0:66 RequestSendPost";
@@ -63,7 +66,7 @@ public final class RequestSendPost extends L2GameClientPacket {
 	private boolean _isCod;
 	private String _subject;
 	private String _text;
-	private AttachmentItem _items[] = null;
+	private AttachmentItem[] _items = null;
 	private long _reqAdena;
 	
 	public RequestSendPost() {
@@ -72,7 +75,7 @@ public final class RequestSendPost extends L2GameClientPacket {
 	@Override
 	protected void readImpl() {
 		_receiver = readS();
-		_isCod = readD() == 0 ? false : true;
+		_isCod = readD() != 0;
 		_subject = readS();
 		_text = readS();
 		
@@ -300,11 +303,7 @@ public final class RequestSendPost extends L2GameClientPacket {
 		}
 		
 		// Send updated item list to the player
-		if (playerIU != null) {
-			player.sendPacket(playerIU);
-		} else {
-			player.sendPacket(new ItemList(player, false));
-		}
+		player.sendPacket(Objects.requireNonNullElseGet(playerIU, () -> new ItemList(player, false)));
 		
 		// Update current load status on player
 		StatusUpdate su = new StatusUpdate(player);

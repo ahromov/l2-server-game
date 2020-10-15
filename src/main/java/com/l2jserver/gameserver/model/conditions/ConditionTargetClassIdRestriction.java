@@ -26,15 +26,11 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionTargetClassIdRestriction.
+ * Target class Id restriction condition.
  */
 public class ConditionTargetClassIdRestriction extends Condition {
 	private final List<Integer> _classIds;
 	
-	/**
-	 * Instantiates a new condition target class id restriction.
-	 * @param classId the class id
-	 */
 	public ConditionTargetClassIdRestriction(List<Integer> classId) {
 		_classIds = classId;
 	}

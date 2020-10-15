@@ -37,30 +37,18 @@ public class L2FishingMonster {
 		_probability = set.getInt("probability");
 	}
 	
-	/**
-	 * @return the minimum user level.
-	 */
 	public int getUserMinLevel() {
 		return _userMinLevel;
 	}
 	
-	/**
-	 * @return the maximum user level.
-	 */
 	public int getUserMaxLevel() {
 		return _userMaxLevel;
 	}
 	
-	/**
-	 * @return the fishing monster Id.
-	 */
 	public int getFishingMonsterId() {
 		return _fishingMonsterId;
 	}
 	
-	/**
-	 * @return the probability.
-	 */
 	public int getProbability() {
 		return _probability;
 	}

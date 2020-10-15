@@ -26,9 +26,6 @@ import com.l2jserver.gameserver.model.actor.instance.L2BoatInstance;
 public class VehicleDeparture extends L2GameServerPacket {
 	private final int _objId, _x, _y, _z, _moveSpeed, _rotationSpeed;
 	
-	/**
-	 * @param boat
-	 */
 	public VehicleDeparture(L2BoatInstance boat) {
 		_objId = boat.getObjectId();
 		_x = boat.getXdestination();

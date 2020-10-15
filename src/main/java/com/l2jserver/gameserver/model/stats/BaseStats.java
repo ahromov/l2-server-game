@@ -21,7 +21,6 @@ package com.l2jserver.gameserver.model.stats;
 import static com.l2jserver.gameserver.config.Configuration.server;
 
 import java.io.File;
-import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,7 +61,7 @@ public enum BaseStats {
 		return _stat.getClass().getSimpleName();
 	}
 	
-	private BaseStats(BaseStat s) {
+	BaseStats(BaseStat s) {
 		_stat = s;
 	}
 	
@@ -72,16 +71,6 @@ public enum BaseStats {
 		}
 		
 		return 1;
-	}
-	
-	public static final BaseStats valueOfXml(String name) {
-		name = name.intern();
-		for (BaseStats s : values()) {
-			if (s.getValue().equalsIgnoreCase(name)) {
-				return s;
-			}
-		}
-		throw new NoSuchElementException("Unknown name '" + name + "' for enum BaseStats");
 	}
 	
 	private interface BaseStat {

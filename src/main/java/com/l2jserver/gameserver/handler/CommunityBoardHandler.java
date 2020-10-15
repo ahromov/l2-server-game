@@ -128,25 +128,13 @@ public final class CommunityBoardHandler implements IHandler<IParseBoardHandler,
 			return;
 		}
 		
-		String cmd = "";
+		String cmd;
 		switch (url) {
-			case "Topic": {
-				cmd = "_bbstop";
-				break;
-			}
-			case "Post": {
-				cmd = "_bbspos"; // TODO: Implement.
-				break;
-			}
-			case "Region": {
-				cmd = "_bbsloc";
-				break;
-			}
-			case "Notice": {
-				cmd = "_bbsclan";
-				break;
-			}
-			default: {
+			case "Topic" -> cmd = "_bbstop";
+			case "Post" -> cmd = "_bbspos"; // TODO: Implement.
+			case "Region" -> cmd = "_bbsloc";
+			case "Notice" -> cmd = "_bbsclan";
+			default -> {
 				separateAndSend("<html><body><br><br><center>The command: " + url + " is not implemented yet.</center><br><br></body></html>", player);
 				return;
 			}

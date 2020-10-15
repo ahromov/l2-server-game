@@ -44,7 +44,7 @@ public class Auction {
 	
 	protected static final Logger _log = Logger.getLogger(Auction.class.getName());
 	
-	private int _id = 0;
+	private final int _id;
 	
 	private long _endDate;
 	
@@ -119,7 +119,6 @@ public class Auction {
 		}
 	}
 	
-	/** Task Sheduler for endAuction */
 	public class AutoEndTask implements Runnable {
 		public AutoEndTask() {
 		}
@@ -134,10 +133,6 @@ public class Auction {
 		}
 	}
 	
-	/**
-	 * Constructor
-	 * @param auctionId
-	 */
 	public Auction(int auctionId) {
 		_id = auctionId;
 		load();
@@ -244,7 +239,7 @@ public class Auction {
 		if (((getHighestBidderId() > 0) && (bid > getHighestBidderMaxBid())) || ((getHighestBidderId() == 0) && (bid >= getStartingBid()))) {
 			if (takeItem(bidder, requiredAdena)) {
 				updateInDB(bidder, bid);
-				bidder.getClan().setAuctionBiddedAt(_id, true);
+				bidder.getClan().setAuctionBidAt(_id, true);
 				return;
 			}
 		}
@@ -363,7 +358,7 @@ public class Auction {
 					L2World.getInstance().getPlayer(b.getName()).sendMessage("Congratulation you have won ClanHall!");
 				}
 			}
-			ClanTable.getInstance().getClanByName(b.getClanName()).setAuctionBiddedAt(0, true);
+			ClanTable.getInstance().getClanByName(b.getClanName()).setAuctionBidAt(0, true);
 		}
 		_bidders.clear();
 	}
@@ -387,9 +382,7 @@ public class Auction {
 				return;
 			}
 			if ((_highestBidderId == 0) && (_sellerId > 0)) {
-				/**
-				 * If seller haven't sell ClanHall, auction removed, THIS MUST BE CONFIRMED
-				 */
+				// If seller haven't sell ClanHall, auction removed, THIS MUST BE CONFIRMED
 				int aucId = AuctionManager.getInstance().getAuctionIndex(_id);
 				AuctionManager.getInstance().getAuctions().remove(aucId);
 				return;
@@ -401,11 +394,11 @@ public class Auction {
 			deleteAuctionFromDB();
 			L2Clan Clan = ClanTable.getInstance().getClanByName(_bidders.get(_highestBidderId).getClanName());
 			_bidders.remove(_highestBidderId);
-			Clan.setAuctionBiddedAt(0, true);
+			Clan.setAuctionBidAt(0, true);
 			removeBids();
 			ClanHallManager.getInstance().setOwner(_itemId, Clan);
 		} else {
-			/** Task waiting ClanHallManager is loaded every 3s */
+			// Task waiting ClanHallManager is loaded every 3s
 			ThreadPoolManager.getInstance().scheduleGeneral(new AutoEndTask(), 3000);
 		}
 	}
@@ -425,7 +418,7 @@ public class Auction {
 		}
 		
 		returnItem(_bidders.get(bidder).getClanName(), _bidders.get(bidder).getBid(), true);
-		ClanTable.getInstance().getClanByName(_bidders.get(bidder).getClanName()).setAuctionBiddedAt(0, true);
+		ClanTable.getInstance().getClanByName(_bidders.get(bidder).getClanName()).setAuctionBidAt(0, true);
 		_bidders.clear();
 		loadBid();
 	}
@@ -454,7 +447,6 @@ public class Auction {
 			ps.setLong(11, _currentBid);
 			ps.setLong(12, _endDate);
 			ps.execute();
-			ps.close();
 		} catch (Exception e) {
 			_log.log(Level.SEVERE, "Exception: Auction.load(): " + e.getMessage(), e);
 		}

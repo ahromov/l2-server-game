@@ -18,7 +18,6 @@
  */
 package com.l2jserver.gameserver.network.serverpackets;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +27,8 @@ import com.l2jserver.gameserver.model.interfaces.IPositionable;
 
 /**
  * MagicSkillUse server packet implementation.
- * @author UnAfraid, NosBit
+ * @author UnAfraid
+ * @author NosBit
  */
 public final class MagicSkillUse extends L2GameServerPacket {
 	private final int _skillId;
@@ -47,7 +47,7 @@ public final class MagicSkillUse extends L2GameServerPacket {
 		_skillLevel = skillLevel;
 		_hitTime = hitTime;
 		_reuseDelay = reuseDelay;
-		_groundLocations = cha.isPlayer() && (cha.getActingPlayer().getCurrentSkillWorldPosition() != null) ? Arrays.asList(cha.getActingPlayer().getCurrentSkillWorldPosition()) : Collections.<Location> emptyList();
+		_groundLocations = cha.isPlayer() && (cha.getActingPlayer().getCurrentSkillWorldPosition() != null) ? Collections.singletonList(cha.getActingPlayer().getCurrentSkillWorldPosition()) : Collections.emptyList();
 	}
 	
 	public MagicSkillUse(L2Character cha, int skillId, int skillLevel, int hitTime, int reuseDelay) {

@@ -59,7 +59,7 @@ public enum TriggerType {
 	
 	private final int _mask;
 	
-	private TriggerType(int mask) {
+	TriggerType(int mask) {
 		_mask = mask;
 	}
 	

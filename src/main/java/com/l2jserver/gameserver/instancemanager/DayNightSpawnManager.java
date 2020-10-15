@@ -118,14 +118,14 @@ public final class DayNightSpawnManager {
 		}
 		
 		switch (mode) {
-			case 0:
+			case 0 -> {
 				spawnDayCreatures();
 				specialNightBoss(0);
-				break;
-			case 1:
+			}
+			case 1 -> {
 				spawnNightCreatures();
 				specialNightBoss(1);
-				break;
+			}
 		}
 	}
 	
@@ -176,16 +176,16 @@ public final class DayNightSpawnManager {
 	
 	private void handleHellmans(L2RaidBossInstance boss, int mode) {
 		switch (mode) {
-			case 0:
+			case 0 -> {
 				boss.deleteMe();
 				LOG.info("Deleting Hellman raidboss.");
-				break;
-			case 1:
+			}
+			case 1 -> {
 				if (!boss.isVisible()) {
 					boss.spawnMe();
 				}
 				LOG.info("Spawning Hellman raidboss.");
-				break;
+			}
 		}
 	}
 	

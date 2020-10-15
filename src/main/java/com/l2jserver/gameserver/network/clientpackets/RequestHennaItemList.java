@@ -22,7 +22,8 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.serverpackets.HennaEquipList;
 
 /**
- * @author Tempy, Zoey76
+ * @author Tempy
+ * @author Zoey76
  */
 public final class RequestHennaItemList extends L2GameClientPacket {
 	private static final String _C__C3_REQUESTHENNAITEMLIST = "[C] C3 RequestHennaItemList";

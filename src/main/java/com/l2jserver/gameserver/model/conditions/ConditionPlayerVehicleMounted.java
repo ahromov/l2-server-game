@@ -23,14 +23,12 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
+ * Vehicle mounted condition.
  * @author Nyaran
  */
 public class ConditionPlayerVehicleMounted extends Condition {
 	private final boolean _val;
 	
-	/**
-	 * @param val the val
-	 */
 	public ConditionPlayerVehicleMounted(boolean val) {
 		_val = val;
 	}

@@ -99,7 +99,6 @@ public class PcStatus extends PlayableStatus {
 		
 		int fullValue = (int) value;
 		int tDmg = 0;
-		int mpDam = 0;
 		
 		if ((attacker != null) && (attacker != getActiveChar())) {
 			final L2PcInstance attackerPlayer = attacker.getActingPlayer();
@@ -123,7 +122,7 @@ public class PcStatus extends PlayableStatus {
 				}
 			}
 			
-			// Check and calculate transfered damage
+			// Check and calculate transferred damage
 			final L2Summon summon = getActiveChar().getSummon();
 			if (getActiveChar().hasServitor() && Util.checkIfInRange(1000, getActiveChar(), summon, true)) {
 				tDmg = ((int) value * (int) getActiveChar().getStat().calcStat(Stats.TRANSFER_DAMAGE_PERCENT, 0, null, null)) / 100;
@@ -137,8 +136,7 @@ public class PcStatus extends PlayableStatus {
 				}
 			}
 			
-			mpDam = ((int) value * (int) getActiveChar().getStat().calcStat(Stats.MANA_SHIELD_PERCENT, 0, null, null)) / 100;
-			
+			int mpDam = ((int) value * (int) getActiveChar().getStat().calcStat(Stats.MANA_SHIELD_PERCENT, 0, null, null)) / 100;
 			if (mpDam > 0) {
 				mpDam = (int) (value - mpDam);
 				if (mpDam > getActiveChar().getCurrentMp()) {
@@ -155,11 +153,9 @@ public class PcStatus extends PlayableStatus {
 				}
 			}
 			
-			final L2PcInstance caster = getActiveChar().getTransferingDamageTo();
+			final L2PcInstance caster = getActiveChar().getTransferringDamageTo();
 			if ((caster != null) && (getActiveChar().getParty() != null) && Util.checkIfInRange(1000, getActiveChar(), caster, true) && !caster.isDead() && (getActiveChar() != caster) && getActiveChar().getParty().getMembers().contains(caster)) {
-				int transferDmg = 0;
-				
-				transferDmg = ((int) value * (int) getActiveChar().getStat().calcStat(Stats.TRANSFER_DAMAGE_TO_PLAYER, 0, null, null)) / 100;
+				int transferDmg = ((int) value * (int) getActiveChar().getStat().calcStat(Stats.TRANSFER_DAMAGE_TO_PLAYER, 0, null, null)) / 100;
 				transferDmg = Math.min((int) caster.getCurrentHp() - 1, transferDmg);
 				if (transferDmg > 0) {
 					int membersInRange = 0;

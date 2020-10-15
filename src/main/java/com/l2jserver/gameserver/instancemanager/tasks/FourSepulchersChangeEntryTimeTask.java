@@ -39,11 +39,10 @@ public final class FourSepulchersChangeEntryTimeTask implements Runnable {
 		manager.setIsAttackTime(false);
 		manager.setIsCoolDownTime(false);
 		
-		long interval = 0;
+		long interval;
 		// if this is first launch - search time whFourSepulchersManager_inEntryTime = true;naFourSepulchersManager_inEntryTime = true;maen entry time will be
 		// ended:
-		// counting difference between time when entry time ends and current
-		// time
+		// counting difference between time when entry time ends and current time
 		// and then launching change time task
 		if (manager.isFirstTimeRun()) {
 			interval = manager.getEntrytTimeEnd() - Calendar.getInstance().getTimeInMillis();

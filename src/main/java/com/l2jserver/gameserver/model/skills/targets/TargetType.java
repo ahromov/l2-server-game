@@ -58,5 +58,5 @@ public enum TargetType {
 	/** Anything targetable. */
 	TARGET,
 	/** Wyverns. */
-	WYVERN_TARGET;
+	WYVERN_TARGET
 }

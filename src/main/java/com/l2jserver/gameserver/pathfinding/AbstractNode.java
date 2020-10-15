@@ -63,12 +63,8 @@ public abstract class AbstractNode<Loc extends AbstractNodeLoc> {
 		}
 		final AbstractNode<?> other = (AbstractNode<?>) obj;
 		if (_loc == null) {
-			if (other._loc != null) {
-				return false;
-			}
-		} else if (!_loc.equals(other._loc)) {
-			return false;
+			return other._loc == null;
 		}
-		return true;
+		return _loc.equals(other._loc);
 	}
 }

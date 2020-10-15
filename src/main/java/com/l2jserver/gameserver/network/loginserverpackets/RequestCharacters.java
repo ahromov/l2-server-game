@@ -21,7 +21,8 @@ package com.l2jserver.gameserver.network.loginserverpackets;
 import com.l2jserver.commons.network.BaseRecievePacket;
 
 /**
- * @author mrTJO Thanks to mochitto
+ * @author mrTJO
+ * @author mochitto
  */
 public class RequestCharacters extends BaseRecievePacket {
 	private final String _account;
@@ -31,9 +32,6 @@ public class RequestCharacters extends BaseRecievePacket {
 		_account = readS();
 	}
 	
-	/**
-	 * @return Return account name
-	 */
 	public String getAccount() {
 		return _account;
 	}

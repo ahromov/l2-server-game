@@ -24,6 +24,6 @@ package com.l2jserver.gameserver.bbs.model;
  * @version 2.6.2.0
  */
 public enum TopicType {
-	MORMAL,
+	NORMAL,
 	MEMO
 }

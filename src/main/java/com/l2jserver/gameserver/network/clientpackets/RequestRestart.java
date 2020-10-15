@@ -110,7 +110,7 @@ public final class RequestRestart extends L2GameClientPacket {
 		
 		LOG_ACCOUNTING.info("Client {} restarted.", client);
 		
-		// detach the client from the char so that the connection isnt closed in the deleteMe
+		// detach the client from the char so that the connection isn't closed in the deleteMe
 		player.setClient(null);
 		
 		player.deleteMe();

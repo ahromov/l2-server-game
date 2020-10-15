@@ -53,7 +53,7 @@ public class L2EffectZone extends L2ZoneType {
 		_chance = 100;
 		_initialDelay = 0;
 		_reuse = 30000;
-		setTargetType(InstanceType.L2Playable); // default only playabale
+		setTargetType(InstanceType.L2Playable); // default only playable
 		_bypassConditions = false;
 		_isShowDangerIcon = true;
 		AbstractZoneSettings settings = ZoneManager.getSettings(getName());
@@ -70,37 +70,32 @@ public class L2EffectZone extends L2ZoneType {
 	
 	@Override
 	public void setParameter(String name, String value) {
-		if (name.equals("chance")) {
-			_chance = Integer.parseInt(value);
-		} else if (name.equals("initialDelay")) {
-			_initialDelay = Integer.parseInt(value);
-		} else if (name.equals("reuse")) {
-			_reuse = Integer.parseInt(value);
-		} else if (name.equals("bypassSkillConditions")) {
-			_bypassConditions = Boolean.parseBoolean(value);
-		} else if (name.equals("maxDynamicSkillCount")) {
-			_skills = new ConcurrentHashMap<>(Integer.parseInt(value));
-		} else if (name.equals("skillIdLvl")) {
-			String[] propertySplit = value.split(";");
-			_skills = new ConcurrentHashMap<>(propertySplit.length);
-			for (String skill : propertySplit) {
-				String[] skillSplit = skill.split("-");
-				if (skillSplit.length != 2) {
-					_log.warning(StringUtil.concat(getClass().getSimpleName() + ": invalid config property -> skillsIdLvl \"", skill, "\""));
-				} else {
-					try {
-						_skills.put(Integer.parseInt(skillSplit[0]), Integer.parseInt(skillSplit[1]));
-					} catch (NumberFormatException nfe) {
-						if (!skill.isEmpty()) {
-							_log.warning(StringUtil.concat(getClass().getSimpleName() + ": invalid config property -> skillsIdLvl \"", skillSplit[0], "\"", skillSplit[1]));
+		switch (name) {
+			case "chance" -> _chance = Integer.parseInt(value);
+			case "initialDelay" -> _initialDelay = Integer.parseInt(value);
+			case "reuse" -> _reuse = Integer.parseInt(value);
+			case "bypassSkillConditions" -> _bypassConditions = Boolean.parseBoolean(value);
+			case "maxDynamicSkillCount" -> _skills = new ConcurrentHashMap<>(Integer.parseInt(value));
+			case "skillIdLvl" -> {
+				String[] propertySplit = value.split(";");
+				_skills = new ConcurrentHashMap<>(propertySplit.length);
+				for (String skill : propertySplit) {
+					String[] skillSplit = skill.split("-");
+					if (skillSplit.length != 2) {
+						_log.warning(StringUtil.concat(getClass().getSimpleName() + ": invalid config property -> skillsIdLvl \"", skill, "\""));
+					} else {
+						try {
+							_skills.put(Integer.parseInt(skillSplit[0]), Integer.parseInt(skillSplit[1]));
+						} catch (NumberFormatException nfe) {
+							if (!skill.isEmpty()) {
+								_log.warning(StringUtil.concat(getClass().getSimpleName() + ": invalid config property -> skillsIdLvl \"", skillSplit[0], "\"", skillSplit[1]));
+							}
 						}
 					}
 				}
 			}
-		} else if (name.equals("showDangerIcon")) {
-			_isShowDangerIcon = Boolean.parseBoolean(value);
-		} else {
-			super.setParameter(name, value);
+			case "showDangerIcon" -> _isShowDangerIcon = Boolean.parseBoolean(value);
+			default -> super.setParameter(name, value);
 		}
 	}
 	

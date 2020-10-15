@@ -23,15 +23,11 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerIsClanLeader.
+ * Clan leader condition.
  */
 public class ConditionPlayerIsClanLeader extends Condition {
 	private final boolean _val;
 	
-	/**
-	 * Instantiates a new condition player is clan leader.
-	 * @param val the val
-	 */
 	public ConditionPlayerIsClanLeader(boolean val) {
 		_val = val;
 	}

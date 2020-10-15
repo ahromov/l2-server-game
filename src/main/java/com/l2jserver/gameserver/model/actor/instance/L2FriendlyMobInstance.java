@@ -29,10 +29,7 @@ import com.l2jserver.gameserver.model.actor.templates.L2NpcTemplate;
  * These friendly mobs should only attack players with karma > 0 and it is always aggro, since it just attacks players with karma.
  */
 public class L2FriendlyMobInstance extends L2Attackable {
-	/**
-	 * Creates a friendly monster.
-	 * @param template the friendly monster NPC template
-	 */
+	
 	public L2FriendlyMobInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2FriendlyMobInstance);

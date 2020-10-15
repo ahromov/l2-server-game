@@ -29,10 +29,6 @@ import com.l2jserver.gameserver.model.skills.Skill;
 public class ConditionLogicNot extends Condition {
 	private final Condition _condition;
 	
-	/**
-	 * Instantiates a new condition logic not.
-	 * @param condition the condition
-	 */
 	public ConditionLogicNot(Condition condition) {
 		_condition = condition;
 		if (getListener() != null) {

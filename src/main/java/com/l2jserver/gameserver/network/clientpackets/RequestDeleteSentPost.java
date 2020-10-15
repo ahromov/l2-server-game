@@ -29,7 +29,8 @@ import com.l2jserver.gameserver.network.serverpackets.ExChangePostState;
 import com.l2jserver.gameserver.util.Util;
 
 /**
- * @author Migi, DS
+ * @author Migi
+ * @author DS
  */
 public final class RequestDeleteSentPost extends L2GameClientPacket {
 	private static final String _C__D0_6D_REQUESTDELETESENTPOST = "[C] D0:6D RequestDeleteSentPost";

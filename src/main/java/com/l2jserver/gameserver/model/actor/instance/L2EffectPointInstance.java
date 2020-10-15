@@ -27,11 +27,6 @@ import com.l2jserver.gameserver.network.serverpackets.ActionFailed;
 public class L2EffectPointInstance extends L2Npc {
 	private final L2PcInstance _owner;
 	
-	/**
-	 * Creates an effect point.
-	 * @param template the effect point NPC template
-	 * @param owner the owner
-	 */
 	public L2EffectPointInstance(L2NpcTemplate template, L2Character owner) {
 		super(template);
 		setInstanceType(InstanceType.L2EffectPointInstance);
@@ -47,10 +42,6 @@ public class L2EffectPointInstance extends L2Npc {
 		return _owner;
 	}
 	
-	/**
-	 * this is called when a player interacts with this NPC
-	 * @param player
-	 */
 	@Override
 	public void onAction(L2PcInstance player, boolean interact) {
 		player.sendPacket(ActionFailed.STATIC_PACKET);
@@ -61,7 +52,6 @@ public class L2EffectPointInstance extends L2Npc {
 		if (player == null) {
 			return;
 		}
-		
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 }

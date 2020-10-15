@@ -59,7 +59,7 @@ public class L2DamageZone extends L2ZoneType {
 		_castleId = 0;
 		_castle = null;
 		
-		setTargetType(InstanceType.L2Playable); // default only playabale
+		setTargetType(InstanceType.L2Playable); // default only playable
 		AbstractZoneSettings settings = ZoneManager.getSettings(getName());
 		if (settings == null) {
 			settings = new TaskZoneSettings();

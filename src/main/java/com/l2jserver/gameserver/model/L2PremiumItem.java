@@ -26,14 +26,14 @@ public class L2PremiumItem {
 	private long _count;
 	private final String _sender;
 	
-	public L2PremiumItem(int itemid, long count, String sender) {
-		_itemId = itemid;
+	public L2PremiumItem(int itemId, long count, String sender) {
+		_itemId = itemId;
 		_count = count;
 		_sender = sender;
 	}
 	
-	public void updateCount(long newcount) {
-		_count = newcount;
+	public void updateCount(long newCount) {
+		_count = newCount;
 	}
 	
 	public int getItemId() {

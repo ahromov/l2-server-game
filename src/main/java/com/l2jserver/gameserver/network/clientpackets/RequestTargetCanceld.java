@@ -23,8 +23,7 @@ import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.network.serverpackets.TargetUnselected;
 
 /**
- * This class ...
- * @version $Revision: 1.3.4.2 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class RequestTargetCanceld extends L2GameClientPacket {
 	private static final String _C__48_REQUESTTARGETCANCELD = "[C] 48 RequestTargetCanceld";

@@ -28,7 +28,6 @@ public class TvTEventPlayer {
 	
 	protected TvTEventPlayer(L2PcInstance player) {
 		_player = player;
-		
 	}
 	
 	public boolean isOnEvent() {

@@ -21,5 +21,5 @@ package com.l2jserver.gameserver.enums;
 public enum Sex {
 	MALE,
 	FEMALE,
-	ETC;
+	ETC
 }

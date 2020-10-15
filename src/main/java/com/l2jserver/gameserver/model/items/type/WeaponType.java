@@ -46,11 +46,7 @@ public enum WeaponType implements ItemType {
 	private final int _mask;
 	private final TraitType _traitType;
 	
-	/**
-	 * Constructor of the WeaponType.
-	 * @param traitType
-	 */
-	private WeaponType(TraitType traitType) {
+	WeaponType(TraitType traitType) {
 		_mask = 1 << ordinal();
 		_traitType = traitType;
 	}
@@ -63,9 +59,6 @@ public enum WeaponType implements ItemType {
 		return _mask;
 	}
 	
-	/**
-	 * @return TraitType the type of the WeaponType
-	 */
 	public TraitType getTraitType() {
 		return _traitType;
 	}

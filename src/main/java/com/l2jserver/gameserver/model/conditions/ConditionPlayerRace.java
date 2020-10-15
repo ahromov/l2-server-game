@@ -18,32 +18,26 @@
  */
 package com.l2jserver.gameserver.model.conditions;
 
+import java.util.Set;
+
 import com.l2jserver.gameserver.enums.Race;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
-import com.l2jserver.gameserver.util.Util;
 
 /**
- * The Class ConditionPlayerRace.
- * @author mkizub, Zoey76
+ * Race condition.
+ * @author Zoey76
  */
 public class ConditionPlayerRace extends Condition {
-	private final Race[] _races;
+	private final Set<Race> races;
 	
-	/**
-	 * Instantiates a new condition player race.
-	 * @param races the list containing the allowed races.
-	 */
 	public ConditionPlayerRace(Race[] races) {
-		_races = races;
+		this.races = Set.of(races);
 	}
 	
 	@Override
 	public boolean testImpl(L2Character effector, L2Character effected, Skill skill, L2Item item) {
-		if ((effector == null) || !effector.isPlayer()) {
-			return false;
-		}
-		return Util.contains(_races, effector.getActingPlayer().getRace());
+		return effector.isPlayer() && races.contains(effector.getActingPlayer().getRace());
 	}
 }

@@ -23,10 +23,6 @@ import com.l2jserver.gameserver.model.Shortcut;
 public final class ShortCutRegister extends L2GameServerPacket {
 	private final Shortcut _shortcut;
 	
-	/**
-	 * Register new skill shortcut
-	 * @param shortcut
-	 */
 	public ShortCutRegister(Shortcut shortcut) {
 		_shortcut = shortcut;
 	}
@@ -37,26 +33,21 @@ public final class ShortCutRegister extends L2GameServerPacket {
 		writeD(_shortcut.getType().ordinal());
 		writeD(_shortcut.getSlot() + (_shortcut.getPage() * 12)); // C4 Client
 		switch (_shortcut.getType()) {
-			case ITEM: {
+			case ITEM -> {
 				writeD(_shortcut.getId());
 				writeD(_shortcut.getCharacterType());
 				writeD(_shortcut.getSharedReuseGroup());
 				writeD(0x00); // unknown
 				writeD(0x00); // unknown
 				writeD(0x00); // item augment id
-				break;
 			}
-			case SKILL: {
+			case SKILL -> {
 				writeD(_shortcut.getId());
 				writeD(_shortcut.getLevel());
 				writeC(0x00); // C5
 				writeD(_shortcut.getCharacterType());
-				break;
 			}
-			case ACTION:
-			case MACRO:
-			case RECIPE:
-			case BOOKMARK: {
+			case ACTION, MACRO, RECIPE, BOOKMARK -> {
 				writeD(_shortcut.getId());
 				writeD(_shortcut.getCharacterType());
 			}

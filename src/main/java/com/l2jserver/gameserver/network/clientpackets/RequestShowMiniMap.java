@@ -22,8 +22,7 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.serverpackets.ShowMiniMap;
 
 /**
- * sample format d
- * @version $Revision: 1 $ $Date: 2005/04/10 00:17:44 $
+ * @since 2005/04/10 00:17:44
  */
 public final class RequestShowMiniMap extends L2GameClientPacket {
 	private static final String _C__6C_REQUESTSHOWMINIMAP = "[C] 6C RequestShowMiniMap";

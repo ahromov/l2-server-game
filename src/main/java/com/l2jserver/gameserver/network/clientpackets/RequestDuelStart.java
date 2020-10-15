@@ -47,7 +47,7 @@ public final class RequestDuelStart extends L2GameClientPacket {
 	protected void runImpl() {
 		L2PcInstance activeChar = getClient().getActiveChar();
 		L2PcInstance targetChar = L2World.getInstance().getPlayer(_player);
-		boolean isPartyDuel = _partyDuel == 1 ? true : false;
+		boolean isPartyDuel = _partyDuel == 1;
 		if ((activeChar == null) || (targetChar == null)) {
 			return;
 		}

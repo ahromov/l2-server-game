@@ -151,18 +151,13 @@ public final class GraciaSeedsManager {
 	}
 	
 	public long getSoDTimeForNextStateChange() {
-		switch (_SoDState) {
-			case 1:
-				return -1;
-			case 2:
-				return ((_SoDLastStateChangeDate.getTimeInMillis() + graciaSeeds().getStage2Length()) - System.currentTimeMillis());
-			case 3:
-				// not implemented yet
-				return -1;
-			default:
-				// this should not happen!
-				return -1;
-		}
+		// this should not happen!
+		return switch (_SoDState) {
+			case 1 -> -1;
+			case 2 -> ((_SoDLastStateChangeDate.getTimeInMillis() + graciaSeeds().getStage2Length()) - System.currentTimeMillis());
+			case 3 -> -1; // not implemented yet
+			default -> -1;
+		};
 	}
 	
 	public Calendar getSoDLastStateChangeDate() {

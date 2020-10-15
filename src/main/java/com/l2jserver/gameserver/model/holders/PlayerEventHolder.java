@@ -37,7 +37,8 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
  * <li>PK Kills</li>
  * <li>Karma</li>
  * </ul>
- * @author Nik, xban1x
+ * @author Nik
+ * @author xban1x
  */
 public final class PlayerEventHolder {
 	private final L2PcInstance _player;

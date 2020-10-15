@@ -51,7 +51,7 @@ public final class L2WorldRegion {
 	
 	private final Queue<L2WorldRegion> _surroundingRegions = new ConcurrentLinkedQueue<>();
 	private final int _tileX, _tileY;
-	private boolean _active = false;
+	private boolean _active;
 	private ScheduledFuture<?> _neighborsTask = null;
 	private final List<L2ZoneType> _zones = new CopyOnWriteArrayList<>();
 	

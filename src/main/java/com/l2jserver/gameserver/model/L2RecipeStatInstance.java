@@ -30,28 +30,16 @@ public class L2RecipeStatInstance {
 	/** The value of the statType */
 	private final int _value;
 	
-	/**
-	 * Constructor of L2RecipeStatInstance.
-	 * @param type
-	 * @param value
-	 */
 	public L2RecipeStatInstance(String type, int value) {
 		_type = Enum.valueOf(StatType.class, type);
 		_value = value;
 	}
 	
-	/**
-	 * @return the the type of the L2RecipeStatInstance.
-	 */
 	public StatType getType() {
 		return _type;
 	}
 	
-	/**
-	 * @return the value of the L2RecipeStatInstance.
-	 */
 	public int getValue() {
 		return _value;
 	}
-	
 }

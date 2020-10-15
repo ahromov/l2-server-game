@@ -23,15 +23,11 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerSubclass.
+ * Subclass condition.
  */
 public class ConditionPlayerSubclass extends Condition {
 	private final boolean _val;
 	
-	/**
-	 * Instantiates a new condition player subclass.
-	 * @param val the val
-	 */
 	public ConditionPlayerSubclass(boolean val) {
 		_val = val;
 	}

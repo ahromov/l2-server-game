@@ -23,16 +23,12 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionWithSkill.
+ * With skill condition.
  * @author Steuf
  */
 public class ConditionWithSkill extends Condition {
 	private final boolean _skill;
 	
-	/**
-	 * Instantiates a new condition with skill.
-	 * @param skill the skill
-	 */
 	public ConditionWithSkill(boolean skill) {
 		_skill = skill;
 	}

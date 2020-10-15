@@ -23,16 +23,11 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerMp.
+ * MP condition.
  */
 public class ConditionPlayerMp extends Condition {
-	
 	private final int _mp;
 	
-	/**
-	 * Instantiates a new condition player mp.
-	 * @param mp the mp
-	 */
 	public ConditionPlayerMp(int mp) {
 		_mp = mp;
 	}

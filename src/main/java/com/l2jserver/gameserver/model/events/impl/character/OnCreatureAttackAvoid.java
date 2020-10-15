@@ -31,11 +31,6 @@ public class OnCreatureAttackAvoid implements IBaseEvent {
 	private final L2Character _target;
 	private final boolean _damageOverTime;
 	
-	/**
-	 * @param attacker who attack
-	 * @param target who avoid
-	 * @param isDot is dot damage
-	 */
 	public OnCreatureAttackAvoid(L2Character attacker, L2Character target, boolean isDot) {
 		_attacker = attacker;
 		_target = target;
@@ -50,9 +45,6 @@ public class OnCreatureAttackAvoid implements IBaseEvent {
 		return _target;
 	}
 	
-	/**
-	 * @return
-	 */
 	public boolean isDamageOverTime() {
 		return _damageOverTime;
 	}

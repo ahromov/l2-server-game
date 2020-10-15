@@ -110,7 +110,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	protected final ScheduledFuture<?> _autoSaveInDB;
 	protected ScheduledFuture<?> _cleanupTask = null;
 	
-	private L2GameServerPacket _aditionalClosePacket;
+	private L2GameServerPacket _additionalClosePacket;
 	
 	// Crypt
 	private final GameCrypt _crypt;
@@ -537,11 +537,11 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	
 	public void close(L2GameServerPacket gsp) {
 		if (getConnection() == null) {
-			return; // ofline shop
+			return; // offline shop
 		}
-		if (_aditionalClosePacket != null) {
+		if (_additionalClosePacket != null) {
 			getConnection().close(new L2GameServerPacket[] {
-				_aditionalClosePacket,
+				_additionalClosePacket,
 				gsp
 			});
 		} else {
@@ -551,7 +551,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	
 	public void close(L2GameServerPacket[] gspArray) {
 		if (getConnection() == null) {
-			return; // ofline shop
+			return; // offline shop
 		}
 		getConnection().close(gspArray);
 	}
@@ -601,17 +601,11 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	public String toString() {
 		try {
 			final InetAddress address = getConnection().getInetAddress();
-			switch (getState()) {
-				case CONNECTED:
-					return "[IP: " + (address == null ? "disconnected" : address.getHostAddress()) + "]";
-				case AUTHED:
-					return "[Account: " + getAccountName() + " - IP: " + (address == null ? "disconnected" : address.getHostAddress()) + "]";
-				case JOINING:
-				case IN_GAME:
-					return "[Character: " + (getActiveChar() == null ? "disconnected" : getActiveChar().getName() + "[" + getActiveChar().getObjectId() + "]") + " - Account: " + getAccountName() + " - IP: " + (address == null ? "disconnected" : address.getHostAddress()) + "]";
-				default:
-					throw new IllegalStateException("Missing state on switch");
-			}
+			return switch (getState()) {
+				case CONNECTED -> "[IP: " + (address == null ? "disconnected" : address.getHostAddress()) + "]";
+				case AUTHED -> "[Account: " + getAccountName() + " - IP: " + (address == null ? "disconnected" : address.getHostAddress()) + "]";
+				case JOINING, IN_GAME -> "[Character: " + (getActiveChar() == null ? "disconnected" : getActiveChar().getName() + "[" + getActiveChar().getObjectId() + "]") + " - Account: " + getAccountName() + " - IP: " + (address == null ? "disconnected" : address.getHostAddress()) + "]";
+			};
 		} catch (NullPointerException e) {
 			return "[Character read failed due to disconnect]";
 		}
@@ -676,23 +670,11 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 			return false;
 		}
 		
-		boolean canSetShop = false;
-		switch (player.getPrivateStoreType()) {
-			case SELL:
-			case PACKAGE_SELL:
-			case BUY: {
-				canSetShop = customs().offlineTradeEnable();
-				break;
-			}
-			case MANUFACTURE: {
-				canSetShop = customs().offlineTradeEnable();
-				break;
-			}
-			default: {
-				canSetShop = customs().offlineCraftEnable() && player.isInCraftMode();
-				break;
-			}
-		}
+		boolean canSetShop = switch (player.getPrivateStoreType()) {
+			case SELL, PACKAGE_SELL, BUY -> customs().offlineTradeEnable();
+			case MANUFACTURE -> customs().offlineTradeEnable();
+			default -> customs().offlineCraftEnable() && player.isInCraftMode();
+		};
 		
 		if (customs().offlineModeInPeaceZone() && !player.isInsideZone(ZoneId.PEACE)) {
 			canSetShop = false;
@@ -818,7 +800,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 		// In CONNECTED state kick client immediately.
 		if (_state == GameClientState.CONNECTED) {
 			if (general().packetHandlerDebug()) {
-				LOG.error("Client {} disconnected, too many buffer underflows in non-authed state!", this);
+				LOG.error("Client {} disconnected, too many buffer underflow in non-authed state!", this);
 			}
 			closeNow();
 		}
@@ -943,7 +925,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 		return false;
 	}
 	
-	public void setAditionalClosePacket(L2GameServerPacket aditionalClosePacket) {
-		_aditionalClosePacket = aditionalClosePacket;
+	public void setAdditionalClosePacket(L2GameServerPacket additionalClosePacket) {
+		_additionalClosePacket = additionalClosePacket;
 	}
 }

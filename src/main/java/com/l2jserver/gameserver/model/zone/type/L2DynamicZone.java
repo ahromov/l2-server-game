@@ -47,7 +47,7 @@ public class L2DynamicZone extends L2ZoneType {
 		}
 		setSettings(settings);
 		
-		getSettings().setTask(ThreadPoolManager.getInstance().scheduleGeneral(() -> remove(), skill.getAbnormalTime() * 1000));
+		getSettings().setTask(ThreadPoolManager.getInstance().scheduleGeneral(this::remove, skill.getAbnormalTime() * 1000));
 	}
 	
 	@Override

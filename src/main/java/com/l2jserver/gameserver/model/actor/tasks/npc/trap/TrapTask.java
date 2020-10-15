@@ -48,15 +48,10 @@ public class TrapTask implements Runnable {
 					}
 					if (_trap.getRemainingTime() <= 0) {
 						switch (_trap.getSkill().getTargetType()) {
-							case AURA:
-							case FRONT_AURA:
-							case BEHIND_AURA: {
+							case AURA, FRONT_AURA, BEHIND_AURA -> {
 								_trap.triggerTrap(_trap);
-								break;
 							}
-							default: {
-								_trap.unSummon();
-							}
+							default -> _trap.unSummon();
 						}
 						return;
 					}

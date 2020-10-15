@@ -47,7 +47,7 @@ public class RaidBossPointsManager {
 		init();
 	}
 	
-	private final void init() {
+	private void init() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var s = con.createStatement();
 			var rs = s.executeQuery("SELECT `charId`,`boss_id`,`points` FROM `character_raid_points`")) {
@@ -64,7 +64,7 @@ public class RaidBossPointsManager {
 			}
 			LOG.info("Loaded {} characters raid points.", _list.size());
 		} catch (Exception ex) {
-			LOG.warn("Couldnt load character raid points!", ex);
+			LOG.warn("Couldn't load character raid points!", ex);
 		}
 	}
 	
@@ -140,7 +140,7 @@ public class RaidBossPointsManager {
 		return tmpRanking;
 	}
 	
-	public static final RaidBossPointsManager getInstance() {
+	public static RaidBossPointsManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	

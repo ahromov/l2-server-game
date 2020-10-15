@@ -40,7 +40,7 @@ public class GMViewSkillInfo extends L2GameServerPacket {
 		writeS(_activeChar.getName());
 		writeD(_skills.size());
 		
-		boolean isDisabled = (_activeChar.getClan() != null) ? (_activeChar.getClan().getReputationScore() < 0) : false;
+		boolean isDisabled = _activeChar.getClan() != null && (_activeChar.getClan().getReputationScore() < 0);
 		
 		for (Skill skill : _skills) {
 			writeD(skill.isPassive() ? 1 : 0);

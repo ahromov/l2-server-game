@@ -129,7 +129,7 @@ public abstract class IdFactory {
 	public static final int LAST_OID = 0x7FFFFFFF;
 	public static final int FREE_OBJECT_ID_SIZE = LAST_OID - FIRST_OID;
 	
-	protected static final IdFactory _instance;
+	protected static IdFactory _instance;
 	
 	protected IdFactory() {
 		setAllCharacterOffline();
@@ -144,17 +144,9 @@ public abstract class IdFactory {
 	
 	static {
 		switch (server().getIdFactory()) {
-			default:
-			case BitSet:
-				_instance = new BitSetIDFactory();
-				break;
-			case Stack:
-				_instance = new StackIDFactory();
-				break;
-			case Compaction:
-				throw new UnsupportedOperationException("Compaction IdFactory is disabled.");
-			// _instance = new CompactionIDFactory();
-			// break;
+			case BitSet -> _instance = new BitSetIDFactory();
+			case Stack -> _instance = new StackIDFactory();
+			case Compaction -> throw new UnsupportedOperationException("Compaction IdFactory is disabled.");
 		}
 	}
 	

@@ -48,7 +48,10 @@ import com.l2jserver.gameserver.network.serverpackets.SkillCoolTime;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 /**
- * @author godson, GodKratos, Pere, DS
+ * @author godson
+ * @author GodKratos
+ * @author Pere
+ * @author DS
  */
 public abstract class AbstractOlympiadGame {
 	protected static final Logger _log = Logger.getLogger(AbstractOlympiadGame.class.getName());
@@ -150,7 +153,7 @@ public abstract class AbstractOlympiadGame {
 		return null;
 	}
 	
-	protected static final boolean portPlayerToArena(Participant par, Location loc, int id) {
+	protected static boolean portPlayerToArena(Participant par, Location loc, int id) {
 		final L2PcInstance player = par.getPlayer();
 		if ((player == null) || !player.isOnline()) {
 			return false;
@@ -178,7 +181,7 @@ public abstract class AbstractOlympiadGame {
 		return true;
 	}
 	
-	protected static final void removals(L2PcInstance player, boolean removeParty) {
+	protected static void removals(L2PcInstance player, boolean removeParty) {
 		try {
 			if (player == null) {
 				return;
@@ -262,7 +265,7 @@ public abstract class AbstractOlympiadGame {
 		}
 	}
 	
-	protected static final void cleanEffects(L2PcInstance player) {
+	protected static void cleanEffects(L2PcInstance player) {
 		try {
 			// prevent players kill each other
 			player.setIsOlympiadStart(false);
@@ -299,7 +302,7 @@ public abstract class AbstractOlympiadGame {
 		}
 	}
 	
-	protected static final void playerStatusBack(L2PcInstance player) {
+	protected static void playerStatusBack(L2PcInstance player) {
 		try {
 			if (player.isTransformed()) {
 				player.untransform();
@@ -340,7 +343,7 @@ public abstract class AbstractOlympiadGame {
 		}
 	}
 	
-	protected static final void portPlayerBack(L2PcInstance player) {
+	protected static void portPlayerBack(L2PcInstance player) {
 		if (player == null) {
 			return;
 		}
@@ -354,7 +357,7 @@ public abstract class AbstractOlympiadGame {
 		player.unsetLastLocation();
 	}
 	
-	public static final void rewardParticipant(L2PcInstance player, List<ItemHolder> rewards) {
+	public static void rewardParticipant(L2PcInstance player, List<ItemHolder> rewards) {
 		if ((player == null) || !player.isOnline() || (rewards == null) || rewards.isEmpty()) {
 			return;
 		}

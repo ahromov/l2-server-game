@@ -60,7 +60,7 @@ public class Options {
 	
 	public List<AbstractFunction> getStatFuncs(L2ItemInstance item, L2Character player) {
 		if (_funcs.isEmpty()) {
-			return Collections.<AbstractFunction> emptyList();
+			return Collections.emptyList();
 		}
 		
 		final List<AbstractFunction> funcs = new ArrayList<>(_funcs.size());
@@ -178,7 +178,7 @@ public class Options {
 		player.sendSkillList();
 	}
 	
-	private final void addSkill(L2PcInstance player, Skill skill) {
+	private void addSkill(L2PcInstance player, Skill skill) {
 		boolean updateTimeStamp = false;
 		
 		player.addSkill(skill, false);

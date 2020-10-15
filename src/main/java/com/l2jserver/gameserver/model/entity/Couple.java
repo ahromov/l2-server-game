@@ -36,7 +36,7 @@ public class Couple {
 	private int _Id = 0;
 	private int _player1Id = 0;
 	private int _player2Id = 0;
-	private boolean _maried = false;
+	private boolean _married = false;
 	private Calendar _affiancedDate;
 	private Calendar _weddingDate;
 	
@@ -50,7 +50,7 @@ public class Couple {
 				while (rs.next()) {
 					_player1Id = rs.getInt("player1Id");
 					_player2Id = rs.getInt("player2Id");
-					_maried = rs.getBoolean("married");
+					_married = rs.getBoolean("married");
 					
 					_affiancedDate = Calendar.getInstance();
 					_affiancedDate.setTimeInMillis(rs.getLong("affianceDate"));
@@ -100,7 +100,7 @@ public class Couple {
 			ps.setLong(2, _weddingDate.getTimeInMillis());
 			ps.setInt(3, _Id);
 			ps.execute();
-			_maried = true;
+			_married = true;
 		} catch (Exception e) {
 			_log.log(Level.SEVERE, "Could not marry: " + e.getMessage(), e);
 		}
@@ -128,8 +128,8 @@ public class Couple {
 		return _player2Id;
 	}
 	
-	public final boolean getMaried() {
-		return _maried;
+	public final boolean getMarried() {
+		return _married;
 	}
 	
 	public final Calendar getAffiancedDate() {

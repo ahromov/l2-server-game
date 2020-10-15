@@ -42,10 +42,6 @@ public class TowerSpawn implements IIdentifiable {
 		_zoneList = zoneList;
 	}
 	
-	/**
-	 * Gets the NPC ID.
-	 * @return the NPC ID
-	 */
 	@Override
 	public int getId() {
 		return _npcId;

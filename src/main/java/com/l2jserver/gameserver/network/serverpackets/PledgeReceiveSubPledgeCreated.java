@@ -28,10 +28,6 @@ public class PledgeReceiveSubPledgeCreated extends L2GameServerPacket {
 	private final SubPledge _subPledge;
 	private final L2Clan _clan;
 	
-	/**
-	 * @param subPledge
-	 * @param clan
-	 */
 	public PledgeReceiveSubPledgeCreated(SubPledge subPledge, L2Clan clan) {
 		_subPledge = subPledge;
 		_clan = clan;

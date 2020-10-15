@@ -37,7 +37,7 @@ public enum CrystalType {
 	private final int _crystalEnchantBonusArmor;
 	private final int _crystalEnchantBonusWeapon;
 	
-	private CrystalType(int id, int crystalId, int crystalEnchantBonusArmor, int crystalEnchantBonusWeapon) {
+	CrystalType(int id, int crystalId, int crystalEnchantBonusArmor, int crystalEnchantBonusWeapon) {
 		_id = id;
 		_crystalId = crystalId;
 		_crystalEnchantBonusArmor = crystalEnchantBonusArmor;

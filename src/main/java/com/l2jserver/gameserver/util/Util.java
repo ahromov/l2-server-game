@@ -226,7 +226,7 @@ public final class Util {
 		if (includeZAxis) {
 			d = Math.hypot(d, obj1.getZ() - obj2.getZ());
 		}
-		return (d - (rad / 2)) <= range;
+		return (d - (rad / 2.0)) <= range;
 	}
 	
 	/**
@@ -276,18 +276,18 @@ public final class Util {
 	 * Based on implode() in PHP
 	 * @param <T>
 	 * @param array
-	 * @param delim
+	 * @param delimiter
 	 * @return a delimited string for a given array of string elements.
 	 */
-	public static <T> String implode(T[] array, String delim) {
-		String result = "";
+	public static <T> String implode(T[] array, String delimiter) {
+		StringBuilder result = new StringBuilder();
 		for (T val : array) {
-			result += val.toString() + delim;
+			result.append(val.toString()).append(delimiter);
 		}
-		if (!result.isEmpty()) {
-			result = result.substring(0, result.length() - 1);
+		if (result.length() > 0) {
+			result = new StringBuilder(result.substring(0, result.length() - 1));
 		}
-		return result;
+		return result.toString();
 	}
 	
 	/**
@@ -402,12 +402,12 @@ public final class Util {
 		return false;
 	}
 	
-	public static File[] getDatapackFiles(String dirname, String extention) {
+	public static File[] getDatapackFiles(String dirname, String extension) {
 		File dir = new File(server().getDatapackRoot(), "data/" + dirname);
 		if (!dir.exists()) {
 			return null;
 		}
-		return dir.listFiles(new ExtFilter(extention));
+		return dir.listFiles(new ExtFilter(extension));
 	}
 	
 	public static String getDateString(Date date) {
@@ -483,7 +483,7 @@ public final class Util {
 	/**
 	 * Builds the html action cache for the specified scope.<br>
 	 * An {@code npcObjId} of 0 means, the cached actions can be clicked<br>
-	 * without beeing near an npc which is spawned in the world.
+	 * without being near an npc which is spawned in the world.
 	 * @param player the player to build the html action cache for
 	 * @param scope the scope to build the html action cache for
 	 * @param npcObjId the npc object id the html actions are cached for
@@ -609,8 +609,8 @@ public final class Util {
 	 * Return the number of playable characters in a defined radius around the specified object.
 	 * @param range : the radius in which to look for players
 	 * @param npc : the object whose knownlist to check
-	 * @param playable : if {@code true}, count summons and pets aswell
-	 * @param invisible : if {@code true}, count invisible characters aswell
+	 * @param playable : if {@code true}, count summons and pets as well
+	 * @param invisible : if {@code true}, count invisible characters as well
 	 * @return the number of targets found
 	 */
 	public static int getPlayersCountInRadius(int range, L2Object npc, boolean playable, boolean invisible) {
@@ -640,12 +640,7 @@ public final class Util {
 		if (target == null) {
 			return false;
 		}
-		
-		if (obj.calculateDistance(target, false, false) > radius) {
-			return false;
-		}
-		
-		return true;
+		return !(obj.calculateDistance(target, false, false) > radius);
 	}
 	
 	public static int min(int value1, int value2, int... values) {
@@ -798,7 +793,7 @@ public final class Util {
 	 * @return input: if input is between min and max, min: if input is less than min, max: if input is greater than max
 	 */
 	public static int constrain(int input, int min, int max) {
-		return (input < min) ? min : (input > max) ? max : input;
+		return (input < min) ? min : Math.min(input, max);
 	}
 	
 	/**
@@ -809,7 +804,7 @@ public final class Util {
 	 * @return input: if input is between min and max, min: if input is less than min, max: if input is greater than max
 	 */
 	public static long constrain(long input, long min, long max) {
-		return (input < min) ? min : (input > max) ? max : input;
+		return (input < min) ? min : Math.min(input, max);
 	}
 	
 	/**
@@ -820,7 +815,7 @@ public final class Util {
 	 * @return input: if input is between min and max, min: if input is less than min, max: if input is greater than max
 	 */
 	public static double constrain(double input, double min, double max) {
-		return (input < min) ? min : (input > max) ? max : input;
+		return (input < min) ? min : Math.min(input, max);
 	}
 	
 	/**

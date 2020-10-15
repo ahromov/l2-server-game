@@ -35,7 +35,7 @@ import com.l2jserver.gameserver.model.items.L2Henna;
 import com.l2jserver.gameserver.util.IXmlReader;
 
 /**
- * This class holds the henna related information.<br>
+ * Henna data parser.<br>
  * Cost and required amount to add the henna to the player.<br>
  * Cost and retrieved amount for removing the henna from the player.<br>
  * Allowed classes to wear each henna.
@@ -89,31 +89,25 @@ public final class HennaData implements IXmlReader {
 			final String name = c.getNodeName();
 			attrs = c.getAttributes();
 			switch (name) {
-				case "stats": {
+				case "stats" -> {
 					for (int i = 0; i < attrs.getLength(); i++) {
 						attr = attrs.item(i);
 						set.set(attr.getNodeName(), attr.getNodeValue());
 					}
-					break;
 				}
-				case "wear": {
+				case "wear" -> {
 					attr = attrs.getNamedItem("count");
 					set.set("wear_count", attr.getNodeValue());
 					attr = attrs.getNamedItem("fee");
 					set.set("wear_fee", attr.getNodeValue());
-					break;
 				}
-				case "cancel": {
+				case "cancel" -> {
 					attr = attrs.getNamedItem("count");
 					set.set("cancel_count", attr.getNodeValue());
 					attr = attrs.getNamedItem("fee");
 					set.set("cancel_fee", attr.getNodeValue());
-					break;
 				}
-				case "classId": {
-					wearClassIds.add(ClassId.getClassId(Integer.parseInt(c.getTextContent())));
-					break;
-				}
+				case "classId" -> wearClassIds.add(ClassId.getClassId(Integer.parseInt(c.getTextContent())));
 			}
 		}
 		final L2Henna henna = new L2Henna(set);

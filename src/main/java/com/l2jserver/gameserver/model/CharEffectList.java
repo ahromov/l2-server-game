@@ -199,7 +199,7 @@ public final class CharEffectList {
 	 */
 	public List<BuffInfo> getEffects() {
 		if (isEmpty()) {
-			return Collections.<BuffInfo> emptyList();
+			return Collections.emptyList();
 		}
 		
 		final List<BuffInfo> buffs = new ArrayList<>();

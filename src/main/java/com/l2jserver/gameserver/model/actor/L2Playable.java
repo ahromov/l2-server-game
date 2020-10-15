@@ -48,12 +48,7 @@ import com.l2jserver.gameserver.network.serverpackets.EtcStatusUpdate;
 public abstract class L2Playable extends L2Character {
 	private L2Character _lockedTarget = null;
 	private L2PcInstance transferDmgTo = null;
-    
-	/**
-	 * Creates an abstract playable creature.
-	 * @param objectId the playable object ID
-	 * @param template the creature template
-	 */
+	
 	public L2Playable(int objectId, L2CharTemplate template) {
 		super(objectId, template);
 		setInstanceType(InstanceType.L2Playable);
@@ -216,11 +211,7 @@ public abstract class L2Playable extends L2Character {
 		if (targetPlayer.getKarma() != 0) {
 			return false; // Target player has karma
 		}
-		if (targetPlayer.getPvpFlag() == 0) {
-			return false;
-		}
-		
-		return true;
+		return targetPlayer.getPvpFlag() != 0;
 		// Even at war, there should be PvP flag
 		// if(
 		// player.getClan() == null ||
@@ -293,7 +284,7 @@ public abstract class L2Playable extends L2Character {
 		transferDmgTo = val;
 	}
 	
-	public L2PcInstance getTransferingDamageTo() {
+	public L2PcInstance getTransferringDamageTo() {
 		return transferDmgTo;
 	}
 	

@@ -48,13 +48,7 @@ public final class L2EtcItem extends L2Item {
 		
 		// l2j custom - L2EtcItemType.SHOT
 		switch (getDefaultAction()) {
-			case SOULSHOT:
-			case SUMMON_SOULSHOT:
-			case SUMMON_SPIRITSHOT:
-			case SPIRITSHOT: {
-				_type = EtcItemType.SHOT;
-				break;
-			}
+			case SOULSHOT, SUMMON_SOULSHOT, SUMMON_SPIRITSHOT, SPIRITSHOT -> _type = EtcItemType.SHOT;
 		}
 		
 		_type1 = ItemType1.ITEM_QUESTITEM_ADENA;
@@ -80,7 +74,7 @@ public final class L2EtcItem extends L2Item {
 				}
 				String[] data = part.split(",");
 				if (data.length != 4) {
-					_log.info(StringUtil.concat("> Couldnt parse ", part, " in capsuled_items! item ", toString()));
+					_log.info(StringUtil.concat("> Couldn't parse ", part, " in capsuled_items! item ", toString()));
 					continue;
 				}
 				int itemId = Integer.parseInt(data[0]);

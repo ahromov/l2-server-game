@@ -52,11 +52,11 @@ public final class RelationChanged extends L2GameServerPacket {
 	private Relation _singled;
 	private List<Relation> _multi;
 	
-	public RelationChanged(L2Playable activeChar, int relation, boolean autoattackable) {
+	public RelationChanged(L2Playable activeChar, int relation, boolean autoAttackable) {
 		_singled = new Relation();
 		_singled._objId = activeChar.getObjectId();
 		_singled._relation = relation;
-		_singled._autoAttackable = autoattackable ? 1 : 0;
+		_singled._autoAttackable = autoAttackable ? 1 : 0;
 		_singled._karma = activeChar.getKarma();
 		_singled._pvpFlag = activeChar.getPvpFlag();
 		setInvisible(activeChar.isInvisible());
@@ -66,14 +66,14 @@ public final class RelationChanged extends L2GameServerPacket {
 		_multi = new ArrayList<>();
 	}
 	
-	public void addRelation(L2Playable activeChar, int relation, boolean autoattackable) {
+	public void addRelation(L2Playable activeChar, int relation, boolean autoAttackable) {
 		if (activeChar.isInvisible()) {
-			throw new IllegalArgumentException("Cannot add insivisble character to multi relation packet");
+			throw new IllegalArgumentException("Cannot add invisible character to multi relation packet");
 		}
 		Relation r = new Relation();
 		r._objId = activeChar.getObjectId();
 		r._relation = relation;
-		r._autoAttackable = autoattackable ? 1 : 0;
+		r._autoAttackable = autoAttackable ? 1 : 0;
 		r._karma = activeChar.getKarma();
 		r._pvpFlag = activeChar.getPvpFlag();
 		_multi.add(r);

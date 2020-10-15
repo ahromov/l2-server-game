@@ -24,10 +24,7 @@ import com.l2jserver.gameserver.model.base.ClassType;
 import com.l2jserver.gameserver.model.base.PlayerClass;
 
 public final class L2VillageMasterPriestInstance extends L2VillageMasterInstance {
-	/**
-	 * Creates a village master.
-	 * @param template the village master NPC template
-	 */
+	
 	public L2VillageMasterPriestInstance(L2NpcTemplate template) {
 		super(template);
 	}
@@ -46,7 +43,6 @@ public final class L2VillageMasterPriestInstance extends L2VillageMasterInstance
 		if (pclass == null) {
 			return false;
 		}
-		
 		return pclass.isOfType(ClassType.Priest);
 	}
 }

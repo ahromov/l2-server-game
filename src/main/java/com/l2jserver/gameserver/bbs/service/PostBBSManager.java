@@ -48,7 +48,7 @@ public class PostBBSManager extends BaseBBSManager {
 		// Do nothing.
 	}
 	
-	public List<Post> getGPosttByTopic(Topic topic) {
+	public List<Post> getGPostByTopic(Topic topic) {
 		var posts = _postByTopic.get(topic);
 		if (posts == null) {
 			posts = DAOFactory.getInstance().getPostRepository().load(topic);
@@ -98,7 +98,7 @@ public class PostBBSManager extends BaseBBSManager {
 		if (topic == null) {
 			CommunityBoardHandler.separateAndSend("<html><body><br><br><center>Error: This topic does not exist!</center></body></html>", activeChar);
 		} else {
-			final List<Post> p = getGPosttByTopic(topic);
+			final List<Post> p = getGPostByTopic(topic);
 			if ((forum == null) || (p == null)) {
 				CommunityBoardHandler.separateAndSend("<html><body><br><br><center>Error: This forum or post does not exist!</center></body></html>", activeChar);
 			} else {
@@ -124,7 +124,7 @@ public class PostBBSManager extends BaseBBSManager {
 	}
 	
 	private void showMemoPost(Topic topic, L2PcInstance activeChar, Forum forum) {
-		final var posts = getGPosttByTopic(topic);
+		final var posts = getGPostByTopic(topic);
 		Locale locale = Locale.getDefault();
 		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL, locale);
 		
@@ -151,7 +151,7 @@ public class PostBBSManager extends BaseBBSManager {
 			if (t == null) {
 				CommunityBoardHandler.separateAndSend("<html><body><br><br><center>the topic: " + idt + " does not exist !</center><br><br></body></html>", activeChar);
 			} else {
-				final var posts = getGPosttByTopic(t);
+				final var posts = getGPostByTopic(t);
 				if (!posts.isEmpty()) {
 					final Post post = posts.get(idp);
 					if (post == null) {

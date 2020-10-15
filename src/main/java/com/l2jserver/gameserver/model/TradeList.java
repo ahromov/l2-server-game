@@ -23,6 +23,7 @@ import static com.l2jserver.gameserver.config.Configuration.general;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
@@ -194,7 +195,7 @@ public class TradeList {
 		}
 		
 		if (!getOwner().getInventory().canManipulateWithItemId(item.getId())) {
-			_log.warning(_owner.getName() + ": Attempt to add an item that can't manipualte!");
+			_log.warning(_owner.getName() + ": Attempt to add an item that can't manipulate!");
 			return null;
 		}
 		
@@ -526,17 +527,8 @@ public class TradeList {
 			TransferItems(partnerList.getOwner(), ownerIU, partnerIU);
 			
 			// Send inventory update packet
-			if (ownerIU != null) {
-				_owner.sendPacket(ownerIU);
-			} else {
-				_owner.sendPacket(new ItemList(_owner, false));
-			}
-			
-			if (partnerIU != null) {
-				_partner.sendPacket(partnerIU);
-			} else {
-				_partner.sendPacket(new ItemList(_partner, false));
-			}
+			_owner.sendPacket(Objects.requireNonNullElseGet(ownerIU, () -> new ItemList(_owner, false)));
+			_partner.sendPacket(Objects.requireNonNullElseGet(partnerIU, () -> new ItemList(_partner, false)));
 			
 			// Update current load as well
 			StatusUpdate playerSU = new StatusUpdate(_owner);

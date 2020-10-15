@@ -42,7 +42,7 @@ public class PostRepositoryMySQLImpl implements PostRepository {
 	
 	private static final String DELETE_POST = "DELETE FROM posts WHERE post_forum_id=? AND post_topic_id=?";
 	
-	private static final String SELECT_POSTS = "SELECT * FROM posts WHERE post_forum_id=? AND post_topic_id=? ORDER BY post_id ASC";
+	private static final String SELECT_POSTS = "SELECT * FROM posts WHERE post_forum_id=? AND post_topic_id=? ORDER BY post_id";
 	
 	private static final String UPDATE_POST = "UPDATE posts SET post_txt=? WHERE post_id=? AND post_topic_id=? AND post_forum_id=?";
 	

@@ -95,26 +95,11 @@ public class UIData implements IXmlReader {
 					final Node att = c.getAttributes().item(i);
 					final int val = Integer.parseInt(att.getNodeValue());
 					switch (att.getNodeName()) {
-						case "cmd": {
-							akey.setCommandId(val);
-							break;
-						}
-						case "key": {
-							akey.setKeyId(val);
-							break;
-						}
-						case "toggleKey1": {
-							akey.setToogleKey1(val);
-							break;
-						}
-						case "toggleKey2": {
-							akey.setToogleKey2(val);
-							break;
-						}
-						case "showType": {
-							akey.setShowStatus(val);
-							break;
-						}
+						case "cmd" -> akey.setCommandId(val);
+						case "key" -> akey.setKeyId(val);
+						case "toggleKey1" -> akey.setToggleKey1(val);
+						case "toggleKey2" -> akey.setToggleKey2(val);
+						case "showType" -> akey.setShowStatus(val);
 					}
 				}
 				addKey(_storedKeys, cat, akey);

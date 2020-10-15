@@ -24,7 +24,6 @@ import static com.l2jserver.gameserver.config.Configuration.server;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -228,9 +227,7 @@ public class L2Event {
 			_registeredPlayers.add(player);
 		} else {
 			player.sendMessage("You have reached the maximum allowed participants per IP.");
-			return;
 		}
-		
 	}
 	
 	/**
@@ -348,7 +345,7 @@ public class L2Event {
 			}
 		} catch (Exception e) {
 			_log.warning("L2Event: " + e.getMessage());
-			return "Cannot start event participation, an error has occured.";
+			return "Cannot start event participation, an error has occurred.";
 		}
 		
 		return "The event participation has been successfully started.";
@@ -377,7 +374,7 @@ public class L2Event {
 			
 			// Insert empty lists at _teams.
 			for (int i = 0; i < _teamsNumber; i++) {
-				_teams.put(i + 1, new CopyOnWriteArrayList<L2PcInstance>());
+				_teams.put(i + 1, new CopyOnWriteArrayList<>());
 			}
 			
 			int i = 0;
@@ -408,7 +405,7 @@ public class L2Event {
 			
 		} catch (Exception e) {
 			_log.warning("L2Event: " + e.getMessage());
-			return "Cannot start event, an error has occured.";
+			return "Cannot start event, an error has occurred.";
 		}
 		
 		return "The event has been successfully started.";
@@ -461,10 +458,10 @@ public class L2Event {
 		return "The event has been successfully finished.";
 	}
 	
-	private static final Map<L2PcInstance, Integer> sortByValue(Map<L2PcInstance, Integer> unsortMap) {
+	private static Map<L2PcInstance, Integer> sortByValue(Map<L2PcInstance, Integer> unsortMap) {
 		final List<Entry<L2PcInstance, Integer>> list = new LinkedList<>(unsortMap.entrySet());
 		
-		list.sort(Comparator.comparing(Entry::getValue));
+		list.sort(Entry.comparingByValue());
 		
 		final Map<L2PcInstance, Integer> sortedMap = new LinkedHashMap<>();
 		for (Entry<L2PcInstance, Integer> entry : list) {

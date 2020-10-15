@@ -23,7 +23,8 @@ import com.l2jserver.gameserver.pathfinding.AbstractNodeLoc;
 import com.l2jserver.geodriver.Cell;
 
 /**
- * @author -Nemesiss-, HorridoJoho
+ * @author -Nemesiss-
+ * @author HorridoJoho
  */
 public class NodeLoc extends AbstractNodeLoc {
 	private int _x;
@@ -158,9 +159,6 @@ public class NodeLoc extends AbstractNodeLoc {
 		if (_goWest != other._goWest) {
 			return false;
 		}
-		if (_geoHeight != other._geoHeight) {
-			return false;
-		}
-		return true;
+		return _geoHeight == other._geoHeight;
 	}
 }

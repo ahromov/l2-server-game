@@ -24,7 +24,7 @@ import com.l2jserver.gameserver.model.skills.Skill;
 import com.l2jserver.gameserver.network.SystemMessageId;
 
 /**
- * The Class ConditionPlayerHasServitor.
+ * Has servitor condition.
  * @author Zealar
  */
 public class ConditionPlayerHasServitor extends Condition {

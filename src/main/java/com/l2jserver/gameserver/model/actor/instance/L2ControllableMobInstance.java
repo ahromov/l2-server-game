@@ -28,12 +28,8 @@ import com.l2jserver.gameserver.model.actor.templates.L2NpcTemplate;
  * @author littlecrow
  */
 public class L2ControllableMobInstance extends L2MonsterInstance {
-	private boolean _isInvul;
+	private boolean isInvulnerable;
 	
-	/**
-	 * Creates a controllable monster.
-	 * @param template the controllable monster NPC template
-	 */
 	public L2ControllableMobInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2ControllableMobInstance);
@@ -57,11 +53,11 @@ public class L2ControllableMobInstance extends L2MonsterInstance {
 	
 	@Override
 	public boolean isInvul() {
-		return _isInvul;
+		return isInvulnerable;
 	}
 	
-	public void setInvul(boolean isInvul) {
-		_isInvul = isInvul;
+	public void setInvul(boolean isInvulnerable) {
+		this.isInvulnerable = isInvulnerable;
 	}
 	
 	@Override

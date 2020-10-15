@@ -62,54 +62,54 @@ public class PlayerDAOMySQLImpl implements PlayerDAO {
 			var ps = con.prepareStatement(SELECT)) {
 			// Retrieve the L2PcInstance from the characters table of the database
 			ps.setInt(1, objectId);
-			try (var rset = ps.executeQuery()) {
-				if (rset.next()) {
-					final int activeClassId = rset.getInt("classid");
-					final boolean female = rset.getInt("sex") != Sex.MALE.ordinal();
-					PcAppearance app = new PcAppearance(rset.getByte("face"), rset.getByte("hairColor"), rset.getByte("hairStyle"), female);
+			try (var rs = ps.executeQuery()) {
+				if (rs.next()) {
+					final int activeClassId = rs.getInt("classid");
+					final boolean female = rs.getInt("sex") != Sex.MALE.ordinal();
+					PcAppearance app = new PcAppearance(rs.getByte("face"), rs.getByte("hairColor"), rs.getByte("hairStyle"), female);
 					
-					player = new L2PcInstance(objectId, activeClassId, rset.getString("account_name"), app);
-					player.setName(rset.getString("char_name"));
-					player.setLastAccess(rset.getLong("lastAccess"));
-					player.setExp(rset.getLong("exp"));
-					player.setExpBeforeDeath(rset.getLong("expBeforeDeath"));
-					player.setLevel(rset.getInt("level"));
-					player.setSp(rset.getInt("sp"));
-					player.setWantsPeace(rset.getInt("wantspeace"));
-					player.setHeading(rset.getInt("heading"));
-					player.setKarma(rset.getInt("karma"));
-					player.setFame(rset.getInt("fame"));
-					player.setPvpKills(rset.getInt("pvpkills"));
-					player.setPkKills(rset.getInt("pkkills"));
-					player.setOnlineTime(rset.getLong("onlinetime"));
-					player.setNewbie(rset.getInt("newbie"));
-					player.setNoble(rset.getInt("nobless") == 1);
+					player = new L2PcInstance(objectId, activeClassId, rs.getString("account_name"), app);
+					player.setName(rs.getString("char_name"));
+					player.setLastAccess(rs.getLong("lastAccess"));
+					player.setExp(rs.getLong("exp"));
+					player.setExpBeforeDeath(rs.getLong("expBeforeDeath"));
+					player.setLevel(rs.getInt("level"));
+					player.setSp(rs.getInt("sp"));
+					player.setWantsPeace(rs.getInt("wantspeace"));
+					player.setHeading(rs.getInt("heading"));
+					player.setKarma(rs.getInt("karma"));
+					player.setFame(rs.getInt("fame"));
+					player.setPvpKills(rs.getInt("pvpkills"));
+					player.setPkKills(rs.getInt("pkkills"));
+					player.setOnlineTime(rs.getLong("onlinetime"));
+					player.setNewbie(rs.getInt("newbie"));
+					player.setNoble(rs.getInt("nobless") == 1);
 					
-					player.setClanJoinExpiryTime(rset.getLong("clan_join_expiry_time"));
+					player.setClanJoinExpiryTime(rs.getLong("clan_join_expiry_time"));
 					if (player.getClanJoinExpiryTime() < System.currentTimeMillis()) {
 						player.setClanJoinExpiryTime(0);
 					}
-					player.setClanCreateExpiryTime(rset.getLong("clan_create_expiry_time"));
+					player.setClanCreateExpiryTime(rs.getLong("clan_create_expiry_time"));
 					if (player.getClanCreateExpiryTime() < System.currentTimeMillis()) {
 						player.setClanCreateExpiryTime(0);
 					}
 					
-					player.setPowerGrade(rset.getInt("power_grade"));
-					player.setPledgeType(rset.getInt("subpledge"));
-					// player.setApprentice(rset.getInt("apprentice"));
+					player.setPowerGrade(rs.getInt("power_grade"));
+					player.setPledgeType(rs.getInt("subpledge"));
+					// player.setApprentice(rs.getInt("apprentice"));
 					
-					player.setDeleteTimer(rset.getLong("deletetime"));
-					player.setTitle(rset.getString("title"));
-					player.setAccessLevel(rset.getInt("accesslevel"));
-					player.getAppearance().setTitleColor(rset.getInt("title_color"));
+					player.setDeleteTimer(rs.getLong("deletetime"));
+					player.setTitle(rs.getString("title"));
+					player.setAccessLevel(rs.getInt("accesslevel"));
+					player.getAppearance().setTitleColor(rs.getInt("title_color"));
 					player.setFistsWeaponItem(player.findFistsWeaponItem(activeClassId));
 					player.setUptime(System.currentTimeMillis());
 					
-					player.setCurrentCp(rset.getDouble("curCp"));
-					player.setCurrentHp(rset.getDouble("curHp"));
-					player.setCurrentMp(rset.getDouble("curMp"));
+					player.setCurrentCp(rs.getDouble("curCp"));
+					player.setCurrentHp(rs.getDouble("curHp"));
+					player.setCurrentMp(rs.getDouble("curMp"));
 					player.setClassIndex(0);
-					player.setBaseClass(rset.getInt("base_class"));
+					player.setBaseClass(rs.getInt("base_class"));
 					
 					// Restore Subclass Data (cannot be done earlier in function)
 					DAOFactory.getInstance().getSubclassDAO().load(player);
@@ -132,33 +132,33 @@ public class PlayerDAOMySQLImpl implements PlayerDAO {
 						player.setActiveClass(activeClassId);
 					}
 					
-					player.setApprentice(rset.getInt("apprentice"));
-					player.setSponsor(rset.getInt("sponsor"));
-					player.setLvlJoinedAcademy(rset.getInt("lvl_joined_academy"));
-					player.setIsIn7sDungeon(rset.getInt("isin7sdungeon") == 1);
+					player.setApprentice(rs.getInt("apprentice"));
+					player.setSponsor(rs.getInt("sponsor"));
+					player.setLvlJoinedAcademy(rs.getInt("lvl_joined_academy"));
+					player.setIsIn7sDungeon(rs.getInt("isin7sdungeon") == 1);
 					
 					CursedWeaponsManager.getInstance().checkPlayer(player);
 					
-					player.setDeathPenaltyBuffLevel(rset.getInt("death_penalty_level"));
+					player.setDeathPenaltyBuffLevel(rs.getInt("death_penalty_level"));
 					
-					player.setVitalityPoints(rset.getInt("vitality_points"), true);
+					player.setVitalityPoints(rs.getInt("vitality_points"), true);
 					
 					// Set the x,y,z position of the L2PcInstance and make it invisible
-					player.setXYZInvisible(rset.getInt("x"), rset.getInt("y"), rset.getInt("z"));
+					player.setXYZInvisible(rs.getInt("x"), rs.getInt("y"), rs.getInt("z"));
 					
 					// Set Teleport Bookmark Slot
-					player.setBookMarkSlot(rset.getInt("BookmarkSlot"));
+					player.setBookMarkSlot(rs.getInt("BookmarkSlot"));
 					
 					// character creation Time
-					player.getCreateDate().setTimeInMillis(rset.getTimestamp("createDate").getTime());
+					player.getCreateDate().setTimeInMillis(rs.getTimestamp("createDate").getTime());
 					
 					// Language
-					player.setLang(rset.getString("language"));
+					player.setLang(rs.getString("language"));
 					
 					// Set Hero status if it applies
 					player.setHero(Hero.getInstance().isHero(objectId));
 					
-					player.setClan(ClanTable.getInstance().getClan(rset.getInt("clanid")));
+					player.setClan(ClanTable.getInstance().getClan(rs.getInt("clanid")));
 					
 					if (player.getClan() != null) {
 						if (player.getClan().getLeaderId() != player.getObjectId()) {
@@ -184,8 +184,8 @@ public class PlayerDAOMySQLImpl implements PlayerDAO {
 					}
 				}
 			}
-		} catch (Exception e) {
-			LOG.error("Failed loading character. {}", e);
+		} catch (Exception ex) {
+			LOG.error("Failed loading character!", ex);
 		}
 		return player;
 	}
@@ -248,8 +248,8 @@ public class PlayerDAOMySQLImpl implements PlayerDAO {
 			ps.setLong(36, 0);
 			ps.setTimestamp(37, new Timestamp(player.getCreateDate().getTimeInMillis()));
 			ps.executeUpdate();
-		} catch (Exception e) {
-			LOG.error("Could not insert char data: {}", e);
+		} catch (Exception ex) {
+			LOG.error("Could not insert player data!", ex);
 			return false;
 		}
 		return true;
@@ -316,8 +316,8 @@ public class PlayerDAOMySQLImpl implements PlayerDAO {
 			ps.setInt(50, player.getObjectId());
 			
 			ps.execute();
-		} catch (Exception e) {
-			LOG.error("Could not store {} base data: {}", player, e);
+		} catch (Exception ex) {
+			LOG.error("Could not store {} base data!", player, ex);
 		}
 	}
 	
@@ -329,8 +329,8 @@ public class PlayerDAOMySQLImpl implements PlayerDAO {
 			ps.setLong(2, System.currentTimeMillis());
 			ps.setInt(3, player.getObjectId());
 			ps.execute();
-		} catch (Exception e) {
-			LOG.error("Failed updating character online status. {}", e);
+		} catch (Exception ex) {
+			LOG.error("Failed updating player online status!", ex);
 		}
 	}
 }

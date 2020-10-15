@@ -155,7 +155,7 @@ public class FortSiege implements Siegable {
 				{
 					_fortInst.getSiege().startSiege();
 				} else {
-					_log.warning("Exception: ScheduleStartSiegeTask(): unknown siege time: " + String.valueOf(_time));
+					_log.warning("Exception: ScheduleStartSiegeTask(): unknown siege time: " + _time);
 				}
 			} catch (Exception e) {
 				_log.log(Level.WARNING, "Exception: ScheduleStartSiegeTask() for Fort: " + _fortInst.getName() + " " + e.getMessage(), e);
@@ -356,7 +356,7 @@ public class FortSiege implements Siegable {
 					member.setSiegeSide(getFort().getResidenceId());
 					if (checkIfInZone(member)) {
 						member.setIsInSiege(true);
-						member.startFameTask(character().getFortressZoneFameTaskFrequency(), character().getFortressZoneFameAquirePoints());
+						member.startFameTask(character().getFortressZoneFameTaskFrequency(), character().getFortressZoneFameAcquirePoints());
 					}
 				}
 				member.broadcastUserInfo();
@@ -379,7 +379,7 @@ public class FortSiege implements Siegable {
 					member.setSiegeSide(getFort().getResidenceId());
 					if (checkIfInZone(member)) {
 						member.setIsInSiege(true);
-						member.startFameTask(character().getFortressZoneFameTaskFrequency(), character().getFortressZoneFameAquirePoints());
+						member.startFameTask(character().getFortressZoneFameTaskFrequency(), character().getFortressZoneFameAcquirePoints());
 					}
 				}
 				member.broadcastUserInfo();
@@ -420,11 +420,7 @@ public class FortSiege implements Siegable {
 	 */
 	@Override
 	public boolean checkIsDefender(L2Clan clan) {
-		if ((clan != null) && (getFort().getOwnerClan() == clan)) {
-			return true;
-		}
-		
-		return false;
+		return (clan != null) && (getFort().getOwnerClan() == clan);
 	}
 	
 	/** Clear all registered siege clans from database for fort */
@@ -519,21 +515,13 @@ public class FortSiege implements Siegable {
 				List<FortSiegeSpawn> commanders = FortSiegeManager.getInstance().getCommanderSpawnList(getFort().getResidenceId());
 				for (FortSiegeSpawn spawn2 : commanders) {
 					if (spawn2.getId() == spawn.getId()) {
-						NpcStringId npcString = null;
-						switch (spawn2.getMessageId()) {
-							case 1:
-								npcString = NpcStringId.YOU_MAY_HAVE_BROKEN_OUR_ARROWS_BUT_YOU_WILL_NEVER_BREAK_OUR_WILL_ARCHERS_RETREAT;
-								break;
-							case 2:
-								npcString = NpcStringId.AIIEEEE_COMMAND_CENTER_THIS_IS_GUARD_UNIT_WE_NEED_BACKUP_RIGHT_AWAY;
-								break;
-							case 3:
-								npcString = NpcStringId.AT_LAST_THE_MAGIC_FIELD_THAT_PROTECTS_THE_FORTRESS_HAS_WEAKENED_VOLUNTEERS_STAND_BACK;
-								break;
-							case 4:
-								npcString = NpcStringId.I_FEEL_SO_MUCH_GRIEF_THAT_I_CANT_EVEN_TAKE_CARE_OF_MYSELF_THERE_ISNT_ANY_REASON_FOR_ME_TO_STAY_HERE_ANY_LONGER;
-								break;
-						}
+						NpcStringId npcString = switch (spawn2.getMessageId()) {
+							case 1 -> NpcStringId.YOU_MAY_HAVE_BROKEN_OUR_ARROWS_BUT_YOU_WILL_NEVER_BREAK_OUR_WILL_ARCHERS_RETREAT;
+							case 2 -> NpcStringId.AIIEEEE_COMMAND_CENTER_THIS_IS_GUARD_UNIT_WE_NEED_BACKUP_RIGHT_AWAY;
+							case 3 -> NpcStringId.AT_LAST_THE_MAGIC_FIELD_THAT_PROTECTS_THE_FORTRESS_HAS_WEAKENED_VOLUNTEERS_STAND_BACK;
+							case 4 -> NpcStringId.I_FEEL_SO_MUCH_GRIEF_THAT_I_CANT_EVEN_TAKE_CARE_OF_MYSELF_THERE_ISNT_ANY_REASON_FOR_ME_TO_STAY_HERE_ANY_LONGER;
+							default -> null;
+						};
 						if (npcString != null) {
 							instance.broadcastPacket(new NpcSay(instance.getObjectId(), Say2.NPC_SHOUT, instance.getId(), npcString));
 						}
@@ -753,17 +741,11 @@ public class FortSiege implements Siegable {
 	 * @param teleportWhere
 	 */
 	public void teleportPlayer(FortTeleportWhoType teleportWho, TeleportWhereType teleportWhere) {
-		List<L2PcInstance> players;
-		switch (teleportWho) {
-			case Owner:
-				players = getOwnersInZone();
-				break;
-			case Attacker:
-				players = getAttackersInZone();
-				break;
-			default:
-				players = getPlayersInZone();
-		}
+		List<L2PcInstance> players = switch (teleportWho) {
+			case Owner -> getOwnersInZone();
+			case Attacker -> getAttackersInZone();
+			default -> getPlayersInZone();
+		};
 		
 		for (L2PcInstance player : players) {
 			if (player.canOverrideCond(PcCondOverride.FORTRESS_CONDITIONS) || player.isJailed()) {
@@ -1038,7 +1020,7 @@ public class FortSiege implements Siegable {
 	
 	@Override
 	public int getFameAmount() {
-		return character().getFortressZoneFameAquirePoints();
+		return character().getFortressZoneFameAcquirePoints();
 	}
 	
 	@Override

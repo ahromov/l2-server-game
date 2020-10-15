@@ -82,7 +82,7 @@ public abstract class AbstractResidence extends ListenersContainer implements IN
 	}
 	
 	public void giveResidentialSkills(L2PcInstance player) {
-		if ((_residentialSkills != null) && !_residentialSkills.isEmpty()) {
+		if (!_residentialSkills.isEmpty()) {
 			for (SkillHolder sh : _residentialSkills) {
 				player.addSkill(sh.getSkill(), false);
 			}
@@ -90,7 +90,7 @@ public abstract class AbstractResidence extends ListenersContainer implements IN
 	}
 	
 	public void removeResidentialSkills(L2PcInstance player) {
-		if ((_residentialSkills != null) && !_residentialSkills.isEmpty()) {
+		if (!_residentialSkills.isEmpty()) {
 			for (SkillHolder sh : _residentialSkills) {
 				player.removeSkill(sh.getSkill(), false);
 			}

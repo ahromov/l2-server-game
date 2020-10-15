@@ -35,9 +35,9 @@ public final class MagicUseTask implements Runnable {
 	private int _phase;
 	private final boolean _simultaneously;
 	
-	public MagicUseTask(L2Character character, L2Object[] tgts, Skill s, int hit, boolean simultaneous) {
+	public MagicUseTask(L2Character character, L2Object[] targets, Skill s, int hit, boolean simultaneous) {
 		_character = character;
-		_targets = tgts;
+		_targets = targets;
 		_skill = s;
 		_count = 0;
 		_phase = 1;
@@ -51,18 +51,9 @@ public final class MagicUseTask implements Runnable {
 			return;
 		}
 		switch (_phase) {
-			case 1: {
-				_character.onMagicLaunchedTimer(this);
-				break;
-			}
-			case 2: {
-				_character.onMagicHitTimer(this);
-				break;
-			}
-			case 3: {
-				_character.onMagicFinalizer(this);
-				break;
-			}
+			case 1 -> _character.onMagicLaunchedTimer(this);
+			case 2 -> _character.onMagicHitTimer(this);
+			case 3 -> _character.onMagicFinalizer(this);
 		}
 	}
 	

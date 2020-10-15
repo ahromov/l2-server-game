@@ -23,16 +23,12 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionUsingSkill.
+ * Using skill condition.
  * @author mkizub
  */
 public final class ConditionUsingSkill extends Condition {
 	private final int _skillId;
 	
-	/**
-	 * Instantiates a new condition using skill.
-	 * @param skillId the skill id
-	 */
 	public ConditionUsingSkill(int skillId) {
 		_skillId = skillId;
 	}

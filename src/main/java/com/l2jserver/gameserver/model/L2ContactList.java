@@ -34,7 +34,8 @@ import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
  * ADD: 3223: The previous name is being registered. Please try again later.<br>
  * DEL 3219: $s1 was successfully deleted from your Contact List.<br>
  * DEL 3217: The name is not currently registered.
- * @author UnAfraid, mrTJO
+ * @author UnAfraid
+ * @author mrTJO
  */
 public class L2ContactList {
 	

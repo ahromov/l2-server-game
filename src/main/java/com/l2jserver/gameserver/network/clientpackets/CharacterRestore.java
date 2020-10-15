@@ -24,13 +24,11 @@ import com.l2jserver.gameserver.model.events.impl.character.player.OnPlayerResto
 import com.l2jserver.gameserver.network.serverpackets.CharSelectionInfo;
 
 /**
- * This class ...
- * @version $Revision: 1.4.2.1.2.2 $ $Date: 2005/03/27 15:29:29 $
+ * @since 2005/03/27 15:29:29
  */
 public final class CharacterRestore extends L2GameClientPacket {
 	private static final String _C__7B_CHARACTERRESTORE = "[C] 7B CharacterRestore";
 	
-	// cd
 	private int _charSlot;
 	
 	@Override

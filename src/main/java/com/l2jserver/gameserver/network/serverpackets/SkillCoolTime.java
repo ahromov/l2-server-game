@@ -27,7 +27,8 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 /**
  * Skill Cool Time server packet implementation.
- * @author KenM, Zoey76
+ * @author KenM
+ * @author Zoey76
  */
 public class SkillCoolTime extends L2GameServerPacket {
 	private final List<TimeStamp> _skillReuseTimeStamps = new ArrayList<>();

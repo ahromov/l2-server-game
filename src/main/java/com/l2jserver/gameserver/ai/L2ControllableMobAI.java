@@ -47,7 +47,7 @@ import com.l2jserver.gameserver.util.Util;
 public final class L2ControllableMobAI extends L2AttackableAI {
 	public static final int AI_IDLE = 1;
 	public static final int AI_NORMAL = 2;
-	public static final int AI_FORCEATTACK = 3;
+	public static final int AI_FORCE_ATTACK = 3;
 	public static final int AI_FOLLOW = 4;
 	public static final int AI_CAST = 5;
 	public static final int AI_ATTACK_GROUP = 6;
@@ -99,7 +99,7 @@ public final class L2ControllableMobAI extends L2AttackableAI {
 				case AI_CAST:
 					thinkCast();
 					break;
-				case AI_FORCEATTACK:
+				case AI_FORCE_ATTACK:
 					thinkForceAttack();
 					break;
 				case AI_ATTACK_GROUP:
@@ -148,8 +148,6 @@ public final class L2ControllableMobAI extends L2AttackableAI {
 			if (!isNotMoving()) {
 				moveToPawn(getAttackTarget(), max_range);
 			}
-			
-			return;
 		}
 	}
 	
@@ -386,12 +384,12 @@ public final class L2ControllableMobAI extends L2AttackableAI {
 		return _alternateAI;
 	}
 	
-	public void setAlternateAI(int _alternateai) {
-		_alternateAI = _alternateai;
+	public void setAlternateAI(int alternateAI) {
+		_alternateAI = alternateAI;
 	}
 	
 	public void forceAttack(L2Character target) {
-		setAlternateAI(AI_FORCEATTACK);
+		setAlternateAI(AI_FORCE_ATTACK);
 		setForcedTarget(target);
 	}
 	

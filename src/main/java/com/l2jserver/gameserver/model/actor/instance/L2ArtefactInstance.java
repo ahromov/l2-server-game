@@ -26,10 +26,7 @@ import com.l2jserver.gameserver.model.skills.Skill;
 import com.l2jserver.gameserver.network.serverpackets.ActionFailed;
 
 public final class L2ArtefactInstance extends L2Npc {
-	/**
-	 * Creates a castle siege artifact.
-	 * @param template the artifact NPC template
-	 */
+	
 	public L2ArtefactInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2ArtefactInstance);

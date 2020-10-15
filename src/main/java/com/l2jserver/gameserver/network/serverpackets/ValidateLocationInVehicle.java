@@ -27,9 +27,6 @@ public class ValidateLocationInVehicle extends L2GameServerPacket {
 	private final int _heading;
 	private final Location _pos;
 	
-	/**
-	 * @param player
-	 */
 	public ValidateLocationInVehicle(L2PcInstance player) {
 		_charObjId = player.getObjectId();
 		_boatObjId = player.getBoat().getObjectId();

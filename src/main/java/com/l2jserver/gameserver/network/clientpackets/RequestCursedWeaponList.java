@@ -18,11 +18,7 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.l2jserver.gameserver.instancemanager.CursedWeaponsManager;
-import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.network.serverpackets.ExCursedWeaponList;
 
 /**
@@ -39,18 +35,11 @@ public class RequestCursedWeaponList extends L2GameClientPacket {
 	
 	@Override
 	protected void runImpl() {
-		L2Character activeChar = getClient().getActiveChar();
-		if (activeChar == null) {
+		final var player = getClient().getActiveChar();
+		if (player == null) {
 			return;
 		}
-		
-		// send a ExCursedWeaponList :p
-		List<Integer> list = new ArrayList<>();
-		for (int id : CursedWeaponsManager.getInstance().getCursedWeaponsIds()) {
-			list.add(id);
-		}
-		
-		activeChar.sendPacket(new ExCursedWeaponList(list));
+		player.sendPacket(new ExCursedWeaponList(CursedWeaponsManager.getInstance().getCursedWeaponsIds()));
 	}
 	
 	@Override

@@ -27,10 +27,6 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 public class PartyMatchDetail extends L2GameServerPacket {
 	private final PartyMatchRoom _room;
 	
-	/**
-	 * @param player
-	 * @param room
-	 */
 	public PartyMatchDetail(L2PcInstance player, PartyMatchRoom room) {
 		_room = room;
 	}

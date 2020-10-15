@@ -89,8 +89,8 @@ public class SkillDAOMySQLImpl implements SkillDAO {
 					}
 				}
 			}
-		} catch (Exception e) {
-			LOG.error("Could not restore {} skills: {}", player, e);
+		} catch (Exception ex) {
+			LOG.error("Could not restore {} skills!", player, ex);
 		}
 	}
 	
@@ -103,8 +103,8 @@ public class SkillDAOMySQLImpl implements SkillDAO {
 			ps.setInt(3, skill.getLevel());
 			ps.setInt(4, classIndex);
 			ps.execute();
-		} catch (Exception e) {
-			LOG.warn("Error could not store char skills: {}", e);
+		} catch (Exception ex) {
+			LOG.warn("Error could not store char skills!", ex);
 		}
 	}
 	
@@ -128,8 +128,8 @@ public class SkillDAOMySQLImpl implements SkillDAO {
 			}
 			ps.executeBatch();
 			con.commit();
-		} catch (Exception e) {
-			LOG.error("Error could not store {} skills: {}", player, e);
+		} catch (Exception ex) {
+			LOG.error("Error could not store {} skills!", player, ex);
 		}
 	}
 	
@@ -142,8 +142,8 @@ public class SkillDAOMySQLImpl implements SkillDAO {
 			ps.setInt(3, player.getObjectId());
 			ps.setInt(4, classIndex);
 			ps.execute();
-		} catch (Exception e) {
-			LOG.warn("Error could not store char skills: {}", e);
+		} catch (Exception ex) {
+			LOG.warn("Error could not store char skills!", ex);
 		}
 	}
 	
@@ -155,8 +155,8 @@ public class SkillDAOMySQLImpl implements SkillDAO {
 			ps.setInt(2, player.getObjectId());
 			ps.setInt(3, player.getClassIndex());
 			ps.execute();
-		} catch (Exception e) {
-			LOG.warn("Error could not delete skill: {}", e);
+		} catch (Exception ex) {
+			LOG.warn("Error could not delete skill!", ex);
 		}
 	}
 	
@@ -167,8 +167,8 @@ public class SkillDAOMySQLImpl implements SkillDAO {
 			ps.setInt(1, player.getObjectId());
 			ps.setInt(2, classIndex);
 			ps.execute();
-		} catch (Exception e) {
-			LOG.warn("Error could not delete skill: {}", e);
+		} catch (Exception ex) {
+			LOG.warn("Error could not delete skill!", ex);
 		}
 	}
 }

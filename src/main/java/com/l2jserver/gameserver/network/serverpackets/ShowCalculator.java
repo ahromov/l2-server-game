@@ -21,9 +21,6 @@ package com.l2jserver.gameserver.network.serverpackets;
 public class ShowCalculator extends L2GameServerPacket {
 	private final int _calculatorId;
 	
-	/**
-	 * @param calculatorId
-	 */
 	public ShowCalculator(int calculatorId) {
 		_calculatorId = calculatorId;
 	}

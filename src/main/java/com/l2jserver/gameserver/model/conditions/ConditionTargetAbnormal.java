@@ -23,16 +23,12 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionTargetAbnormal.
+ * Target abnormal condition.
  * @author janiii
  */
 public class ConditionTargetAbnormal extends Condition {
 	private final int _abnormalId;
 	
-	/**
-	 * Instantiates a new condition target abnormal.
-	 * @param abnormalId the abnormal id
-	 */
 	public ConditionTargetAbnormal(int abnormalId) {
 		_abnormalId = abnormalId;
 	}

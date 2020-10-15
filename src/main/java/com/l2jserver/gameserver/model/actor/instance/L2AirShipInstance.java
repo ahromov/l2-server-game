@@ -31,8 +31,9 @@ import com.l2jserver.gameserver.network.serverpackets.ExMoveToLocationAirShip;
 import com.l2jserver.gameserver.network.serverpackets.ExStopMoveAirShip;
 
 /**
- * Flying airships. Very similar to Maktakien boats (see L2BoatInstance) but these do fly :P
- * @author DrHouse, DS
+ * Flying airships.
+ * @author DrHouse
+ * @author DS
  */
 public class L2AirShipInstance extends L2Vehicle {
 	public L2AirShipInstance(L2CharTemplate template) {

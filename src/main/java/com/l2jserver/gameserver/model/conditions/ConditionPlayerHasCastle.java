@@ -24,25 +24,17 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerHasCastle.
+ * Has castle condition.
  * @author MrPoke
  */
 public final class ConditionPlayerHasCastle extends Condition {
 	
 	private final int _castle;
 	
-	/**
-	 * Instantiates a new condition player has castle.
-	 * @param castle the castle
-	 */
 	public ConditionPlayerHasCastle(int castle) {
 		_castle = castle;
 	}
 	
-	/**
-	 * Test impl.
-	 * @return true, if successful
-	 */
 	@Override
 	public boolean testImpl(L2Character effector, L2Character effected, Skill skill, L2Item item) {
 		if (effector.getActingPlayer() == null) {

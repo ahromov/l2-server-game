@@ -43,13 +43,9 @@ import com.l2jserver.gameserver.model.zone.L2ZoneType;
 public class L2BossZone extends L2ZoneType {
 	private int _timeInvade;
 	
-	private int[] _oustLoc = {
-		0,
-		0,
-		0
-	};
+	private final int[] _oustLoc;
 	
-	public final class Settings extends AbstractZoneSettings {
+	public static final class Settings extends AbstractZoneSettings {
 		// track the times that players got disconnected. Players are allowed
 		// to log back into the zone as long as their log-out was within _timeInvade time...
 		// <player objectId, expiration time in milliseconds>
@@ -102,16 +98,12 @@ public class L2BossZone extends L2ZoneType {
 	
 	@Override
 	public void setParameter(String name, String value) {
-		if (name.equals("InvadeTime")) {
-			_timeInvade = Integer.parseInt(value);
-		} else if (name.equals("oustX")) {
-			_oustLoc[0] = Integer.parseInt(value);
-		} else if (name.equals("oustY")) {
-			_oustLoc[1] = Integer.parseInt(value);
-		} else if (name.equals("oustZ")) {
-			_oustLoc[2] = Integer.parseInt(value);
-		} else {
-			super.setParameter(name, value);
+		switch (name) {
+			case "InvadeTime" -> _timeInvade = Integer.parseInt(value);
+			case "oustX" -> _oustLoc[0] = Integer.parseInt(value);
+			case "oustY" -> _oustLoc[1] = Integer.parseInt(value);
+			case "oustZ" -> _oustLoc[2] = Integer.parseInt(value);
+			default -> super.setParameter(name, value);
 		}
 	}
 	
@@ -149,11 +141,11 @@ public class L2BossZone extends L2ZoneType {
 					} else {
 						// legal non-null logoutTime entries
 						getSettings().getPlayerAllowedReEntryTimes().remove(player.getObjectId());
-						if (expirationTime.longValue() > System.currentTimeMillis()) {
+						if (expirationTime > System.currentTimeMillis()) {
 							return;
 						}
 					}
-					getSettings().getPlayersAllowed().remove(getSettings().getPlayersAllowed().indexOf(player.getObjectId()));
+					getSettings().getPlayersAllowed().remove((Integer) player.getObjectId());
 				}
 				// teleport out all players who attempt "illegal" (re-)entry
 				if ((_oustLoc[0] != 0) && (_oustLoc[1] != 0) && (_oustLoc[2] != 0)) {
@@ -199,7 +191,7 @@ public class L2BossZone extends L2ZoneType {
 					getSettings().getPlayerAllowedReEntryTimes().put(player.getObjectId(), System.currentTimeMillis() + _timeInvade);
 				} else {
 					if (getSettings().getPlayersAllowed().contains(player.getObjectId())) {
-						getSettings().getPlayersAllowed().remove(getSettings().getPlayersAllowed().indexOf(player.getObjectId()));
+						getSettings().getPlayersAllowed().remove((Integer) player.getObjectId());
 					}
 					getSettings().getPlayerAllowedReEntryTimes().remove(player.getObjectId());
 				}
@@ -218,7 +210,7 @@ public class L2BossZone extends L2ZoneType {
 							getSettings().getRaidList().add(creature);
 						}
 					}
-					// if inside zone isnt any player, force all boss instance return to its spawn points
+					// if inside zone isn't any player, force all boss instance return to its spawn points
 					if ((count == 0) && !getSettings().getRaidList().isEmpty()) {
 						for (L2Character creature : getSettings().getRaidList()) {
 							L2Attackable raid = (L2Attackable) creature;
@@ -277,7 +269,8 @@ public class L2BossZone extends L2ZoneType {
 	}
 	
 	/**
-	 * Some GrandBosses send all players in zone to a specific part of the zone, rather than just removing them all. If this is the case, this command should be used. If this is no the case, then use oustAllPlayers().
+	 * Some GrandBosses send all players in zone to a specific part of the zone, rather than just removing them all.<br>
+	 * If this is the case, this command should be used. If this is no the case, then use oustAllPlayers().
 	 * @param loc
 	 */
 	public void movePlayersTo(Location loc) {
@@ -296,8 +289,8 @@ public class L2BossZone extends L2ZoneType {
 	}
 	
 	/**
-	 * Occasionally, all players need to be sent out of the zone (for example, if the players are just running around without fighting for too long, or if all players die, etc). This call sends all online players to town and marks offline players to be teleported (by clearing their relog expiration
-	 * times) when they log back in (no real need for off-line teleport).
+	 * Occasionally, all players need to be sent out of the zone (for example, if the players are just running around without fighting for too long, or if all players die, etc).<br>
+	 * This call sends all online players to town and marks offline players to be teleported (by clearing their relog expiration times) when they log back in (no real need for off-line teleport).
 	 */
 	public void oustAllPlayers() {
 		if (_characterList.isEmpty()) {

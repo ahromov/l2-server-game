@@ -21,6 +21,8 @@ package com.l2jserver.gameserver.network.clientpackets;
 import static com.l2jserver.gameserver.config.Configuration.general;
 import static com.l2jserver.gameserver.model.itemcontainer.Inventory.ADENA_ID;
 
+import java.util.Objects;
+
 import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.enums.ItemLocation;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
@@ -40,7 +42,8 @@ import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 import com.l2jserver.gameserver.util.Util;
 
 /**
- * @author Migi, DS
+ * @author Migi
+ * @author DS
  */
 public final class RequestPostAttachment extends L2GameClientPacket {
 	private static final String _C__D0_6A_REQUESTPOSTATTACHMENT = "[C] D0:6A RequestPostAttachment";
@@ -193,11 +196,7 @@ public final class RequestPostAttachment extends L2GameClientPacket {
 		}
 		
 		// Send updated item list to the player
-		if (playerIU != null) {
-			activeChar.sendPacket(playerIU);
-		} else {
-			activeChar.sendPacket(new ItemList(activeChar, false));
-		}
+		activeChar.sendPacket(Objects.requireNonNullElseGet(playerIU, () -> new ItemList(activeChar, false)));
 		
 		msg.removeAttachments();
 		

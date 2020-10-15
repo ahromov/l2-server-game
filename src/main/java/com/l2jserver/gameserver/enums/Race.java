@@ -46,5 +46,5 @@ public enum Race {
 	NONE,
 	PLANT,
 	SIEGE_WEAPON,
-	UNDEAD;
+	UNDEAD
 }

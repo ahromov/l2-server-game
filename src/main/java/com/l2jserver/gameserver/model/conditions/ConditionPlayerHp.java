@@ -23,16 +23,12 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerHp.
+ * HP condition.
  * @author mr
  */
 public class ConditionPlayerHp extends Condition {
 	private final int _hp;
 	
-	/**
-	 * Instantiates a new condition player hp.
-	 * @param hp the hp
-	 */
 	public ConditionPlayerHp(int hp) {
 		_hp = hp;
 	}

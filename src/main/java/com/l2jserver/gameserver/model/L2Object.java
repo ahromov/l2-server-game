@@ -545,7 +545,7 @@ public abstract class L2Object extends ListenersContainer implements IIdentifiab
 			
 			setWorldRegion(newRegion);
 			
-			// Add the L2Oject spawn to _visibleObjects and if necessary to _allplayers of its L2WorldRegion
+			// Add the L2Object spawn to _visibleObjects and if necessary to _allplayers of its L2WorldRegion
 			getWorldRegion().addVisibleObject(this);
 		}
 	}
@@ -804,7 +804,7 @@ public abstract class L2Object extends ListenersContainer implements IIdentifiab
 	 * @param instance the instance to update
 	 * @param hide if {@code true} hide the player
 	 */
-	private final void sendInstanceUpdate(Instance instance, boolean hide) {
+	private void sendInstanceUpdate(Instance instance, boolean hide) {
 		final int startTime = (int) ((System.currentTimeMillis() - instance.getInstanceStartTime()) / 1000);
 		final int endTime = (int) ((instance.getInstanceEndTime() - instance.getInstanceStartTime()) / 1000);
 		if (instance.isTimerIncrease()) {

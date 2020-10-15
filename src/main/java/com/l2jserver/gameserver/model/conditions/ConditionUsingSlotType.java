@@ -23,6 +23,7 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
+ * Using slot type condition.
  * @author NosBit
  */
 public class ConditionUsingSlotType extends Condition {

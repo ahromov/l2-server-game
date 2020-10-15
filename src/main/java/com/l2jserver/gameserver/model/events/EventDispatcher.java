@@ -37,42 +37,18 @@ public final class EventDispatcher {
 	protected EventDispatcher() {
 	}
 	
-	/**
-	 * @param <T>
-	 * @param event
-	 * @return
-	 */
 	public <T extends AbstractEventReturn> T notifyEvent(IBaseEvent event) {
 		return notifyEvent(event, null, null);
 	}
 	
-	/**
-	 * @param <T>
-	 * @param event
-	 * @param callbackClass
-	 * @return
-	 */
 	public <T extends AbstractEventReturn> T notifyEvent(IBaseEvent event, Class<T> callbackClass) {
 		return notifyEvent(event, null, callbackClass);
 	}
 	
-	/**
-	 * @param <T>
-	 * @param event
-	 * @param container
-	 * @return
-	 */
 	public <T extends AbstractEventReturn> T notifyEvent(IBaseEvent event, ListenersContainer container) {
 		return notifyEvent(event, container, null);
 	}
 	
-	/**
-	 * @param <T>
-	 * @param event
-	 * @param container
-	 * @param callbackClass
-	 * @return
-	 */
 	public <T extends AbstractEventReturn> T notifyEvent(IBaseEvent event, ListenersContainer container, Class<T> callbackClass) {
 		try {
 			return Containers.Global().hasListener(event.getType()) || ((container != null) && container.hasListener(event.getType())) ? notifyEventImpl(event, container, callbackClass) : null;
@@ -207,11 +183,13 @@ public final class EventDispatcher {
 				final T rb = listener.executeEvent(event, returnBackClass);
 				if (rb == null) {
 					continue;
-				} else if ((callback == null) || rb.override()) // Let's check if this listener wants to override previous return object or we simply don't have one
-				{
+				}
+				
+				if ((callback == null) || rb.override()) {
+					// Let's check if this listener wants to override previous return object or we simply don't have one
 					callback = rb;
-				} else if (rb.abort()) // This listener wants to abort the notification to others.
-				{
+				} else if (rb.abort()) {
+					// This listener wants to abort the notification to others.
 					break;
 				}
 			} catch (Exception e) {

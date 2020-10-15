@@ -23,15 +23,11 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerCloakStatus.
+ * Cloak status condition.
  */
 public class ConditionPlayerCloakStatus extends Condition {
 	private final boolean _val;
 	
-	/**
-	 * Instantiates a new condition player cloak status.
-	 * @param val the val
-	 */
 	public ConditionPlayerCloakStatus(boolean val) {
 		_val = val;
 	}

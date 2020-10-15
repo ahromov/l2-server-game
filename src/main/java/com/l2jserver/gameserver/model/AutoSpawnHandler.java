@@ -64,9 +64,9 @@ public class AutoSpawnHandler {
 	
 	private static final int DEFAULT_INITIAL_SPAWN = 30000; // 30 seconds after registration
 	
-	private static final int DEFAULT_RESPAWN = 3600000; // 1 hour in millisecs
+	private static final int DEFAULT_RESPAWN = 3600000; // 1 hour in milliseconds
 	
-	private static final int DEFAULT_DESPAWN = 3600000; // 1 hour in millisecs
+	private static final int DEFAULT_DESPAWN = 3600000; // 1 hour in milliseconds
 	
 	protected Map<Integer, AutoSpawnInstance> _registeredSpawns = new ConcurrentHashMap<>();
 	
@@ -103,7 +103,7 @@ public class AutoSpawnHandler {
 	private void restoreSpawnData() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var s = con.createStatement();
-			var rs = s.executeQuery("SELECT * FROM random_spawn ORDER BY groupId ASC");
+			var rs = s.executeQuery("SELECT * FROM random_spawn ORDER BY groupId");
 			var ps = con.prepareStatement("SELECT * FROM random_spawn_loc WHERE groupId=?")) {
 			// Restore spawn group data, then the location data.
 			while (rs.next()) {
@@ -231,7 +231,7 @@ public class AutoSpawnHandler {
 		int objectId = spawnInst._objectId;
 		
 		if (isSpawnRegistered(objectId)) {
-			ScheduledFuture<?> spawnTask = null;
+			ScheduledFuture<?> spawnTask;
 			
 			if (isActive) {
 				AutoSpawner rs = new AutoSpawner(objectId);

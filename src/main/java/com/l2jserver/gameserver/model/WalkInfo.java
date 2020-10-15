@@ -28,7 +28,8 @@ import com.l2jserver.gameserver.model.events.impl.character.npc.OnNpcMoveRouteFi
 
 /**
  * Holds info about current walk progress.
- * @author GKR, UnAfraid
+ * @author GKR
+ * @author UnAfraid
  */
 public class WalkInfo {
 	private final String _routeName;
@@ -92,23 +93,18 @@ public class WalkInfo {
 				}
 				
 				switch (getRoute().getRepeatType()) {
-					case WalkingManager.REPEAT_GO_BACK: {
+					case WalkingManager.REPEAT_GO_BACK -> {
 						_forward = false;
 						_currentNode -= 2;
-						break;
 					}
-					case WalkingManager.REPEAT_GO_FIRST: {
-						_currentNode = 0;
-						break;
-					}
-					case WalkingManager.REPEAT_TELE_FIRST: {
+					case WalkingManager.REPEAT_GO_FIRST -> _currentNode = 0;
+					case WalkingManager.REPEAT_TELE_FIRST -> {
 						npc.teleToLocation(npc.getSpawn().getLocation());
 						_currentNode = 0;
-						break;
 					}
 				}
-			} else if (_currentNode == WalkingManager.NO_REPEAT) // First node arrived, when direction is first <-- last
-			{
+			} else if (_currentNode == WalkingManager.NO_REPEAT) {
+				// First node arrived, when direction is first <-- last
 				_currentNode = 1;
 				_forward = true;
 			}
@@ -122,9 +118,6 @@ public class WalkInfo {
 		return _blocked;
 	}
 	
-	/**
-	 * @param val
-	 */
 	public void setBlocked(boolean val) {
 		_blocked = val;
 	}
@@ -136,9 +129,6 @@ public class WalkInfo {
 		return _suspended;
 	}
 	
-	/**
-	 * @param val
-	 */
 	public void setSuspended(boolean val) {
 		_suspended = val;
 	}
@@ -150,9 +140,6 @@ public class WalkInfo {
 		return _stoppedByAttack;
 	}
 	
-	/**
-	 * @param val
-	 */
 	public void setStoppedByAttack(boolean val) {
 		_stoppedByAttack = val;
 	}
@@ -171,9 +158,6 @@ public class WalkInfo {
 		return _lastActionTime;
 	}
 	
-	/**
-	 * @param val
-	 */
 	public void setLastAction(long val) {
 		_lastActionTime = val;
 	}

@@ -25,8 +25,8 @@ import com.l2jserver.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2jserver.gameserver.util.Util;
 
 /**
- * Lets drink to code!
- * @author zabbix, HorridoJoho
+ * @author zabbix
+ * @author HorridoJoho
  */
 public final class RequestLinkHtml extends L2GameClientPacket {
 	private static final String _C__22_REQUESTLINKHTML = "[C] 22 RequestLinkHtml";

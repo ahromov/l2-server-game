@@ -31,11 +31,10 @@ public class L2WalkRoute {
 	private final byte _repeatType; // Repeat style: 0 - go back, 1 - go to first point (circle style), 2 - teleport to first point (conveyor style), 3 - random walking between points
 	
 	public L2WalkRoute(String name, List<L2NpcWalkerNode> route, boolean repeat, boolean once, byte repeatType) {
-		
 		_name = name;
 		_nodeList = route;
 		_repeatType = repeatType;
-		_repeatWalk = ((_repeatType >= 0) && (_repeatType <= 2)) ? repeat : false;
+		_repeatWalk = (_repeatType >= 0) && (_repeatType <= 2) && repeat;
 	}
 	
 	public String getName() {

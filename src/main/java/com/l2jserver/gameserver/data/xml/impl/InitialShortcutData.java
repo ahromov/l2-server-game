@@ -77,14 +77,8 @@ public final class InitialShortcutData implements IXmlReader {
 			if ("list".equals(n.getNodeName())) {
 				for (Node d = n.getFirstChild(); d != null; d = d.getNextSibling()) {
 					switch (d.getNodeName()) {
-						case "shortcuts": {
-							parseShortcuts(d);
-							break;
-						}
-						case "macros": {
-							parseMacros(d);
-							break;
-						}
+						case "shortcuts" -> parseShortcuts(d);
+						case "macros" -> parseMacros(d);
 					}
 				}
 			}
@@ -146,34 +140,20 @@ public final class InitialShortcutData implements IXmlReader {
 						int d2 = 0;
 						final String cmd = b.getTextContent();
 						switch (type) {
-							case SKILL: {
+							case SKILL -> {
 								d1 = parseInteger(attrs, "skillId"); // Skill ID
 								d2 = parseInteger(attrs, "skillLvl", 0); // Skill level
-								break;
 							}
-							case ACTION: {
-								// Not handled by client.
-								d1 = parseInteger(attrs, "actionId");
-								break;
-							}
-							case TEXT: {
+							case ACTION -> d1 = parseInteger(attrs, "actionId"); // Not handled by client.
+							case TEXT -> {
 								// Doesn't have numeric parameters.
-								break;
 							}
-							case SHORTCUT: {
+							case SHORTCUT -> {
 								d1 = parseInteger(attrs, "page"); // Page
 								d2 = parseInteger(attrs, "slot", 0); // Slot
-								break;
 							}
-							case ITEM: {
-								// Not handled by client.
-								d1 = parseInteger(attrs, "itemId");
-								break;
-							}
-							case DELAY: {
-								d1 = parseInteger(attrs, "delay"); // Delay in seconds
-								break;
-							}
+							case ITEM -> d1 = parseInteger(attrs, "itemId"); // Not handled by client.
+							case DELAY -> d1 = parseInteger(attrs, "delay"); // Delay in seconds
 						}
 						commands.add(new MacroCmd(entry++, type, d1, d2, cmd));
 					}
@@ -239,27 +219,24 @@ public final class InitialShortcutData implements IXmlReader {
 		for (Shortcut shortcut : _initialGlobalShortcutList) {
 			int shortcutId = shortcut.getId();
 			switch (shortcut.getType()) {
-				case ITEM: {
+				case ITEM -> {
 					final L2ItemInstance item = player.getInventory().getItemByItemId(shortcutId);
 					if (item == null) {
 						continue;
 					}
 					shortcutId = item.getObjectId();
-					break;
 				}
-				case SKILL: {
+				case SKILL -> {
 					if (!player.getSkills().containsKey(shortcutId)) {
 						continue;
 					}
-					break;
 				}
-				case MACRO: {
+				case MACRO -> {
 					final Macro macro = _macroPresets.get(shortcutId);
 					if (macro == null) {
 						continue;
 					}
 					player.registerMacro(macro);
-					break;
 				}
 			}
 			
@@ -274,27 +251,24 @@ public final class InitialShortcutData implements IXmlReader {
 			for (Shortcut shortcut : _initialShortcutData.get(player.getClassId())) {
 				int shortcutId = shortcut.getId();
 				switch (shortcut.getType()) {
-					case ITEM: {
+					case ITEM -> {
 						final L2ItemInstance item = player.getInventory().getItemByItemId(shortcutId);
 						if (item == null) {
 							continue;
 						}
 						shortcutId = item.getObjectId();
-						break;
 					}
-					case SKILL: {
+					case SKILL -> {
 						if (!player.getSkills().containsKey(shortcut.getId())) {
 							continue;
 						}
-						break;
 					}
-					case MACRO: {
+					case MACRO -> {
 						final Macro macro = _macroPresets.get(shortcutId);
 						if (macro == null) {
 							continue;
 						}
 						player.registerMacro(macro);
-						break;
 					}
 				}
 				// Register shortcut

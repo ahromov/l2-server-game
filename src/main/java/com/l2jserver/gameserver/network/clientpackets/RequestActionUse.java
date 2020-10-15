@@ -59,7 +59,7 @@ import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 import com.l2jserver.gameserver.taskmanager.AttackStanceTaskManager;
 
 /**
- * This class manages the action use request packet.
+ * Action use request packet.
  * @author Zoey76
  */
 public final class RequestActionUse extends L2GameClientPacket {
@@ -757,7 +757,7 @@ public final class RequestActionUse extends L2GameClientPacket {
 			return;
 		}
 		
-		int lvl = 0;
+		int lvl;
 		if (summon.isPet()) {
 			lvl = PetDataTable.getInstance().getPetData(summon.getId()).getAvailableLevel(skillId, summon.getLevel());
 		} else {

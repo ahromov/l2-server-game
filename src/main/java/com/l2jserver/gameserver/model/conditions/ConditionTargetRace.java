@@ -24,16 +24,12 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionTargetRace.
+ * Target race condition.
  * @author Zealar
  */
 public class ConditionTargetRace extends Condition {
 	private final Race _race;
 	
-	/**
-	 * Instantiates a new condition target race.
-	 * @param race containing the allowed race.
-	 */
 	public ConditionTargetRace(Race race) {
 		_race = race;
 	}

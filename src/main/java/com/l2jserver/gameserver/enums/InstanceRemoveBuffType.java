@@ -25,5 +25,5 @@ public enum InstanceRemoveBuffType {
 	NONE,
 	ALL,
 	WHITELIST,
-	BLACKLIST,
+	BLACKLIST
 }

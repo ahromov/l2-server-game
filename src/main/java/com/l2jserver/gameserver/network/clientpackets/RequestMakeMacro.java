@@ -33,7 +33,7 @@ public final class RequestMakeMacro extends L2GameClientPacket {
 	private static final String _C__CD_REQUESTMAKEMACRO = "[C] CD RequestMakeMacro";
 	
 	private Macro _macro;
-	private int _commandsLenght = 0;
+	private int _commandsLength = 0;
 	
 	private static final int MAX_MACRO_LENGTH = 12;
 	
@@ -60,7 +60,7 @@ public final class RequestMakeMacro extends L2GameClientPacket {
 			int d1 = readD(); // skill or page number for shortcuts
 			int d2 = readC();
 			String command = readS();
-			_commandsLenght += command.length();
+			_commandsLength += command.length();
 			commands.add(new MacroCmd(entry, MacroType.values()[(type < 1) || (type > 6) ? 0 : type], d1, d2, command));
 		}
 		_macro = new Macro(_id, _icon, _name, _desc, _acronym, commands);
@@ -72,12 +72,12 @@ public final class RequestMakeMacro extends L2GameClientPacket {
 		if (player == null) {
 			return;
 		}
-		if (_commandsLenght > 255) {
+		if (_commandsLength > 255) {
 			// Invalid macro. Refer to the Help file for instructions.
 			player.sendPacket(SystemMessageId.INVALID_MACRO);
 			return;
 		}
-		if (player.getMacros().getAllMacroses().size() > 48) {
+		if (player.getMacros().getAllMacros().size() > 48) {
 			// You may create up to 48 macros.
 			player.sendPacket(SystemMessageId.YOU_MAY_CREATE_UP_TO_48_MACROS);
 			return;

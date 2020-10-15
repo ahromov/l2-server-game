@@ -30,19 +30,20 @@ import com.l2jserver.gameserver.model.stats.Stats;
 
 /**
  * Function template.
- * @author mkizub, Zoey76
+ * @author mkizub
+ * @author Zoey76
  */
 public final class FuncTemplate {
 	private static final Logger LOG = Logger.getLogger(FuncTemplate.class.getName());
 	
 	private final Condition _attachCond;
-	private final Condition _applayCond;
+	private final Condition _applyCond;
 	private final Constructor<?> _constructor;
 	private final Stats _stat;
 	private final int _order;
 	private final double _value;
 	
-	public FuncTemplate(Condition attachCond, Condition applayCond, String functionName, int order, Stats stat, double value) {
+	public FuncTemplate(Condition attachCond, Condition applyCond, String functionName, int order, Stats stat, double value) {
 		final StatFunction function = StatFunction.valueOf(functionName.toUpperCase());
 		if (order >= 0) {
 			_order = order;
@@ -51,7 +52,7 @@ public final class FuncTemplate {
 		}
 		
 		_attachCond = attachCond;
-		_applayCond = applayCond;
+		_applyCond = applyCond;
 		_stat = stat;
 		_value = value;
 		
@@ -130,7 +131,7 @@ public final class FuncTemplate {
 			return null;
 		}
 		try {
-			return (AbstractFunction) _constructor.newInstance(_stat, _order, owner, _value, _applayCond);
+			return (AbstractFunction) _constructor.newInstance(_stat, _order, owner, _value, _applyCond);
 		} catch (Exception e) {
 			LOG.warning(FuncTemplate.class.getSimpleName() + ": " + e.getMessage());
 		}

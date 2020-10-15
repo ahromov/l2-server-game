@@ -38,7 +38,7 @@ import com.l2jserver.gameserver.model.interfaces.IParserAdvUtils;
 public class StatsSet implements IParserAdvUtils {
 	private static final Logger _log = Logger.getLogger(StatsSet.class.getName());
 	/** Static empty immutable map, used to avoid multiple null checks over the source. */
-	public static final StatsSet EMPTY_STATSET = new StatsSet(Collections.<String, Object> emptyMap());
+	public static final StatsSet EMPTY_STATSET = new StatsSet(Collections.emptyMap());
 	
 	private final Map<String, Object> _set;
 	
@@ -91,7 +91,7 @@ public class StatsSet implements IParserAdvUtils {
 			throw new IllegalArgumentException("Boolean value required, but not specified");
 		}
 		if (val instanceof Boolean) {
-			return ((Boolean) val).booleanValue();
+			return (Boolean) val;
 		}
 		try {
 			return Boolean.parseBoolean((String) val);
@@ -113,7 +113,7 @@ public class StatsSet implements IParserAdvUtils {
 			return defaultValue;
 		}
 		if (val instanceof Boolean) {
-			return ((Boolean) val).booleanValue();
+			return (Boolean) val;
 		}
 		try {
 			return Boolean.parseBoolean((String) val);
@@ -160,15 +160,14 @@ public class StatsSet implements IParserAdvUtils {
 			throw new IllegalArgumentException("Byte value required, but not specified");
 		}
 		if (val instanceof Number) {
-			byte[] result = {
+			return new byte[] {
 				((Number) val).byteValue()
 			};
-			return result;
 		}
 		int c = 0;
-		String[] vals = ((String) val).split(splitOn);
-		byte[] result = new byte[vals.length];
-		for (String v : vals) {
+		String[] values = ((String) val).split(splitOn);
+		byte[] result = new byte[values.length];
+		for (String v : values) {
 			try {
 				result[c++] = Byte.parseByte(v);
 			} catch (Exception e) {
@@ -258,15 +257,14 @@ public class StatsSet implements IParserAdvUtils {
 			throw new IllegalArgumentException("Integer value required, but not specified");
 		}
 		if (val instanceof Number) {
-			int[] result = {
+			return new int[] {
 				((Number) val).intValue()
 			};
-			return result;
 		}
 		int c = 0;
-		String[] vals = ((String) val).split(splitOn);
-		int[] result = new int[vals.length];
-		for (String v : vals) {
+		String[] values = ((String) val).split(splitOn);
+		int[] result = new int[values.length];
+		for (String v : values) {
 			try {
 				result[c++] = Integer.parseInt(v);
 			} catch (Exception e) {
@@ -444,20 +442,18 @@ public class StatsSet implements IParserAdvUtils {
 	
 	public SkillHolder getSkillHolder(String key) {
 		Object obj = _set.get(key);
-		if ((obj == null) || !(obj instanceof SkillHolder)) {
+		if (!(obj instanceof SkillHolder)) {
 			return null;
 		}
-		
 		return (SkillHolder) obj;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<MinionHolder> getMinionList(String key) {
 		Object obj = _set.get(key);
-		if ((obj == null) || !(obj instanceof List<?>)) {
+		if (!(obj instanceof List<?>)) {
 			return Collections.emptyList();
 		}
-		
 		return (List<MinionHolder>) obj;
 	}
 	

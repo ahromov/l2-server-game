@@ -59,7 +59,7 @@ public class L2Spawn implements IPositionable, IIdentifiable, INamable {
 	/** String identifier of this spawn */
 	private String _name;
 	/** The link on the L2NpcTemplate object containing generic and static properties of this spawn (ex : RewardExp, RewardSP, AggroRange...) */
-	private L2NpcTemplate _template;
+	private final L2NpcTemplate _template;
 	/** The maximum number of L2NpcInstance that can manage this L2Spawn */
 	private int _maximumCount;
 	/** The current number of L2NpcInstance managed by this L2Spawn */
@@ -82,7 +82,7 @@ public class L2Spawn implements IPositionable, IIdentifiable, INamable {
 	private boolean _doRespawn;
 	/** If true then spawn is custom */
 	private boolean _customSpawn;
-	private static List<SpawnListener> _spawnListeners = new CopyOnWriteArrayList<>();
+	private static final List<SpawnListener> _spawnListeners = new CopyOnWriteArrayList<>();
 	private final Deque<L2Npc> _spawnedNpcs = new ConcurrentLinkedDeque<>();
 	private Map<Integer, Location> _lastSpawnPoints;
 	private boolean _isNoRndWalk = false; // Is no random walk
@@ -466,7 +466,7 @@ public class L2Spawn implements IPositionable, IIdentifiable, INamable {
 	}
 	
 	/**
-	 * Create the L2NpcInstance, add it to the world and lauch its OnSpawn action.<br>
+	 * Create the L2NpcInstance, add it to the world and launch its OnSpawn action.<br>
 	 * <B><U>Concept</U>:</B><br>
 	 * L2NpcInstance can be spawned either in a random position into a location area (if Lox=0 and Locy=0), either at an exact position.<br>
 	 * The heading of the L2NpcInstance can be a random heading if not defined (value= -1) or an exact heading (ex : merchant...).<br>
@@ -502,7 +502,7 @@ public class L2Spawn implements IPositionable, IIdentifiable, INamable {
 				npc.setShowSummonAnimation(isSummonSpawn);
 			}
 			
-			// Check for certain AI data, overriden in spawnlist
+			// Check for certain AI data, overridden in spawnlist
 			if (_name != null) {
 				NpcPersonalAIData.getInstance().initializeNpcParameters(npc, this, _name);
 			}

@@ -72,24 +72,14 @@ public class L2ClanHallDoormenInstance extends L2DoormenInstance {
 				}
 				
 				st.nextToken();
-				boolean ok = false;
-				switch (Integer.parseInt(st.nextToken())) {
-					case 1:
-						ok = Evolve.doEvolve(player, this, 9882, 10307, 55);
-						break;
-					case 2:
-						ok = Evolve.doEvolve(player, this, 4422, 10308, 55);
-						break;
-					case 3:
-						ok = Evolve.doEvolve(player, this, 4423, 10309, 55);
-						break;
-					case 4:
-						ok = Evolve.doEvolve(player, this, 4424, 10310, 55);
-						break;
-					case 5:
-						ok = Evolve.doEvolve(player, this, 10426, 10611, 70);
-						break;
-				}
+				boolean ok = switch (Integer.parseInt(st.nextToken())) {
+					case 1 -> Evolve.doEvolve(player, this, 9882, 10307, 55);
+					case 2 -> Evolve.doEvolve(player, this, 4422, 10308, 55);
+					case 3 -> Evolve.doEvolve(player, this, 4423, 10309, 55);
+					case 4 -> Evolve.doEvolve(player, this, 4424, 10310, 55);
+					case 5 -> Evolve.doEvolve(player, this, 10426, 10611, 70);
+					default -> false;
+				};
 				final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 				if (ok) {
 					html.setFile(player.getHtmlPrefix(), "data/html/clanHallDoormen/evolve-ok.htm");
@@ -155,7 +145,7 @@ public class L2ClanHallDoormenInstance extends L2DoormenInstance {
 		player.sendPacket(html);
 	}
 	
-	private final ClanHall getClanHall() {
+	private ClanHall getClanHall() {
 		if (!_init) {
 			synchronized (this) {
 				if (!_init) {
@@ -173,9 +163,7 @@ public class L2ClanHallDoormenInstance extends L2DoormenInstance {
 	@Override
 	protected final boolean isOwnerClan(L2PcInstance player) {
 		if ((player.getClan() != null) && (getClanHall() != null)) {
-			if (player.getClanId() == getClanHall().getOwnerId()) {
-				return true;
-			}
+			return player.getClanId() == getClanHall().getOwnerId();
 		}
 		return false;
 	}

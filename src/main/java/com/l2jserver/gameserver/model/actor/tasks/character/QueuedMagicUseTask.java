@@ -22,7 +22,7 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * Task dedicated to qued magic use of character
+ * Task dedicated to queued magic use of character
  * @author xban1x
  */
 public final class QueuedMagicUseTask implements Runnable {

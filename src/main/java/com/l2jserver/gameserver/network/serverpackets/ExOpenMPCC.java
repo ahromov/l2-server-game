@@ -19,18 +19,19 @@
 package com.l2jserver.gameserver.network.serverpackets;
 
 /**
- * Opens the CommandChannel Information window
+ * Opens the Command Channel Information window.
  * @author chris_00
  */
 public class ExOpenMPCC extends L2GameServerPacket {
 	public static final ExOpenMPCC STATIC_PACKET = new ExOpenMPCC();
 	
 	private ExOpenMPCC() {
+		// Do nothing.
 	}
 	
 	@Override
 	protected void writeImpl() {
-		writeC(0xfe);
+		writeC(0xFE);
 		writeH(0x12);
 	}
 }

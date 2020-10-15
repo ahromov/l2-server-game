@@ -24,6 +24,7 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
+ * Target playable condition.
  * @author DS
  */
 public class ConditionTargetPlayable extends Condition {

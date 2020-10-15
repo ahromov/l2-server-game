@@ -19,6 +19,8 @@
 package com.l2jserver.gameserver.network.serverpackets;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -33,17 +35,13 @@ public class GMViewItemList extends AbstractItemPacket {
 	public GMViewItemList(L2PcInstance cha) {
 		_playerName = cha.getName();
 		_limit = cha.getInventoryLimit();
-		for (L2ItemInstance item : cha.getInventory().getItems()) {
-			_items.add(item);
-		}
+		Collections.addAll(_items, cha.getInventory().getItems());
 	}
 	
 	public GMViewItemList(L2PetInstance cha) {
 		_playerName = cha.getName();
 		_limit = cha.getInventoryLimit();
-		for (L2ItemInstance item : cha.getInventory().getItems()) {
-			_items.add(item);
-		}
+		_items.addAll(Arrays.asList(cha.getInventory().getItems()));
 	}
 	
 	@Override

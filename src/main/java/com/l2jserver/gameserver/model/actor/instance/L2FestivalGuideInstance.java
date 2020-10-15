@@ -49,93 +49,83 @@ public final class L2FestivalGuideInstance extends L2Npc {
 		setInstanceType(InstanceType.L2FestivalGiudeInstance);
 		
 		switch (getId()) {
-			case 31127:
-			case 31132:
+			case 31127, 31132 -> {
 				_festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_31;
 				_festivalOracle = SevenSigns.CABAL_DAWN;
 				_blueStonesNeeded = 900;
 				_greenStonesNeeded = 540;
 				_redStonesNeeded = 270;
-				break;
-			case 31128:
-			case 31133:
+			}
+			case 31128, 31133 -> {
 				_festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_42;
 				_festivalOracle = SevenSigns.CABAL_DAWN;
 				_blueStonesNeeded = 1500;
 				_greenStonesNeeded = 900;
 				_redStonesNeeded = 450;
-				break;
-			case 31129:
-			case 31134:
+			}
+			case 31129, 31134 -> {
 				_festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_53;
 				_festivalOracle = SevenSigns.CABAL_DAWN;
 				_blueStonesNeeded = 3000;
 				_greenStonesNeeded = 1800;
 				_redStonesNeeded = 900;
-				break;
-			case 31130:
-			case 31135:
+			}
+			case 31130, 31135 -> {
 				_festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_64;
 				_festivalOracle = SevenSigns.CABAL_DAWN;
 				_blueStonesNeeded = 4500;
 				_greenStonesNeeded = 2700;
 				_redStonesNeeded = 1350;
-				break;
-			case 31131:
-			case 31136:
+			}
+			case 31131, 31136 -> {
 				_festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_NONE;
 				_festivalOracle = SevenSigns.CABAL_DAWN;
 				_blueStonesNeeded = 6000;
 				_greenStonesNeeded = 3600;
 				_redStonesNeeded = 1800;
-				break;
-			
-			case 31137:
-			case 31142:
+			}
+			case 31137, 31142 -> {
 				_festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_31;
 				_festivalOracle = SevenSigns.CABAL_DUSK;
 				_blueStonesNeeded = 900;
 				_greenStonesNeeded = 540;
 				_redStonesNeeded = 270;
-				break;
-			case 31138:
-			case 31143:
+			}
+			case 31138, 31143 -> {
 				_festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_42;
 				_festivalOracle = SevenSigns.CABAL_DUSK;
 				_blueStonesNeeded = 1500;
 				_greenStonesNeeded = 900;
 				_redStonesNeeded = 450;
-				break;
-			case 31139:
-			case 31144:
+			}
+			case 31139, 31144 -> {
 				_festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_53;
 				_festivalOracle = SevenSigns.CABAL_DUSK;
 				_blueStonesNeeded = 3000;
 				_greenStonesNeeded = 1800;
 				_redStonesNeeded = 900;
-				break;
-			case 31140:
-			case 31145:
+			}
+			case 31140, 31145 -> {
 				_festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_64;
 				_festivalOracle = SevenSigns.CABAL_DUSK;
 				_blueStonesNeeded = 4500;
 				_greenStonesNeeded = 2700;
 				_redStonesNeeded = 1350;
-				break;
-			case 31141:
-			case 31146:
+			}
+			case 31141, 31146 -> {
 				_festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_NONE;
 				_festivalOracle = SevenSigns.CABAL_DUSK;
 				_blueStonesNeeded = 6000;
 				_greenStonesNeeded = 3600;
 				_redStonesNeeded = 1800;
-				break;
-			default:
+			}
+			default -> {
 				_festivalType = SevenSignsFestival.FESTIVAL_LEVEL_MAX_NONE;
 				_festivalOracle = SevenSigns.CABAL_NULL;
 				_blueStonesNeeded = 0;
 				_greenStonesNeeded = 0;
 				_redStonesNeeded = 0;
+			}
 		}
 	}
 	
@@ -148,16 +138,12 @@ public final class L2FestivalGuideInstance extends L2Npc {
 	}
 	
 	public int getStoneCount(int stoneType) {
-		switch (stoneType) {
-			case SevenSigns.SEAL_STONE_BLUE_ID:
-				return _blueStonesNeeded;
-			case SevenSigns.SEAL_STONE_GREEN_ID:
-				return _greenStonesNeeded;
-			case SevenSigns.SEAL_STONE_RED_ID:
-				return _redStonesNeeded;
-			default:
-				return -1;
-		}
+		return switch (stoneType) {
+			case SevenSigns.SEAL_STONE_BLUE_ID -> _blueStonesNeeded;
+			case SevenSigns.SEAL_STONE_GREEN_ID -> _greenStonesNeeded;
+			case SevenSigns.SEAL_STONE_RED_ID -> _redStonesNeeded;
+			default -> -1;
+		};
 	}
 	
 	public void showChatWindow(L2PcInstance player, int val, String suffix, boolean isDescription) {

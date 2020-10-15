@@ -51,5 +51,4 @@ public class L2RecipeInstance {
 	public int getQuantity() {
 		return _quantity;
 	}
-	
 }

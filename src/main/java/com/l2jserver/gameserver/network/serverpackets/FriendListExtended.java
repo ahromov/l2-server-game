@@ -30,11 +30,12 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 /**
  * Support for "Chat with Friends" dialog. <br />
  * This packet is sent only at login.
- * @author mrTJO, UnAfraid
+ * @author mrTJO
+ * @author UnAfraid
  */
 public class FriendListExtended extends L2GameServerPacket {
 	
-	private List<FriendInfo> _info;
+	private final List<FriendInfo> _info;
 	
 	private static class FriendInfo {
 		int _objId;
@@ -66,9 +67,9 @@ public class FriendListExtended extends L2GameServerPacket {
 				try (var con = ConnectionFactory.getInstance().getConnection();
 					var statement = con.prepareStatement("SELECT char_name, online, classid, level FROM characters WHERE charId = ?")) {
 					statement.setInt(1, objId);
-					try (var rset = statement.executeQuery()) {
-						if (rset.next()) {
-							_info.add(new FriendInfo(objId, rset.getString(1), rset.getInt(2) == 1, rset.getInt(3), rset.getInt(4)));
+					try (var rs = statement.executeQuery()) {
+						if (rs.next()) {
+							_info.add(new FriendInfo(objId, rs.getString(1), rs.getInt(2) == 1, rs.getInt(3), rs.getInt(4)));
 						}
 					}
 				} catch (Exception e) {

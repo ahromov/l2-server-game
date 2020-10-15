@@ -47,7 +47,7 @@ public class MonsterRace {
 	}
 	
 	public void newRace() {
-		int random = 0;
+		int random;
 		
 		for (int i = 0; i < 8; i++) {
 			int id = 31003;
@@ -56,7 +56,6 @@ public class MonsterRace {
 				for (int j = i - 1; j >= 0; j--) {
 					if (_monsters[j].getTemplate().getId() == (id + random)) {
 						random = Rnd.get(24);
-						continue;
 					}
 				}
 				break;
@@ -74,7 +73,7 @@ public class MonsterRace {
 	
 	public void newSpeeds() {
 		_speeds = new int[8][20];
-		int total = 0;
+		int total;
 		_first[1] = 0;
 		_second[1] = 0;
 		for (int i = 0; i < 8; i++) {

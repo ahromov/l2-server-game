@@ -32,10 +32,6 @@ public final class TempItem {
 	private final int _referencePrice;
 	private final String _itemName;
 	
-	/**
-	 * @param item
-	 * @param quantity of that item
-	 */
 	public TempItem(L2ItemInstance item, int quantity) {
 		super();
 		_itemId = item.getId();
@@ -44,16 +40,10 @@ public final class TempItem {
 		_referencePrice = item.getReferencePrice();
 	}
 	
-	/**
-	 * @return the quantity.
-	 */
 	public int getQuantity() {
 		return _quantity;
 	}
 	
-	/**
-	 * @param quantity The quantity to set.
-	 */
 	public void setQuantity(int quantity) {
 		_quantity = quantity;
 	}
@@ -62,16 +52,10 @@ public final class TempItem {
 		return _referencePrice;
 	}
 	
-	/**
-	 * @return the itemId.
-	 */
 	public int getItemId() {
 		return _itemId;
 	}
 	
-	/**
-	 * @return the itemName.
-	 */
 	public String getItemName() {
 		return _itemName;
 	}

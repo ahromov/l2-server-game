@@ -25,7 +25,8 @@ import com.l2jserver.gameserver.model.skills.Skill;
  * Simple class containing all necessary information to maintain<br>
  * valid time stamps and reuse for skills and items reuse upon re-login.<br>
  * <b>Filter this carefully as it becomes redundant to store reuse for small delays.</b>
- * @author Yesod, Zoey76
+ * @author Yesod
+ * @author Zoey76
  */
 public class TimeStamp {
 	/** Item or skill ID. */

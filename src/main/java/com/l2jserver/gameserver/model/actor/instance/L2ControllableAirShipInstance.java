@@ -166,15 +166,8 @@ public class L2ControllableAirShipInstance extends L2AirShipInstance {
 	
 	@Override
 	public void setFuel(int f) {
-		
 		final int old = _fuel;
-		if (f < 0) {
-			_fuel = 0;
-		} else if (f > _maxFuel) {
-			_fuel = _maxFuel;
-		} else {
-			_fuel = f;
-		}
+		_fuel = Math.min(Math.max(f, 0), _maxFuel);
 		
 		if ((_fuel == 0) && (old > 0)) {
 			broadcastToPassengers(SystemMessage.getSystemMessage(SystemMessageId.THE_AIRSHIP_FUEL_RUN_OUT));

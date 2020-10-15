@@ -33,7 +33,7 @@ public enum ItemType2 {
 	
 	private final int _id;
 	
-	private ItemType2(int id) {
+	ItemType2(int id) {
 		_id = id;
 	}
 	

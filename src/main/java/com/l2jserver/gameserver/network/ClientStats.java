@@ -165,7 +165,7 @@ public class ClientStats {
 		return _floodsInMin > general().getClientPacketQueueMaxFloodsPerMin();
 	}
 	
-	private final boolean longFloodDetected() {
+	private boolean longFloodDetected() {
 		return (_totalCount / BUFFER_SIZE) > general().getClientPacketQueueMaxAveragePacketsPerSecond();
 	}
 	
@@ -173,7 +173,7 @@ public class ClientStats {
 	 * Later during flood returns true (and send ActionFailed) once per second.
 	 * @return true if flood detected first and ActionFailed packet need to be sent.
 	 */
-	private final synchronized boolean countPacket() {
+	private synchronized boolean countPacket() {
 		_totalCount++;
 		final long tick = System.currentTimeMillis();
 		if ((tick - _packetCountStartTick) > 1000) {

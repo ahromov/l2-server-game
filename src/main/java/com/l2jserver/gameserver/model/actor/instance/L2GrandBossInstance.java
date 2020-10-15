@@ -30,16 +30,12 @@ import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 /**
  * This class manages all Grand Bosses.
- * @version $Revision: 1.0.0.0 $ $Date: 2006/06/16 $
+ * @since 2006/06/16
  */
 public final class L2GrandBossInstance extends L2MonsterInstance {
 	private static final int BOSS_MAINTENANCE_INTERVAL = 10000;
 	private boolean _useRaidCurse = true;
 	
-	/**
-	 * Creates a grand boss.
-	 * @param template the grand boss NPC template
-	 */
 	public L2GrandBossInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2GrandBossInstance);

@@ -26,13 +26,11 @@ import com.l2jserver.gameserver.model.zone.ZoneId;
 import com.l2jserver.gameserver.network.SystemMessageId;
 
 /**
- * This class manages AI of L2Playable.
+ * Playable creatures AI.
  * @author JIV
  */
 public abstract class L2PlayableAI extends L2CharacterAI {
-	/**
-	 * @param creature the creature
-	 */
+	
 	public L2PlayableAI(L2Playable creature) {
 		super(creature);
 	}

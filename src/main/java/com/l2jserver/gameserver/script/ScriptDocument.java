@@ -30,9 +30,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-/**
- *
- */
 public class ScriptDocument {
 	private static final Logger _log = Logger.getLogger(ScriptDocument.class.getName());
 	
@@ -54,13 +51,9 @@ public class ScriptDocument {
 				x = sxe.getException();
 			}
 			_log.warning(getClass().getSimpleName() + ": " + x.getMessage());
-		} catch (ParserConfigurationException pce) {
+		} catch (ParserConfigurationException | IOException pce) {
 			// Parser with specified options can't be built
 			_log.log(Level.WARNING, "", pce);
-			
-		} catch (IOException ioe) {
-			// I/O error
-			_log.log(Level.WARNING, "", ioe);
 		}
 	}
 	
@@ -68,9 +61,6 @@ public class ScriptDocument {
 		return _document;
 	}
 	
-	/**
-	 * @return Returns the _name.
-	 */
 	public String getName() {
 		return _name;
 	}
@@ -79,5 +69,4 @@ public class ScriptDocument {
 	public String toString() {
 		return _name;
 	}
-	
 }

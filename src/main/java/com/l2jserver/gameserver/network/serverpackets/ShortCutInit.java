@@ -41,7 +41,7 @@ public final class ShortCutInit extends L2GameServerPacket {
 			writeD(sc.getSlot() + (sc.getPage() * 12));
 			
 			switch (sc.getType()) {
-				case ITEM: {
+				case ITEM -> {
 					writeD(sc.getId());
 					writeD(0x01);
 					writeD(sc.getSharedReuseGroup());
@@ -49,19 +49,14 @@ public final class ShortCutInit extends L2GameServerPacket {
 					writeD(0x00);
 					writeH(0x00);
 					writeH(0x00);
-					break;
 				}
-				case SKILL: {
+				case SKILL -> {
 					writeD(sc.getId());
 					writeD(sc.getLevel());
 					writeC(0x00); // C5
 					writeD(0x01); // C6
-					break;
 				}
-				case ACTION:
-				case MACRO:
-				case RECIPE:
-				case BOOKMARK: {
+				case ACTION, MACRO, RECIPE, BOOKMARK -> {
 					writeD(sc.getId());
 					writeD(0x01); // C6
 				}

@@ -25,7 +25,8 @@ import com.l2jserver.gameserver.network.serverpackets.ExConfirmAddingContact;
 
 /**
  * Format: (ch)S S: Character Name
- * @author UnAfraid & mrTJO
+ * @author UnAfraid
+ * @author mrTJO
  */
 public class RequestExAddContactToContactList extends L2GameClientPacket {
 	private static final String _C__D0_84_REQUESTEXADDCONTACTTOCONTACTLIST = "[C] D0:84 RequestExAddContactToContactList";

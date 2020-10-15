@@ -91,7 +91,7 @@ public final class RequestJoinDominionWar extends L2GameClientPacket {
 				if (TerritoryWarManager.getInstance().checkIsRegistered(-1, activeChar.getObjectId())) {
 					activeChar.sendPacket(SystemMessageId.YOU_ALREADY_REQUESTED_TW_REGISTRATION);
 					return;
-				} else if ((clan != null) && TerritoryWarManager.getInstance().checkIsRegistered(-1, clan)) {
+				} else if (TerritoryWarManager.getInstance().checkIsRegistered(-1, clan)) {
 					activeChar.sendPacket(SystemMessageId.YOU_ALREADY_REQUESTED_TW_REGISTRATION);
 					return;
 				}

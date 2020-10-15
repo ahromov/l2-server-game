@@ -77,14 +77,9 @@ public class L2SummonAI extends L2PlayableAI implements Runnable {
 	@Override
 	synchronized void changeIntention(CtrlIntention intention, Object arg0, Object arg1) {
 		switch (intention) {
-			case AI_INTENTION_ACTIVE:
-			case AI_INTENTION_FOLLOW:
-				startAvoidTask();
-				break;
-			default:
-				stopAvoidTask();
+			case AI_INTENTION_ACTIVE, AI_INTENTION_FOLLOW -> startAvoidTask();
+			default -> stopAvoidTask();
 		}
-		
 		super.changeIntention(intention, arg0, arg1);
 	}
 	
@@ -147,18 +142,10 @@ public class L2SummonAI extends L2PlayableAI implements Runnable {
 		_thinking = true;
 		try {
 			switch (getIntention()) {
-				case AI_INTENTION_ATTACK:
-					thinkAttack();
-					break;
-				case AI_INTENTION_CAST:
-					thinkCast();
-					break;
-				case AI_INTENTION_PICK_UP:
-					thinkPickUp();
-					break;
-				case AI_INTENTION_INTERACT:
-					thinkInteract();
-					break;
+				case AI_INTENTION_ATTACK -> thinkAttack();
+				case AI_INTENTION_CAST -> thinkCast();
+				case AI_INTENTION_PICK_UP -> thinkPickUp();
+				case AI_INTENTION_INTERACT -> thinkInteract();
 			}
 		} finally {
 			_thinking = false;
@@ -219,12 +206,7 @@ public class L2SummonAI extends L2PlayableAI implements Runnable {
 	public void notifyFollowStatusChange() {
 		_startFollow = !_startFollow;
 		switch (getIntention()) {
-			case AI_INTENTION_ACTIVE:
-			case AI_INTENTION_FOLLOW:
-			case AI_INTENTION_IDLE:
-			case AI_INTENTION_MOVE_TO:
-			case AI_INTENTION_PICK_UP:
-				((L2Summon) _actor).setFollowStatus(_startFollow);
+			case AI_INTENTION_ACTIVE, AI_INTENTION_FOLLOW, AI_INTENTION_IDLE, AI_INTENTION_MOVE_TO, AI_INTENTION_PICK_UP -> ((L2Summon) _actor).setFollowStatus(_startFollow);
 		}
 	}
 	

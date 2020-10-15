@@ -24,5 +24,5 @@ package com.l2jserver.gameserver.enums;
 public enum InstanceReenterType {
 	NONE,
 	ON_INSTANCE_ENTER,
-	ON_INSTANCE_FINISH,
+	ON_INSTANCE_FINISH
 }

@@ -475,40 +475,6 @@ public final class L2NpcTemplate extends L2CharTemplate implements IIdentifiable
 		return _collisionHeightGrown;
 	}
 	
-	public static boolean isAssignableTo(Class<?> sub, Class<?> clazz) {
-		// If clazz represents an interface
-		if (clazz.isInterface()) {
-			// check if obj implements the clazz interface
-			Class<?>[] interfaces = sub.getInterfaces();
-			for (Class<?> interface1 : interfaces) {
-				if (clazz.getName().equals(interface1.getName())) {
-					return true;
-				}
-			}
-		} else {
-			do {
-				if (sub.getName().equals(clazz.getName())) {
-					return true;
-				}
-				
-				sub = sub.getSuperclass();
-			}
-			while (sub != null);
-		}
-		return false;
-	}
-	
-	/**
-	 * Checks if obj can be assigned to the Class represented by clazz.<br>
-	 * This is true if, and only if, obj is the same class represented by clazz, or a subclass of it or obj implements the interface represented by clazz.
-	 * @param obj
-	 * @param clazz
-	 * @return {@code true} if the object can be assigned to the class, {@code false} otherwise
-	 */
-	public static boolean isAssignableTo(Object obj, Class<?> clazz) {
-		return L2NpcTemplate.isAssignableTo(obj.getClass(), clazz);
-	}
-	
 	public boolean canTeach(ClassId classId) {
 		// If the player is on a third class, fetch the class teacher
 		// information for its parent class.

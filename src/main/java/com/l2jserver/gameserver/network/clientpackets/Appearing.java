@@ -23,13 +23,8 @@ import com.l2jserver.gameserver.network.serverpackets.ExBrExtraUserInfo;
 import com.l2jserver.gameserver.network.serverpackets.UserInfo;
 
 /**
- * Appearing Packet Handler
- * <p>
- * <p>
- * 0000: 30
- * <p>
- * <p>
- * @version $Revision: 1.3.4.4 $ $Date: 2005/03/29 23:15:33 $
+ * Appearing packet.
+ * @since 2005/03/29 23:15:33
  */
 public final class Appearing extends L2GameClientPacket {
 	private static final String _C__3A_APPEARING = "[C] 3A Appearing";

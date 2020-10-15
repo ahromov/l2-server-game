@@ -39,7 +39,8 @@ import com.l2jserver.gameserver.network.serverpackets.L2GameServerPacket;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 /**
- * @author Pere, DS
+ * @author Pere
+ * @author DS
  */
 public class OlympiadGameTeams extends AbstractOlympiadGame {
 	public static final int MAX_TEAM_SIZE = 3;

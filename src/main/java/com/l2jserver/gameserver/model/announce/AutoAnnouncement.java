@@ -42,7 +42,7 @@ public final class AutoAnnouncement extends Announcement implements Runnable {
 	
 	private long _delay;
 	
-	private int _repeat = -1;
+	private int _repeat;
 	
 	private int _currentState;
 	
@@ -91,9 +91,9 @@ public final class AutoAnnouncement extends Announcement implements Runnable {
 			ps.setLong(5, getDelay());
 			ps.setInt(6, getRepeat());
 			ps.execute();
-			try (var rset = ps.getGeneratedKeys()) {
-				if (rset.next()) {
-					_id = rset.getInt(1);
+			try (var rs = ps.getGeneratedKeys()) {
+				if (rs.next()) {
+					_id = rs.getInt(1);
 				}
 			}
 		} catch (Exception e) {

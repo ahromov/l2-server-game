@@ -25,18 +25,13 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerState.
+ * State condition.
  * @author mkizub
  */
 public class ConditionPlayerState extends Condition {
 	private final PlayerState _check;
 	private final boolean _required;
 	
-	/**
-	 * Instantiates a new condition player state.
-	 * @param check the player state to be verified.
-	 * @param required the required value.
-	 */
 	public ConditionPlayerState(PlayerState check, boolean required) {
 		_check = check;
 		_required = required;
@@ -44,7 +39,6 @@ public class ConditionPlayerState extends Condition {
 	
 	@Override
 	public boolean testImpl(L2Character effector, L2Character effected, Skill skill, L2Item item) {
-		final L2Character character = effector;
 		final L2PcInstance player = effector.getActingPlayer();
 		switch (_check) {
 			case RESTING:
@@ -53,20 +47,20 @@ public class ConditionPlayerState extends Condition {
 				}
 				return !_required;
 			case MOVING:
-				return character.isMoving() == _required;
+				return effector.isMoving() == _required;
 			case RUNNING:
-				return character.isRunning() == _required;
+				return effector.isRunning() == _required;
 			case STANDING:
 				if (player != null) {
 					return (_required != (player.isSitting() || player.isMoving()));
 				}
-				return (_required != character.isMoving());
+				return (_required != effector.isMoving());
 			case FLYING:
-				return (character.isFlying() == _required);
+				return (effector.isFlying() == _required);
 			case BEHIND:
-				return (character.isBehindTarget() == _required);
+				return (effector.isBehindTarget() == _required);
 			case FRONT:
-				return (character.isInFrontOfTarget() == _required);
+				return (effector.isInFrontOfTarget() == _required);
 			case CHAOTIC:
 				if (player != null) {
 					return ((player.getKarma() > 0) == _required);

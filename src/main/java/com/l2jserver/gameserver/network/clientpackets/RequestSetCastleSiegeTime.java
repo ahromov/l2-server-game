@@ -57,10 +57,14 @@ public class RequestSetCastleSiegeTime extends L2GameClientPacket {
 		if ((castle.getOwnerId() > 0) && (castle.getOwnerId() != activeChar.getClanId())) {
 			_log.log(Level.WARNING, getType() + ": activeChar: " + activeChar + " castle: " + castle + " castleId: " + _castleId + " is trying to change siege date of not his own castle!");
 			return;
-		} else if (!activeChar.isClanLeader()) {
+		}
+		
+		if (!activeChar.isClanLeader()) {
 			_log.log(Level.WARNING, getType() + ": activeChar: " + activeChar + " castle: " + castle + " castleId: " + _castleId + " is trying to change siege date but is not clan leader!");
 			return;
-		} else if (!castle.getIsTimeRegistrationOver()) {
+		}
+		
+		if (!castle.getIsTimeRegistrationOver()) {
 			if (isSiegeTimeValid(castle.getSiegeDate().getTimeInMillis(), _time)) {
 				castle.getSiegeDate().setTimeInMillis(_time);
 				castle.setIsTimeRegistrationOver(true);
@@ -77,14 +81,14 @@ public class RequestSetCastleSiegeTime extends L2GameClientPacket {
 		}
 	}
 	
-	private static boolean isSiegeTimeValid(long siegeDate, long choosenDate) {
+	private static boolean isSiegeTimeValid(long siegeDate, long chosenDate) {
 		Calendar cal1 = Calendar.getInstance();
 		cal1.setTimeInMillis(siegeDate);
 		cal1.set(Calendar.MINUTE, 0);
 		cal1.set(Calendar.SECOND, 0);
 		
 		Calendar cal2 = Calendar.getInstance();
-		cal2.setTimeInMillis(choosenDate);
+		cal2.setTimeInMillis(chosenDate);
 		
 		for (int hour : castle().getSiegeHourList()) {
 			cal1.set(Calendar.HOUR_OF_DAY, hour);

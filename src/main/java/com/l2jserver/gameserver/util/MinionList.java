@@ -35,7 +35,8 @@ import com.l2jserver.gameserver.model.actor.templates.L2NpcTemplate;
 import com.l2jserver.gameserver.model.holders.MinionHolder;
 
 /**
- * @author luisantonioa, DS
+ * @author luisantonioa
+ * @author DS
  */
 public class MinionList {
 	private static final Logger _log = Logger.getLogger(MinionList.class.getName());
@@ -123,8 +124,6 @@ public class MinionList {
 			_reusedMinionReferences.clear();
 		}
 	}
-	
-	// hooks
 	
 	/**
 	 * Called on the master spawn Old minions (from previous spawn) are deleted. If master can respawn - enabled reuse of the killed minions.
@@ -229,7 +228,7 @@ public class MinionList {
 		}
 	}
 	
-	private final void spawnMinion(int minionId) {
+	private void spawnMinion(int minionId) {
 		if (minionId == 0) {
 			return;
 		}
@@ -285,7 +284,7 @@ public class MinionList {
 	 * @param minionId The L2NpcTemplate Identifier of the Minion to spawn
 	 * @return
 	 */
-	public static final L2MonsterInstance spawnMinion(L2MonsterInstance master, int minionId) {
+	public static L2MonsterInstance spawnMinion(L2MonsterInstance master, int minionId) {
 		// Get the template of the Minion to spawn
 		L2NpcTemplate minionTemplate = NpcData.getInstance().getTemplate(minionId);
 		if (minionTemplate == null) {
@@ -294,7 +293,7 @@ public class MinionList {
 		return initializeNpcInstance(master, new L2MonsterInstance(minionTemplate));
 	}
 	
-	protected static final L2MonsterInstance initializeNpcInstance(L2MonsterInstance master, L2MonsterInstance minion) {
+	protected static L2MonsterInstance initializeNpcInstance(L2MonsterInstance master, L2MonsterInstance minion) {
 		minion.stopAllEffects();
 		minion.setIsDead(false);
 		minion.setDecayed(false);
@@ -336,9 +335,7 @@ public class MinionList {
 		return minion;
 	}
 	
-	// Statistics part
-	
-	private final long countSpawnedMinionsById(int minionId) {
+	private long countSpawnedMinionsById(int minionId) {
 		return _minionReferences.stream().filter(npc -> npc.getId() == minionId).count();
 	}
 	

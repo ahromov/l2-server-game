@@ -83,7 +83,7 @@ public class EnchantItemData implements IXmlReader {
 							}
 							_scrolls.put(item.getId(), item);
 						} catch (NullPointerException e) {
-							LOG.warn("Unexistent enchant scroll: {} defined in enchant data!", set.getString("id"));
+							LOG.warn("Nonexistent enchant scroll: {} defined in enchant data!", set.getString("id"));
 						} catch (IllegalAccessError e) {
 							LOG.warn("Wrong enchant scroll item type: {} defined in enchant data!", set.getString("id"));
 						}
@@ -99,7 +99,7 @@ public class EnchantItemData implements IXmlReader {
 							final EnchantSupportItem item = new EnchantSupportItem(set);
 							_supports.put(item.getId(), item);
 						} catch (NullPointerException e) {
-							LOG.warn("Unexistent enchant support item: {} defined in enchant data!", set.getString("id"));
+							LOG.warn("Nonexistent enchant support item: {} defined in enchant data!", set.getString("id"));
 						} catch (IllegalAccessError e) {
 							LOG.warn("Wrong enchant support item type: {} defined in enchant data!", set.getString("id"));
 						}
@@ -131,7 +131,7 @@ public class EnchantItemData implements IXmlReader {
 	 * Gets the single instance of EnchantItemData.
 	 * @return single instance of EnchantItemData
 	 */
-	public static final EnchantItemData getInstance() {
+	public static EnchantItemData getInstance() {
 		return SingletonHolder._instance;
 	}
 	

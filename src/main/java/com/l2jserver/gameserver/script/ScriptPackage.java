@@ -43,23 +43,14 @@ public class ScriptPackage {
 		addFiles(pack);
 	}
 	
-	/**
-	 * @return Returns the otherFiles.
-	 */
 	public List<String> getOtherFiles() {
 		return _otherFiles;
 	}
 	
-	/**
-	 * @return Returns the scriptFiles.
-	 */
 	public List<ScriptDocument> getScriptFiles() {
 		return _scriptFiles;
 	}
 	
-	/**
-	 * @param pack
-	 */
 	private void addFiles(ZipFile pack) {
 		for (Enumeration<? extends ZipEntry> e = pack.entries(); e.hasMoreElements();) {
 			ZipEntry entry = e.nextElement();
@@ -75,9 +66,6 @@ public class ScriptPackage {
 		}
 	}
 	
-	/**
-	 * @return Returns the name.
-	 */
 	public String getName() {
 		return _name;
 	}
@@ -94,7 +82,7 @@ public class ScriptPackage {
 		out.append(Configuration.EOL);
 		
 		if (!getScriptFiles().isEmpty()) {
-			out.append("Xml Script Files..." + Configuration.EOL);
+			out.append("Xml Script Files...").append(Configuration.EOL);
 			for (ScriptDocument script : getScriptFiles()) {
 				out.append(script.getName());
 				out.append(Configuration.EOL);
@@ -102,7 +90,7 @@ public class ScriptPackage {
 		}
 		
 		if (!getOtherFiles().isEmpty()) {
-			out.append("Other Files..." + Configuration.EOL);
+			out.append("Other Files...").append(Configuration.EOL);
 			for (String fileName : getOtherFiles()) {
 				out.append(fileName);
 				out.append(Configuration.EOL);

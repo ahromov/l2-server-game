@@ -21,8 +21,7 @@ package com.l2jserver.gameserver.network.clientpackets;
 import com.l2jserver.gameserver.network.serverpackets.PledgeCrest;
 
 /**
- * This class ...
- * @version $Revision: 1.4.4.4 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class RequestPledgeCrest extends L2GameClientPacket {
 	private static final String _C__68_REQUESTPLEDGECREST = "[C] 68 RequestPledgeCrest";

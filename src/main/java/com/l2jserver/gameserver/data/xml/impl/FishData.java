@@ -34,7 +34,7 @@ import com.l2jserver.gameserver.model.fishing.L2Fish;
 import com.l2jserver.gameserver.util.IXmlReader;
 
 /**
- * This class holds the Fish information.
+ * Fish data parser.
  * @author nonom
  */
 public final class FishData implements IXmlReader {
@@ -76,18 +76,9 @@ public final class FishData implements IXmlReader {
 						
 						final L2Fish fish = new L2Fish(set);
 						switch (fish.getFishGrade()) {
-							case 0: {
-								_fishEasy.put(fish.getFishId(), fish);
-								break;
-							}
-							case 1: {
-								_fishNormal.put(fish.getFishId(), fish);
-								break;
-							}
-							case 2: {
-								_fishHard.put(fish.getFishId(), fish);
-								break;
-							}
+							case 0 -> _fishEasy.put(fish.getFishId(), fish);
+							case 1 -> _fishNormal.put(fish.getFishId(), fish);
+							case 2 -> _fishHard.put(fish.getFishId(), fish);
 						}
 					}
 				}
@@ -104,21 +95,12 @@ public final class FishData implements IXmlReader {
 	 */
 	public List<L2Fish> getFish(int level, int group, int grade) {
 		final ArrayList<L2Fish> result = new ArrayList<>();
-		Map<Integer, L2Fish> fish = null;
+		Map<Integer, L2Fish> fish;
 		switch (grade) {
-			case 0: {
-				fish = _fishEasy;
-				break;
-			}
-			case 1: {
-				fish = _fishNormal;
-				break;
-			}
-			case 2: {
-				fish = _fishHard;
-				break;
-			}
-			default: {
+			case 0 -> fish = _fishEasy;
+			case 1 -> fish = _fishNormal;
+			case 2 -> fish = _fishHard;
+			default -> {
 				LOG.warn("Unmanaged fish grade!");
 				return result;
 			}

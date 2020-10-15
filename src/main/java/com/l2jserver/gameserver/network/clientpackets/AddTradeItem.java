@@ -27,8 +27,7 @@ import com.l2jserver.gameserver.network.serverpackets.TradeOtherAdd;
 import com.l2jserver.gameserver.network.serverpackets.TradeOwnAdd;
 
 /**
- * This class ...
- * @version $Revision: 1.5.2.2.2.5 $ $Date: 2005/03/27 15:29:29 $
+ * @since 2005/03/27 15:29:29
  */
 public final class AddTradeItem extends L2GameClientPacket {
 	private static final String _C__1B_ADDTRADEITEM = "[C] 1B AddTradeItem";

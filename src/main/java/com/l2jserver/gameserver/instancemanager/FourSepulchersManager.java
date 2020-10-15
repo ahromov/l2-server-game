@@ -255,9 +255,7 @@ public final class FourSepulchersManager {
 		_hallInUse.put(31923, false);
 		_hallInUse.put(31924, false);
 		
-		for (int npcId : _archonSpawned.keySet()) {
-			_archonSpawned.put(npcId, false);
-		}
+		_archonSpawned.replaceAll((i, v) -> false);
 	}
 	
 	protected void spawnManagers() {
@@ -269,30 +267,34 @@ public final class FourSepulchersManager {
 				spawnDat.setAmount(1);
 				spawnDat.setRespawnDelay(60);
 				switch (npcId) {
-					case 31921: // conquerors
+					// conquerors
+					case 31921 -> {
 						spawnDat.setX(181061);
 						spawnDat.setY(-85595);
 						spawnDat.setZ(-7200);
 						spawnDat.setHeading(-32584);
-						break;
-					case 31922: // emperors
+					}
+					// emperors
+					case 31922 -> {
 						spawnDat.setX(179292);
 						spawnDat.setY(-88981);
 						spawnDat.setZ(-7200);
 						spawnDat.setHeading(-33272);
-						break;
-					case 31923: // sages
+					}
+					// sages
+					case 31923 -> {
 						spawnDat.setX(173202);
 						spawnDat.setY(-87004);
 						spawnDat.setZ(-7200);
 						spawnDat.setHeading(-16248);
-						break;
-					case 31924: // judges
+					}
+					// judges
+					case 31924 -> {
 						spawnDat.setX(175606);
 						spawnDat.setY(-82853);
 						spawnDat.setZ(-7200);
 						spawnDat.setHeading(-16248);
-						break;
+					}
 				}
 				_managers.add(spawnDat);
 				SpawnTable.getInstance().addNewSpawn(spawnDat, false);
@@ -764,7 +766,7 @@ public final class FourSepulchersManager {
 			}
 		}
 		
-		if (_hallInUse.get(npcId).booleanValue()) {
+		if (_hallInUse.get(npcId)) {
 			showHtmlFile(player, npcId + "-FULL.htm", npc, null);
 			return;
 		}
@@ -996,33 +998,15 @@ public final class FourSepulchersManager {
 				if (mob != null) {
 					mob.mysteriousBoxId = npcId;
 					switch (npcId) {
-						case 31469:
-						case 31474:
-						case 31479:
-						case 31484:
-						case 31472:
-						case 31477:
-						case 31482:
-						case 31487:
-							mobs.add(mob);
+						case 31469, 31474, 31479, 31484, 31472, 31477, 31482, 31487 -> mobs.add(mob);
 					}
 					_allMobs.add(mob);
 				}
 			}
 			
 			switch (npcId) {
-				case 31469:
-				case 31474:
-				case 31479:
-				case 31484:
-					_viscountMobs.put(npcId, mobs);
-					break;
-				case 31472:
-				case 31477:
-				case 31482:
-				case 31487:
-					_dukeMobs.put(npcId, mobs);
-					break;
+				case 31469, 31474, 31479, 31484 -> _viscountMobs.put(npcId, mobs);
+				case 31472, 31477, 31482, 31487 -> _dukeMobs.put(npcId, mobs);
 			}
 		}
 	}
@@ -1203,70 +1187,17 @@ public final class FourSepulchersManager {
 			// mad table for selecting proper minutes...
 			// may be there is a better way to do this
 			switch (min) {
-				case 6:
-				case 7:
-					min = 5;
-					break;
-				case 8:
-				case 9:
-				case 11:
-				case 12:
-					min = 10;
-					break;
-				case 13:
-				case 14:
-				case 16:
-				case 17:
-					min = 15;
-					break;
-				case 18:
-				case 19:
-				case 21:
-				case 22:
-					min = 20;
-					break;
-				case 23:
-				case 24:
-				case 26:
-				case 27:
-					min = 25;
-					break;
-				case 28:
-				case 29:
-				case 31:
-				case 32:
-					min = 30;
-					break;
-				case 33:
-				case 34:
-				case 36:
-				case 37:
-					min = 35;
-					break;
-				case 38:
-				case 39:
-				case 41:
-				case 42:
-					min = 40;
-					break;
-				case 43:
-				case 44:
-				case 46:
-				case 47:
-					min = 45;
-					break;
-				case 48:
-				case 49:
-				case 51:
-				case 52:
-					min = 50;
-					break;
-				case 53:
-				case 54:
-				case 56:
-				case 57:
-					min = 55;
-					break;
+				case 6, 7 -> min = 5;
+				case 8, 9, 11, 12 -> min = 10;
+				case 13, 14, 16, 17 -> min = 15;
+				case 18, 19, 21, 22 -> min = 20;
+				case 23, 24, 26, 27 -> min = 25;
+				case 28, 29, 31, 32 -> min = 30;
+				case 33, 34, 36, 37 -> min = 35;
+				case 38, 39, 41, 42 -> min = 40;
+				case 43, 44, 46, 47 -> min = 45;
+				case 48, 49, 51, 52 -> min = 50;
+				case 53, 54, 56, 57 -> min = 55;
 			}
 		}
 		return min;
@@ -1300,7 +1231,7 @@ public final class FourSepulchersManager {
 				
 				// hall not used right now, so its manager will not tell you anything :)
 				// if you don't need this - delete next two lines.
-				if (!_hallInUse.get(temp.getId()).booleanValue()) {
+				if (!_hallInUse.get(temp.getId())) {
 					continue;
 				}
 				

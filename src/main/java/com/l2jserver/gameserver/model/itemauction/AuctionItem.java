@@ -48,10 +48,7 @@ public final class AuctionItem {
 	
 	public boolean checkItemExists() {
 		final L2Item item = ItemTable.getInstance().getTemplate(_itemId);
-		if (item == null) {
-			return false;
-		}
-		return true;
+		return item != null;
 	}
 	
 	public int getAuctionItemId() {

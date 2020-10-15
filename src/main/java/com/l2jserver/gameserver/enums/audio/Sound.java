@@ -107,7 +107,7 @@ public enum Sound implements IAudio {
 	
 	private final PlaySound _playSound;
 	
-	private Sound(String soundName) {
+	Sound(String soundName) {
 		_playSound = PlaySound.createSound(soundName);
 	}
 	

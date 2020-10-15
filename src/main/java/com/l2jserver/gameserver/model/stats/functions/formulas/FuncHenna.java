@@ -51,24 +51,12 @@ public class FuncHenna extends AbstractFunction {
 		double value = initVal;
 		if (pc != null) {
 			switch (getStat()) {
-				case STAT_STR:
-					value += pc.getHennaStatSTR();
-					break;
-				case STAT_CON:
-					value += pc.getHennaStatCON();
-					break;
-				case STAT_DEX:
-					value += pc.getHennaStatDEX();
-					break;
-				case STAT_INT:
-					value += pc.getHennaStatINT();
-					break;
-				case STAT_WIT:
-					value += pc.getHennaStatWIT();
-					break;
-				case STAT_MEN:
-					value += pc.getHennaStatMEN();
-					break;
+				case STAT_STR -> value += pc.getHennaStatSTR();
+				case STAT_CON -> value += pc.getHennaStatCON();
+				case STAT_DEX -> value += pc.getHennaStatDEX();
+				case STAT_INT -> value += pc.getHennaStatINT();
+				case STAT_WIT -> value += pc.getHennaStatWIT();
+				case STAT_MEN -> value += pc.getHennaStatMEN();
 			}
 		}
 		return value;

@@ -66,9 +66,7 @@ public final class SkillData {
 			final int skillId = skill.getId();
 			final int skillLvl = skill.getLevel();
 			if (skillLvl > 99) {
-				if (!_enchantable.contains(skillId)) {
-					_enchantable.add(skillId);
-				}
+				_enchantable.add(skillId);
 				continue;
 			}
 			
@@ -149,7 +147,7 @@ public final class SkillData {
 		}
 		if (hasCastle) {
 			temp[i++] = _skills.get(SkillData.getSkillHashCode(844, 1));
-			temp[i++] = _skills.get(SkillData.getSkillHashCode(845, 1));
+			temp[i] = _skills.get(SkillData.getSkillHashCode(845, 1));
 		}
 		return temp;
 	}

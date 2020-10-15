@@ -43,8 +43,9 @@ import com.l2jserver.gameserver.network.serverpackets.L2GameServerPacket;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 /**
- * An olympiad stadium
- * @author durgus, DS
+ * Olympiad stadium zone.
+ * @author durgus
+ * @author DS
  */
 public class L2OlympiadStadiumZone extends L2ZoneRespawn {
 	private List<Location> _spectatorLocations;
@@ -58,7 +59,7 @@ public class L2OlympiadStadiumZone extends L2ZoneRespawn {
 		setSettings(settings);
 	}
 	
-	public final class Settings extends AbstractZoneSettings {
+	public static final class Settings extends AbstractZoneSettings {
 		private OlympiadGameTask _task = null;
 		
 		protected Settings() {

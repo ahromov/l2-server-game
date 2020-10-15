@@ -22,8 +22,7 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.SystemMessageId;
 
 /**
- * This class ...
- * @version $Revision: 1.3.2.1.2.3 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class RequestDismissAlly extends L2GameClientPacket {
 	private static final String _C__90_REQUESTDISMISSALLY = "[C] 90 RequestDismissAlly";

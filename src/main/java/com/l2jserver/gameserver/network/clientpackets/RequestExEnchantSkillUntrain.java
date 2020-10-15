@@ -129,7 +129,7 @@ public final class RequestExEnchantSkillUntrain extends L2GameClientPacket {
 		
 		boolean check = true;
 		if (character().enchantSkillSpBookNeeded()) {
-			check &= player.destroyItem("Consume", spb.getObjectId(), 1, player, true);
+			check = player.destroyItem("Consume", spb.getObjectId(), 1, player, true);
 		}
 		
 		check &= player.destroyItemByItemId("Consume", Inventory.ADENA_ID, requireditems, player, true);

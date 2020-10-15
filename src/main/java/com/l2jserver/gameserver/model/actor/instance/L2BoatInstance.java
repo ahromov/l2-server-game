@@ -28,13 +28,11 @@ import com.l2jserver.gameserver.network.serverpackets.VehicleInfo;
 import com.l2jserver.gameserver.network.serverpackets.VehicleStarted;
 
 /**
- * @author Maktakien, DS
+ * @author Maktakien
+ * @author DS
  */
 public class L2BoatInstance extends L2Vehicle {
-	/**
-	 * Creates a boat.
-	 * @param template the boat template
-	 */
+	
 	public L2BoatInstance(L2CharTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2BoatInstance);

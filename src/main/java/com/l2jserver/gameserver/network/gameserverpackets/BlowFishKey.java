@@ -30,12 +30,8 @@ import com.l2jserver.commons.network.BaseSendablePacket;
  * @author -Wooden-
  */
 public class BlowFishKey extends BaseSendablePacket {
-	private static Logger _log = Logger.getLogger(BlowFishKey.class.getName());
+	private static final Logger _log = Logger.getLogger(BlowFishKey.class.getName());
 	
-	/**
-	 * @param blowfishKey
-	 * @param publicKey
-	 */
 	public BlowFishKey(byte[] blowfishKey, RSAPublicKey publicKey) {
 		writeC(0x00);
 		try {

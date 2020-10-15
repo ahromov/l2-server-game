@@ -88,13 +88,11 @@ public class NpcPersonalAIData {
 			try {
 				for (String key : map.keySet()) {
 					switch (key) {
-						case "disableRandomAnimation":
-							npc.setRandomAnimationEnabled((map.get(key) == 0));
-							break;
-						case "disableRandomWalk":
+						case "disableRandomAnimation" -> npc.setRandomAnimationEnabled((map.get(key) == 0));
+						case "disableRandomWalk" -> {
 							npc.setIsNoRndWalk((map.get(key) == 1));
 							spawn.setIsNoRndWalk((map.get(key) == 1));
-							break;
+						}
 					}
 				}
 			} catch (Exception e) {

@@ -32,8 +32,8 @@ import com.l2jserver.gameserver.taskmanager.AttackStanceTaskManager;
 import com.l2jserver.gameserver.util.Util;
 
 /**
- * This class ...
- * @version $Revision: 1.2.2.1.2.5 $ $Date: 2005/03/27 15:29:30 $ CPU Disasm Packets: ddhhQQ cddb
+ * Packets: ddhhQQ cddb
+ * @since 2005/03/27 15:29:30
  */
 public final class SetPrivateStoreListBuy extends L2GameClientPacket {
 	private static final String _C__9A_SETPRIVATESTORELISTBUY = "[C] 9A SetPrivateStoreListBuy";

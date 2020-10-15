@@ -25,7 +25,8 @@ import com.l2jserver.gameserver.model.effects.AbstractEffect;
 import com.l2jserver.gameserver.scripting.ScriptEngineManager;
 
 /**
- * @author BiggBoss, UnAfraid
+ * @author BiggBoss
+ * @author UnAfraid
  */
 public final class EffectHandler implements IHandler<Class<? extends AbstractEffect>, String> {
 	private final Map<String, Class<? extends AbstractEffect>> _handlers;

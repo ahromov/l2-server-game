@@ -26,7 +26,8 @@ import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 /**
  * Format: (ch) S
- * @author -Wooden-, Tryskell
+ * @author -Wooden-
+ * @author Tryskell
  */
 public class RequestAskJoinPartyRoom extends L2GameClientPacket {
 	private String _name;

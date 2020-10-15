@@ -25,13 +25,6 @@ public final class TargetSelected extends L2GameServerPacket {
 	private final int _y;
 	private final int _z;
 	
-	/**
-	 * @param objectId
-	 * @param targetId
-	 * @param x
-	 * @param y
-	 * @param z
-	 */
 	public TargetSelected(int objectId, int targetId, int x, int y, int z) {
 		_objectId = objectId;
 		_targetObjId = targetId;

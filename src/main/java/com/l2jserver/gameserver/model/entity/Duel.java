@@ -508,29 +508,26 @@ public class Duel {
 	private void sendEndMessages() {
 		SystemMessage sm = null;
 		switch (checkEndDuelCondition()) {
-			case TEAM_1_WIN:
-			case TEAM_2_SURRENDER:
+			case TEAM_1_WIN, TEAM_2_SURRENDER -> {
 				if (_partyDuel) {
 					sm = SystemMessage.getSystemMessage(SystemMessageId.C1_PARTY_HAS_WON_THE_DUEL);
 				} else {
 					sm = SystemMessage.getSystemMessage(SystemMessageId.C1_HAS_WON_THE_DUEL);
 				}
 				sm.addString(_leaderA.getName());
-				break;
-			case TEAM_1_SURRENDER:
-			case TEAM_2_WIN:
+			}
+			case TEAM_1_SURRENDER, TEAM_2_WIN -> {
 				if (_partyDuel) {
 					sm = SystemMessage.getSystemMessage(SystemMessageId.C1_PARTY_HAS_WON_THE_DUEL);
 				} else {
 					sm = SystemMessage.getSystemMessage(SystemMessageId.C1_HAS_WON_THE_DUEL);
 				}
 				sm.addString(_leaderB.getName());
-				break;
-			case CANCELED:
-			case TIMEOUT:
+			}
+			case CANCELED, TIMEOUT -> {
 				stopFighting();
 				sm = SystemMessage.getSystemMessage(SystemMessageId.THE_DUEL_HAS_ENDED_IN_A_TIE);
-				break;
+			}
 		}
 		broadcastToTeam1(sm);
 		broadcastToTeam2(sm);

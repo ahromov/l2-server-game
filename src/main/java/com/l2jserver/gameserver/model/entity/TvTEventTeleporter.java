@@ -29,11 +29,11 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 public class TvTEventTeleporter implements Runnable {
 	/** The instance of the player to teleport */
-	private L2PcInstance _playerInstance = null;
+	private final L2PcInstance _playerInstance;
 	/** Coordinates of the spot to teleport to */
-	private Location _loc = null;
+	private final Location _loc;
 	/** Admin removed this player from event */
-	private boolean _adminRemove = false;
+	private final boolean _adminRemove;
 	
 	/**
 	 * Initialize the teleporter and start the delayed task.
@@ -97,15 +97,9 @@ public class TvTEventTeleporter implements Runnable {
 		if (TvTEvent.isStarted() && !_adminRemove) {
 			int teamId = TvTEvent.getParticipantTeamId(_playerInstance.getObjectId()) + 1;
 			switch (teamId) {
-				case 0:
-					_playerInstance.setTeam(Team.NONE);
-					break;
-				case 1:
-					_playerInstance.setTeam(Team.BLUE);
-					break;
-				case 2:
-					_playerInstance.setTeam(Team.RED);
-					break;
+				case 0 -> _playerInstance.setTeam(Team.NONE);
+				case 1 -> _playerInstance.setTeam(Team.BLUE);
+				case 2 -> _playerInstance.setTeam(Team.RED);
 			}
 		} else {
 			_playerInstance.setTeam(Team.NONE);

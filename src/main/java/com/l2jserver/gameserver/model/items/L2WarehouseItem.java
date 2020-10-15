@@ -25,14 +25,8 @@ import com.l2jserver.gameserver.model.items.type.ItemType1;
 import com.l2jserver.gameserver.model.items.type.ItemType2;
 
 /**
- * This class contains L2ItemInstance<BR>
- * Use to sort L2ItemInstance of :
- * <ul>
- * <li>L2Armor</li>
- * <li>L2EtcItem</li>
- * <li>L2Weapon</li>
- * </ul>
- * @version $Revision: 1.7.2.2.2.5 $ $Date: 2005/04/06 18:25:18 $
+ * Item instance.
+ * @since 2005/04/06 18:25:18
  */
 public class L2WarehouseItem {
 	private final L2Item _item;
@@ -42,14 +36,14 @@ public class L2WarehouseItem {
 	private final int _locationSlot;
 	private final int _enchant;
 	private final CrystalType _grade;
-	private boolean _isAugmented;
+	private final boolean _isAugmented;
 	private int _augmentationId;
 	private final int _customType1;
 	private final int _customType2;
 	private final int _mana;
 	
-	private int _elemAtkType = -2;
-	private int _elemAtkPower = 0;
+	private final int _elemAtkType;
+	private final int _elemAtkPower;
 	
 	private final int[] _elemDefAttr = {
 		0,

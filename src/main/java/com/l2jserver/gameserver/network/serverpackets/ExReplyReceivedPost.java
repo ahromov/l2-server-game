@@ -23,7 +23,8 @@ import com.l2jserver.gameserver.model.itemcontainer.ItemContainer;
 import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
 
 /**
- * @author Migi, DS
+ * @author Migi
+ * @author DS
  */
 public class ExReplyReceivedPost extends AbstractItemPacket {
 	private final Message _msg;

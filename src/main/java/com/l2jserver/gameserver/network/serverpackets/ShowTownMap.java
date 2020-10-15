@@ -23,11 +23,6 @@ public class ShowTownMap extends L2GameServerPacket {
 	private final int _x;
 	private final int _y;
 	
-	/**
-	 * @param texture
-	 * @param x
-	 * @param y
-	 */
 	public ShowTownMap(String texture, int x, int y) {
 		_texture = texture;
 		_x = x;

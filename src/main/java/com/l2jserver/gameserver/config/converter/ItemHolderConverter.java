@@ -39,6 +39,6 @@ public class ItemHolderConverter implements Converter<ItemHolder> {
 		}
 		
 		final var tokens = input.replaceAll(" ", "").split(",");
-		return new ItemHolder(Integer.valueOf(tokens[0]), Long.valueOf(tokens[1]));
+		return new ItemHolder(Integer.parseInt(tokens[0]), Long.parseLong(tokens[1]));
 	}
 }

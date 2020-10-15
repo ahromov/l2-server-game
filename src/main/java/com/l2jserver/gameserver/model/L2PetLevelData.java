@@ -22,7 +22,8 @@ import com.l2jserver.gameserver.model.stats.MoveType;
 
 /**
  * Stats definition for each pet level.
- * @author JIV, Zoey76
+ * @author JIV
+ * @author Zoey76
  */
 public class L2PetLevelData {
 	private final int _ownerExpTaken;
@@ -181,21 +182,13 @@ public class L2PetLevelData {
 	 * @return the base riding speed of given movement type.
 	 */
 	public double getSpeedOnRide(MoveType mt) {
-		switch (mt) {
-			case WALK:
-				return _walkSpeedOnRide;
-			case RUN:
-				return _runSpeedOnRide;
-			case SLOW_SWIM:
-				return _slowSwimSpeedOnRide;
-			case FAST_SWIM:
-				return _fastSwimSpeedOnRide;
-			case SLOW_FLY:
-				return _slowFlySpeedOnRide;
-			case FAST_FLY:
-				return _fastFlySpeedOnRide;
-		}
-		
-		return 0;
+		return switch (mt) {
+			case WALK -> _walkSpeedOnRide;
+			case RUN -> _runSpeedOnRide;
+			case SLOW_SWIM -> _slowSwimSpeedOnRide;
+			case FAST_SWIM -> _fastSwimSpeedOnRide;
+			case SLOW_FLY -> _slowFlySpeedOnRide;
+			case FAST_FLY -> _fastFlySpeedOnRide;
+		};
 	}
 }

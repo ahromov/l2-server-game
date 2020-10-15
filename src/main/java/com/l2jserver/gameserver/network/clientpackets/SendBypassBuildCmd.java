@@ -27,8 +27,8 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.util.GMAudit;
 
 /**
- * This class handles all GM commands triggered by //command
- * @version $Revision: 1.3.4.2 $ $Date: 2005/03/27 15:29:29 $
+ * All GM commands triggered by //command
+ * @since 2005/03/27 15:29:29
  */
 public final class SendBypassBuildCmd extends L2GameClientPacket {
 	
@@ -42,10 +42,7 @@ public final class SendBypassBuildCmd extends L2GameClientPacket {
 	
 	@Override
 	protected void readImpl() {
-		_command = readS();
-		if (_command != null) {
-			_command = _command.trim();
-		}
+		_command = readS().trim();
 	}
 	
 	@Override
@@ -70,7 +67,7 @@ public final class SendBypassBuildCmd extends L2GameClientPacket {
 		
 		if (!AdminData.getInstance().hasAccess(command, activeChar.getAccessLevel())) {
 			activeChar.sendMessage("You don't have the access right to use this command!");
-			_log.warning("Character " + activeChar.getName() + " tryed to use admin command " + command + ", but have no access to it!");
+			_log.warning("Character " + activeChar.getName() + " tried to use admin command " + command + ", but have no access to it!");
 			return;
 		}
 		

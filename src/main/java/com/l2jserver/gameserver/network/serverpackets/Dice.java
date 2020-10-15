@@ -26,14 +26,6 @@ public class Dice extends L2GameServerPacket {
 	private final int _y;
 	private final int _z;
 	
-	/**
-	 * @param charObjId
-	 * @param itemId
-	 * @param number
-	 * @param x
-	 * @param y
-	 * @param z
-	 */
 	public Dice(int charObjId, int itemId, int number, int x, int y, int z) {
 		_charObjId = charObjId;
 		_itemId = itemId;

@@ -19,22 +19,18 @@
 package com.l2jserver.gameserver.network.serverpackets;
 
 public class AskJoinAlly extends L2GameServerPacket {
-	private final String _requestorName;
-	private final int _requestorObjId;
+	private final String _requesterName;
+	private final int _requesterObjId;
 	
-	/**
-	 * @param requestorObjId
-	 * @param requestorName
-	 */
-	public AskJoinAlly(int requestorObjId, String requestorName) {
-		_requestorName = requestorName;
-		_requestorObjId = requestorObjId;
+	public AskJoinAlly(int requesterObjId, String requesterName) {
+		_requesterName = requesterName;
+		_requesterObjId = requesterObjId;
 	}
 	
 	@Override
 	protected final void writeImpl() {
 		writeC(0xbb);
-		writeD(_requestorObjId);
-		writeS(_requestorName);
+		writeD(_requesterObjId);
+		writeS(_requesterName);
 	}
 }

@@ -20,6 +20,7 @@ package com.l2jserver.gameserver.model.items;
 
 import java.util.Objects;
 
+import com.l2jserver.gameserver.model.L2Object;
 import com.l2jserver.gameserver.model.StatsSet;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.L2Npc;
@@ -40,7 +41,7 @@ import com.l2jserver.gameserver.util.StringUtil;
 import com.l2jserver.gameserver.util.Util;
 
 /**
- * This class is dedicated to the management of weapons.
+ * Weapon template.
  */
 public final class L2Weapon extends L2Item {
 	private final WeaponType _type;
@@ -73,10 +74,6 @@ public final class L2Weapon extends L2Item {
 	private final boolean _isAttackWeapon;
 	private final boolean _useWeaponSkillsOnly;
 	
-	/**
-	 * Constructor for Weapon.
-	 * @param set the StatsSet designating the set of couples (key,value) characterizing the weapon.
-	 */
 	public L2Weapon(StatsSet set) {
 		super(set);
 		_type = WeaponType.valueOf(set.getString("weapon_type", "none").toUpperCase());
@@ -107,7 +104,7 @@ public final class L2Weapon extends L2Item {
 		if (skill != null) {
 			String[] info = skill.split("-");
 			
-			if ((info != null) && (info.length == 2)) {
+			if (info.length == 2) {
 				int id = 0;
 				int level = 0;
 				try {
@@ -127,7 +124,7 @@ public final class L2Weapon extends L2Item {
 		if (skill != null) {
 			String[] info = skill.split("-");
 			final int chance = set.getInt("onmagic_chance", 100);
-			if ((info != null) && (info.length == 2)) {
+			if (info.length == 2) {
 				int id = 0;
 				int level = 0;
 				try {
@@ -148,7 +145,7 @@ public final class L2Weapon extends L2Item {
 		if (skill != null) {
 			String[] info = skill.split("-");
 			final int chance = set.getInt("oncrit_chance", 100);
-			if ((info != null) && (info.length == 2)) {
+			if (info.length == 2) {
 				int id = 0;
 				int level = 0;
 				try {
@@ -171,9 +168,6 @@ public final class L2Weapon extends L2Item {
 		_useWeaponSkillsOnly = set.getBoolean("useWeaponSkillsOnly", false);
 	}
 	
-	/**
-	 * @return the type of Weapon
-	 */
 	@Override
 	public WeaponType getItemType() {
 		return _type;
@@ -187,52 +181,31 @@ public final class L2Weapon extends L2Item {
 		return getItemType().mask();
 	}
 	
-	/**
-	 * @return {@code true} if the weapon is magic, {@code false} otherwise.
-	 */
 	@Override
 	public boolean isMagicWeapon() {
 		return _isMagicWeapon;
 	}
 	
-	/**
-	 * @return the quantity of SoulShot used.
-	 */
 	public int getSoulShotCount() {
 		return _soulShotCount;
 	}
 	
-	/**
-	 * @return the quantity of SpiritShot used.
-	 */
 	public int getSpiritShotCount() {
 		return _spiritShotCount;
 	}
 	
-	/**
-	 * @return the reduced quantity of SoultShot used.
-	 */
 	public int getReducedSoulShot() {
 		return _reducedSoulshot;
 	}
 	
-	/**
-	 * @return the chance to use Reduced SoultShot.
-	 */
 	public int getReducedSoulShotChance() {
 		return _reducedSoulshotChance;
 	}
 	
-	/**
-	 * @return the random damage inflicted by the weapon.
-	 */
 	public int getRandomDamage() {
 		return _rndDam;
 	}
 	
-	/**
-	 * @return the MP consumption with the weapon.
-	 */
 	public int getMpConsume() {
 		return _mpConsume;
 	}
@@ -245,23 +218,14 @@ public final class L2Weapon extends L2Item {
 		return _baseAttackAngle;
 	}
 	
-	/**
-	 * @return the reduced MP consumption with the weapon.
-	 */
 	public int getReducedMpConsume() {
 		return _reducedMpConsume;
 	}
 	
-	/**
-	 * @return the chance to use getReducedMpConsume()
-	 */
 	public int getReducedMpConsumeChance() {
 		return _reducedMpConsumeChance;
 	}
 	
-	/**
-	 * @return the skill that player get when has equipped weapon +4 or more (for duals SA).
-	 */
 	@Override
 	public Skill getEnchant4Skill() {
 		if (_enchant4Skill == null) {
@@ -270,30 +234,18 @@ public final class L2Weapon extends L2Item {
 		return _enchant4Skill.getSkill();
 	}
 	
-	/**
-	 * @return the Id in which weapon this weapon can be changed.
-	 */
 	public int getChangeWeaponId() {
 		return _changeWeaponId;
 	}
 	
-	/**
-	 * @return {@code true} if the weapon is force equip, {@code false} otherwise.
-	 */
 	public boolean isForceEquip() {
 		return _isForceEquip;
 	}
 	
-	/**
-	 * @return {@code true} if the weapon is attack weapon, {@code false} otherwise.
-	 */
 	public boolean isAttackWeapon() {
 		return _isAttackWeapon;
 	}
 	
-	/**
-	 * @return {@code true} if the weapon is skills only, {@code false} otherwise.
-	 */
 	public boolean useWeaponSkillsOnly() {
 		return _useWeaponSkillsOnly;
 	}
@@ -378,16 +330,11 @@ public final class L2Weapon extends L2Item {
 				target
 			};
 			
-			//@formatter:off
-			caster.getKnownList().getKnownObjects().values().stream()
-				.filter(Objects::nonNull)
-				.filter(npc -> npc.isNpc())
-				.filter(npc -> Util.checkIfInRange(1000, npc, caster, false))
-				.forEach(npc -> 
-				{
-					EventDispatcher.getInstance().notifyEventAsync(new OnNpcSkillSee((L2Npc) npc, caster.getActingPlayer(), onMagicSkill, targets, false), npc);
-				});
-			//@formatter:on
+			caster.getKnownList().getKnownObjects().values().stream() //
+				.filter(Objects::nonNull) //
+				.filter(L2Object::isNpc) //
+				.filter(npc -> Util.checkIfInRange(1000, npc, caster, false)) //
+				.forEach(npc -> EventDispatcher.getInstance().notifyEventAsync(new OnNpcSkillSee((L2Npc) npc, caster.getActingPlayer(), onMagicSkill, targets, false), npc));
 		}
 		if (caster.isPlayer()) {
 			SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.S1_HAS_BEEN_ACTIVATED);

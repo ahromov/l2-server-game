@@ -23,7 +23,6 @@ import static com.l2jserver.gameserver.config.Configuration.general;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -96,7 +95,7 @@ public final class MultisellData implements IXmlReader {
 					if (att != null) {
 						try {
 							
-							list.setUseRate(Double.valueOf(att.getNodeValue()));
+							list.setUseRate(Double.parseDouble(att.getNodeValue()));
 							if (list.getUseRate() <= 1e-6) {
 								throw new NumberFormatException("The value cannot be 0"); // threat 0 as invalid value
 							}
@@ -239,7 +238,7 @@ public final class MultisellData implements IXmlReader {
 	
 	public static boolean hasSpecialIngredient(int id, long amount, L2PcInstance player) {
 		switch (id) {
-			case CLAN_REPUTATION:
+			case CLAN_REPUTATION -> {
 				if (player.getClan() == null) {
 					player.sendPacket(SystemMessageId.YOU_ARE_NOT_A_CLAN_MEMBER);
 					break;
@@ -253,61 +252,59 @@ public final class MultisellData implements IXmlReader {
 					break;
 				}
 				return true;
-			case FAME:
+			}
+			case FAME -> {
 				if (player.getFame() < amount) {
 					player.sendPacket(SystemMessageId.NOT_ENOUGH_FAME_POINTS);
 					break;
 				}
 				return true;
+			}
 		}
 		return false;
 	}
 	
 	public static boolean takeSpecialIngredient(int id, long amount, L2PcInstance player) {
 		switch (id) {
-			case CLAN_REPUTATION:
+			case CLAN_REPUTATION -> {
 				player.getClan().takeReputationScore((int) amount, true);
 				SystemMessage smsg = SystemMessage.getSystemMessage(SystemMessageId.S1_DEDUCTED_FROM_CLAN_REP);
 				smsg.addLong(amount);
 				player.sendPacket(smsg);
 				return true;
-			case FAME:
+			}
+			case FAME -> {
 				player.setFame(player.getFame() - (int) amount);
 				player.sendPacket(new UserInfo(player));
 				player.sendPacket(new ExBrExtraUserInfo(player));
 				return true;
+			}
 		}
 		return false;
 	}
 	
 	public static void giveSpecialProduct(int id, long amount, L2PcInstance player) {
 		switch (id) {
-			case CLAN_REPUTATION:
-				player.getClan().addReputationScore((int) amount, true);
-				break;
-			case FAME:
+			case CLAN_REPUTATION -> player.getClan().addReputationScore((int) amount, true);
+			case FAME -> {
 				player.setFame((int) (player.getFame() + amount));
 				player.sendPacket(new UserInfo(player));
 				player.sendPacket(new ExBrExtraUserInfo(player));
-				break;
+			}
 		}
 	}
 	
 	private void verify() {
-		ListContainer list;
-		final Iterator<ListContainer> iter = _entries.values().iterator();
-		while (iter.hasNext()) {
-			list = iter.next();
-			
-			for (Entry ent : list.getEntries()) {
+		for (ListContainer listContainer : _entries.values()) {
+			for (Entry ent : listContainer.getEntries()) {
 				for (Ingredient ing : ent.getIngredients()) {
 					if (!verifyIngredient(ing)) {
-						LOG.warn("{}: Cannot find ingredient with item ID: {} in list: {}!", getClass().getSimpleName(), ing.getItemId(), list.getListId());
+						LOG.warn("{}: Cannot find ingredient with item ID: {} in list: {}!", getClass().getSimpleName(), ing.getItemId(), listContainer.getListId());
 					}
 				}
 				for (Ingredient ing : ent.getProducts()) {
 					if (!verifyIngredient(ing)) {
-						LOG.warn("{}: Cannot find product with item ID: {} in list: {}!", getClass().getSimpleName(), ing.getItemId(), list.getListId());
+						LOG.warn("{}: Cannot find product with item ID: {} in list: {}!", getClass().getSimpleName(), ing.getItemId(), listContainer.getListId());
 					}
 				}
 			}
@@ -315,13 +312,10 @@ public final class MultisellData implements IXmlReader {
 	}
 	
 	private boolean verifyIngredient(Ingredient ing) {
-		switch (ing.getItemId()) {
-			case CLAN_REPUTATION:
-			case FAME:
-				return true;
-			default:
-				return ing.getTemplate() != null;
-		}
+		return switch (ing.getItemId()) {
+			case CLAN_REPUTATION, FAME -> true;
+			default -> ing.getTemplate() != null;
+		};
 	}
 	
 	public static MultisellData getInstance() {

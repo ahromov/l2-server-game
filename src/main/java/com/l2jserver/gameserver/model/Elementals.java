@@ -91,7 +91,7 @@ public final class Elementals {
 		
 		public int _maxLevel;
 		
-		private ElementalItemType(int maxLvl) {
+		ElementalItemType(int maxLvl) {
 			_maxLevel = maxLvl;
 		}
 	}
@@ -137,7 +137,7 @@ public final class Elementals {
 		public int _itemId;
 		public ElementalItemType _type;
 		
-		private ElementalItems(byte element, int itemId, ElementalItemType type) {
+		ElementalItems(byte element, int itemId, ElementalItemType type) {
 			_element = element;
 			_itemId = itemId;
 			_type = type;
@@ -165,21 +165,15 @@ public final class Elementals {
 	}
 	
 	public static String getElementName(byte element) {
-		switch (element) {
-			case FIRE:
-				return "Fire";
-			case WATER:
-				return "Water";
-			case WIND:
-				return "Wind";
-			case EARTH:
-				return "Earth";
-			case DARK:
-				return "Dark";
-			case HOLY:
-				return "Holy";
-		}
-		return "None";
+		return switch (element) {
+			case FIRE -> "Fire";
+			case WATER -> "Water";
+			case WIND -> "Wind";
+			case EARTH -> "Earth";
+			case DARK -> "Dark";
+			case HOLY -> "Holy";
+			default -> "None";
+		};
 	}
 	
 	public static byte getElementId(String name) {
@@ -227,24 +221,12 @@ public final class Elementals {
 			}
 			
 			switch (_elementalType) {
-				case FIRE:
-					player.addStatFunc(new FuncAdd(isArmor ? Stats.FIRE_RES : Stats.FIRE_POWER, 0x40, this, _elementalValue, null));
-					break;
-				case WATER:
-					player.addStatFunc(new FuncAdd(isArmor ? Stats.WATER_RES : Stats.WATER_POWER, 0x40, this, _elementalValue, null));
-					break;
-				case WIND:
-					player.addStatFunc(new FuncAdd(isArmor ? Stats.WIND_RES : Stats.WIND_POWER, 0x40, this, _elementalValue, null));
-					break;
-				case EARTH:
-					player.addStatFunc(new FuncAdd(isArmor ? Stats.EARTH_RES : Stats.EARTH_POWER, 0x40, this, _elementalValue, null));
-					break;
-				case DARK:
-					player.addStatFunc(new FuncAdd(isArmor ? Stats.DARK_RES : Stats.DARK_POWER, 0x40, this, _elementalValue, null));
-					break;
-				case HOLY:
-					player.addStatFunc(new FuncAdd(isArmor ? Stats.HOLY_RES : Stats.HOLY_POWER, 0x40, this, _elementalValue, null));
-					break;
+				case FIRE -> player.addStatFunc(new FuncAdd(isArmor ? Stats.FIRE_RES : Stats.FIRE_POWER, 0x40, this, _elementalValue, null));
+				case WATER -> player.addStatFunc(new FuncAdd(isArmor ? Stats.WATER_RES : Stats.WATER_POWER, 0x40, this, _elementalValue, null));
+				case WIND -> player.addStatFunc(new FuncAdd(isArmor ? Stats.WIND_RES : Stats.WIND_POWER, 0x40, this, _elementalValue, null));
+				case EARTH -> player.addStatFunc(new FuncAdd(isArmor ? Stats.EARTH_RES : Stats.EARTH_POWER, 0x40, this, _elementalValue, null));
+				case DARK -> player.addStatFunc(new FuncAdd(isArmor ? Stats.DARK_RES : Stats.DARK_POWER, 0x40, this, _elementalValue, null));
+				case HOLY -> player.addStatFunc(new FuncAdd(isArmor ? Stats.HOLY_RES : Stats.HOLY_POWER, 0x40, this, _elementalValue, null));
 			}
 			
 			_active = true;
@@ -271,9 +253,9 @@ public final class Elementals {
 	}
 	
 	// non static:
-	private ElementalStatBoni _boni = null;
-	private byte _element = NONE;
-	private int _value = 0;
+	private final ElementalStatBoni _boni;
+	private byte _element;
+	private int _value;
 	
 	public byte getElement() {
 		return _element;

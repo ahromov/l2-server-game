@@ -31,36 +31,19 @@ public class EffectTickTask implements Runnable {
 	private final AbstractEffect _effect;
 	private final AtomicInteger _tickCount = new AtomicInteger();
 	
-	/**
-	 * EffectTickTask constructor.
-	 * @param info the buff info
-	 * @param effect the effect
-	 */
 	public EffectTickTask(BuffInfo info, AbstractEffect effect) {
 		_info = info;
 		_effect = effect;
 	}
 	
-	/**
-	 * Gets the buff info.
-	 * @return the buff info
-	 */
 	public BuffInfo getBuffInfo() {
 		return _info;
 	}
 	
-	/**
-	 * Gets the effect.
-	 * @return the effect
-	 */
 	public AbstractEffect getEffect() {
 		return _effect;
 	}
 	
-	/**
-	 * Gets the current tick count.
-	 * @return the tick count
-	 */
 	public int getTickCount() {
 		return _tickCount.get();
 	}

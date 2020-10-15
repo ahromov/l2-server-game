@@ -34,7 +34,7 @@ import com.l2jserver.gameserver.network.serverpackets.ShortCutInit;
 import com.l2jserver.gameserver.network.serverpackets.ShortCutRegister;
 
 public class ShortCuts implements IRestorable {
-	private static Logger _log = Logger.getLogger(ShortCuts.class.getName());
+	private static final Logger _log = Logger.getLogger(ShortCuts.class.getName());
 	private static final int MAX_SHORTCUTS_PER_BAR = 12;
 	private final L2PcInstance _owner;
 	private final Map<Integer, Shortcut> _shortCuts = new TreeMap<>();
@@ -145,13 +145,13 @@ public class ShortCuts implements IRestorable {
 			statement.setInt(1, _owner.getObjectId());
 			statement.setInt(2, _owner.getClassIndex());
 			
-			try (var rset = statement.executeQuery()) {
-				while (rset.next()) {
-					int slot = rset.getInt("slot");
-					int page = rset.getInt("page");
-					int type = rset.getInt("type");
-					int id = rset.getInt("shortcut_id");
-					int level = rset.getInt("level");
+			try (var rs = statement.executeQuery()) {
+				while (rs.next()) {
+					int slot = rs.getInt("slot");
+					int page = rs.getInt("page");
+					int type = rs.getInt("type");
+					int id = rs.getInt("shortcut_id");
+					int level = rs.getInt("level");
 					
 					_shortCuts.put(slot + (page * MAX_SHORTCUTS_PER_BAR), new Shortcut(slot, page, ShortcutType.values()[type], id, level, 1));
 				}
@@ -185,9 +185,9 @@ public class ShortCuts implements IRestorable {
 		// Update all the shortcuts for this skill
 		for (Shortcut sc : _shortCuts.values()) {
 			if ((sc.getId() == skillId) && (sc.getType() == ShortcutType.SKILL)) {
-				Shortcut newsc = new Shortcut(sc.getSlot(), sc.getPage(), sc.getType(), sc.getId(), skillLevel, 1);
-				_owner.sendPacket(new ShortCutRegister(newsc));
-				_owner.registerShortCut(newsc);
+				final var shortcut = new Shortcut(sc.getSlot(), sc.getPage(), sc.getType(), sc.getId(), skillLevel, 1);
+				_owner.sendPacket(new ShortCutRegister(shortcut));
+				_owner.registerShortCut(shortcut);
 			}
 		}
 	}

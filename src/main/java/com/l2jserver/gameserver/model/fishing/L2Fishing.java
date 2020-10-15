@@ -38,11 +38,11 @@ public class L2Fishing implements Runnable {
 	private int _stop = 0;
 	private int _goodUse = 0;
 	private int _anim = 0;
-	private int _mode = 0;
-	private int _deceptiveMode = 0;
+	private int _mode;
+	private int _deceptiveMode;
 	private Future<?> _fishAiTask;
 	private boolean _thinking;
-	// Fish datas
+	// Fish data
 	private final int _fishId;
 	private final int _fishMaxHp;
 	private int _fishCurHp;
@@ -107,10 +107,8 @@ public class L2Fishing implements Runnable {
 		if (_fishCurHp > (_fishMaxHp * 2)) {
 			_fishCurHp = _fishMaxHp * 2;
 			doDie(false);
-			return;
 		} else if (_fishCurHp == 0) {
 			doDie(true);
-			return;
 		}
 	}
 	
@@ -175,11 +173,11 @@ public class L2Fishing implements Runnable {
 			}
 		} finally {
 			_thinking = false;
-			ExFishingHpRegen efhr = new ExFishingHpRegen(_fisher, _time, _fishCurHp, _mode, 0, _anim, 0, _deceptiveMode);
+			ExFishingHpRegen exFishingHpRegen = new ExFishingHpRegen(_fisher, _time, _fishCurHp, _mode, 0, _anim, 0, _deceptiveMode);
 			if (_anim != 0) {
-				_fisher.broadcastPacket(efhr);
+				_fisher.broadcastPacket(exFishingHpRegen);
 			} else {
-				_fisher.sendPacket(efhr);
+				_fisher.sendPacket(exFishingHpRegen);
 			}
 		}
 	}

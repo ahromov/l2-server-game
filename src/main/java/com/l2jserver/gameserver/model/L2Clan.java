@@ -89,8 +89,8 @@ public class L2Clan implements IIdentifiable, INamable {
 	private static final String SELECT_CLAN_DATA = "SELECT * FROM clan_data where clan_id=?";
 	
 	// Ally Penalty Types
-	/** Clan leaved ally */
-	public static final int PENALTY_TYPE_CLAN_LEAVED = 1;
+	/** Clan left ally */
+	public static final int PENALTY_TYPE_CLAN_LEFT = 1;
 	/** Clan was dismissed from ally */
 	public static final int PENALTY_TYPE_CLAN_DISMISSED = 2;
 	/** Leader clan dismiss clan from ally */
@@ -128,7 +128,7 @@ public class L2Clan implements IIdentifiable, INamable {
 	private int _crestId;
 	private int _crestLargeId;
 	private int _allyCrestId;
-	private int _auctionBiddedAt = 0;
+	private int _auctionBidAt = 0;
 	private long _allyPenaltyExpiryTime;
 	private int _allyPenaltyType;
 	private long _charPenaltyExpiryTime;
@@ -358,11 +358,11 @@ public class L2Clan implements IIdentifiable, INamable {
 			_log.warning("Member Object ID: " + objectId + " not found in clan while trying to remove");
 			return;
 		}
-		final int leadssubpledge = getLeaderSubPledge(objectId);
-		if (leadssubpledge != 0) {
+		final int subPledgeLeader = getLeaderSubPledge(objectId);
+		if (subPledgeLeader != 0) {
 			// Sub-unit leader withdraws, position becomes vacant and leader should appoint new via NPC
-			getSubPledge(leadssubpledge).setLeaderId(0);
-			updateSubPledgeInDB(leadssubpledge);
+			getSubPledge(subPledgeLeader).setLeaderId(0);
+			updateSubPledgeInDB(subPledgeLeader);
 		}
 		
 		if (exMember.getApprentice() != 0) {
@@ -464,57 +464,37 @@ public class L2Clan implements IIdentifiable, INamable {
 		
 		switch (pledgeType) {
 			case 0:
-				switch (getLevel()) {
-					case 3:
-						limit = 30;
-						break;
-					case 2:
-						limit = 20;
-						break;
-					case 1:
-						limit = 15;
-						break;
-					case 0:
-						limit = 10;
-						break;
-					default:
-						limit = 40;
-						break;
-				}
+				limit = switch (getLevel()) {
+					case 3 -> 30;
+					case 2 -> 20;
+					case 1 -> 15;
+					case 0 -> 10;
+					default -> 40;
+				};
 				break;
 			case -1:
 				limit = 20;
 				break;
 			case 100:
 			case 200:
-				switch (getLevel()) {
-					case 11:
-						limit = 30;
-						break;
-					default:
-						limit = 20;
-						break;
+				if (getLevel() == 11) {
+					limit = 30;
+				} else {
+					limit = 20;
 				}
 				break;
 			case 1001:
 			case 1002:
 			case 2001:
 			case 2002:
-				switch (getLevel()) {
-					case 9:
-					case 10:
-					case 11:
-						limit = 25;
-						break;
-					default:
-						limit = 10;
-						break;
-				}
+				limit = switch (getLevel()) {
+					case 9, 10, 11 -> 25;
+					default -> 10;
+				};
 				break;
 			default:
 				break;
 		}
-		
 		return limit;
 	}
 	
@@ -706,7 +686,7 @@ public class L2Clan implements IIdentifiable, INamable {
 	}
 	
 	/**
-	 * Store current Bloood Alliances count in database.
+	 * Store current Blood Alliances count in database.
 	 */
 	public void updateBloodAllianceCountInDB() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
@@ -743,7 +723,7 @@ public class L2Clan implements IIdentifiable, INamable {
 	}
 	
 	/**
-	 * Store current Bloood Alliances count in database.
+	 * Store current Blood Alliances count in database.
 	 */
 	public void updateBloodOathCountInDB() {
 		try (var con = ConnectionFactory.getInstance().getConnection();
@@ -903,7 +883,7 @@ public class L2Clan implements IIdentifiable, INamable {
 					setAllyCrestId(clanData.getInt("ally_crest_id"));
 					
 					setReputationScore(clanData.getInt("reputation_score"), false);
-					setAuctionBiddedAt(clanData.getInt("auction_bid_at"), false);
+					setAuctionBidAt(clanData.getInt("auction_bid_at"), false);
 					setNewLeaderId(clanData.getInt("new_leader_id"), false);
 					
 					final int leaderId = (clanData.getInt("leader_id"));
@@ -913,9 +893,8 @@ public class L2Clan implements IIdentifiable, INamable {
 					try (var select = con.prepareStatement("SELECT char_name,level,classid,charId,title,power_grade,subpledge,apprentice,sponsor,sex,race FROM characters WHERE clanid=?")) {
 						select.setInt(1, getId());
 						try (var clanMember = select.executeQuery()) {
-							L2ClanMember member = null;
 							while (clanMember.next()) {
-								member = new L2ClanMember(this, clanMember);
+								final var member = new L2ClanMember(this, clanMember);
 								if (member.getObjectId() == leaderId) {
 									setLeader(member);
 								} else {
@@ -1012,15 +991,15 @@ public class L2Clan implements IIdentifiable, INamable {
 			var ps = con.prepareStatement("SELECT skill_id,skill_level,sub_pledge_id FROM clan_skills WHERE clan_id=?")) {
 			// Retrieve all skills of this L2PcInstance from the database
 			ps.setInt(1, getId());
-			try (var rset = ps.executeQuery()) {
+			try (var rs = ps.executeQuery()) {
 				// Go though the recordset of this SQL query
-				while (rset.next()) {
-					int id = rset.getInt("skill_id");
-					int level = rset.getInt("skill_level");
+				while (rs.next()) {
+					int id = rs.getInt("skill_id");
+					int level = rs.getInt("skill_level");
 					// Create a L2Skill object for each record
 					Skill skill = SkillData.getInstance().getSkill(id, level);
 					// Add the L2Skill object to the L2Clan _skills
-					int subType = rset.getInt("sub_pledge_id");
+					int subType = rs.getInt("sub_pledge_id");
 					
 					if (subType == -2) {
 						_skills.put(skill.getId(), skill);
@@ -1433,11 +1412,11 @@ public class L2Clan implements IIdentifiable, INamable {
 			var ps = con.prepareStatement("SELECT sub_pledge_id,name,leader_id FROM clan_subpledges WHERE clan_id=?")) {
 			// Retrieve all subpledges of this clan from the database
 			ps.setInt(1, getId());
-			try (var rset = ps.executeQuery()) {
-				while (rset.next()) {
-					int id = rset.getInt("sub_pledge_id");
-					String name = rset.getString("name");
-					int leaderId = rset.getInt("leader_id");
+			try (var rs = ps.executeQuery()) {
+				while (rs.next()) {
+					int id = rs.getInt("sub_pledge_id");
+					String name = rs.getString("name");
+					int leaderId = rs.getInt("leader_id");
 					// Create a SubPledge object for each record
 					SubPledge pledge = new SubPledge(id, name, leaderId);
 					_subPledges.put(id, pledge);
@@ -1539,26 +1518,12 @@ public class L2Clan implements IIdentifiable, INamable {
 	
 	public int getAvailablePledgeTypes(int pledgeType) {
 		if (_subPledges.get(pledgeType) != null) {
-			// _log.warning("found sub-unit with id: "+pledgeType);
 			switch (pledgeType) {
-				case SUBUNIT_ACADEMY:
-					return 0;
-				case SUBUNIT_ROYAL1:
-					pledgeType = getAvailablePledgeTypes(SUBUNIT_ROYAL2);
-					break;
-				case SUBUNIT_ROYAL2:
-					return 0;
-				case SUBUNIT_KNIGHT1:
-					pledgeType = getAvailablePledgeTypes(SUBUNIT_KNIGHT2);
-					break;
-				case SUBUNIT_KNIGHT2:
-					pledgeType = getAvailablePledgeTypes(SUBUNIT_KNIGHT3);
-					break;
-				case SUBUNIT_KNIGHT3:
-					pledgeType = getAvailablePledgeTypes(SUBUNIT_KNIGHT4);
-					break;
-				case SUBUNIT_KNIGHT4:
-					return 0;
+				case SUBUNIT_ROYAL2, SUBUNIT_ACADEMY, SUBUNIT_KNIGHT4 -> pledgeType = 0;
+				case SUBUNIT_ROYAL1 -> pledgeType = getAvailablePledgeTypes(SUBUNIT_ROYAL2);
+				case SUBUNIT_KNIGHT1 -> pledgeType = getAvailablePledgeTypes(SUBUNIT_KNIGHT2);
+				case SUBUNIT_KNIGHT2 -> pledgeType = getAvailablePledgeTypes(SUBUNIT_KNIGHT3);
+				case SUBUNIT_KNIGHT3 -> pledgeType = getAvailablePledgeTypes(SUBUNIT_KNIGHT4);
 			}
 		}
 		return pledgeType;
@@ -1686,12 +1651,12 @@ public class L2Clan implements IIdentifiable, INamable {
 		return _rank;
 	}
 	
-	public int getAuctionBiddedAt() {
-		return _auctionBiddedAt;
+	public int getAuctionBidAt() {
+		return _auctionBidAt;
 	}
 	
-	public void setAuctionBiddedAt(int id, boolean storeInDb) {
-		_auctionBiddedAt = id;
+	public void setAuctionBidAt(int id, boolean storeInDb) {
+		_auctionBidAt = id;
 		
 		if (storeInDb) {
 			try (var con = ConnectionFactory.getInstance().getConnection();
@@ -1810,7 +1775,7 @@ public class L2Clan implements IIdentifiable, INamable {
 			return false;
 		}
 		if (targetClan.getAllyPenaltyExpiryTime() > System.currentTimeMillis()) {
-			if (targetClan.getAllyPenaltyType() == PENALTY_TYPE_CLAN_LEAVED) {
+			if (targetClan.getAllyPenaltyType() == PENALTY_TYPE_CLAN_LEFT) {
 				SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.S1_CANT_ENTER_ALLIANCE_WITHIN_1_DAY);
 				sm.addString(target.getClan().getName());
 				sm.addString(target.getClan().getAllyName());
@@ -2150,7 +2115,7 @@ public class L2Clan implements IIdentifiable, INamable {
 		changeLevel(getLevel() + 1);
 		
 		// Notify to scripts
-		EventDispatcher.getInstance().notifyEventAsync(new OnPlayerClanLvlUp(player, this));
+		EventDispatcher.getInstance().notifyEventAsync(new OnPlayerClanLvlUp(this));
 		return true;
 	}
 	

@@ -19,7 +19,7 @@
 package com.l2jserver.gameserver.network.clientpackets;
 
 /**
- * @author zabbix Lets drink to code!
+ * @author zabbix
  */
 public final class DummyPacket extends L2GameClientPacket {
 	@Override

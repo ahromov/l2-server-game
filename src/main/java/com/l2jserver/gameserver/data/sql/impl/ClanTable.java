@@ -67,7 +67,7 @@ public class ClanTable {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ClanTable.class);
 	
-	public static final int CLAN_NAME_MAX_LENGHT = 16;
+	public static final int CLAN_NAME_MAX_LENGTH = 16;
 	
 	private final Map<Integer, L2Clan> _clans = new ConcurrentHashMap<>();
 	
@@ -150,7 +150,7 @@ public class ClanTable {
 			player.sendPacket(SystemMessageId.CLAN_NAME_INCORRECT);
 			return null;
 		}
-		if (clanName.length() > CLAN_NAME_MAX_LENGHT) {
+		if (clanName.length() > CLAN_NAME_MAX_LENGTH) {
 			player.sendPacket(SystemMessageId.CLAN_NAME_TOO_LONG);
 			return null;
 		}
@@ -171,7 +171,7 @@ public class ClanTable {
 		player.setPledgeClass(L2ClanMember.calculatePledgeClass(player));
 		player.setClanPrivileges(new EnumIntBitmask<>(ClanPrivilege.class, true));
 		
-		_clans.put(Integer.valueOf(clan.getId()), clan);
+		_clans.put(clan.getId(), clan);
 		
 		// should be update packet only
 		player.sendPacket(new PledgeShowInfoUpdate(clan));
@@ -214,7 +214,7 @@ public class ClanTable {
 			}
 		}
 		
-		Auction auction = AuctionManager.getInstance().getAuction(clan.getAuctionBiddedAt());
+		Auction auction = AuctionManager.getInstance().getAuction(clan.getAuctionBidAt());
 		if (auction != null) {
 			auction.cancelBid(clan.getId());
 		}
@@ -398,13 +398,13 @@ public class ClanTable {
 		L2Clan clan1, clan2;
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var statement = con.createStatement();
-			var rset = statement.executeQuery("SELECT clan1, clan2 FROM clan_wars")) {
-			while (rset.next()) {
-				clan1 = getClan(rset.getInt("clan1"));
-				clan2 = getClan(rset.getInt("clan2"));
+			var rs = statement.executeQuery("SELECT clan1, clan2 FROM clan_wars")) {
+			while (rs.next()) {
+				clan1 = getClan(rs.getInt("clan1"));
+				clan2 = getClan(rs.getInt("clan2"));
 				if ((clan1 != null) && (clan2 != null)) {
-					clan1.setEnemyClan(rset.getInt("clan2"));
-					clan2.setAttackerClan(rset.getInt("clan1"));
+					clan1.setEnemyClan(rs.getInt("clan2"));
+					clan2.setAttackerClan(rs.getInt("clan1"));
 				} else {
 					LOG.warn("While restoring clan wars on of the clans [{}, {}] is null!", clan1, clan2);
 				}

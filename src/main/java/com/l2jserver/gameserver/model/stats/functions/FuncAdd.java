@@ -34,7 +34,7 @@ public class FuncAdd extends AbstractFunction {
 	
 	@Override
 	public double calc(L2Character effector, L2Character effected, Skill skill, double initVal) {
-		if ((getApplayCond() == null) || getApplayCond().test(effector, effected, skill)) {
+		if ((getApplyCond() == null) || getApplyCond().test(effector, effected, skill)) {
 			return initVal + getValue();
 		}
 		return initVal;

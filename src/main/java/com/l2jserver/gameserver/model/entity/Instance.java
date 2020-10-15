@@ -37,7 +37,6 @@ import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
@@ -68,7 +67,8 @@ import com.l2jserver.gameserver.util.Broadcast;
 
 /**
  * Main class for game instances.
- * @author evill33t, GodKratos
+ * @author evill33t
+ * @author GodKratos
  */
 public final class Instance {
 	private static final Logger _log = Logger.getLogger(Instance.class.getName());
@@ -88,7 +88,7 @@ public final class Instance {
 	private boolean _allowSummon = true;
 	private long _emptyDestroyTime = -1;
 	private long _lastLeft = -1;
-	private long _instanceStartTime = -1;
+	private final long _instanceStartTime;
 	private long _instanceEndTime = -1;
 	private boolean _isPvPInstance = false;
 	private boolean _showTimer = false;
@@ -390,14 +390,13 @@ public final class Instance {
 	}
 	
 	public void loadInstanceTemplate(String filename) {
-		Document doc = null;
 		File xml = new File(server().getDatapackRoot(), "data/instances/" + filename);
 		
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setValidating(false);
 			factory.setIgnoringComments(true);
-			doc = factory.newDocumentBuilder().parse(xml);
+			var doc = factory.newDocumentBuilder().parse(xml);
 			
 			for (Node n = doc.getFirstChild(); n != null; n = n.getNextSibling()) {
 				if ("instance".equalsIgnoreCase(n.getNodeName())) {
@@ -424,29 +423,26 @@ public final class Instance {
 		Node first = n.getFirstChild();
 		for (n = first; n != null; n = n.getNextSibling()) {
 			switch (n.getNodeName().toLowerCase()) {
-				case "activitytime": {
+				case "activitytime" -> {
 					a = n.getAttributes().getNamedItem("val");
 					if (a != null) {
 						_checkTimeUpTask = ThreadPoolManager.getInstance().scheduleGeneral(new CheckTimeUp(Integer.parseInt(a.getNodeValue()) * 60000), 15000);
 						_instanceEndTime = System.currentTimeMillis() + (Long.parseLong(a.getNodeValue()) * 60000) + 15000;
 					}
-					break;
 				}
-				case "allowsummon": {
+				case "allowsummon" -> {
 					a = n.getAttributes().getNamedItem("val");
 					if (a != null) {
 						setAllowSummon(Boolean.parseBoolean(a.getNodeValue()));
 					}
-					break;
 				}
-				case "emptydestroytime": {
+				case "emptydestroytime" -> {
 					a = n.getAttributes().getNamedItem("val");
 					if (a != null) {
 						_emptyDestroyTime = Long.parseLong(a.getNodeValue()) * 1000;
 					}
-					break;
 				}
-				case "showtimer": {
+				case "showtimer" -> {
 					a = n.getAttributes().getNamedItem("val");
 					if (a != null) {
 						_showTimer = Boolean.parseBoolean(a.getNodeValue());
@@ -459,20 +455,17 @@ public final class Instance {
 					if (a != null) {
 						_timerText = a.getNodeValue();
 					}
-					break;
 				}
-				case "pvpinstance": {
+				case "pvpinstance" -> {
 					a = n.getAttributes().getNamedItem("val");
 					if (a != null) {
 						setPvPInstance(Boolean.parseBoolean(a.getNodeValue()));
 					}
-					break;
 				}
-				case "doorlist": {
+				case "doorlist" -> {
 					for (Node d = n.getFirstChild(); d != null; d = d.getNextSibling()) {
-						int doorId = 0;
 						if ("door".equalsIgnoreCase(d.getNodeName())) {
-							doorId = Integer.parseInt(d.getAttributes().getNamedItem("doorId").getNodeValue());
+							int doorId = Integer.parseInt(d.getAttributes().getNamedItem("doorId").getNodeValue());
 							StatsSet set = new StatsSet();
 							set.add(DoorData.getInstance().getDoorTemplate(doorId));
 							for (Node bean = d.getFirstChild(); bean != null; bean = bean.getNextSibling()) {
@@ -486,26 +479,25 @@ public final class Instance {
 							addDoor(doorId, set);
 						}
 					}
-					break;
 				}
-				case "spawnlist": {
+				case "spawnlist" -> {
 					for (Node group = n.getFirstChild(); group != null; group = group.getNextSibling()) {
 						if ("group".equalsIgnoreCase(group.getNodeName())) {
 							String spawnGroup = group.getAttributes().getNamedItem("name").getNodeValue();
 							List<L2Spawn> manualSpawn = new ArrayList<>();
 							for (Node d = group.getFirstChild(); d != null; d = d.getNextSibling()) {
-								int npcId = 0, x = 0, y = 0, z = 0, heading = 0, respawn = 0, respawnRandom = 0, delay = -1;
+								int respawnRandom = 0, delay = -1;
 								Boolean allowRandomWalk = null;
 								String areaName = null;
 								int globalMapId = 0;
 								
 								if ("spawn".equalsIgnoreCase(d.getNodeName())) {
-									npcId = Integer.parseInt(d.getAttributes().getNamedItem("npcId").getNodeValue());
-									x = Integer.parseInt(d.getAttributes().getNamedItem("x").getNodeValue());
-									y = Integer.parseInt(d.getAttributes().getNamedItem("y").getNodeValue());
-									z = Integer.parseInt(d.getAttributes().getNamedItem("z").getNodeValue());
-									heading = Integer.parseInt(d.getAttributes().getNamedItem("heading").getNodeValue());
-									respawn = Integer.parseInt(d.getAttributes().getNamedItem("respawn").getNodeValue());
+									int npcId = Integer.parseInt(d.getAttributes().getNamedItem("npcId").getNodeValue());
+									int x = Integer.parseInt(d.getAttributes().getNamedItem("x").getNodeValue());
+									int y = Integer.parseInt(d.getAttributes().getNamedItem("y").getNodeValue());
+									int z = Integer.parseInt(d.getAttributes().getNamedItem("z").getNodeValue());
+									int heading = Integer.parseInt(d.getAttributes().getNamedItem("heading").getNodeValue());
+									int respawn = Integer.parseInt(d.getAttributes().getNamedItem("respawn").getNodeValue());
 									
 									Node node = d.getAttributes().getNamedItem("onKillDelay");
 									if (node != null) {
@@ -570,16 +562,14 @@ public final class Instance {
 							}
 						}
 					}
-					break;
 				}
-				case "exitpoint": {
+				case "exitpoint" -> {
 					int x = Integer.parseInt(n.getAttributes().getNamedItem("x").getNodeValue());
 					int y = Integer.parseInt(n.getAttributes().getNamedItem("y").getNodeValue());
 					int z = Integer.parseInt(n.getAttributes().getNamedItem("z").getNodeValue());
 					_exitLocation = new Location(x, y, z);
-					break;
 				}
-				case "spawnpoints": {
+				case "spawnpoints" -> {
 					_enterLocations = new ArrayList<>();
 					for (Node loc = n.getFirstChild(); loc != null; loc = loc.getNextSibling()) {
 						if (loc.getNodeName().equals("Location")) {
@@ -593,16 +583,14 @@ public final class Instance {
 							}
 						}
 					}
-					break;
 				}
-				case "reenter": {
+				case "reenter" -> {
 					a = n.getAttributes().getNamedItem("additionStyle");
 					if (a != null) {
 						_type = InstanceReenterType.valueOf(a.getNodeValue());
 					}
 					
 					for (Node d = n.getFirstChild(); d != null; d = d.getNextSibling()) {
-						long time = -1;
 						DayOfWeek day = null;
 						int hour = -1;
 						int minute = -1;
@@ -610,13 +598,12 @@ public final class Instance {
 						if ("reset".equalsIgnoreCase(d.getNodeName())) {
 							a = d.getAttributes().getNamedItem("time");
 							if (a != null) {
-								time = Long.parseLong(a.getNodeValue());
-								
+								long time = Long.parseLong(a.getNodeValue());
 								if (time > 0) {
 									_resetData.add(new InstanceReenterTimeHolder(time));
 									break;
 								}
-							} else if (time == -1) {
+							} else {
 								a = d.getAttributes().getNamedItem("day");
 								if (a != null) {
 									day = DayOfWeek.valueOf(a.getNodeValue().toUpperCase());
@@ -635,9 +622,8 @@ public final class Instance {
 							}
 						}
 					}
-					break;
 				}
-				case "removebuffs": {
+				case "removebuffs" -> {
 					a = n.getAttributes().getNamedItem("type");
 					if (a != null) {
 						_removeBuffType = InstanceRemoveBuffType.valueOf(a.getNodeValue().toUpperCase());
@@ -651,7 +637,6 @@ public final class Instance {
 							}
 						}
 					}
-					break;
 				}
 			}
 		}
@@ -667,7 +652,7 @@ public final class Instance {
 			interval = 500;
 		} else if (_players.isEmpty() && (_emptyDestroyTime > 0)) {
 			
-			Long emptyTimeLeft = (_lastLeft + _emptyDestroyTime) - System.currentTimeMillis();
+			long emptyTimeLeft = (_lastLeft + _emptyDestroyTime) - System.currentTimeMillis();
 			if (emptyTimeLeft <= 0) {
 				interval = 0;
 				remaining = 0;

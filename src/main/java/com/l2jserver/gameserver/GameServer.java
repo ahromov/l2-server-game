@@ -427,7 +427,7 @@ public final class GameServer {
 			try {
 				bindAddress = InetAddress.getByName(server().getHost());
 			} catch (UnknownHostException ex) {
-				LOG.warn("Bind address is invalid, using all avaliable IPs!", ex);
+				LOG.warn("Bind address is invalid, using all available IPs!", ex);
 			}
 		}
 		
@@ -491,10 +491,11 @@ public final class GameServer {
 	}
 	
 	public static void printSection(String s) {
-		s = "=[ " + s + " ]";
-		while (s.length() < 61) {
-			s = "-" + s;
+		StringBuilder sBuilder = new StringBuilder("=[ " + s + " ]");
+		while (sBuilder.length() < 61) {
+			sBuilder.insert(0, "-");
 		}
+		s = sBuilder.toString();
 		LOG.info(s);
 	}
 }

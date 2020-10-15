@@ -174,7 +174,7 @@ public class RequestProcureCropList extends L2GameClientPacket {
 		}
 	}
 	
-	private final class CropHolder extends UniqueItemHolder {
+	private static final class CropHolder extends UniqueItemHolder {
 		private final int _manorId;
 		private CropProcure _cp;
 		private int _rewardId = 0;

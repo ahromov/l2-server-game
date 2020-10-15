@@ -167,28 +167,18 @@ public final class L2ArmorSet {
 		if (!_gloves.isEmpty() && !_gloves.contains(gloves)) {
 			return false;
 		}
-		if (!_feet.isEmpty() && !_feet.contains(feet)) {
-			return false;
-		}
-		
-		return true;
+		return _feet.isEmpty() || _feet.contains(feet);
 	}
 	
 	public boolean containItem(int slot, int itemId) {
-		switch (slot) {
-			case Inventory.PAPERDOLL_CHEST:
-				return _chestId == itemId;
-			case Inventory.PAPERDOLL_LEGS:
-				return _legs.contains(itemId);
-			case Inventory.PAPERDOLL_HEAD:
-				return _head.contains(itemId);
-			case Inventory.PAPERDOLL_GLOVES:
-				return _gloves.contains(itemId);
-			case Inventory.PAPERDOLL_FEET:
-				return _feet.contains(itemId);
-			default:
-				return false;
-		}
+		return switch (slot) {
+			case Inventory.PAPERDOLL_CHEST -> _chestId == itemId;
+			case Inventory.PAPERDOLL_LEGS -> _legs.contains(itemId);
+			case Inventory.PAPERDOLL_HEAD -> _head.contains(itemId);
+			case Inventory.PAPERDOLL_GLOVES -> _gloves.contains(itemId);
+			case Inventory.PAPERDOLL_FEET -> _feet.contains(itemId);
+			default -> false;
+		};
 	}
 	
 	public int getChestId() {
@@ -203,15 +193,11 @@ public final class L2ArmorSet {
 		Inventory inv = player.getInventory();
 		
 		L2ItemInstance shieldItem = inv.getPaperdollItem(Inventory.PAPERDOLL_LHAND);
-		return ((shieldItem != null) && _shield.contains(Integer.valueOf(shieldItem.getId())));
+		return ((shieldItem != null) && _shield.contains(shieldItem.getId()));
 	}
 	
-	public boolean containShield(int shield_id) {
-		if (_shield.isEmpty()) {
-			return false;
-		}
-		
-		return _shield.contains(Integer.valueOf(shield_id));
+	public boolean containShield(int shieldId) {
+		return _shield.contains(shieldId);
 	}
 	
 	public List<SkillHolder> getShieldSkillId() {
@@ -252,11 +238,7 @@ public final class L2ArmorSet {
 		if (!_head.isEmpty() && ((headItem == null) || (headItem.getEnchantLevel() < 6))) {
 			return false;
 		}
-		if (!_feet.isEmpty() && ((feetItem == null) || (feetItem.getEnchantLevel() < 6))) {
-			return false;
-		}
-		
-		return true;
+		return _feet.isEmpty() || ((feetItem != null) && (feetItem.getEnchantLevel() >= 6));
 	}
 	
 	public int getCON() {

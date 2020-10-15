@@ -49,9 +49,9 @@ public final class GlobalVariablesManager extends AbstractVariables {
 		// Restore previous variables.
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var st = con.createStatement();
-			var rset = st.executeQuery(SELECT_QUERY)) {
-			while (rset.next()) {
-				set(rset.getString("var"), rset.getString("value"));
+			var rs = st.executeQuery(SELECT_QUERY)) {
+			while (rs.next()) {
+				set(rs.getString("var"), rs.getString("value"));
 			}
 		} catch (Exception ex) {
 			LOG.warn("Couldn't restore global variables!", ex);

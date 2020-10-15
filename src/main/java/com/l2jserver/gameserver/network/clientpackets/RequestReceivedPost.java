@@ -30,7 +30,8 @@ import com.l2jserver.gameserver.network.serverpackets.ExReplyReceivedPost;
 import com.l2jserver.gameserver.util.Util;
 
 /**
- * @author Migi, DS
+ * @author Migi
+ * @author DS
  */
 public final class RequestReceivedPost extends L2GameClientPacket {
 	private static final String _C__D0_69_REQUESTRECEIVEDPOST = "[C] D0:69 RequestReceivedPost";

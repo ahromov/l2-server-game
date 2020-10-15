@@ -27,13 +27,9 @@ import com.l2jserver.gameserver.model.skills.Skill;
  * @author mkizub
  */
 public class ConditionLogicAnd extends Condition {
-	private static Condition[] _emptyConditions = new Condition[0];
-	public Condition[] conditions = _emptyConditions;
+	private static final Condition[] EMPTY_CONDITIONS = new Condition[0];
+	public Condition[] conditions = EMPTY_CONDITIONS;
 	
-	/**
-	 * Adds the.
-	 * @param condition the condition
-	 */
 	public void add(Condition condition) {
 		if (condition == null) {
 			return;

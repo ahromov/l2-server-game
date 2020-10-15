@@ -58,7 +58,7 @@ public class KnownListUpdateTaskManager {
 		public void run() {
 			try {
 				boolean failed;
-				for (L2WorldRegion regions[] : L2World.getInstance().getWorldRegions()) {
+				for (L2WorldRegion[] regions : L2World.getInstance().getWorldRegions()) {
 					for (L2WorldRegion r : regions) // go through all world regions
 					{
 						// avoid stopping update if something went wrong in updateRegion()
@@ -105,17 +105,17 @@ public class KnownListUpdateTaskManager {
 				object.getKnownList().forgetObjects(aggro || fullUpdate);
 				continue;
 			}
-			for (L2WorldRegion regi : region.getSurroundingRegions()) {
-				if ((object instanceof L2Playable) || (aggro && regi.isActive()) || fullUpdate) {
-					Collection<L2Object> inrObj = regi.getVisibleObjects().values();
+			for (L2WorldRegion worldRegion : region.getSurroundingRegions()) {
+				if ((object instanceof L2Playable) || (aggro && worldRegion.isActive()) || fullUpdate) {
+					Collection<L2Object> inrObj = worldRegion.getVisibleObjects().values();
 					for (L2Object obj : inrObj) {
 						if (obj != object) {
 							object.getKnownList().addKnownObject(obj);
 						}
 					}
 				} else if (object instanceof L2Character) {
-					if (regi.isActive()) {
-						Collection<L2Playable> inrPls = regi.getVisiblePlayable().values();
+					if (worldRegion.isActive()) {
+						Collection<L2Playable> inrPls = worldRegion.getVisiblePlayable().values();
 						
 						for (L2Object obj : inrPls) {
 							if (obj != object) {

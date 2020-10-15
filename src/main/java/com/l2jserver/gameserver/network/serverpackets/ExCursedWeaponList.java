@@ -18,26 +18,26 @@
  */
 package com.l2jserver.gameserver.network.serverpackets;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author -Wooden-
  */
 public class ExCursedWeaponList extends L2GameServerPacket {
-	private final List<Integer> _cursedWeaponIds;
 	
-	public ExCursedWeaponList(List<Integer> cursedWeaponIds) {
-		_cursedWeaponIds = cursedWeaponIds;
+	private final Set<Integer> cursedWeaponIds;
+	
+	public ExCursedWeaponList(Set<Integer> cursedWeaponIds) {
+		this.cursedWeaponIds = cursedWeaponIds;
 	}
 	
 	@Override
 	protected void writeImpl() {
-		writeC(0xfe);
+		writeC(0xFE);
 		writeH(0x46);
-		
-		writeD(_cursedWeaponIds.size());
-		for (int i : _cursedWeaponIds) {
-			writeD(i);
+		writeD(cursedWeaponIds.size());
+		for (int id : cursedWeaponIds) {
+			writeD(id);
 		}
 	}
 }

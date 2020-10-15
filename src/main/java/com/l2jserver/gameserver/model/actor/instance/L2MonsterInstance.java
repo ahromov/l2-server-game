@@ -45,10 +45,6 @@ public class L2MonsterInstance extends L2Attackable {
 	
 	protected ScheduledFuture<?> _maintenanceTask = null;
 	
-	/**
-	 * Creates a monster.
-	 * @param template the monster NPC template
-	 */
 	public L2MonsterInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2MonsterInstance);

@@ -51,7 +51,7 @@ public class OlympiadManager {
 		_teamsBasedRegisters = new CopyOnWriteArrayList<>();
 	}
 	
-	public static final OlympiadManager getInstance() {
+	public static OlympiadManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	
@@ -100,8 +100,8 @@ public class OlympiadManager {
 		return isRegistered(noble, noble, false);
 	}
 	
-	private final boolean isRegistered(L2PcInstance noble, L2PcInstance player, boolean showMessage) {
-		final Integer objId = Integer.valueOf(noble.getObjectId());
+	private boolean isRegistered(L2PcInstance noble, L2PcInstance player, boolean showMessage) {
+		final Integer objId = noble.getObjectId();
 		// party may be already dispersed
 		for (List<Integer> team : _teamsBasedRegisters) {
 			if ((team != null) && team.contains(objId)) {
@@ -141,7 +141,7 @@ public class OlympiadManager {
 	}
 	
 	@SuppressWarnings("incomplete-switch")
-	private final boolean isInCompetition(L2PcInstance noble, L2PcInstance player, boolean showMessage) {
+	private boolean isInCompetition(L2PcInstance noble, L2PcInstance player, boolean showMessage) {
 		if (!Olympiad._inCompPeriod) {
 			return false;
 		}
@@ -159,23 +159,20 @@ public class OlympiadManager {
 				}
 				
 				switch (game.getType()) {
-					case CLASSED: {
+					case CLASSED -> {
 						final SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.C1_IS_ALREADY_REGISTERED_ON_THE_CLASS_MATCH_WAITING_LIST);
 						sm.addPcName(noble);
 						player.sendPacket(sm);
-						break;
 					}
-					case NON_CLASSED: {
+					case NON_CLASSED -> {
 						final SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.C1_IS_ALREADY_REGISTERED_ON_THE_NON_CLASS_LIMITED_MATCH_WAITING_LIST);
 						sm.addPcName(noble);
 						player.sendPacket(sm);
-						break;
 					}
-					case TEAMS: {
+					case TEAMS -> {
 						final SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.C1_IS_ALREADY_REGISTERED_NON_CLASS_LIMITED_EVENT_TEAMS);
 						sm.addPcName(noble);
 						player.sendPacket(sm);
-						break;
 					}
 				}
 				return true;
@@ -184,7 +181,6 @@ public class OlympiadManager {
 		return false;
 	}
 	
-	@SuppressWarnings("incomplete-switch")
 	public final boolean registerNoble(L2PcInstance player, CompetitionType type) {
 		if (!Olympiad._inCompPeriod) {
 			player.sendPacket(SystemMessageId.THE_OLYMPIAD_GAME_IS_NOT_CURRENTLY_IN_PROGRESS);
@@ -203,7 +199,7 @@ public class OlympiadManager {
 		}
 		
 		switch (type) {
-			case CLASSED: {
+			case CLASSED -> {
 				if (!checkNoble(player, player)) {
 					return false;
 				}
@@ -223,9 +219,8 @@ public class OlympiadManager {
 				}
 				
 				player.sendPacket(SystemMessageId.YOU_HAVE_BEEN_REGISTERED_IN_A_WAITING_LIST_OF_CLASSIFIED_GAMES);
-				break;
 			}
-			case NON_CLASSED: {
+			case NON_CLASSED -> {
 				if (!checkNoble(player, player)) {
 					return false;
 				}
@@ -237,9 +232,8 @@ public class OlympiadManager {
 				
 				_nonClassBasedRegisters.add(charId);
 				player.sendPacket(SystemMessageId.YOU_HAVE_BEEN_REGISTERED_IN_A_WAITING_LIST_OF_NO_CLASS_GAMES);
-				break;
 			}
-			case TEAMS: {
+			case TEAMS -> {
 				final L2Party party = player.getParty();
 				if ((party == null) || (party.getMemberCount() != 3)) {
 					player.sendPacket(SystemMessageId.PARTY_REQUIREMENTS_NOT_MET);
@@ -288,7 +282,6 @@ public class OlympiadManager {
 				
 				party.broadcastPacket(SystemMessage.getSystemMessage(SystemMessageId.YOU_HAVE_REGISTERED_IN_A_WAITING_LIST_OF_TEAM_GAMES));
 				_teamsBasedRegisters.add(team);
-				break;
 			}
 		}
 		return true;
@@ -316,7 +309,7 @@ public class OlympiadManager {
 			return false;
 		}
 		
-		Integer objId = Integer.valueOf(noble.getObjectId());
+		Integer objId = noble.getObjectId();
 		if (_nonClassBasedRegisters.remove(objId)) {
 			if (customs().getDualboxCheckMaxOlympiadParticipantsPerIP() > 0) {
 				AntiFeedManager.getInstance().removePlayer(AntiFeedManager.OLYMPIAD_ID, noble);
@@ -354,7 +347,7 @@ public class OlympiadManager {
 			task.getGame().handleDisconnect(player);
 		}
 		
-		final Integer objId = Integer.valueOf(player.getObjectId());
+		final Integer objId = player.getObjectId();
 		if (_nonClassBasedRegisters.remove(objId)) {
 			return;
 		}
@@ -379,7 +372,7 @@ public class OlympiadManager {
 	 * @return true if all requirements are met
 	 */
 	// TODO: move to the bypass handler after reworking points system
-	private final boolean checkNoble(L2PcInstance noble, L2PcInstance player) {
+	private boolean checkNoble(L2PcInstance noble, L2PcInstance player) {
 		SystemMessage sm;
 		if (!noble.isNoble()) {
 			sm = SystemMessage.getSystemMessage(SystemMessageId.C1_DOES_NOT_MEET_REQUIREMENTS_ONLY_NOBLESS_CAN_PARTICIPATE_IN_THE_OLYMPIAD);

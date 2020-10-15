@@ -54,21 +54,14 @@ public class ConditionPlayerBaseStats extends Condition {
 			return false;
 		}
 		final L2PcInstance player = effector.getActingPlayer();
-		switch (_stat) {
-			case Int:
-				return player.getINT() >= _value;
-			case Str:
-				return player.getSTR() >= _value;
-			case Con:
-				return player.getCON() >= _value;
-			case Dex:
-				return player.getDEX() >= _value;
-			case Men:
-				return player.getMEN() >= _value;
-			case Wit:
-				return player.getWIT() >= _value;
-		}
-		return false;
+		return switch (_stat) {
+			case Int -> player.getINT() >= _value;
+			case Str -> player.getSTR() >= _value;
+			case Con -> player.getCON() >= _value;
+			case Dex -> player.getDEX() >= _value;
+			case Men -> player.getMEN() >= _value;
+			case Wit -> player.getWIT() >= _value;
+		};
 	}
 }
 

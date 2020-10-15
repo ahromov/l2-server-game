@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * @author DS Credits to Diamond
+ * @author Diamond
+ * @author DS
  */
 public class CellNodeBuffer {
 	private static final int MAX_ITERATIONS = 3500;
@@ -121,7 +122,7 @@ public class CellNodeBuffer {
 		return result;
 	}
 	
-	private final void getNeighbors() {
+	private void getNeighbors() {
 		if (_current.getLoc().canGoNone()) {
 			return;
 		}
@@ -186,7 +187,7 @@ public class CellNodeBuffer {
 		}
 	}
 	
-	private final CellNode getNode(int x, int y, int z) {
+	private CellNode getNode(int x, int y, int z) {
 		final int aX = x - _baseX;
 		if ((aX < 0) || (aX >= _mapSize)) {
 			return null;
@@ -214,7 +215,7 @@ public class CellNodeBuffer {
 		return result;
 	}
 	
-	private final CellNode addNode(int x, int y, int z, boolean diagonal) {
+	private CellNode addNode(int x, int y, int z, boolean diagonal) {
 		CellNode newNode = getNode(x, y, z);
 		if (newNode == null) {
 			return null;
@@ -265,7 +266,7 @@ public class CellNodeBuffer {
 		return newNode;
 	}
 	
-	private final boolean isHighWeight(int x, int y, int z) {
+	private boolean isHighWeight(int x, int y, int z) {
 		final CellNode result = getNode(x, y, z);
 		if (result == null) {
 			return true;
@@ -274,14 +275,10 @@ public class CellNodeBuffer {
 		if (!result.getLoc().canGoAll()) {
 			return true;
 		}
-		if (Math.abs(result.getLoc().getZ() - z) > 16) {
-			return true;
-		}
-		
-		return false;
+		return Math.abs(result.getLoc().getZ() - z) > 16;
 	}
 	
-	private final double getCost(int x, int y, int z, float weight) {
+	private double getCost(int x, int y, int z, float weight) {
 		final int dX = x - _targetX;
 		final int dY = y - _targetY;
 		final int dZ = z - _targetZ;

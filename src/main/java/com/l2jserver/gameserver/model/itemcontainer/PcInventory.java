@@ -837,10 +837,7 @@ public class PcInventory extends Inventory {
 	 * @return true if can use
 	 */
 	public boolean canManipulateWithItemId(int itemId) {
-		if (((_blockMode == 0) && Util.contains(_blockItems, itemId)) || ((_blockMode == 1) && !Util.contains(_blockItems, itemId))) {
-			return false;
-		}
-		return true;
+		return ((_blockMode != 0) || !Util.contains(_blockItems, itemId)) && ((_blockMode != 1) || Util.contains(_blockItems, itemId));
 	}
 	
 	@Override

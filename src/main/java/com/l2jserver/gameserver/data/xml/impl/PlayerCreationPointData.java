@@ -83,7 +83,7 @@ public class PlayerCreationPointData implements IXmlReader {
 		}
 	}
 	
-	public static final PlayerCreationPointData getInstance() {
+	public static PlayerCreationPointData getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 	

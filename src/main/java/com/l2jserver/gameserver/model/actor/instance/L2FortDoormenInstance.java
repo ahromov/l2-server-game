@@ -26,10 +26,7 @@ import com.l2jserver.gameserver.network.serverpackets.ActionFailed;
 import com.l2jserver.gameserver.network.serverpackets.NpcHtmlMessage;
 
 public class L2FortDoormenInstance extends L2DoormenInstance {
-	/**
-	 * Creates a fort doorman.
-	 * @param template the fort doorman NPC template
-	 */
+	
 	public L2FortDoormenInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2FortDoormenInstance);
@@ -76,9 +73,7 @@ public class L2FortDoormenInstance extends L2DoormenInstance {
 	@Override
 	protected final boolean isOwnerClan(L2PcInstance player) {
 		if ((player.getClan() != null) && (getFort() != null) && (getFort().getOwnerClan() != null)) {
-			if (player.getClanId() == getFort().getOwnerClan().getId()) {
-				return true;
-			}
+			return player.getClanId() == getFort().getOwnerClan().getId();
 		}
 		return false;
 	}

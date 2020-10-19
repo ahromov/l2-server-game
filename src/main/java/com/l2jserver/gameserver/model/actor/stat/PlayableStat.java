@@ -52,21 +52,11 @@ public class PlayableStat extends CharStat {
 	public int getSp() {
 		return _sp.get();
 	}
-
-	/**
-	 * This method not contains checks!
-	 * 
-	 * @param exp
-	 */
+		
 	public void setExp(long exp) {
 		_exp.set(exp);
 	}
-
-	/**
-	 * This method not contains checks!
-	 * 
-	 * @param sp
-	 */
+		
 	public void setSp(int sp) {
 		_sp.set(sp);
 	}
@@ -74,31 +64,21 @@ public class PlayableStat extends CharStat {
 	public boolean isExpBlock() {
 		return expBlock;
 	}
-
-	/**
-	 * @param _expBlock the _expBlock to set
-	 */
+	
 	public void setExpBlock(boolean _expBlock) {
 		this.expBlock = _expBlock;
 	}
-
-	/**
-	 * @return the _spBlock
-	 */
+	
 	public boolean isSpBlock() {
 		return spBlock;
 	}
 
-	/**
-	 * @param _spBlock the _spBlock to set
-	 */
 	public void setSpBlock(boolean _spBlock) {
 		this.spBlock = _spBlock;
 	}
 
 	/**
 	 * Contains only under zero check
-	 * 
 	 * @param exp
 	 * @return
 	 */
@@ -112,10 +92,9 @@ public class PlayableStat extends CharStat {
 		syncExpLevel(false);
 		return true;
 	}
-
+	
 	/**
 	 * Contains only under zero check
-	 * 
 	 * @param sp
 	 * @return
 	 */
@@ -128,20 +107,18 @@ public class PlayableStat extends CharStat {
 		}
 		return true;
 	}
-
+	
 	public boolean addExp(long value) {
 		if (isExpBlock())
 			return false;
 
 		final long currentExp = getExp();
 		final long totalExp = currentExp + value;
-		final TerminateReturn term = EventDispatcher.getInstance().notifyEvent(
-				new OnPlayableExpChanged(getActiveChar(), currentExp, totalExp), getActiveChar(),
-				TerminateReturn.class);
+		final TerminateReturn term = EventDispatcher.getInstance().notifyEvent(new OnPlayableExpChanged(getActiveChar(), currentExp, totalExp), getActiveChar(), TerminateReturn.class);
 		if ((term != null) && term.terminate()) {
 			return false;
 		}
-
+		
 		if ((totalExp < 0) || ((value > 0) && (currentExp == (getExpForLevel(getMaxExpLevel()) - 1)))) {
 			return true;
 		}
@@ -159,7 +136,6 @@ public class PlayableStat extends CharStat {
 
 	/**
 	 * Check if level need to be increased / decreased
-	 * 
 	 * @param isExpIncreased
 	 */
 	public void syncExpLevel(boolean isExpIncreased) {
@@ -180,9 +156,7 @@ public class PlayableStat extends CharStat {
 
 					if (tmp != currentLevel) {
 						int newLevel = tmp - currentLevel;
-						EventDispatcher.getInstance().notifyEventAsync(
-								new OnPlayerLevelChanged(getActiveChar().getActingPlayer(), currentLevel, newLevel),
-								getActiveChar());
+						EventDispatcher.getInstance().notifyEventAsync(new OnPlayerLevelChanged(getActiveChar().getActingPlayer(), currentLevel, newLevel), getActiveChar());
 						getActiveChar().addLevel(newLevel);
 					}
 					break;
@@ -201,9 +175,7 @@ public class PlayableStat extends CharStat {
 
 					if (tmp != currentLevel) {
 						int newLevel = tmp - currentLevel;
-						EventDispatcher.getInstance().notifyEventAsync(
-								new OnPlayerLevelChanged(getActiveChar().getActingPlayer(), currentLevel, newLevel),
-								getActiveChar());
+						EventDispatcher.getInstance().notifyEventAsync(new OnPlayerLevelChanged(getActiveChar().getActingPlayer(), currentLevel, newLevel), getActiveChar());
 						getActiveChar().addLevel(newLevel);
 					}
 					break;
@@ -217,7 +189,7 @@ public class PlayableStat extends CharStat {
 			return false;
 
 		if (sp < 0) {
-			_log.warning("addSp acept only possitive numbers!");
+			_log.warning("addSp accepts only positive numbers!");
 			return false;
 		}
 		int currentSp = getSp();
@@ -264,7 +236,6 @@ public class PlayableStat extends CharStat {
 
 	/**
 	 * Get required exp for specific level
-	 * 
 	 * @param level
 	 * @return
 	 */
@@ -284,13 +255,9 @@ public class PlayableStat extends CharStat {
 	}
 
 	/**
-	 * Get maximum level of expirince is max level +1 for get (100%)<br>
-	 * <B><U> Overridden in </U> :</B>
-	 * <li>PcStat</li>
-	 * <li>PetStat</li>
+	 * Get maximum level of experience is max level +1 for get (100%).
 	 */
 	public int getMaxExpLevel() {
-		// Dummy method
 		return character().getMaxPlayerLevel() + 1;
 	}
 

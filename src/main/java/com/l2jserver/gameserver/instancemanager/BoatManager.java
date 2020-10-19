@@ -20,6 +20,7 @@ package com.l2jserver.gameserver.instancemanager;
 
 import static com.l2jserver.gameserver.config.Configuration.general;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -39,14 +40,12 @@ public class BoatManager {
 	public static final int GLUDIN_HARBOR = 2;
 	public static final int RUNE_HARBOR = 3;
 	
-	public static final BoatManager getInstance() {
+	public static BoatManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	
 	protected BoatManager() {
-		for (int i = 0; i < _docksBusy.length; i++) {
-			_docksBusy[i] = false;
-		}
+		Arrays.fill(_docksBusy, false);
 	}
 	
 	public L2BoatInstance getNewBoat(int boatId, int x, int y, int z, int heading) {

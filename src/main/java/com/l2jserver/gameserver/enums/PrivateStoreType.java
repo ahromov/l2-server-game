@@ -30,9 +30,9 @@ public enum PrivateStoreType {
 	MANUFACTURE(5),
 	PACKAGE_SELL(8);
 	
-	private int _id;
+	private final int _id;
 	
-	private PrivateStoreType(int id) {
+	PrivateStoreType(int id) {
 		_id = id;
 	}
 	

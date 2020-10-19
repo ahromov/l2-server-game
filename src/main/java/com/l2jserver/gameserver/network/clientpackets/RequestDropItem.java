@@ -37,8 +37,7 @@ import com.l2jserver.gameserver.util.GMAudit;
 import com.l2jserver.gameserver.util.Util;
 
 /**
- * This class ...
- * @version $Revision: 1.11.2.1.2.7 $ $Date: 2005/04/02 21:25:21 $
+ * @since 2005/04/02 21:25:21
  */
 public final class RequestDropItem extends L2GameClientPacket {
 	private static final String _C__17_REQUESTDROPITEM = "[C] 17 RequestDropItem";

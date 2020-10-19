@@ -21,7 +21,8 @@ package com.l2jserver.gameserver.network.serverpackets;
 import com.l2jserver.gameserver.network.SystemMessageId;
 
 /**
- * @author Forsaiken, UnAfraid
+ * @author Forsaiken
+ * @author UnAfraid
  */
 public final class SystemMessage extends AbstractMessagePacket<SystemMessage> {
 	private SystemMessage(final SystemMessageId smId) {
@@ -59,16 +60,6 @@ public final class SystemMessage extends AbstractMessagePacket<SystemMessage> {
 	 */
 	public static SystemMessage getSystemMessage(int id) {
 		return getSystemMessage(SystemMessageId.getSystemMessageId(id));
-	}
-	
-	/**
-	 * Use SystemMessage.getSystemMessage(SystemMessageId smId) where possible instead
-	 * @param id
-	 * @deprecated
-	 */
-	@Deprecated
-	private SystemMessage(final int id) {
-		this(SystemMessageId.getSystemMessageId(id));
 	}
 	
 	@Override

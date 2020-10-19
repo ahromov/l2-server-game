@@ -118,17 +118,15 @@ public abstract class AbstractEnchantItem {
 			return false;
 		} else if ((_maxEnchantLevel != 0) && (itemToEnchant.getEnchantLevel() >= _maxEnchantLevel)) {
 			return false;
-		} else if (_grade != itemToEnchant.getItem().getItemGradeSPlus()) {
-			return false;
 		}
-		return true;
+		return _grade == itemToEnchant.getItem().getItemGradeSPlus();
 	}
 	
 	/**
 	 * @param type2
 	 * @return {@code true} if current type2 is valid to be enchanted, {@code false} otherwise
 	 */
-	private final boolean isValidItemType(ItemType2 type2) {
+	private boolean isValidItemType(ItemType2 type2) {
 		if (type2 == ItemType2.WEAPON) {
 			return isWeapon();
 		} else if ((type2 == ItemType2.SHIELD_ARMOR) || (type2 == ItemType2.ACCESSORY)) {

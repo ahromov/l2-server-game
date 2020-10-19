@@ -23,15 +23,11 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerCharges.
+ * Player charges condition.
  */
 public class ConditionPlayerCharges extends Condition {
 	private final int _charges;
 	
-	/**
-	 * Instantiates a new condition player charges.
-	 * @param charges the charges
-	 */
 	public ConditionPlayerCharges(int charges) {
 		_charges = charges;
 	}

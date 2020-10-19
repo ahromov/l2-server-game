@@ -173,9 +173,9 @@ public class PunishmentTask implements Runnable {
 				ps.setString(5, _reason);
 				ps.setString(6, _punishedBy);
 				ps.execute();
-				try (var rset = ps.getGeneratedKeys()) {
-					if (rset.next()) {
-						_id = rset.getInt(1);
+				try (var rs = ps.getGeneratedKeys()) {
+					if (rs.next()) {
+						_id = rs.getInt(1);
 					}
 				}
 				_isStored = true;

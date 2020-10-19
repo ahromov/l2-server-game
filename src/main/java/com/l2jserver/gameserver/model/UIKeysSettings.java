@@ -29,7 +29,8 @@ import com.l2jserver.gameserver.data.xml.impl.UIData;
 
 /**
  * UI Keys Settings class.
- * @author mrTJO, Zoey76
+ * @author mrTJO
+ * @author Zoey76
  */
 public class UIKeysSettings {
 	
@@ -78,38 +79,38 @@ public class UIKeysSettings {
 	 * Save Categories and Mapped Keys into GameServer DataBase
 	 */
 	public void saveInDB() {
-		String query;
+		StringBuilder query;
 		if (_saved) {
 			return;
 		}
 		
 		// TODO(Zoey76): Refactor this to use batch.
-		query = "REPLACE INTO character_ui_categories (`charId`, `catId`, `order`, `cmdId`) VALUES ";
+		query = new StringBuilder("REPLACE INTO character_ui_categories (`charId`, `catId`, `order`, `cmdId`) VALUES ");
 		for (int category : _storedCategories.keySet()) {
 			int order = 0;
 			for (int key : _storedCategories.get(category)) {
-				query += "(" + _playerObjId + ", " + category + ", " + (order++) + ", " + key + "),";
+				query.append("(").append(_playerObjId).append(", ").append(category).append(", ").append(order++).append(", ").append(key).append("),");
 			}
 		}
-		query = query.substring(0, query.length() - 1) + "; ";
+		query = new StringBuilder(query.substring(0, query.length() - 1) + "; ");
 		try (var con = ConnectionFactory.getInstance().getConnection();
-			var statement = con.prepareStatement(query)) {
+			var statement = con.prepareStatement(query.toString())) {
 			statement.execute();
 		} catch (Exception e) {
 			_log.log(Level.WARNING, "Exception: saveInDB(): " + e.getMessage(), e);
 		}
 		
-		query = "REPLACE INTO character_ui_actions (`charId`, `cat`, `order`, `cmd`, `key`, `tgKey1`, `tgKey2`, `show`) VALUES";
+		query = new StringBuilder("REPLACE INTO character_ui_actions (`charId`, `cat`, `order`, `cmd`, `key`, `tgKey1`, `tgKey2`, `show`) VALUES");
 		for (List<ActionKey> keyLst : _storedKeys.values()) {
 			int order = 0;
 			for (ActionKey key : keyLst) {
-				query += key.getSqlSaveString(_playerObjId, order++) + ",";
+				query.append(key.getSqlSaveString(_playerObjId, order++)).append(",");
 			}
 		}
-		query = query.substring(0, query.length() - 1) + ";";
+		query = new StringBuilder(query.substring(0, query.length() - 1) + ";");
 		
 		try (var con = ConnectionFactory.getInstance().getConnection();
-			var statement = con.prepareStatement(query)) {
+			var statement = con.prepareStatement(query.toString())) {
 			statement.execute();
 		} catch (Exception e) {
 			_log.log(Level.WARNING, "Exception: saveInDB(): " + e.getMessage(), e);

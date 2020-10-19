@@ -1,11 +1,20 @@
 eclipse.preferences.version=1
+<<<<<<< HEAD
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=13
 org.eclipse.jdt.core.compiler.compliance=13
+=======
+org.eclipse.jdt.core.compiler.codegen.targetPlatform=14
+org.eclipse.jdt.core.compiler.compliance=14
+>>>>>>> branch 'develop' of https://bitbucket.org/l2jserver/l2j-server-game.git
 org.eclipse.jdt.core.compiler.problem.enablePreviewFeatures=disabled
 org.eclipse.jdt.core.compiler.problem.forbiddenReference=warning
 org.eclipse.jdt.core.compiler.problem.reportPreviewFeatures=ignore
 org.eclipse.jdt.core.compiler.release=disabled
+<<<<<<< HEAD
 org.eclipse.jdt.core.compiler.source=13
+=======
+org.eclipse.jdt.core.compiler.source=14
+>>>>>>> branch 'develop' of https://bitbucket.org/l2jserver/l2j-server-game.git
 org.eclipse.jdt.core.formatter.align_assignment_statements_on_columns=false
 org.eclipse.jdt.core.formatter.align_fields_grouping_blank_lines=2147483647
 org.eclipse.jdt.core.formatter.align_type_members_on_columns=false

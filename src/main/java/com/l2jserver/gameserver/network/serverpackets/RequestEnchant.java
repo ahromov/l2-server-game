@@ -24,9 +24,6 @@ package com.l2jserver.gameserver.network.serverpackets;
 public class RequestEnchant extends L2GameServerPacket {
 	private final int _unk;
 	
-	/**
-	 * @param value
-	 */
 	public RequestEnchant(int value) {
 		_unk = value;
 	}

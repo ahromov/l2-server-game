@@ -39,12 +39,12 @@ public class LocationConverter implements Converter<Location> {
 		}
 		
 		final var tokens = input.replaceAll(" ", "").split(",");
-		final var location = new Location(Integer.valueOf(tokens[0]), Integer.valueOf(tokens[1]), Integer.valueOf(tokens[2]));
+		final var location = new Location(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
 		if (tokens.length >= 4) {
-			location.setHeading(Integer.valueOf(tokens[3]));
+			location.setHeading(Integer.parseInt(tokens[3]));
 		}
 		if (tokens.length == 5) {
-			location.setInstanceId(Integer.valueOf(tokens[4]));
+			location.setInstanceId(Integer.parseInt(tokens[4]));
 		}
 		return location;
 	}

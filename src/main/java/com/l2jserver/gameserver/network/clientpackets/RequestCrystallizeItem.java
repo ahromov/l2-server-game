@@ -33,8 +33,7 @@ import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 import com.l2jserver.gameserver.util.Util;
 
 /**
- * This class ...
- * @version $Revision: 1.2.2.3.2.5 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class RequestCrystallizeItem extends L2GameClientPacket {
 	private static final String _C__2F_REQUESTDCRYSTALLIZEITEM = "[C] 2F RequestCrystallizeItem";
@@ -119,29 +118,25 @@ public final class RequestCrystallizeItem extends L2GameClientPacket {
 		boolean canCrystallize = true;
 		
 		switch (itemToRemove.getItem().getItemGradeSPlus()) {
-			case C: {
+			case C -> {
 				if (skillLevel <= 1) {
 					canCrystallize = false;
 				}
-				break;
 			}
-			case B: {
+			case B -> {
 				if (skillLevel <= 2) {
 					canCrystallize = false;
 				}
-				break;
 			}
-			case A: {
+			case A -> {
 				if (skillLevel <= 3) {
 					canCrystallize = false;
 				}
-				break;
 			}
-			case S: {
+			case S -> {
 				if (skillLevel <= 4) {
 					canCrystallize = false;
 				}
-				break;
 			}
 		}
 		

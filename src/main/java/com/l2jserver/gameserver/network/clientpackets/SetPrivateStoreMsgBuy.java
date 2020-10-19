@@ -23,8 +23,7 @@ import com.l2jserver.gameserver.network.serverpackets.PrivateStoreMsgBuy;
 import com.l2jserver.gameserver.util.Util;
 
 /**
- * This class ...
- * @version $Revision: 1.2.4.2 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class SetPrivateStoreMsgBuy extends L2GameClientPacket {
 	private static final String _C__9D_SETPRIVATESTOREMSGBUY = "[C] 9D SetPrivateStoreMsgBuy";

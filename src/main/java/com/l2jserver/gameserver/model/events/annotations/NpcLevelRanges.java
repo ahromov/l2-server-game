@@ -29,5 +29,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface NpcLevelRanges {
-	public NpcLevelRange[] value();
+	NpcLevelRange[] value();
 }

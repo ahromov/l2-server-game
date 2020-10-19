@@ -53,7 +53,7 @@ public abstract class AbstractFunction {
 	 */
 	private final Object _funcOwner;
 	/** Function may be disabled by attached condition. */
-	private final Condition _applayCond;
+	private final Condition _applyCond;
 	/** The value. */
 	private final double _value;
 	
@@ -63,26 +63,26 @@ public abstract class AbstractFunction {
 	 * @param order the order
 	 * @param owner the owner
 	 * @param value the value
-	 * @param applayCond the apply condition
+	 * @param applyCond the apply condition
 	 */
-	public AbstractFunction(Stats stat, int order, Object owner, double value, Condition applayCond) {
+	public AbstractFunction(Stats stat, int order, Object owner, double value, Condition applyCond) {
 		_stat = stat;
 		_order = order;
 		_funcOwner = owner;
 		_value = value;
-		_applayCond = applayCond;
+		_applyCond = applyCond;
 	}
 	
 	/**
 	 * Gets the apply condition
 	 * @return the apply condition
 	 */
-	public Condition getApplayCond() {
-		return _applayCond;
+	public Condition getApplyCond() {
+		return _applyCond;
 	}
 	
 	/**
-	 * Gets the fuction owner.
+	 * Gets the function owner.
 	 * @return the function owner
 	 */
 	public final Object getFuncOwner() {

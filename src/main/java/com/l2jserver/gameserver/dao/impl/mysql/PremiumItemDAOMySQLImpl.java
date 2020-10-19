@@ -41,30 +41,30 @@ public class PremiumItemDAOMySQLImpl implements PremiumItemDAO {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement(GET_PREMIUM_ITEMS)) {
 			ps.setInt(1, player.getObjectId());
-			try (var rset = ps.executeQuery()) {
-				while (rset.next()) {
-					int itemNum = rset.getInt("itemNum");
-					int itemId = rset.getInt("itemId");
-					long itemCount = rset.getLong("itemCount");
-					String itemSender = rset.getString("itemSender");
+			try (var rs = ps.executeQuery()) {
+				while (rs.next()) {
+					int itemNum = rs.getInt("itemNum");
+					int itemId = rs.getInt("itemId");
+					long itemCount = rs.getLong("itemCount");
+					String itemSender = rs.getString("itemSender");
 					player.getPremiumItemList().put(itemNum, new L2PremiumItem(itemId, itemCount, itemSender));
 				}
 			}
-		} catch (Exception e) {
-			LOG.error("Could not restore premium items: {}", e);
+		} catch (Exception ex) {
+			LOG.error("Could not restore premium items!", ex);
 		}
 	}
 	
 	@Override
-	public void update(L2PcInstance player, int itemNum, long newcount) {
+	public void update(L2PcInstance player, int itemNum, long newCount) {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("UPDATE character_premium_items SET itemCount=? WHERE charId=? AND itemNum=? ")) {
-			ps.setLong(1, newcount);
+			ps.setLong(1, newCount);
 			ps.setInt(2, player.getObjectId());
 			ps.setInt(3, itemNum);
 			ps.execute();
-		} catch (Exception e) {
-			LOG.error("Could not update premium items: {}", e);
+		} catch (Exception ex) {
+			LOG.error("Could not update premium items!", ex);
 		}
 	}
 	
@@ -75,8 +75,8 @@ public class PremiumItemDAOMySQLImpl implements PremiumItemDAO {
 			ps.setInt(1, player.getObjectId());
 			ps.setInt(2, itemNum);
 			ps.execute();
-		} catch (Exception e) {
-			LOG.error("Could not delete premium item: {}" + e);
+		} catch (Exception ex) {
+			LOG.error("Could not delete premium item!" + ex);
 		}
 	}
 }

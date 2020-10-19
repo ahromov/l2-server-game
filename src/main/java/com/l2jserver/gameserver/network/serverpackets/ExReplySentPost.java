@@ -24,7 +24,8 @@ import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
 
 /**
  * ExReplySentPost packet implementation.
- * @author Migi, DS
+ * @author Migi
+ * @author DS
  */
 public class ExReplySentPost extends AbstractItemPacket {
 	private final Message _msg;

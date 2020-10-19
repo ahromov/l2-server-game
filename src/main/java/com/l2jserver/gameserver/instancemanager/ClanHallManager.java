@@ -50,7 +50,7 @@ public final class ClanHallManager {
 	
 	private final Map<Integer, AuctionableHall> _allAuctionableClanHalls = new HashMap<>();
 	
-	private static Map<Integer, ClanHall> _allClanHalls = new HashMap<>();
+	private static final Map<Integer, ClanHall> _allClanHalls = new HashMap<>();
 	
 	private boolean _loaded = false;
 	
@@ -130,10 +130,7 @@ public final class ClanHallManager {
 	}
 	
 	public boolean isFree(int chId) {
-		if (_freeClanHall.containsKey(chId)) {
-			return true;
-		}
-		return false;
+		return _freeClanHall.containsKey(chId);
 	}
 	
 	public synchronized void setFree(int chId) {
@@ -176,7 +173,7 @@ public final class ClanHallManager {
 	}
 	
 	public AuctionableHall getNearbyClanHall(int x, int y, int maxDist) {
-		L2ClanHallZone zone = null;
+		L2ClanHallZone zone;
 		
 		for (Map.Entry<Integer, AuctionableHall> ch : _clanHall.entrySet()) {
 			zone = ch.getValue().getZone();
@@ -194,9 +191,8 @@ public final class ClanHallManager {
 	}
 	
 	public ClanHall getNearbyAbstractHall(int x, int y, int maxDist) {
-		L2ClanHallZone zone = null;
 		for (Map.Entry<Integer, ClanHall> ch : _allClanHalls.entrySet()) {
-			zone = ch.getValue().getZone();
+			final var zone = ch.getValue().getZone();
 			if ((zone != null) && (zone.getDistanceToZone(x, y) < maxDist)) {
 				return ch.getValue();
 			}

@@ -37,15 +37,11 @@ import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
  * In a group mob, there are one master called RaidBoss and several slaves called Minions.
  */
 public class L2RaidBossInstance extends L2MonsterInstance {
-	private static final int RAIDBOSS_MAINTENANCE_INTERVAL = 30000; // 30 sec
+	private static final int RAID_BOSS_MAINTENANCE_INTERVAL = 30000; // 30 sec
 	
 	private RaidBossSpawnManager.StatusEnum _raidStatus;
 	private boolean _useRaidCurse = true;
 	
-	/**
-	 * Creates a raid boss.
-	 * @param template the raid boss template
-	 */
 	public L2RaidBossInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2RaidBossInstance);
@@ -61,7 +57,7 @@ public class L2RaidBossInstance extends L2MonsterInstance {
 	
 	@Override
 	protected int getMaintenanceInterval() {
-		return RAIDBOSS_MAINTENANCE_INTERVAL;
+		return RAID_BOSS_MAINTENANCE_INTERVAL;
 	}
 	
 	@Override
@@ -97,7 +93,7 @@ public class L2RaidBossInstance extends L2MonsterInstance {
 	 */
 	@Override
 	protected void startMaintenanceTask() {
-		_maintenanceTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(() -> checkAndReturnToSpawn(), 60000, getMaintenanceInterval() + Rnd.get(5000));
+		_maintenanceTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(this::checkAndReturnToSpawn, 60000, getMaintenanceInterval() + Rnd.get(5000));
 	}
 	
 	protected void checkAndReturnToSpawn() {

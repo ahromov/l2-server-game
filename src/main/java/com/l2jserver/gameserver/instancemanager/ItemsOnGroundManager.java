@@ -60,7 +60,7 @@ public final class ItemsOnGroundManager implements Runnable {
 		
 		// if DestroyPlayerDroppedItem was previously false, items currently protected will be added to ItemsAutoDestroy
 		if (general().destroyPlayerDroppedItem()) {
-			String str = null;
+			String str;
 			if (!general().destroyEquipableItem()) {
 				// Recycle misc. items only
 				str = "UPDATE itemsonground SET drop_time = ? WHERE drop_time = -1 AND equipable = 0";

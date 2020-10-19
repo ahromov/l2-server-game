@@ -110,9 +110,9 @@ public class LoginServerThread extends Thread {
 	 * in blowfishKey
 	 */
 	private NewCrypt _blowfish;
-	private byte[] _hexID;
+	private final byte[] _hexID;
 	private final boolean _acceptAlternate;
-	private int _requestID;
+	private final int _requestID;
 	private final boolean _reserveHost;
 	private int _maxPlayer;
 	private final List<WaitingClient> _waitingClients;
@@ -146,10 +146,10 @@ public class LoginServerThread extends Thread {
 	@Override
 	public void run() {
 		while (!isInterrupted()) {
-			int lengthHi = 0;
-			int lengthLo = 0;
-			int length = 0;
-			boolean checksumOk = false;
+			int lengthHi;
+			int lengthLo;
+			int length;
+			boolean checksumOk;
 			try {
 				// Connection
 				LOG.info("Connecting to login server on {}:{}", _hostname, _port);
@@ -200,12 +200,13 @@ public class LoginServerThread extends Thread {
 					}
 					
 					int packetType = incoming[0] & 0xff;
+					// send the blowfish key through the rsa encryption
+					// now, only accept packet with the new encryption
+					// login will close the connection here
 					switch (packetType) {
-						case 0x00:
+						case 0x00 -> {
 							InitLS init = new InitLS(incoming);
-							
 							RSAPublicKey publicKey;
-							
 							try {
 								KeyFactory kfac = KeyFactory.getInstance("RSA");
 								BigInteger modulus = new BigInteger(init.getRSAKey());
@@ -215,18 +216,15 @@ public class LoginServerThread extends Thread {
 								LOG.warn("Trouble while init the public key send by login");
 								break;
 							}
-							// send the blowfish key through the rsa encryption
 							sendPacket(new BlowFishKey(blowfishKey, publicKey));
-							// now, only accept packet with the new encryption
 							_blowfish = new NewCrypt(blowfishKey);
 							sendPacket(new AuthRequest(_requestID, _acceptAlternate, _hexID, _gamePort, _reserveHost, _maxPlayer, _subnets, _hosts));
-							break;
-						case 0x01:
+						}
+						case 0x01 -> {
 							LoginServerFail lsf = new LoginServerFail(incoming);
 							LOG.info("Damn! Registeration Failed: {}", lsf.getReasonString());
-							// login will close the connection here
-							break;
-						case 0x02:
+						}
+						case 0x02 -> {
 							AuthResponse aresp = new AuthResponse(incoming);
 							int serverID = aresp.getServerId();
 							_serverName = aresp.getServerName();
@@ -259,8 +257,8 @@ public class LoginServerThread extends Thread {
 								}
 								sendPacket(new PlayerInGame(playerList));
 							}
-							break;
-						case 0x03:
+						}
+						case 0x03 -> {
 							PlayerAuthResponse par = new PlayerAuthResponse(incoming);
 							String account = par.getAccount();
 							WaitingClient wcToRemove = null;
@@ -288,18 +286,16 @@ public class LoginServerThread extends Thread {
 								}
 								_waitingClients.remove(wcToRemove);
 							}
-							break;
-						case 0x04:
+						}
+						case 0x04 -> {
 							KickPlayer kp = new KickPlayer(incoming);
 							doKickPlayer(kp.getAccount());
-							break;
-						case 0x05:
+						}
+						case 0x05 -> {
 							RequestCharacters rc = new RequestCharacters(incoming);
 							getCharsOnServer(rc.getAccount());
-							break;
-						case 0x06:
-							new ChangePasswordResponse(incoming);
-							break;
+						}
+						case 0x06 -> new ChangePasswordResponse(incoming);
 					}
 				}
 			} catch (UnknownHostException e) {
@@ -462,7 +458,7 @@ public class LoginServerThread extends Thread {
 		L2GameClient client = _accountsInGameServer.get(account);
 		if (client != null) {
 			LOG_ACCOUNTING.warn("Kicked by login: {}", client);
-			client.setAditionalClosePacket(SystemMessage.getSystemMessage(SystemMessageId.ANOTHER_LOGIN_WITH_ACCOUNT));
+			client.setAdditionalClosePacket(SystemMessage.getSystemMessage(SystemMessageId.ANOTHER_LOGIN_WITH_ACCOUNT));
 			client.closeNow();
 		}
 	}
@@ -598,32 +594,31 @@ public class LoginServerThread extends Thread {
 	 */
 	public void setServerStatus(int status) {
 		switch (status) {
-			case ServerStatus.STATUS_AUTO:
+			case ServerStatus.STATUS_AUTO -> {
 				sendServerStatus(ServerStatus.SERVER_LIST_STATUS, ServerStatus.STATUS_AUTO);
 				_status = status;
-				break;
-			case ServerStatus.STATUS_DOWN:
+			}
+			case ServerStatus.STATUS_DOWN -> {
 				sendServerStatus(ServerStatus.SERVER_LIST_STATUS, ServerStatus.STATUS_DOWN);
 				_status = status;
-				break;
-			case ServerStatus.STATUS_FULL:
+			}
+			case ServerStatus.STATUS_FULL -> {
 				sendServerStatus(ServerStatus.SERVER_LIST_STATUS, ServerStatus.STATUS_FULL);
 				_status = status;
-				break;
-			case ServerStatus.STATUS_GM_ONLY:
+			}
+			case ServerStatus.STATUS_GM_ONLY -> {
 				sendServerStatus(ServerStatus.SERVER_LIST_STATUS, ServerStatus.STATUS_GM_ONLY);
 				_status = status;
-				break;
-			case ServerStatus.STATUS_GOOD:
+			}
+			case ServerStatus.STATUS_GOOD -> {
 				sendServerStatus(ServerStatus.SERVER_LIST_STATUS, ServerStatus.STATUS_GOOD);
 				_status = status;
-				break;
-			case ServerStatus.STATUS_NORMAL:
+			}
+			case ServerStatus.STATUS_NORMAL -> {
 				sendServerStatus(ServerStatus.SERVER_LIST_STATUS, ServerStatus.STATUS_NORMAL);
 				_status = status;
-				break;
-			default:
-				throw new IllegalArgumentException("Status does not exists:" + status);
+			}
+			default -> throw new IllegalArgumentException("Status does not exists:" + status);
 		}
 	}
 	

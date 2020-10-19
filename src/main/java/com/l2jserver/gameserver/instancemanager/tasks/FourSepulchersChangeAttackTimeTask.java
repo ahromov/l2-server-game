@@ -50,7 +50,7 @@ public final class FourSepulchersChangeAttackTimeTask implements Runnable {
 			manager.setWarmUpTimeEnd(Calendar.getInstance().getTimeInMillis());
 		}
 		
-		long interval = 0;
+		long interval;
 		// say task
 		if (manager.isFirstTimeRun()) {
 			for (double min = Calendar.getInstance().get(Calendar.MINUTE); min < manager.getCycleMin(); min++) {

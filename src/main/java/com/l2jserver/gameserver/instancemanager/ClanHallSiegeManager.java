@@ -33,7 +33,6 @@ import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.entity.clanhall.ClanHallSiegeEngine;
 import com.l2jserver.gameserver.model.entity.clanhall.SiegableHall;
-import com.l2jserver.gameserver.model.zone.type.L2ClanHallZone;
 import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
@@ -70,7 +69,7 @@ public final class ClanHallSiegeManager {
 				set.set("desc", rs.getString("desc"));
 				set.set("location", rs.getString("location"));
 				set.set("nextSiege", rs.getLong("nextSiege"));
-				set.set("siegeLenght", rs.getLong("siegeLenght"));
+				set.set("siegeLength", rs.getLong("siege_length"));
 				set.set("scheduleConfig", rs.getString("schedule_config"));
 				SiegableHall hall = new SiegableHall(set);
 				_siegableHalls.put(id, hall);
@@ -95,10 +94,8 @@ public final class ClanHallSiegeManager {
 	}
 	
 	public SiegableHall getNearbyClanHall(int x, int y, int maxDist) {
-		L2ClanHallZone zone = null;
-		
 		for (Map.Entry<Integer, SiegableHall> ch : _siegableHalls.entrySet()) {
-			zone = ch.getValue().getZone();
+			final var zone = ch.getValue().getZone();
 			if ((zone != null) && (zone.getDistanceToZone(x, y) < maxDist)) {
 				return ch.getValue();
 			}

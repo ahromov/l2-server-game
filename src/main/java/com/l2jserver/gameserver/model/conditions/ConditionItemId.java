@@ -29,18 +29,10 @@ import com.l2jserver.gameserver.model.skills.Skill;
 public final class ConditionItemId extends Condition {
 	private final int _itemId;
 	
-	/**
-	 * Instantiates a new condition item id.
-	 * @param itemId the item id
-	 */
 	public ConditionItemId(int itemId) {
 		_itemId = itemId;
 	}
 	
-	/**
-	 * Test impl.
-	 * @return true, if successful
-	 */
 	@Override
 	public boolean testImpl(L2Character effector, L2Character effected, Skill skill, L2Item item) {
 		return (item != null) && (item.getId() == _itemId);

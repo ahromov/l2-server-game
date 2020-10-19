@@ -47,11 +47,6 @@ public class CharSelectionInfo extends L2GameServerPacket {
 	
 	private final List<CharSelectInfoPackage> _characterPackages;
 	
-	/**
-	 * Constructor for CharSelectionInfo.
-	 * @param loginName
-	 * @param sessionId
-	 */
 	public CharSelectionInfo(String loginName, int sessionId) {
 		_sessionId = sessionId;
 		_loginName = loginName;

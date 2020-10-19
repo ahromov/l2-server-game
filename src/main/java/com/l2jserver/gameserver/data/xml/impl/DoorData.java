@@ -132,18 +132,13 @@ public class DoorData implements IXmlReader {
 		_doors.put(door.getId(), door);
 		
 		if (!_regions.containsKey(region)) {
-			_regions.put(region, new ArrayList<L2DoorInstance>());
+			_regions.put(region, new ArrayList<>());
 		}
 		_regions.get(region).add(door);
 	}
 	
 	public static void addDoorGroup(String groupName, int doorId) {
-		Set<Integer> set = GROUPS.get(groupName);
-		if (set == null) {
-			set = new HashSet<>();
-			GROUPS.put(groupName, set);
-		}
-		set.add(doorId);
+		GROUPS.computeIfAbsent(groupName, k -> new HashSet<>()).add(doorId);
 	}
 	
 	public static Set<Integer> getDoorsByGroup(String groupName) {

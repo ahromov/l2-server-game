@@ -49,8 +49,8 @@ public class TeleportBookmarkDAOMySQLImpl implements TeleportBookmarkDAO {
 			ps.setInt(1, player.getObjectId());
 			ps.setInt(2, id);
 			ps.execute();
-		} catch (Exception e) {
-			LOG.error("Could not delete character teleport bookmark data: {}", e);
+		} catch (Exception ex) {
+			LOG.error("Could not delete character teleport bookmark data!", ex);
 		}
 	}
 	
@@ -67,8 +67,8 @@ public class TeleportBookmarkDAOMySQLImpl implements TeleportBookmarkDAO {
 			ps.setString(7, tag);
 			ps.setString(8, name);
 			ps.execute();
-		} catch (Exception e) {
-			LOG.warn("Could not insert character teleport bookmark data: {}", e);
+		} catch (Exception ex) {
+			LOG.warn("Could not insert character teleport bookmark data!", ex);
 		}
 	}
 	
@@ -82,8 +82,8 @@ public class TeleportBookmarkDAOMySQLImpl implements TeleportBookmarkDAO {
 			ps.setInt(4, player.getObjectId());
 			ps.setInt(5, id);
 			ps.execute();
-		} catch (Exception e) {
-			LOG.error("Could not update character teleport bookmark data: {}", e);
+		} catch (Exception ex) {
+			LOG.error("Could not update character teleport bookmark data!", ex);
 		}
 	}
 	
@@ -97,8 +97,8 @@ public class TeleportBookmarkDAOMySQLImpl implements TeleportBookmarkDAO {
 					player.getTpbookmarks().put(rs.getInt("Id"), new TeleportBookmark(rs.getInt("Id"), rs.getInt("x"), rs.getInt("y"), rs.getInt("z"), rs.getInt("icon"), rs.getString("tag"), rs.getString("name")));
 				}
 			}
-		} catch (Exception e) {
-			LOG.error("Failed restoing character teleport bookmark.", e);
+		} catch (Exception ex) {
+			LOG.error("Failed restoring character teleport bookmark!", ex);
 		}
 	}
 }

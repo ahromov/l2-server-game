@@ -26,7 +26,7 @@ public class ExNevitAdventTimeChange extends L2GameServerPacket {
 	private final int _time;
 	
 	public ExNevitAdventTimeChange(int time) {
-		_time = time > 240000 ? 240000 : time;
+		_time = Math.min(time, 240000);
 		_paused = _time < 1;
 	}
 	

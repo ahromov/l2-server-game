@@ -36,13 +36,13 @@ public class ExListPartyMatchingWaitingRoom extends L2GameServerPacket {
 	// Maximum size supported by client 500.
 	private static final int TOTAL = 64;
 	
-	private final int totalMathingPlayers;
+	private final int totalMatchingPlayers;
 	
 	private final List<L2PcInstance> players;
 	
 	public ExListPartyMatchingWaitingRoom(int page, int minLevel, int maxLevel, Set<Integer> classes, String filter) {
 		final var matchingPlayers = PartyMatchWaitingList.getInstance().findPlayers(minLevel, maxLevel, classes, filter);
-		this.totalMathingPlayers = matchingPlayers.size();
+		this.totalMatchingPlayers = matchingPlayers.size();
 		this.players = matchingPlayers.stream() //
 			.skip((page - 1) * TOTAL) //
 			.limit(page * TOTAL) //
@@ -53,7 +53,7 @@ public class ExListPartyMatchingWaitingRoom extends L2GameServerPacket {
 	protected void writeImpl() {
 		writeC(0xFE);
 		writeH(0x36);
-		writeD(totalMathingPlayers);
+		writeD(totalMatchingPlayers);
 		writeD(players.size());
 		for (L2PcInstance player : players) {
 			writeS(player.getName());

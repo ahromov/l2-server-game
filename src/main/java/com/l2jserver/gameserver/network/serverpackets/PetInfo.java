@@ -110,7 +110,7 @@ public class PetInfo extends L2GameServerPacket {
 		writeD(-1); // High Five NPCString ID
 		writeS(_summon.getTitle()); // owner name
 		writeD(1);
-		writeD(_summon.getPvpFlag()); // 0 = white,2= purpleblink, if its greater then karma = purple
+		writeD(_summon.getPvpFlag()); // 0 = white, 2 = purple blink, if its greater then karma = purple
 		writeD(_summon.getKarma()); // karma
 		writeD(_curFed); // how fed it is
 		writeD(_maxFed); // max fed it can be
@@ -122,13 +122,10 @@ public class PetInfo extends L2GameServerPacket {
 		writeD(_summon.getLevel());// lvl
 		writeQ(_summon.getExp());
 		
-		if (_summon.getExpForThisLevel() > _summon.getExp()) {
-			writeQ(_summon.getExp());// 0% absolute value
-		} else {
-			writeQ(_summon.getExpForThisLevel());// 0% absolute value
-		}
+		// 0% absolute value
+		writeQ(Math.min(_summon.getExpForThisLevel(), _summon.getExp())); // 0% absolute value
 		
-		writeQ(_summon.getExpForNextLevel());// 100% absoulte value
+		writeQ(_summon.getExpForNextLevel());// 100% absolute value
 		writeD(_summon.isPet() ? _summon.getInventory().getTotalWeight() : 0);// weight
 		writeD(_summon.getMaxLoad());// max weight it can carry
 		writeD((int) _summon.getPAtk(null));// patk

@@ -37,9 +37,6 @@ import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.L2Npc;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.actor.instance.L2SiegeFlagInstance;
-import com.l2jserver.gameserver.model.entity.Castle;
-import com.l2jserver.gameserver.model.entity.ClanHall;
-import com.l2jserver.gameserver.model.entity.Fort;
 import com.l2jserver.gameserver.model.entity.Instance;
 import com.l2jserver.gameserver.model.entity.clanhall.SiegableHall;
 import com.l2jserver.gameserver.model.zone.type.L2ClanHallZone;
@@ -184,14 +181,11 @@ public final class MapRegionManager implements IXmlReader {
 		if (activeChar.isPlayer()) {
 			final L2PcInstance player = activeChar.getActingPlayer();
 			
-			Castle castle = null;
-			Fort fort = null;
-			ClanHall clanhall = null;
-			if ((player.getClan() != null) && !player.isFlyingMounted() && !player.isFlying()) // flying players in gracia cant use teleports to aden continent
-			{
+			// flying players in gracia cant use teleports to aden continent
+			if ((player.getClan() != null) && !player.isFlyingMounted() && !player.isFlying()) {
 				// If teleport to clan hall
 				if (teleportWhere == TeleportWhereType.CLANHALL) {
-					clanhall = ClanHallManager.getInstance().getAbstractHallByOwner(player.getClan());
+					final var clanhall = ClanHallManager.getInstance().getAbstractHallByOwner(player.getClan());
 					if (clanhall != null) {
 						L2ClanHallZone zone = clanhall.getZone();
 						if ((zone != null) && !player.isFlyingMounted()) {
@@ -205,7 +199,7 @@ public final class MapRegionManager implements IXmlReader {
 				
 				// If teleport to castle
 				if (teleportWhere == TeleportWhereType.CASTLE) {
-					castle = CastleManager.getInstance().getCastleByOwner(player.getClan());
+					var castle = CastleManager.getInstance().getCastleByOwner(player.getClan());
 					// Otherwise check if player is on castle or fortress ground
 					// and player's clan is defender
 					if (castle == null) {
@@ -225,7 +219,7 @@ public final class MapRegionManager implements IXmlReader {
 				
 				// If teleport to fortress
 				if (teleportWhere == TeleportWhereType.FORTRESS) {
-					fort = FortManager.getInstance().getFortByOwner(player.getClan());
+					var fort = FortManager.getInstance().getFortByOwner(player.getClan());
 					// Otherwise check if player is on castle or fortress ground
 					// and player's clan is defender
 					if (fort == null) {
@@ -245,9 +239,9 @@ public final class MapRegionManager implements IXmlReader {
 				
 				// If teleport to SiegeHQ
 				if (teleportWhere == TeleportWhereType.SIEGEFLAG) {
-					castle = CastleManager.getInstance().getCastle(player);
-					fort = FortManager.getInstance().getFort(player);
-					clanhall = ClanHallManager.getInstance().getNearbyAbstractHall(activeChar.getX(), activeChar.getY(), 10000);
+					final var castle = CastleManager.getInstance().getCastle(player);
+					final var fort = FortManager.getInstance().getFort(player);
+					final var clanhall = ClanHallManager.getInstance().getNearbyAbstractHall(activeChar.getX(), activeChar.getY(), 10000);
 					L2SiegeFlagInstance tw_flag = TerritoryWarManager.getInstance().getHQForClan(player.getClan());
 					if (tw_flag != null) {
 						return tw_flag.getLocation();
@@ -297,7 +291,7 @@ public final class MapRegionManager implements IXmlReader {
 			}
 			
 			// Checking if needed to be respawned in "far" town from the castle;
-			castle = CastleManager.getInstance().getCastle(player);
+			final var castle = CastleManager.getInstance().getCastle(player);
 			if (castle != null) {
 				if (castle.getSiege().isInProgress()) {
 					// Check if player's clan is participating

@@ -57,14 +57,14 @@ public class CharStat {
 	
 	/**
 	 * Calculate the new value of the state with modifiers that will be applied on the targeted L2Character.<BR>
-	 * <B><U> Concept</U> :</B><BR A L2Character owns a table of Calculators called <B>_calculators</B>. Each Calculator (a calculator per state) own a table of Func object. A Func object is a mathematic function that permit to calculate the modifier of a state (ex : REGENERATE_HP_RATE...) : <BR>
+	 * <B><U> Concept</U> :</B><BR A L2Character owns a table of Calculators called <B>_calculators</B>. Each Calculator (a calculator per state) own a table of Func object. A Func object is a mathematical function that permit to calculate the modifier of a state (ex : REGENERATE_HP_RATE...) : <BR>
 	 * FuncAtkAccuracy -> Math.sqrt(_player.getDEX())*6+_player.getLevel()<BR>
 	 * When the calc method of a calculator is launched, each mathematical function is called according to its priority <B>_order</B>.<br>
-	 * Indeed, Func with lowest priority order is executed firsta and Funcs with the same order are executed in unspecified order.<br>
+	 * Indeed, Func with lowest priority order is executed first and Funcs with the same order are executed in unspecified order.<br>
 	 * The result of the calculation is stored in the value property of an Env class instance.<br>
 	 * @param stat The stat to calculate the new value with modifiers
 	 * @param initVal The initial value of the stat before applying modifiers
-	 * @param target The L2Charcater whose properties will be used in the calculation (ex : CON, INT...)
+	 * @param target The L2Character whose properties will be used in the calculation (ex : CON, INT...)
 	 * @param skill The L2Skill whose properties will be used in the calculation (ex : Level...)
 	 * @return
 	 */
@@ -97,25 +97,7 @@ public class CharStat {
 		// avoid some troubles with negative stats (some stats should never be negative)
 		if (value <= 0) {
 			switch (stat) {
-				case MAX_HP:
-				case MAX_MP:
-				case MAX_CP:
-				case MAGIC_DEFENCE:
-				case POWER_DEFENCE:
-				case POWER_ATTACK:
-				case MAGIC_ATTACK:
-				case POWER_ATTACK_SPEED:
-				case MAGIC_ATTACK_SPEED:
-				case SHIELD_DEFENCE:
-				case STAT_CON:
-				case STAT_DEX:
-				case STAT_INT:
-				case STAT_MEN:
-				case STAT_STR:
-				case STAT_WIT: {
-					value = 1.0;
-					break;
-				}
+				case MAX_HP, MAX_MP, MAX_CP, MAGIC_DEFENCE, POWER_DEFENCE, POWER_ATTACK, MAGIC_ATTACK, POWER_ATTACK_SPEED, MAGIC_ATTACK_SPEED, SHIELD_DEFENCE, STAT_CON, STAT_DEX, STAT_INT, STAT_MEN, STAT_STR, STAT_WIT -> value = 1.0;
 			}
 		}
 		return value;
@@ -541,7 +523,8 @@ public class CharStat {
 		}
 		
 		// temp fix starts
-		int tempVal = 0, stats[] = {
+		int tempVal = 0;
+		int[] stats = {
 			0,
 			0,
 			0,
@@ -574,41 +557,27 @@ public class CharStat {
 	}
 	
 	public int getAttackElementValue(byte attackAttribute) {
-		switch (attackAttribute) {
-			case Elementals.FIRE:
-				return (int) calcStat(Stats.FIRE_POWER, _activeChar.getTemplate().getBaseFire());
-			case Elementals.WATER:
-				return (int) calcStat(Stats.WATER_POWER, _activeChar.getTemplate().getBaseWater());
-			case Elementals.WIND:
-				return (int) calcStat(Stats.WIND_POWER, _activeChar.getTemplate().getBaseWind());
-			case Elementals.EARTH:
-				return (int) calcStat(Stats.EARTH_POWER, _activeChar.getTemplate().getBaseEarth());
-			case Elementals.HOLY:
-				return (int) calcStat(Stats.HOLY_POWER, _activeChar.getTemplate().getBaseHoly());
-			case Elementals.DARK:
-				return (int) calcStat(Stats.DARK_POWER, _activeChar.getTemplate().getBaseDark());
-			default:
-				return 0;
-		}
+		return switch (attackAttribute) {
+			case Elementals.FIRE -> (int) calcStat(Stats.FIRE_POWER, _activeChar.getTemplate().getBaseFire());
+			case Elementals.WATER -> (int) calcStat(Stats.WATER_POWER, _activeChar.getTemplate().getBaseWater());
+			case Elementals.WIND -> (int) calcStat(Stats.WIND_POWER, _activeChar.getTemplate().getBaseWind());
+			case Elementals.EARTH -> (int) calcStat(Stats.EARTH_POWER, _activeChar.getTemplate().getBaseEarth());
+			case Elementals.HOLY -> (int) calcStat(Stats.HOLY_POWER, _activeChar.getTemplate().getBaseHoly());
+			case Elementals.DARK -> (int) calcStat(Stats.DARK_POWER, _activeChar.getTemplate().getBaseDark());
+			default -> 0;
+		};
 	}
 	
 	public int getDefenseElementValue(byte defenseAttribute) {
-		switch (defenseAttribute) {
-			case Elementals.FIRE:
-				return (int) calcStat(Stats.FIRE_RES, _activeChar.getTemplate().getBaseFireRes());
-			case Elementals.WATER:
-				return (int) calcStat(Stats.WATER_RES, _activeChar.getTemplate().getBaseWaterRes());
-			case Elementals.WIND:
-				return (int) calcStat(Stats.WIND_RES, _activeChar.getTemplate().getBaseWindRes());
-			case Elementals.EARTH:
-				return (int) calcStat(Stats.EARTH_RES, _activeChar.getTemplate().getBaseEarthRes());
-			case Elementals.HOLY:
-				return (int) calcStat(Stats.HOLY_RES, _activeChar.getTemplate().getBaseHolyRes());
-			case Elementals.DARK:
-				return (int) calcStat(Stats.DARK_RES, _activeChar.getTemplate().getBaseDarkRes());
-			default:
-				return (int) _activeChar.getTemplate().getBaseElementRes();
-		}
+		return switch (defenseAttribute) {
+			case Elementals.FIRE -> (int) calcStat(Stats.FIRE_RES, _activeChar.getTemplate().getBaseFireRes());
+			case Elementals.WATER -> (int) calcStat(Stats.WATER_RES, _activeChar.getTemplate().getBaseWaterRes());
+			case Elementals.WIND -> (int) calcStat(Stats.WIND_RES, _activeChar.getTemplate().getBaseWindRes());
+			case Elementals.EARTH -> (int) calcStat(Stats.EARTH_RES, _activeChar.getTemplate().getBaseEarthRes());
+			case Elementals.HOLY -> (int) calcStat(Stats.HOLY_RES, _activeChar.getTemplate().getBaseHolyRes());
+			case Elementals.DARK -> (int) calcStat(Stats.DARK_RES, _activeChar.getTemplate().getBaseDarkRes());
+			default -> (int) _activeChar.getTemplate().getBaseElementRes();
+		};
 	}
 	
 	public float getAttackTrait(TraitType traitType) {

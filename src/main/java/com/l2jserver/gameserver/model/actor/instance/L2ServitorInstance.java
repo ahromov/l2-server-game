@@ -249,8 +249,8 @@ public class L2ServitorInstance extends L2Summon implements Runnable {
 	
 	@Override
 	public void run() {
-		int usedtime = 5000;
-		_lifeTimeRemaining -= usedtime;
+		int usedTime = 5000;
+		_lifeTimeRemaining -= usedTime;
 		
 		if (isDead() || !isVisible()) {
 			if (_summonLifeTask != null) {
@@ -267,7 +267,7 @@ public class L2ServitorInstance extends L2Summon implements Runnable {
 		}
 		
 		if (_consumeItemInterval > 0) {
-			_consumeItemIntervalRemaining -= usedtime;
+			_consumeItemIntervalRemaining -= usedTime;
 			
 			// check if it is time to consume another item
 			if ((_consumeItemIntervalRemaining <= 0) && (getItemConsume().getCount() > 0) && (getItemConsume().getId() > 0) && !isDead()) {

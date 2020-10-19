@@ -27,12 +27,6 @@ public class OptionsSkillHolder extends SkillHolder {
 	private final OptionsSkillType _type;
 	private final double _chance;
 	
-	/**
-	 * @param skillId
-	 * @param skillLvl
-	 * @param type
-	 * @param chance
-	 */
 	public OptionsSkillHolder(int skillId, int skillLvl, double chance, OptionsSkillType type) {
 		super(skillId, skillLvl);
 		_chance = chance;

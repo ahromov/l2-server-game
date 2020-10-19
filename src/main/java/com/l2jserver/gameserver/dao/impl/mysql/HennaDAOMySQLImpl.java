@@ -49,15 +49,15 @@ public class HennaDAOMySQLImpl implements HennaDAO {
 			var ps = con.prepareStatement(SELECT)) {
 			ps.setInt(1, player.getObjectId());
 			ps.setInt(2, player.getClassIndex());
-			try (var rset = ps.executeQuery()) {
+			try (var rs = ps.executeQuery()) {
 				final L2Henna[] henna = new L2Henna[3];
-				while (rset.next()) {
-					int slot = rset.getInt("slot");
+				while (rs.next()) {
+					int slot = rs.getInt("slot");
 					if ((slot < 1) || (slot > 3)) {
 						continue;
 					}
 					
-					int symbolId = rset.getInt("symbol_id");
+					int symbolId = rs.getInt("symbol_id");
 					if (symbolId == 0) {
 						continue;
 					}
@@ -65,8 +65,8 @@ public class HennaDAOMySQLImpl implements HennaDAO {
 				}
 				player.setHenna(henna);
 			}
-		} catch (Exception e) {
-			LOG.error("Failed restoing character {} hennas. {}", player, e);
+		} catch (Exception ex) {
+			LOG.error("Failed restoring character {} hennas!", player, ex);
 		}
 	}
 	
@@ -79,8 +79,8 @@ public class HennaDAOMySQLImpl implements HennaDAO {
 			ps.setInt(3, slot);
 			ps.setInt(4, player.getClassIndex());
 			ps.execute();
-		} catch (Exception e) {
-			LOG.error("Failed saving character henna. {}", e);
+		} catch (Exception ex) {
+			LOG.error("Failed saving character henna!", ex);
 		}
 	}
 	
@@ -92,8 +92,8 @@ public class HennaDAOMySQLImpl implements HennaDAO {
 			ps.setInt(2, slot);
 			ps.setInt(3, player.getClassIndex());
 			ps.execute();
-		} catch (Exception e) {
-			LOG.error("Failed removing character henna. {}", e);
+		} catch (Exception ex) {
+			LOG.error("Failed removing character henna!", ex);
 		}
 	}
 	
@@ -104,8 +104,8 @@ public class HennaDAOMySQLImpl implements HennaDAO {
 			ps.setInt(1, player.getObjectId());
 			ps.setInt(2, classIndex);
 			ps.execute();
-		} catch (Exception e) {
-			LOG.error("Failed removing character henna. {}", e);
+		} catch (Exception ex) {
+			LOG.error("Failed removing character henna!", ex);
 		}
 	}
 }

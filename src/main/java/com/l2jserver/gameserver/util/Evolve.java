@@ -61,7 +61,6 @@ public final class Evolve {
 			return false;
 		}
 		
-		L2ItemInstance item = null;
 		long petexp = currentPet.getExp();
 		String oldname = currentPet.getName();
 		int oldX = currentPet.getX();
@@ -99,7 +98,7 @@ public final class Evolve {
 		// deleting old pet item
 		currentPet.destroyControlItem(player, true);
 		
-		item = player.getInventory().addItem("Evolve", itemIdgive, 1, player, npc);
+		final var item = player.getInventory().addItem("Evolve", itemIdgive, 1, player, npc);
 		
 		// Summoning new pet
 		L2PetInstance petSummon = L2PetInstance.spawnPet(npcTemplate, player, item);

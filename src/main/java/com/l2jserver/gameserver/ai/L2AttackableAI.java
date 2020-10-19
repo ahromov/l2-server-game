@@ -69,7 +69,7 @@ import com.l2jserver.gameserver.model.zone.ZoneId;
 import com.l2jserver.gameserver.util.Util;
 
 /**
- * This class manages AI of L2Attackable.
+ * Attackable creatures AI.
  * @author Zoey76
  */
 public class L2AttackableAI extends L2CharacterAI implements Runnable {
@@ -263,7 +263,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 				}
 			}
 			
-			if ((target instanceof L2Attackable) || (target instanceof L2Npc)) {
+			if (target instanceof L2Npc) {
 				return false;
 			}
 			
@@ -560,7 +560,6 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 				z1 = leader.getZ();
 				// Move the actor to Location (x,y,z) server side AND client side by sending Server->Client packet CharMoveToLocation (broadcast)
 				moveTo(x1, y1, z1);
-				return;
 			} else if (Rnd.nextInt(RANDOM_WALK_RATE) == 0) {
 				for (Skill sk : npc.getTemplate().getAISkills(AISkillScope.BUFF)) {
 					if (cast(sk)) {
@@ -1535,10 +1534,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 			return false;
 		}
 		// If is a static skill and magic skill and character is muted or is a physical skill muted and character is physically muted.
-		if (!skill.isStatic() && ((skill.isMagic() && caster.isMuted()) || caster.isPhysicalMuted())) {
-			return false;
-		}
-		return true;
+		return skill.isStatic() || ((!skill.isMagic() || !caster.isMuted()) && !caster.isPhysicalMuted());
 	}
 	
 	private L2Character effectTargetReconsider(Skill sk, boolean positive) {
@@ -1548,8 +1544,8 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 		L2Attackable actor = getActiveChar();
 		if (!sk.hasEffectType(L2EffectType.DISPEL)) {
 			if (!positive) {
-				double dist = 0;
-				double dist2 = 0;
+				double dist;
+				double dist2;
 				int range = 0;
 				
 				for (L2Character obj : actor.getAttackByList()) {
@@ -1601,8 +1597,8 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 					}
 				}
 			} else if (positive) {
-				double dist = 0;
-				double dist2 = 0;
+				double dist;
+				double dist2;
 				int range = 0;
 				for (L2Character obj : actor.getKnownList().getKnownCharactersInRadius(range)) {
 					if (!(obj instanceof L2Attackable) || obj.isDead() || !GeoData.getInstance().canSeeTarget(actor, obj)) {
@@ -1633,9 +1629,9 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 				}
 			}
 		} else {
-			double dist = 0;
-			double dist2 = 0;
-			int range = 0;
+			double dist;
+			double dist2;
+			int range;
 			range = sk.getCastRange() + actor.getTemplate().getCollisionRadius() + getAttackTarget().getTemplate().getCollisionRadius();
 			for (L2Character obj : actor.getKnownList().getKnownCharactersInRadius(range)) {
 				if ((obj == null) || obj.isDead() || !GeoData.getInstance().canSeeTarget(actor, obj)) {
@@ -1667,9 +1663,9 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 	}
 	
 	private L2Character skillTargetReconsider(Skill sk) {
-		double dist = 0;
-		double dist2 = 0;
-		int range = 0;
+		double dist;
+		double dist2;
+		int range;
 		L2Attackable actor = getActiveChar();
 		if (actor.getHateList() != null) {
 			for (L2Character obj : actor.getHateList()) {
@@ -1734,9 +1730,9 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 	}
 	
 	private void targetReconsider() {
-		double dist = 0;
-		double dist2 = 0;
-		int range = 0;
+		double dist;
+		double dist2;
+		int range;
 		L2Attackable actor = getActiveChar();
 		L2Character MostHate = actor.getMostHated();
 		if (actor.getHateList() != null) {
@@ -1756,11 +1752,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 				}
 				
 				if (dist2 <= range) {
-					if (MostHate != null) {
-						actor.addDamageHate(obj, 0, actor.getHating(MostHate));
-					} else {
-						actor.addDamageHate(obj, 0, 2000);
-					}
+					actor.addDamageHate(obj, 0, actor.getHating(MostHate));
 					actor.setTarget(obj);
 					setAttackTarget(obj);
 					return;
@@ -1779,11 +1771,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 					continue;
 				}
 				if (obj instanceof L2PcInstance) {
-					if (MostHate != null) {
-						actor.addDamageHate(obj, 0, actor.getHating(MostHate));
-					} else {
-						actor.addDamageHate(obj, 0, 2000);
-					}
+					actor.addDamageHate(obj, 0, actor.getHating(MostHate));
 					actor.setTarget(obj);
 					setAttackTarget(obj);
 					
@@ -1793,20 +1781,12 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 							continue;
 						}
 						
-						if (MostHate != null) {
-							actor.addDamageHate(obj, 0, actor.getHating(MostHate));
-						} else {
-							actor.addDamageHate(obj, 0, 2000);
-						}
+						actor.addDamageHate(obj, 0, actor.getHating(MostHate));
 						actor.setTarget(obj);
 						setAttackTarget(obj);
 					}
 				} else if (obj instanceof L2Summon) {
-					if (MostHate != null) {
-						actor.addDamageHate(obj, 0, actor.getHating(MostHate));
-					} else {
-						actor.addDamageHate(obj, 0, 2000);
-					}
+					actor.addDamageHate(obj, 0, actor.getHating(MostHate));
 					actor.setTarget(obj);
 					setAttackTarget(obj);
 				}
@@ -1850,7 +1830,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 		if (!(actor instanceof L2GuardInstance)) {
 			Collection<L2Object> objs = actor.getKnownList().getKnownObjects().values();
 			for (L2Object target : objs) {
-				L2Character obj = null;
+				L2Character obj;
 				if (target instanceof L2Character) {
 					obj = (L2Character) target;
 				} else {
@@ -1861,11 +1841,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 					continue;
 				}
 				if (obj instanceof L2PcInstance) {
-					if ((MostHate != null) && !MostHate.isDead()) {
-						actor.addDamageHate(obj, 0, actor.getHating(MostHate));
-					} else {
-						actor.addDamageHate(obj, 0, 2000);
-					}
+					actor.addDamageHate(obj, 0, actor.getHating(MostHate));
 					actor.setTarget(obj);
 					setAttackTarget(obj);
 				} else if (obj instanceof L2Attackable) {
@@ -1874,20 +1850,12 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 							continue;
 						}
 						
-						if (MostHate != null) {
-							actor.addDamageHate(obj, 0, actor.getHating(MostHate));
-						} else {
-							actor.addDamageHate(obj, 0, 2000);
-						}
+						actor.addDamageHate(obj, 0, actor.getHating(MostHate));
 						actor.setTarget(obj);
 						setAttackTarget(obj);
 					}
 				} else if (obj instanceof L2Summon) {
-					if (MostHate != null) {
-						actor.addDamageHate(obj, 0, actor.getHating(MostHate));
-					} else {
-						actor.addDamageHate(obj, 0, 2000);
-					}
+					actor.addDamageHate(obj, 0, actor.getHating(MostHate));
 					actor.setTarget(obj);
 					setAttackTarget(obj);
 				}
@@ -1911,15 +1879,9 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 		try {
 			// Manage AI thinks of a L2Attackable
 			switch (getIntention()) {
-				case AI_INTENTION_ACTIVE:
-					thinkActive();
-					break;
-				case AI_INTENTION_ATTACK:
-					thinkAttack();
-					break;
-				case AI_INTENTION_CAST:
-					thinkCast();
-					break;
+				case AI_INTENTION_ACTIVE -> thinkActive();
+				case AI_INTENTION_ATTACK -> thinkAttack();
+				case AI_INTENTION_CAST -> thinkCast();
 			}
 		} catch (Exception e) {
 			LOG.warn("{}: {} - onEvtThink() for {} failed!", getClass().getSimpleName(), this, getIntention(), e);

@@ -58,7 +58,7 @@ public class TaskRecom extends Task {
 		} catch (Exception ex) {
 			LOG.warn("Could not reset recommendations system!", ex);
 		}
-		LOG.info("Recommendations System reseted.");
+		LOG.info("Recommendations system reset.");
 	}
 	
 	@Override

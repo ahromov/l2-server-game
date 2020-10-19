@@ -190,9 +190,9 @@ public enum PlayerClass {
 	inspector(Race.KAMAEL, Fighter, Third),
 	judicator(Race.KAMAEL, Fighter, Fourth);
 	
-	private Race _race;
-	private ClassLevel _level;
-	private ClassType _type;
+	private final Race _race;
+	private final ClassLevel _level;
+	private final ClassType _type;
 	
 	private static final Set<PlayerClass> mainSubclassSet;
 	private static final Set<PlayerClass> neverSubclassed = EnumSet.of(Overlord, Warsmith);
@@ -250,12 +250,8 @@ public enum PlayerClass {
 				subclasses.remove(this);
 				
 				switch (player.getRace()) {
-					case ELF:
-						subclasses.removeAll(getSet(Race.DARK_ELF, Third));
-						break;
-					case DARK_ELF:
-						subclasses.removeAll(getSet(Race.ELF, Third));
-						break;
+					case ELF -> subclasses.removeAll(getSet(Race.DARK_ELF, Third));
+					case DARK_ELF -> subclasses.removeAll(getSet(Race.ELF, Third));
 				}
 				
 				subclasses.removeAll(getSet(Race.KAMAEL, Third));
@@ -287,7 +283,7 @@ public enum PlayerClass {
 		return subclasses;
 	}
 	
-	public static final EnumSet<PlayerClass> getSet(Race race, ClassLevel level) {
+	public static EnumSet<PlayerClass> getSet(Race race, ClassLevel level) {
 		EnumSet<PlayerClass> allOf = EnumSet.noneOf(PlayerClass.class);
 		
 		for (PlayerClass playerClass : EnumSet.allOf(PlayerClass.class)) {

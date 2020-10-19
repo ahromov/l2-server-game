@@ -29,7 +29,6 @@ public class ExAttributeEnchantResult extends L2GameServerPacket {
 	protected final void writeImpl() {
 		writeC(0xfe);
 		writeH(0x61);
-		
 		writeD(_result);
 	}
 }

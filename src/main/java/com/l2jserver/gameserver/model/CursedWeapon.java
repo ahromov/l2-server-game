@@ -63,7 +63,7 @@ public class CursedWeapon implements INamable {
 	private int _dropRate;
 	private int _duration;
 	private int _durationLost;
-	private int _disapearChance;
+	private int _disappearChance;
 	private int _stageKills;
 	
 	// this should be false unless if the cursed weapon is dropped, in that case it would be true.
@@ -419,7 +419,7 @@ public class CursedWeapon implements INamable {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var del = con.prepareStatement("DELETE FROM cursed_weapons WHERE itemId = ?");
 			var ps = con.prepareStatement("INSERT INTO cursed_weapons (itemId, charId, playerKarma, playerPkKills, nbKills, endTime) VALUES (?, ?, ?, ?, ?, ?)")) {
-			// Delete previous datas
+			// Delete previous data
 			del.setInt(1, _itemId);
 			del.executeUpdate();
 			
@@ -438,7 +438,7 @@ public class CursedWeapon implements INamable {
 	}
 	
 	public void dropIt(L2Character killer) {
-		if (Rnd.get(100) <= _disapearChance) {
+		if (Rnd.get(100) <= _disappearChance) {
 			// Remove it
 			endOfLife();
 		} else {
@@ -472,8 +472,8 @@ public class CursedWeapon implements INamable {
 		saveData();
 	}
 	
-	public void setDisapearChance(int disapearChance) {
-		_disapearChance = disapearChance;
+	public void setDisappearChance(int disappearChance) {
+		_disappearChance = disappearChance;
 	}
 	
 	public void setDropRate(int dropRate) {

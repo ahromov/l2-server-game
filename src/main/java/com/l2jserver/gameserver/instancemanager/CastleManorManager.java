@@ -221,21 +221,21 @@ public final class CastleManorManager implements IXmlReader, IStorable {
 		_nextModeChange = Calendar.getInstance();
 		_nextModeChange.set(Calendar.SECOND, 0);
 		switch (_mode) {
-			case MODIFIABLE:
+			case MODIFIABLE -> {
 				_nextModeChange.set(Calendar.HOUR_OF_DAY, general().getManorApproveTime());
 				_nextModeChange.set(Calendar.MINUTE, general().getManorApproveMin());
 				if (_nextModeChange.before(Calendar.getInstance())) {
 					_nextModeChange.add(Calendar.DATE, 1);
 				}
-				break;
-			case MAINTENANCE:
+			}
+			case MAINTENANCE -> {
 				_nextModeChange.set(Calendar.HOUR_OF_DAY, general().getManorRefreshTime());
 				_nextModeChange.set(Calendar.MINUTE, general().getManorRefreshMin() + general().getManorMaintenanceMin());
-				break;
-			case APPROVED:
+			}
+			case APPROVED -> {
 				_nextModeChange.set(Calendar.HOUR_OF_DAY, general().getManorRefreshTime());
 				_nextModeChange.set(Calendar.MINUTE, general().getManorRefreshMin());
-				break;
+			}
 		}
 		// Schedule mode change
 		ThreadPoolManager.getInstance().scheduleGeneral(this::changeMode, (_nextModeChange.getTimeInMillis() - System.currentTimeMillis()));

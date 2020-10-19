@@ -22,8 +22,7 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.serverpackets.StartRotation;
 
 /**
- * This class ...
- * @version $Revision: 1.1.4.3 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class StartRotating extends L2GameClientPacket {
 	private static final String _C__5B_STARTROTATING = "[C] 5B StartRotating";

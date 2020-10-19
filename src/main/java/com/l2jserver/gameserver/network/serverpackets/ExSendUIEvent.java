@@ -31,42 +31,16 @@ public class ExSendUIEvent extends L2GameServerPacket {
 	private final int _startTime;
 	private final int _endTime;
 	private final int _npcstringId;
-	private List<String> _params = null;
+	private final List<String> _params;
 	
-	/**
-	 * @param player
-	 * @param hide
-	 * @param countUp
-	 * @param startTime
-	 * @param endTime
-	 * @param text
-	 */
 	public ExSendUIEvent(L2PcInstance player, boolean hide, boolean countUp, int startTime, int endTime, String text) {
 		this(player, hide, countUp, startTime, endTime, -1, text);
 	}
 	
-	/**
-	 * @param player
-	 * @param hide
-	 * @param countUp
-	 * @param startTime
-	 * @param endTime
-	 * @param npcString
-	 * @param params
-	 */
 	public ExSendUIEvent(L2PcInstance player, boolean hide, boolean countUp, int startTime, int endTime, NpcStringId npcString, String... params) {
 		this(player, hide, countUp, startTime, endTime, npcString.getId(), params);
 	}
 	
-	/**
-	 * @param player
-	 * @param hide
-	 * @param countUp
-	 * @param startTime
-	 * @param endTime
-	 * @param npcstringId
-	 * @param params
-	 */
 	public ExSendUIEvent(L2PcInstance player, boolean hide, boolean countUp, int startTime, int endTime, int npcstringId, String... params) {
 		_objectId = player.getObjectId();
 		_type = hide;

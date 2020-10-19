@@ -29,7 +29,7 @@ public final class BuyList extends L2GameServerPacket {
 	private final int _listId;
 	private final Collection<Product> _list;
 	private final long _money;
-	private double _taxRate = 0;
+	private final double _taxRate;
 	
 	public BuyList(L2BuyList list, long currentMoney, double taxRate) {
 		_listId = list.getListId();

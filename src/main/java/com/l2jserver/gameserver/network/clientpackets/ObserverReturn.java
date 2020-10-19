@@ -21,8 +21,7 @@ package com.l2jserver.gameserver.network.clientpackets;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 /**
- * This class ...
- * @version $Revision: 1.7.4.4 $ $Date: 2005/03/27 18:46:19 $
+ * @since 2005/03/27 18:46:19
  */
 public final class ObserverReturn extends L2GameClientPacket {
 	private static final String __C__C1_OBSERVERRETURN = "[C] C1 ObserverReturn";

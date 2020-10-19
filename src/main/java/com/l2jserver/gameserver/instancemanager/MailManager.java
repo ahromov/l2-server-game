@@ -38,7 +38,8 @@ import com.l2jserver.gameserver.network.serverpackets.ExNoticePostArrived;
 
 /**
  * Mail Manager.
- * @author Migi, DS
+ * @author Migi
+ * @author DS
  */
 public final class MailManager {
 	

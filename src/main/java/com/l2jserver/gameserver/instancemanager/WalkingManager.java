@@ -93,26 +93,11 @@ public final class WalkingManager implements IXmlReader {
 				
 				final byte repeatType;
 				switch (repeatStyle) {
-					case "back": {
-						repeatType = REPEAT_GO_BACK;
-						break;
-					}
-					case "cycle": {
-						repeatType = REPEAT_GO_FIRST;
-						break;
-					}
-					case "conveyor": {
-						repeatType = REPEAT_TELE_FIRST;
-						break;
-					}
-					case "random": {
-						repeatType = REPEAT_RANDOM;
-						break;
-					}
-					default: {
-						repeatType = NO_REPEAT;
-						break;
-					}
+					case "back" -> repeatType = REPEAT_GO_BACK;
+					case "cycle" -> repeatType = REPEAT_GO_FIRST;
+					case "conveyor" -> repeatType = REPEAT_TELE_FIRST;
+					case "random" -> repeatType = REPEAT_RANDOM;
+					default -> repeatType = NO_REPEAT;
 				}
 				
 				final List<L2NpcWalkerNode> list = new ArrayList<>();
@@ -142,10 +127,6 @@ public final class WalkingManager implements IXmlReader {
 								node = attrs.getNamedItem("npcStringId");
 								if (node != null) {
 									npcString = NpcStringId.getNpcStringId(Integer.parseInt(node.getNodeValue()));
-									if (npcString == null) {
-										LOG.warn("Unknown npcString {} for route {}!", node.getNodeValue(), routeName);
-										continue;
-									}
 								}
 							}
 						}
@@ -193,10 +174,7 @@ public final class WalkingManager implements IXmlReader {
 		}
 		
 		final WalkInfo walk = monster != null ? _activeRoutes.get(monster.getObjectId()) : _activeRoutes.get(npc.getObjectId());
-		if (walk.isStoppedByAttack() || walk.isSuspended()) {
-			return false;
-		}
-		return true;
+		return !walk.isStoppedByAttack() && !walk.isSuspended();
 	}
 	
 	public L2WalkRoute getRoute(String route) {

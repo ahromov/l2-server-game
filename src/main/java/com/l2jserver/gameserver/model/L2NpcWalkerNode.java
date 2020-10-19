@@ -21,7 +21,8 @@ package com.l2jserver.gameserver.model;
 import com.l2jserver.gameserver.network.NpcStringId;
 
 /**
- * @author Rayan RPG, JIV
+ * @author Rayan RPG
+ * @author JIV
  * @since 927
  */
 public class L2NpcWalkerNode extends Location {

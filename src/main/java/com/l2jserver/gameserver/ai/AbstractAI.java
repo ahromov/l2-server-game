@@ -47,7 +47,7 @@ import com.l2jserver.gameserver.taskmanager.AttackStanceTaskManager;
 
 /**
  * Mother class of all objects AI in the world.<br>
- * AbastractAI :<br>
+ * AbstractAI :<br>
  * <li>L2CharacterAI</li>
  */
 public abstract class AbstractAI implements Ctrl {
@@ -55,16 +55,10 @@ public abstract class AbstractAI implements Ctrl {
 	
 	private NextAction _nextAction;
 	
-	/**
-	 * @return the _nextAction
-	 */
 	public NextAction getNextAction() {
 		return _nextAction;
 	}
 	
-	/**
-	 * @param nextAction the next action to set.
-	 */
 	public void setNextAction(NextAction nextAction) {
 		_nextAction = nextAction;
 	}
@@ -240,33 +234,15 @@ public abstract class AbstractAI implements Ctrl {
 		
 		// Launch the onIntention method of the L2CharacterAI corresponding to the new Intention
 		switch (intention) {
-			case AI_INTENTION_IDLE:
-				onIntentionIdle();
-				break;
-			case AI_INTENTION_ACTIVE:
-				onIntentionActive();
-				break;
-			case AI_INTENTION_REST:
-				onIntentionRest();
-				break;
-			case AI_INTENTION_ATTACK:
-				onIntentionAttack((L2Character) arg0);
-				break;
-			case AI_INTENTION_CAST:
-				onIntentionCast((Skill) arg0, (L2Object) arg1);
-				break;
-			case AI_INTENTION_MOVE_TO:
-				onIntentionMoveTo((Location) arg0);
-				break;
-			case AI_INTENTION_FOLLOW:
-				onIntentionFollow((L2Character) arg0);
-				break;
-			case AI_INTENTION_PICK_UP:
-				onIntentionPickUp((L2Object) arg0);
-				break;
-			case AI_INTENTION_INTERACT:
-				onIntentionInteract((L2Object) arg0);
-				break;
+			case AI_INTENTION_IDLE -> onIntentionIdle();
+			case AI_INTENTION_ACTIVE -> onIntentionActive();
+			case AI_INTENTION_REST -> onIntentionRest();
+			case AI_INTENTION_ATTACK -> onIntentionAttack((L2Character) arg0);
+			case AI_INTENTION_CAST -> onIntentionCast((Skill) arg0, (L2Object) arg1);
+			case AI_INTENTION_MOVE_TO -> onIntentionMoveTo((Location) arg0);
+			case AI_INTENTION_FOLLOW -> onIntentionFollow((L2Character) arg0);
+			case AI_INTENTION_PICK_UP -> onIntentionPickUp((L2Object) arg0);
+			case AI_INTENTION_INTERACT -> onIntentionInteract((L2Object) arg0);
 		}
 		
 		// If do move or follow intention drop next action.
@@ -666,7 +642,7 @@ public abstract class AbstractAI implements Ctrl {
 	/**
 	 * Update the state of this actor client side by sending Server->Client packet MoveToPawn/CharMoveToLocation and AutoAttackStart to the L2PcInstance player.<br>
 	 * <FONT COLOR=#FF0000><B> <U>Caution</U> : Low level function, used by AI subclasses</B></FONT>
-	 * @param player The L2PcIstance to notify with state of this L2Character
+	 * @param player The L2PcInstance to notify with state of this L2Character
 	 */
 	public void describeStateToPlayer(L2PcInstance player) {
 		if (getActor().isVisibleFor(player)) {

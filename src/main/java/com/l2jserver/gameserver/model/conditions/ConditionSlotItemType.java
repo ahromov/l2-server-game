@@ -24,17 +24,12 @@ import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionSlotItemType.
+ * Slot item type condition.
  * @author mkizub
  */
 public final class ConditionSlotItemType extends ConditionInventory {
 	private final int _mask;
 	
-	/**
-	 * Instantiates a new condition slot item type.
-	 * @param slot the slot
-	 * @param mask the mask
-	 */
 	public ConditionSlotItemType(int slot, int mask) {
 		super(slot);
 		_mask = mask;

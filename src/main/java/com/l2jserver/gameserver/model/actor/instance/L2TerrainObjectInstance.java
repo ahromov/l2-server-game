@@ -24,10 +24,7 @@ import com.l2jserver.gameserver.model.actor.templates.L2NpcTemplate;
 import com.l2jserver.gameserver.network.serverpackets.ActionFailed;
 
 public final class L2TerrainObjectInstance extends L2Npc {
-	/**
-	 * Creates a terrain object.
-	 * @param template the terrain object NPC template
-	 */
+	
 	public L2TerrainObjectInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2TerrainObjectInstance);

@@ -48,7 +48,7 @@ public class PcStat extends PlayableStat {
 	private final AtomicInteger _talismanSlots = new AtomicInteger();
 	private boolean _cloakSlot = false;
 	
-	public static final int VITALITY_LEVELS[] = {
+	public static final int[] VITALITY_LEVELS = {
 		240,
 		2000,
 		13000,
@@ -335,52 +335,36 @@ public class PcStat extends PlayableStat {
 	
 	public double getVitalityMultiplier() {
 		double vitality = 1.0;
-		
 		if (vitality().enabled()) {
 			switch (getVitalityLevel()) {
-				case 1:
-					vitality = vitality().getRateVitalityLevel1();
-					break;
-				case 2:
-					vitality = vitality().getRateVitalityLevel2();
-					break;
-				case 3:
-					vitality = vitality().getRateVitalityLevel3();
-					break;
-				case 4:
-					vitality = vitality().getRateVitalityLevel4();
-					break;
+				case 1 -> vitality = vitality().getRateVitalityLevel1();
+				case 2 -> vitality = vitality().getRateVitalityLevel2();
+				case 3 -> vitality = vitality().getRateVitalityLevel3();
+				case 4 -> vitality = vitality().getRateVitalityLevel4();
 			}
 		}
-		
 		return vitality;
 	}
 	
-	/**
-	 * @return the _vitalityLevel
-	 */
 	public byte getVitalityLevel() {
 		return _vitalityLevel;
 	}
 	
 	public double getExpBonusMultiplier() {
 		double bonus = 1.0;
-		double vitality = 1.0;
-		double nevits = 1.0;
 		double hunting = 1.0;
-		double bonusExp = 1.0;
 		
 		// Bonus from Vitality System
-		vitality = getVitalityMultiplier();
+		double vitality = getVitalityMultiplier();
 		
 		// Bonus from Nevit's Blessing
-		nevits = RecoBonus.getRecoMultiplier(getActiveChar());
+		double nevits = RecoBonus.getRecoMultiplier(getActiveChar());
 		
 		// Bonus from Nevit's Hunting
 		// TODO: Nevit's hunting bonus
 		
 		// Bonus exp from skills
-		bonusExp = 1 + (calcStat(Stats.BONUS_EXP, 0, null, null) / 100);
+		double bonusExp = 1 + (calcStat(Stats.BONUS_EXP, 0, null, null) / 100);
 		
 		if (vitality > 1.0) {
 			bonus += (vitality - 1);
@@ -404,22 +388,19 @@ public class PcStat extends PlayableStat {
 	
 	public double getSpBonusMultiplier() {
 		double bonus = 1.0;
-		double vitality = 1.0;
-		double nevits = 1.0;
 		double hunting = 1.0;
-		double bonusSp = 1.0;
 		
 		// Bonus from Vitality System
-		vitality = getVitalityMultiplier();
+		double vitality = getVitalityMultiplier();
 		
 		// Bonus from Nevit's Blessing
-		nevits = RecoBonus.getRecoMultiplier(getActiveChar());
+		double nevits = RecoBonus.getRecoMultiplier(getActiveChar());
 		
 		// Bonus from Nevit's Hunting
 		// TODO: Nevit's hunting bonus
 		
 		// Bonus sp from skills
-		bonusSp = 1 + (calcStat(Stats.BONUS_SP, 0, null, null) / 100);
+		double bonusSp = 1 + (calcStat(Stats.BONUS_SP, 0, null, null) / 100);
 		
 		if (vitality > 1.0) {
 			bonus += (vitality - 1);

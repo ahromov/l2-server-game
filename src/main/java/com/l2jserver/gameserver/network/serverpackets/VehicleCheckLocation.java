@@ -26,9 +26,6 @@ import com.l2jserver.gameserver.model.actor.L2Character;
 public class VehicleCheckLocation extends L2GameServerPacket {
 	private final L2Character _boat;
 	
-	/**
-	 * @param boat
-	 */
 	public VehicleCheckLocation(L2Character boat) {
 		_boat = boat;
 	}

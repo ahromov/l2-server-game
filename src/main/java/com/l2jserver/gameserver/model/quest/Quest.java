@@ -361,7 +361,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 	 * @param skill the skill used to attack the NPC (can be null)
 	 */
 	public final void notifyAttack(L2Npc npc, L2PcInstance attacker, int damage, boolean isSummon, Skill skill) {
-		String res = null;
+		String res;
 		try {
 			res = onAttack(npc, attacker, damage, isSummon, skill);
 		} catch (Exception e) {
@@ -377,7 +377,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 	 * @param qs the quest state object of the player to be notified of this event
 	 */
 	public final void notifyDeath(L2Character killer, L2Character victim, QuestState qs) {
-		String res = null;
+		String res;
 		try {
 			res = onDeath(killer, victim, qs);
 		} catch (Exception e) {
@@ -387,12 +387,8 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		showResult(qs.getPlayer(), res);
 	}
 	
-	/**
-	 * @param item
-	 * @param player
-	 */
 	public final void notifyItemUse(L2Item item, L2PcInstance player) {
-		String res = null;
+		String res;
 		try {
 			res = onItemUse(item, player);
 		} catch (Exception e) {
@@ -402,13 +398,8 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		showResult(player, res);
 	}
 	
-	/**
-	 * @param instance
-	 * @param player
-	 * @param skill
-	 */
 	public final void notifySpellFinished(L2Npc instance, L2PcInstance player, Skill skill) {
-		String res = null;
+		String res;
 		try {
 			res = onSpellFinished(instance, player, skill);
 		} catch (Exception e) {
@@ -425,7 +416,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 	 * @param action 0: trap casting its skill. 1: trigger detects the trap. 2: trigger removes the trap
 	 */
 	public final void notifyTrapAction(L2TrapInstance trap, L2Character trigger, TrapAction action) {
-		String res = null;
+		String res;
 		try {
 			res = onTrapAction(trap, trigger, action);
 		} catch (Exception e) {
@@ -462,13 +453,8 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		}
 	}
 	
-	/**
-	 * @param event
-	 * @param npc
-	 * @param player
-	 */
 	public final void notifyEvent(String event, L2Npc npc, L2PcInstance player) {
-		String res = null;
+		String res;
 		try {
 			res = onAdvEvent(event, npc, player);
 		} catch (Exception e) {
@@ -482,7 +468,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 	 * @param player the player entering the world
 	 */
 	public final void notifyEnterWorld(L2PcInstance player) {
-		String res = null;
+		String res;
 		try {
 			res = onEnterWorld(player);
 		} catch (Exception e) {
@@ -509,7 +495,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 	}
 	
 	public final void notifyTutorialQuestionMark(L2PcInstance player, int number) {
-		String res = null;
+		String res;
 		try {
 			res = onTutorialQuestionMark(player, number);
 		} catch (Exception e) {
@@ -520,7 +506,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 	}
 	
 	public final void notifyTutorialCmd(L2PcInstance player, String command) {
-		String res = null;
+		String res;
 		try {
 			res = onTutorialCmd(player, command);
 		} catch (Exception e) {
@@ -530,13 +516,8 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		showResult(player, res);
 	}
 	
-	/**
-	 * @param npc
-	 * @param killer
-	 * @param isSummon
-	 */
 	public final void notifyKill(L2Npc npc, L2PcInstance killer, boolean isSummon) {
-		String res = null;
+		String res;
 		try {
 			res = onKill(npc, killer, isSummon);
 		} catch (Exception e) {
@@ -546,12 +527,8 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		showResult(killer, res);
 	}
 	
-	/**
-	 * @param npc
-	 * @param player
-	 */
 	public final void notifyTalk(L2Npc npc, L2PcInstance player) {
-		String res = null;
+		String res;
 		try {
 			final String startConditionHtml = getStartConditionHtml(player);
 			if (!player.hasQuestState(_name) && (startConditionHtml != null)) {
@@ -574,7 +551,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 	 * @param player the player talking to the NPC
 	 */
 	public final void notifyFirstTalk(L2Npc npc, L2PcInstance player) {
-		String res = null;
+		String res;
 		try {
 			res = onFirstTalk(npc, player);
 		} catch (Exception e) {
@@ -592,7 +569,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 	 * @param type the skill learn type
 	 */
 	public final void notifyAcquireSkill(L2Npc npc, L2PcInstance player, Skill skill, AcquireSkillType type) {
-		String res = null;
+		String res;
 		try {
 			res = onAcquireSkill(npc, player, skill, type);
 		} catch (Exception e) {
@@ -602,12 +579,8 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		showResult(player, res);
 	}
 	
-	/**
-	 * @param item
-	 * @param player
-	 */
 	public final void notifyItemTalk(L2ItemInstance item, L2PcInstance player) {
-		String res = null;
+		String res;
 		try {
 			res = onItemTalk(item, player);
 		} catch (Exception e) {
@@ -617,22 +590,12 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		showResult(player, res);
 	}
 	
-	/**
-	 * @param item
-	 * @param player
-	 * @return
-	 */
 	public String onItemTalk(L2ItemInstance item, L2PcInstance player) {
 		return null;
 	}
 	
-	/**
-	 * @param item
-	 * @param player
-	 * @param event
-	 */
 	public final void notifyItemEvent(L2ItemInstance item, L2PcInstance player, String event) {
-		String res = null;
+		String res;
 		try {
 			res = onItemEvent(item, player, event);
 			if (res != null) {
@@ -647,15 +610,8 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		showResult(player, res);
 	}
 	
-	/**
-	 * @param npc
-	 * @param caster
-	 * @param skill
-	 * @param targets
-	 * @param isSummon
-	 */
 	public final void notifySkillSee(L2Npc npc, L2PcInstance caster, Skill skill, L2Object[] targets, boolean isSummon) {
-		String res = null;
+		String res;
 		try {
 			res = onSkillSee(npc, caster, skill, targets, isSummon);
 		} catch (Exception e) {
@@ -665,14 +621,8 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		showResult(caster, res);
 	}
 	
-	/**
-	 * @param npc
-	 * @param caller
-	 * @param attacker
-	 * @param isSummon
-	 */
 	public final void notifyFactionCall(L2Npc npc, L2Npc caller, L2PcInstance attacker, boolean isSummon) {
-		String res = null;
+		String res;
 		try {
 			res = onFactionCall(npc, caller, attacker, isSummon);
 		} catch (Exception e) {
@@ -682,13 +632,8 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		showResult(attacker, res);
 	}
 	
-	/**
-	 * @param npc
-	 * @param player
-	 * @param isSummon
-	 */
 	public final void notifyAggroRangeEnter(L2Npc npc, L2PcInstance player, boolean isSummon) {
-		String res = null;
+		String res;
 		try {
 			res = onAggroRangeEnter(npc, player, isSummon);
 		} catch (Exception e) {
@@ -708,7 +653,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		if (isSummon || creature.isPlayer()) {
 			player = creature.getActingPlayer();
 		}
-		String res = null;
+		String res;
 		try {
 			res = onSeeCreature(npc, creature, isSummon);
 		} catch (Exception e) {
@@ -736,13 +681,9 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		}
 	}
 	
-	/**
-	 * @param character
-	 * @param zone
-	 */
 	public final void notifyEnterZone(L2Character character, L2ZoneType zone) {
 		L2PcInstance player = character.getActingPlayer();
-		String res = null;
+		String res;
 		try {
 			res = onEnterZone(character, zone);
 		} catch (Exception e) {
@@ -756,13 +697,9 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		}
 	}
 	
-	/**
-	 * @param character
-	 * @param zone
-	 */
 	public final void notifyExitZone(L2Character character, L2ZoneType zone) {
 		L2PcInstance player = character.getActingPlayer();
-		String res = null;
+		String res;
 		try {
 			res = onExitZone(character, zone);
 		} catch (Exception e) {
@@ -776,11 +713,6 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		}
 	}
 	
-	/**
-	 * @param winner
-	 * @param looser
-	 * @param type
-	 */
 	public final void notifyOlympiadMatch(Participant winner, Participant looser, CompetitionType type) {
 		try {
 			onOlympiadMatchFinish(winner, looser, type);
@@ -789,9 +721,6 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		}
 	}
 	
-	/**
-	 * @param npc
-	 */
 	public final void notifyMoveFinished(L2Npc npc) {
 		try {
 			onMoveFinished(npc);
@@ -800,9 +729,6 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		}
 	}
 	
-	/**
-	 * @param npc
-	 */
 	public final void notifyNodeArrived(L2Npc npc) {
 		try {
 			onNodeArrived(npc);
@@ -811,9 +737,6 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		}
 	}
 	
-	/**
-	 * @param npc
-	 */
 	public final void notifyRouteFinished(L2Npc npc) {
 		try {
 			onRouteFinished(npc);
@@ -2037,7 +1960,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 		}
 		
 		// normal cases...if the player is not in a party, check the player's state
-		QuestState temp = null;
+		QuestState temp;
 		L2Party party = player.getParty();
 		// if this player is not in a party, just check if this player instance matches the conditions itself
 		if ((party == null) || (party.getMembers().isEmpty())) {
@@ -2081,14 +2004,14 @@ public class Quest extends AbstractScript implements IIdentifiable {
 	 * @param state the quest state required of the random party member
 	 * @return {@code null} if nothing was selected or a random party member that has the specified quest state
 	 */
-	public L2PcInstance getRandomPartyMemberState(L2PcInstance player, byte state) {
+	public L2PcInstance getRandomPartyMemberState(L2PcInstance player, int state) {
 		// if no valid player instance is passed, there is nothing to check...
 		if (player == null) {
 			return null;
 		}
 		
 		// normal cases...if the player is not in a party check the player's state
-		QuestState temp = null;
+		QuestState temp;
 		L2Party party = player.getParty();
 		// if this player is not in a party, just check if this player instance matches the conditions itself
 		if ((party == null) || (party.getMembers().isEmpty())) {
@@ -2134,7 +2057,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 	 * The lucky member is chosen by standard loot roll rules -<br>
 	 * each member rolls a random number, the one with the highest roll wins.
 	 * @param player the player whose party to check
-	 * @param npc the NPC used for distance and other checks (if {@link #checkPartyMember(L2PcInstance, L2Npc)} is overriden)
+	 * @param npc the NPC used for distance and other checks (if {@link #checkPartyMember(L2PcInstance, L2Npc)} is overridden)
 	 * @return the random party member or {@code null}
 	 */
 	public L2PcInstance getRandomPartyMember(L2PcInstance player, L2Npc npc) {
@@ -2167,7 +2090,7 @@ public class Quest extends AbstractScript implements IIdentifiable {
 	
 	/**
 	 * This method is called for every party member in {@link #getRandomPartyMember(L2PcInstance, L2Npc)}.<br>
-	 * It is intended to be overriden by the specific quest implementations.
+	 * It is intended to be overridden by the specific quest implementations.
 	 * @param player the player to check
 	 * @param npc the NPC that was passed to {@link #getRandomPartyMember(L2PcInstance, L2Npc)}
 	 * @return {@code true} if this party member passes the check, {@code false} otherwise

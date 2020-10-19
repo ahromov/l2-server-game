@@ -241,7 +241,7 @@ public enum EventType {
 	private final Class<? extends IBaseEvent> _eventClass;
 	private final Class<?>[] _returnClass;
 	
-	private EventType(Class<? extends IBaseEvent> eventClass, Class<?>... returnClasss) {
+	EventType(Class<? extends IBaseEvent> eventClass, Class<?>... returnClasss) {
 		_eventClass = eventClass;
 		_returnClass = returnClasss;
 	}

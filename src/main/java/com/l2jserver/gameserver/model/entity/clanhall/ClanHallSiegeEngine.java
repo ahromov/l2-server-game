@@ -110,7 +110,7 @@ public abstract class ClanHallSiegeEngine extends Quest implements Siegable {
 				}
 			}
 		} catch (Exception e) {
-			_log.warn("{}: Could not load siege attackers!", getName(), e);
+			_log.warn("Could not load siege attackers!", e);
 		}
 	}
 	
@@ -130,9 +130,9 @@ public abstract class ClanHallSiegeEngine extends Quest implements Siegable {
 					}
 				}
 			}
-			_log.info("{}: Successfully saved attackers to database.", getName());
+			_log.info("Successfully saved attackers to database.");
 		} catch (Exception e) {
-			_log.warn("{}: Couldnt save attacker list!", getName(), e);
+			_log.warn("Couldn't save attacker list!", e);
 		}
 	}
 	
@@ -155,18 +155,18 @@ public abstract class ClanHallSiegeEngine extends Quest implements Siegable {
 					}
 				}
 			} catch (Exception e) {
-				_log.warn("{}: Couldn't load siege guards!", getName(), e);
+				_log.warn("Couldn't load siege guards!", e);
 			}
 		}
 	}
 	
-	private final void spawnSiegeGuards() {
+	private void spawnSiegeGuards() {
 		for (L2Spawn guard : _guards) {
 			guard.init();
 		}
 	}
 	
-	private final void unSpawnSiegeGuards() {
+	private void unSpawnSiegeGuards() {
 		if (_guards != null) {
 			for (L2Spawn guard : _guards) {
 				guard.stopRespawn();
@@ -299,7 +299,7 @@ public abstract class ClanHallSiegeEngine extends Quest implements Siegable {
 		
 		_hall.updateSiegeStatus(SiegeStatus.RUNNING);
 		onSiegeStarts();
-		_siegeTask = ThreadPoolManager.getInstance().scheduleGeneral(new SiegeEnds(), _hall.getSiegeLenght());
+		_siegeTask = ThreadPoolManager.getInstance().scheduleGeneral(new SiegeEnds(), _hall.getSiegeLength());
 	}
 	
 	@Override
@@ -309,16 +309,15 @@ public abstract class ClanHallSiegeEngine extends Quest implements Siegable {
 		Broadcast.toAllOnlinePlayers(end);
 		
 		L2Clan winner = getWinner();
-		SystemMessage finalMsg = null;
 		if (_missionAccomplished && (winner != null)) {
 			_hall.setOwner(winner);
 			winner.setHideoutId(_hall.getId());
-			finalMsg = SystemMessage.getSystemMessage(SystemMessageId.CLAN_S1_VICTORIOUS_OVER_S2_S_SIEGE);
+			var finalMsg = SystemMessage.getSystemMessage(SystemMessageId.CLAN_S1_VICTORIOUS_OVER_S2_S_SIEGE);
 			finalMsg.addString(winner.getName());
 			finalMsg.addString(_hall.getName());
 			Broadcast.toAllOnlinePlayers(finalMsg);
 		} else {
-			finalMsg = SystemMessage.getSystemMessage(SystemMessageId.SIEGE_S1_DRAW);
+			var finalMsg = SystemMessage.getSystemMessage(SystemMessageId.SIEGE_S1_DRAW);
 			finalMsg.addString(_hall.getName());
 			Broadcast.toAllOnlinePlayers(finalMsg);
 		}

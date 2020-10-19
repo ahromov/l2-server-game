@@ -29,7 +29,7 @@ import com.l2jserver.commons.util.Rnd;
  * @author Balancer
  */
 public class L2Territory {
-	private static Logger _log = Logger.getLogger(L2Territory.class.getName());
+	private static final Logger _log = Logger.getLogger(L2Territory.class.getName());
 	
 	protected static class Point {
 		protected int _x, _y, _zmin, _zmax, _proc;

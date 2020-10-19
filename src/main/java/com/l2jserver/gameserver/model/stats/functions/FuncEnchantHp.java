@@ -29,13 +29,13 @@ import com.l2jserver.gameserver.model.stats.Stats;
  * @author Yamaneko
  */
 public class FuncEnchantHp extends AbstractFunction {
-	public FuncEnchantHp(Stats stat, int order, Object owner, double value, Condition applayCond) {
-		super(stat, order, owner, value, applayCond);
+	public FuncEnchantHp(Stats stat, int order, Object owner, double value, Condition applyCond) {
+		super(stat, order, owner, value, applyCond);
 	}
 	
 	@Override
 	public double calc(L2Character effector, L2Character effected, Skill skill, double initVal) {
-		if ((getApplayCond() != null) && !getApplayCond().test(effector, effected, skill)) {
+		if ((getApplyCond() != null) && !getApplyCond().test(effector, effected, skill)) {
 			return initVal;
 		}
 		

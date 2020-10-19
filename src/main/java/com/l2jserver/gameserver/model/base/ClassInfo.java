@@ -41,23 +41,14 @@ public final class ClassInfo {
 		_parentClassId = parentClassId;
 	}
 	
-	/**
-	 * @return the class ID
-	 */
 	public ClassId getClassId() {
 		return _classId;
 	}
 	
-	/**
-	 * @return the hardcoded in-game class name
-	 */
 	public String getClassName() {
 		return _className;
 	}
 	
-	/**
-	 * @return the class client ID
-	 */
 	private int getClassClientId() {
 		int classClientId = _classId.getId();
 		if ((classClientId >= 0) && (classClientId <= 57)) {
@@ -77,16 +68,10 @@ public final class ClassInfo {
 		return "&$" + getClassClientId() + ";";
 	}
 	
-	/**
-	 * @return the escaped class client ID formatted to be displayed on a HTML
-	 */
 	public String getEscapedClientCode() {
 		return Matcher.quoteReplacement(getClientCode());
 	}
 	
-	/**
-	 * @return the parent class ID
-	 */
 	public ClassId getParentClassId() {
 		return _parentClassId;
 	}

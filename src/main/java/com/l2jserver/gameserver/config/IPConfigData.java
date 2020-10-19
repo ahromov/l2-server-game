@@ -104,14 +104,14 @@ public class IPConfigData implements IXmlReader {
 	}
 	
 	protected void autoIpConfig() {
-		String externalIp = "127.0.0.1";
+		String externalIp;
 		try {
 			URL autoIp = new URL("http://ip1.dynupdate.no-ip.com:8245/");
 			try (BufferedReader in = new BufferedReader(new InputStreamReader(autoIp.openStream()))) {
 				externalIp = in.readLine();
 			}
 		} catch (IOException e) {
-			LOG.warn("Failed to connect to api.externalip.net please check your internet connection using 127.0.0.1!");
+			LOG.warn("Failed to connect to ip1.dynupdate.no-ip.com:8245 please check your internet connection using 127.0.0.1!");
 			externalIp = "127.0.0.1";
 		}
 		

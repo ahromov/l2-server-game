@@ -32,23 +32,14 @@ public class RangeChanceHolder {
 		_chance = chance;
 	}
 	
-	/**
-	 * @return minimum value.
-	 */
 	public int getMin() {
 		return _min;
 	}
 	
-	/**
-	 * @return maximum value.
-	 */
 	public int getMax() {
 		return _max;
 	}
 	
-	/**
-	 * @return the chance.
-	 */
 	public double getChance() {
 		return _chance;
 	}

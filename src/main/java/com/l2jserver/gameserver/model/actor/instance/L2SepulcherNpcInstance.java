@@ -58,10 +58,6 @@ public class L2SepulcherNpcInstance extends L2Npc {
 	private static final String HTML_FILE_PATH = "data/html/SepulcherNpc/";
 	private static final int HALLS_KEY = 7260;
 	
-	/**
-	 * Creates a sepulcher.
-	 * @param template the sepulcher NPC template
-	 */
 	public L2SepulcherNpcInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2SepulcherNpcInstance);
@@ -123,7 +119,7 @@ public class L2SepulcherNpcInstance extends L2Npc {
 			// isn't dead
 			if (isAutoAttackable(player) && !isAlikeDead()) {
 				// Check the height difference
-				if (Math.abs(player.getZ() - getZ()) < 400) // this max heigth
+				if (Math.abs(player.getZ() - getZ()) < 400) // this max height
 				// difference might
 				// need some tweaking
 				{
@@ -166,56 +162,23 @@ public class L2SepulcherNpcInstance extends L2Npc {
 		}
 		
 		switch (getId()) {
-			case 31468:
-			case 31469:
-			case 31470:
-			case 31471:
-			case 31472:
-			case 31473:
-			case 31474:
-			case 31475:
-			case 31476:
-			case 31477:
-			case 31478:
-			case 31479:
-			case 31480:
-			case 31481:
-			case 31482:
-			case 31483:
-			case 31484:
-			case 31485:
-			case 31486:
-			case 31487: {
+			case 31468, 31469, 31470, 31471, 31472, 31473, 31474, 31475, 31476, 31477, 31478, 31479, 31480, 31481, 31482, 31483, 31484, 31485, 31486, 31487 -> {
 				setIsInvul(false);
 				reduceCurrentHp(getMaxHp() + 1, player, null);
 				if (_spawnMonsterTask != null) {
 					_spawnMonsterTask.cancel(true);
 				}
 				_spawnMonsterTask = ThreadPoolManager.getInstance().scheduleEffect(new SpawnMonster(getId()), 3500);
-				break;
 			}
-			case 31455:
-			case 31456:
-			case 31457:
-			case 31458:
-			case 31459:
-			case 31460:
-			case 31461:
-			case 31462:
-			case 31463:
-			case 31464:
-			case 31465:
-			case 31466:
-			case 31467: {
+			case 31455, 31456, 31457, 31458, 31459, 31460, 31461, 31462, 31463, 31464, 31465, 31466, 31467 -> {
 				setIsInvul(false);
 				reduceCurrentHp(getMaxHp() + 1, player, null);
 				if ((player.getParty() != null) && !player.getParty().isLeader(player)) {
 					player = player.getParty().getLeader();
 				}
 				player.addItem("Quest", HALLS_KEY, 1, player, true);
-				break;
 			}
-			default: {
+			default -> {
 				if (hasListener(EventType.ON_NPC_QUEST_START)) {
 					player.setLastQuestNpcObject(getObjectId());
 				}
@@ -232,13 +195,12 @@ public class L2SepulcherNpcInstance extends L2Npc {
 	
 	@Override
 	public String getHtmlPath(int npcId, int val) {
-		String pom = "";
+		String pom;
 		if (val == 0) {
 			pom = "" + npcId;
 		} else {
 			pom = npcId + "-" + val;
 		}
-		
 		return HTML_FILE_PATH + pom + ".htm";
 	}
 	
@@ -265,8 +227,8 @@ public class L2SepulcherNpcInstance extends L2Npc {
 			int val = 0;
 			try {
 				val = Integer.parseInt(command.substring(5));
-			} catch (IndexOutOfBoundsException ioobe) {
-			} catch (NumberFormatException nfe) {
+			} catch (Exception ex) {
+				
 			}
 			showChatWindow(player, val);
 		} else if (command.startsWith("open_gate")) {
@@ -328,8 +290,8 @@ public class L2SepulcherNpcInstance extends L2Npc {
 		public void run() {
 			try {
 				_DoorTable.getDoor(_DoorId).closeMe();
-			} catch (Exception e) {
-				LOG.warn("{}", e);
+			} catch (Exception ex) {
+				LOG.warn("Error running task close next door!", ex);
 			}
 		}
 	}

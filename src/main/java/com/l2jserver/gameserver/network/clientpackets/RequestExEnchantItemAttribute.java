@@ -92,15 +92,13 @@ public class RequestExEnchantItemAttribute extends L2GameClientPacket {
 		}
 		
 		switch (item.getItemLocation()) {
-			case INVENTORY:
-			case PAPERDOLL: {
+			case INVENTORY, PAPERDOLL -> {
 				if (item.getOwnerId() != player.getObjectId()) {
 					player.setActiveEnchantAttrItemId(L2PcInstance.ID_NONE);
 					return;
 				}
-				break;
 			}
-			default: {
+			default -> {
 				player.setActiveEnchantAttrItemId(L2PcInstance.ID_NONE);
 				Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to use enchant Exploit!");
 				return;
@@ -113,7 +111,7 @@ public class RequestExEnchantItemAttribute extends L2GameClientPacket {
 		if (item.isArmor()) {
 			elementToAdd = Elementals.getOppositeElement(elementToAdd);
 		}
-		byte opositeElement = Elementals.getOppositeElement(elementToAdd);
+		byte oppositeElement = Elementals.getOppositeElement(elementToAdd);
 		
 		Elementals oldElement = item.getElemental(elementToAdd);
 		int elementValue = oldElement == null ? 0 : oldElement.getValue();
@@ -129,9 +127,9 @@ public class RequestExEnchantItemAttribute extends L2GameClientPacket {
 		if (item.isArmor() && (item.getElementals() != null)) {
 			// cant add opposite element
 			for (Elementals elm : item.getElementals()) {
-				if (elm.getElement() == opositeElement) {
+				if (elm.getElement() == oppositeElement) {
 					player.setActiveEnchantAttrItemId(L2PcInstance.ID_NONE);
-					Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to add oposite attribute to item!");
+					Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to add opposite attribute to item!");
 					return;
 				}
 			}
@@ -155,24 +153,14 @@ public class RequestExEnchantItemAttribute extends L2GameClientPacket {
 			player.setActiveEnchantAttrItemId(L2PcInstance.ID_NONE);
 			return;
 		}
-		boolean success = false;
-		switch (Elementals.getItemElemental(stoneId)._type) {
-			case Stone:
-			case Roughore:
-				success = Rnd.get(100) < character().getEnchantChanceElementStone();
-				break;
-			case Crystal:
-				success = Rnd.get(100) < character().getEnchantChanceElementCrystal();
-				break;
-			case Jewel:
-				success = Rnd.get(100) < character().getEnchantChanceElementJewel();
-				break;
-			case Energy:
-				success = Rnd.get(100) < character().getEnchantChanceElementEnergy();
-				break;
-		}
+		boolean success = switch (Elementals.getItemElemental(stoneId)._type) {
+			case Stone, Roughore -> Rnd.get(100) < character().getEnchantChanceElementStone();
+			case Crystal -> Rnd.get(100) < character().getEnchantChanceElementCrystal();
+			case Jewel -> Rnd.get(100) < character().getEnchantChanceElementJewel();
+			case Energy -> Rnd.get(100) < character().getEnchantChanceElementEnergy();
+		};
 		if (success) {
-			byte realElement = item.isArmor() ? opositeElement : elementToAdd;
+			byte realElement = item.isArmor() ? oppositeElement : elementToAdd;
 			
 			SystemMessage sm;
 			if (item.getEnchantLevel() == 0) {
@@ -219,8 +207,8 @@ public class RequestExEnchantItemAttribute extends L2GameClientPacket {
 		player.setActiveEnchantAttrItemId(L2PcInstance.ID_NONE);
 	}
 	
-	public int getLimit(L2ItemInstance item, int sotneId) {
-		Elementals.ElementalItems elementItem = Elementals.getItemElemental(sotneId);
+	public int getLimit(L2ItemInstance item, int stoneId) {
+		Elementals.ElementalItems elementItem = Elementals.getItemElemental(stoneId);
 		if (elementItem == null) {
 			return 0;
 		}

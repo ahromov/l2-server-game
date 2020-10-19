@@ -37,7 +37,7 @@ public class PetNameTable {
 				return rs.next();
 			}
 		} catch (Exception ex) {
-			LOG.warn("Could not check existing pet name {}!", ex);
+			LOG.warn("Could not check existing pet name!", ex);
 		}
 		return false;
 	}

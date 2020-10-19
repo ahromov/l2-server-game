@@ -27,10 +27,6 @@ public class VehicleStarted extends L2GameServerPacket {
 	private final int _objectId;
 	private final int _state;
 	
-	/**
-	 * @param boat
-	 * @param state
-	 */
 	public VehicleStarted(L2Character boat, int state) {
 		_objectId = boat.getObjectId();
 		_state = state;

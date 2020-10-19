@@ -42,7 +42,7 @@ public final class NewCharacter extends L2GameClientPacket {
 		}
 		
 		final NewCharacterSuccess ct = new NewCharacterSuccess();
-		ct.addChar(PlayerTemplateData.getInstance().getTemplate(ClassId.fighter)); // Human Figther
+		ct.addChar(PlayerTemplateData.getInstance().getTemplate(ClassId.fighter)); // Human Fighter
 		ct.addChar(PlayerTemplateData.getInstance().getTemplate(ClassId.mage)); // Human Mystic
 		ct.addChar(PlayerTemplateData.getInstance().getTemplate(ClassId.elvenFighter)); // Elven Fighter
 		ct.addChar(PlayerTemplateData.getInstance().getTemplate(ClassId.elvenMage)); // Elven Mystic

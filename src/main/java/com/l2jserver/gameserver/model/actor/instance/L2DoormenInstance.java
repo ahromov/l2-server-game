@@ -34,10 +34,6 @@ import com.l2jserver.gameserver.network.serverpackets.NpcHtmlMessage;
 public class L2DoormenInstance extends L2NpcInstance {
 	private static final Logger LOG = LoggerFactory.getLogger(L2DoormenInstance.class);
 	
-	/**
-	 * Creates a doorman.
-	 * @param template the doorman NPC template
-	 */
 	public L2DoormenInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2DoormenInstance);

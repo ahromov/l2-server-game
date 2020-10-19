@@ -25,8 +25,7 @@ import com.l2jserver.gameserver.network.serverpackets.AllianceInfo;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 /**
- * This class ...
- * @version $Revision: 1479 $ $Date: 2005-11-09 00:47:42 +0100 (mer., 09 nov. 2005) $
+ * @since 2005/11/09 00:47:42
  */
 public final class RequestAllyInfo extends L2GameClientPacket {
 	private static final String _C__2E_REQUESTALLYINFO = "[C] 2E RequestAllyInfo";

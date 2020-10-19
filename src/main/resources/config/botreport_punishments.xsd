@@ -9,8 +9,8 @@
               <xs:extension base="xs:string">
                 <xs:attribute type="xs:short" name="neededReportCount" use="required"/>
                 <xs:attribute type="xs:short" name="skillId" use="required"/>
-                <xs:attribute type="xs:byte" name="skillLevel" use="optional"/>
-                <xs:attribute type="xs:short" name="sysMessageId" use="optional"/>
+                <xs:attribute type="xs:byte" name="skillLevel" />
+                <xs:attribute type="xs:short" name="sysMessageId" />
               </xs:extension>
             </xs:simpleContent>
           </xs:complexType>

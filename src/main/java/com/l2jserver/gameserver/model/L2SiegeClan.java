@@ -24,7 +24,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.l2jserver.gameserver.model.actor.L2Npc;
 
 public class L2SiegeClan {
-	private int _clanId = 0;
+	private final int _clanId;
 	private final List<L2Npc> _flag = new CopyOnWriteArrayList<>();
 	private SiegeClanType _type;
 	
@@ -55,7 +55,7 @@ public class L2SiegeClan {
 	}
 	
 	public void removeFlags() {
-		_flag.forEach(f -> f.decayMe());
+		_flag.forEach(L2Object::decayMe);
 		_flag.clear();
 	}
 	

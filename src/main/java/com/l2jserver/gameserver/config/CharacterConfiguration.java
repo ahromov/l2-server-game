@@ -408,15 +408,15 @@ public interface CharacterConfiguration extends Reloadable {
 	@ConverterClass(Seconds2MillisecondsConverter.class)
 	Integer getFortressZoneFameTaskFrequency();
 	
-	@Key("FortressZoneFameAquirePoints")
-	Integer getFortressZoneFameAquirePoints();
+	@Key("FortressZoneFameAcquirePoints")
+	Integer getFortressZoneFameAcquirePoints();
 	
 	@Key("CastleZoneFameTaskFrequency")
 	@ConverterClass(Seconds2MillisecondsConverter.class)
 	Integer getCastleZoneFameTaskFrequency();
 	
-	@Key("CastleZoneFameAquirePoints")
-	Integer getCastleZoneFameAquirePoints();
+	@Key("CastleZoneFameAcquirePoints")
+	Integer getCastleZoneFameAcquirePoints();
 	
 	@Key("FameForDeadPlayers")
 	Boolean fameForDeadPlayers();

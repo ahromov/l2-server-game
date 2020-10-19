@@ -22,12 +22,13 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
 
 /**
- * @author KenM, Gnacik
+ * @author KenM
+ * @author Gnacik
  */
 public class RequestChangeNicknameColor extends L2GameClientPacket {
 	private static final String _C__D0_4F_REQUESTCHANGENICKNAMECOLOR = "[C] D0:4F RequestChangeNicknameColor";
 	
-	private static final int COLORS[] = {
+	private static final int[] COLORS = {
 		0x9393FF, // Pink
 		0x7C49FC, // Rose Pink
 		0x97F8FC, // Lemon Yellow

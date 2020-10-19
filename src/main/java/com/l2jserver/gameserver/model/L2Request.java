@@ -111,9 +111,9 @@ public class L2Request {
 	}
 	
 	private void setOnRequestTimer(boolean isRequestor) {
-		_isRequestor = isRequestor ? true : false;
-		_isAnswerer = isRequestor ? false : true;
-		ThreadPoolManager.getInstance().scheduleGeneral(() -> clear(), REQUEST_TIMEOUT * 1000);
+		_isRequestor = isRequestor;
+		_isAnswerer = !isRequestor;
+		ThreadPoolManager.getInstance().scheduleGeneral(this::clear, REQUEST_TIMEOUT * 1000);
 	}
 	
 	/**

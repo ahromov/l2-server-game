@@ -135,7 +135,7 @@ public final class RequestBuyItem extends L2GameClientPacket {
 		long slots = 0;
 		long weight = 0;
 		for (ItemHolder i : _items) {
-			long price = -1;
+			long price;
 			
 			final Product product = buyList.getProductByItemId(i.getId());
 			if (product == null) {

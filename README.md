@@ -24,7 +24,7 @@ the same archive. NO world content should be incorporated in L2J
 distribution.
 Server and Datapack may not be not be bundled or packaged.
 
-Requeriments
+Requirements
 ---
 
 Windows or Linux system with Java JDK 14+ and MariaDB 10.4+.

@@ -90,19 +90,10 @@ public enum SkillOperateType {
 	 * @return {@code true} if the operative skill type is active, {@code false} otherwise
 	 */
 	public boolean isActive() {
-		switch (this) {
-			case A1:
-			case A2:
-			case A3:
-			case A4:
-			case CA1:
-			case CA5:
-			case DA1:
-			case DA2:
-				return true;
-			default:
-				return false;
-		}
+		return switch (this) {
+			case A1, A2, A3, A4, CA1, CA5, DA1, DA2 -> true;
+			default -> false;
+		};
 	}
 	
 	/**
@@ -110,14 +101,10 @@ public enum SkillOperateType {
 	 * @return {@code true} if the operative skill type is continuous, {@code false} otherwise
 	 */
 	public boolean isContinuous() {
-		switch (this) {
-			case A2:
-			case A4:
-			case DA2:
-				return true;
-			default:
-				return false;
-		}
+		return switch (this) {
+			case A2, A4, DA2 -> true;
+			default -> false;
+		};
 	}
 	
 	/**
@@ -149,13 +136,10 @@ public enum SkillOperateType {
 	 * @return {@code true} if the operative skill type is channeling, {@code false} otherwise
 	 */
 	public boolean isChanneling() {
-		switch (this) {
-			case CA1:
-			case CA5:
-				return true;
-			default:
-				return false;
-		}
+		return switch (this) {
+			case CA1, CA5 -> true;
+			default -> false;
+		};
 	}
 	
 	/**
@@ -163,12 +147,9 @@ public enum SkillOperateType {
 	 * @return {@code true} if the operative skill type is fly, {@code false} otherwise
 	 */
 	public boolean isFlyType() {
-		switch (this) {
-			case DA1:
-			case DA2:
-				return true;
-			default:
-				return false;
-		}
+		return switch (this) {
+			case DA1, DA2 -> true;
+			default -> false;
+		};
 	}
 }

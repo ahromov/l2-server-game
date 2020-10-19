@@ -56,7 +56,7 @@ public class L2SiegeZone extends L2ZoneType {
 		setSettings(settings);
 	}
 	
-	public final class Settings extends AbstractZoneSettings {
+	public static final class Settings extends AbstractZoneSettings {
 		private int _siegableId = -1;
 		private Siegable _siege = null;
 		private boolean _isActiveSiege = false;
@@ -103,29 +103,26 @@ public class L2SiegeZone extends L2ZoneType {
 	
 	@Override
 	public void setParameter(String name, String value) {
-		if (name.equals("castleId")) {
-			if (getSettings().getSiegeableId() != -1) {
-				throw new IllegalArgumentException("Siege object already defined!");
+		switch (name) {
+			case "castleId", "fortId" -> {
+				if (getSettings().getSiegeableId() != -1) {
+					throw new IllegalArgumentException("Siege object already defined!");
+				}
+				getSettings().setSiegeableId(Integer.parseInt(value));
 			}
-			getSettings().setSiegeableId(Integer.parseInt(value));
-		} else if (name.equals("fortId")) {
-			if (getSettings().getSiegeableId() != -1) {
-				throw new IllegalArgumentException("Siege object already defined!");
+			case "clanHallId" -> {
+				if (getSettings().getSiegeableId() != -1) {
+					throw new IllegalArgumentException("Siege object already defined!");
+				}
+				getSettings().setSiegeableId(Integer.parseInt(value));
+				SiegableHall hall = ClanHallSiegeManager.getInstance().getConquerableHalls().get(getSettings().getSiegeableId());
+				if (hall == null) {
+					_log.warning("L2SiegeZone: Siegable clan hall with id " + value + " does not exist!");
+				} else {
+					hall.setSiegeZone(this);
+				}
 			}
-			getSettings().setSiegeableId(Integer.parseInt(value));
-		} else if (name.equals("clanHallId")) {
-			if (getSettings().getSiegeableId() != -1) {
-				throw new IllegalArgumentException("Siege object already defined!");
-			}
-			getSettings().setSiegeableId(Integer.parseInt(value));
-			SiegableHall hall = ClanHallSiegeManager.getInstance().getConquerableHalls().get(getSettings().getSiegeableId());
-			if (hall == null) {
-				_log.warning("L2SiegeZone: Siegable clan hall with id " + value + " does not exist!");
-			} else {
-				hall.setSiegeZone(this);
-			}
-		} else {
-			super.setParameter(name, value);
+			default -> super.setParameter(name, value);
 		}
 	}
 	
@@ -137,18 +134,18 @@ public class L2SiegeZone extends L2ZoneType {
 			character.setInsideZone(ZoneId.NO_SUMMON_FRIEND, true); // FIXME: Custom ?
 			
 			if (character.isPlayer()) {
-				L2PcInstance plyer = character.getActingPlayer();
-				if (plyer.isRegisteredOnThisSiegeField(getSettings().getSiegeableId())) {
-					plyer.setIsInSiege(true); // in siege
+				L2PcInstance player = character.getActingPlayer();
+				if (player.isRegisteredOnThisSiegeField(getSettings().getSiegeableId())) {
+					player.setIsInSiege(true); // in siege
 					if (getSettings().getSiege().giveFame() && (getSettings().getSiege().getFameFrequency() > 0)) {
-						plyer.startFameTask(getSettings().getSiege().getFameFrequency(), getSettings().getSiege().getFameAmount());
+						player.startFameTask(getSettings().getSiege().getFameFrequency(), getSettings().getSiege().getFameAmount());
 					}
 				}
 				
 				character.sendPacket(SystemMessageId.ENTERED_COMBAT_ZONE);
-				if (!castle().allowRideWyvernDuringSiege() && (plyer.getMountType() == MountType.WYVERN)) {
-					plyer.sendPacket(SystemMessageId.AREA_CANNOT_BE_ENTERED_WHILE_MOUNTED_WYVERN);
-					plyer.enteredNoLanding(DISMOUNT_DELAY);
+				if (!castle().allowRideWyvernDuringSiege() && (player.getMountType() == MountType.WYVERN)) {
+					player.sendPacket(SystemMessageId.AREA_CANNOT_BE_ENTERED_WHILE_MOUNTED_WYVERN);
+					player.enteredNoLanding(DISMOUNT_DELAY);
 				}
 			}
 		}

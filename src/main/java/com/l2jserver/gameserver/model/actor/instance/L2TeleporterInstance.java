@@ -50,10 +50,6 @@ public final class L2TeleporterInstance extends L2Npc {
 	private static final int COND_OWNER = 2;
 	private static final int COND_REGULAR = 3;
 	
-	/**
-	 * Creates a teleporter.
-	 * @param template the teleporter NPC template
-	 */
 	public L2TeleporterInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2TeleporterInstance);
@@ -119,14 +115,13 @@ public final class L2TeleporterInstance extends L2Npc {
 			int val = 0;
 			try {
 				val = Integer.parseInt(command.substring(5));
-			} catch (IndexOutOfBoundsException ioobe) {
-			} catch (NumberFormatException nfe) {
+			} catch (Exception ex) {
 			}
 			
 			if ((val == 1) && (player.getLevel() < 41)) {
 				showNewbieHtml(player);
 				return;
-			} else if ((val == 1) && (cal.get(Calendar.HOUR_OF_DAY) >= 20) && (cal.get(Calendar.HOUR_OF_DAY) <= 23) && ((cal.get(Calendar.DAY_OF_WEEK) == 1) || (cal.get(Calendar.DAY_OF_WEEK) == 7))) {
+			} else if ((val == 1) && (cal.get(Calendar.HOUR_OF_DAY) >= 20) && ((cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY))) {
 				showHalfPriceHtml(player);
 				return;
 			}
@@ -138,7 +133,7 @@ public final class L2TeleporterInstance extends L2Npc {
 	
 	@Override
 	public String getHtmlPath(int npcId, int val) {
-		String pom = "";
+		String pom;
 		if (val == 0) {
 			pom = "" + npcId;
 		} else {
@@ -241,7 +236,7 @@ public final class L2TeleporterInstance extends L2Npc {
 				price = 0;
 			} else if (!list.getIsForNoble()) {
 				final Calendar cal = Calendar.getInstance();
-				if ((cal.get(Calendar.HOUR_OF_DAY) >= 20) && (cal.get(Calendar.HOUR_OF_DAY) <= 23) && ((cal.get(Calendar.DAY_OF_WEEK) == 1) || (cal.get(Calendar.DAY_OF_WEEK) == 7))) {
+				if ((cal.get(Calendar.HOUR_OF_DAY) >= 20) && ((cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY))) {
 					price /= 2;
 				}
 			}
@@ -252,7 +247,7 @@ public final class L2TeleporterInstance extends L2Npc {
 				player.teleToLocation(list.getLocX(), list.getLocY(), list.getLocZ(), player.getHeading(), -1);
 			}
 		} else {
-			LOG.warn("No teleport destination with id: {}" + val);
+			LOG.warn("No teleport destination with Id {}!", val);
 		}
 		
 		player.sendPacket(ActionFailed.STATIC_PACKET);

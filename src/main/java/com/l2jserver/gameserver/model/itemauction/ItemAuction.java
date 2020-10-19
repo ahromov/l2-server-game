@@ -276,7 +276,6 @@ public final class ItemAuction {
 			SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.SUBMITTED_A_BID_OF_S1);
 			sm.addLong(newBid);
 			player.sendPacket(sm);
-			return;
 		}
 	}
 	
@@ -360,14 +359,13 @@ public final class ItemAuction {
 		}
 		
 		switch (getAuctionState()) {
-			case CREATED: {
+			case CREATED -> {
 				return false;
 			}
-			case FINISHED: {
+			case FINISHED -> {
 				if (_startingTime < (System.currentTimeMillis() - MILLISECONDS.convert(general().getItemAuctionExpiredAfter(), DAYS))) {
 					return false;
 				}
-				break;
 			}
 		}
 		

@@ -24,10 +24,7 @@ import com.l2jserver.gameserver.model.base.ClassType;
 import com.l2jserver.gameserver.model.base.PlayerClass;
 
 public final class L2VillageMasterFighterInstance extends L2VillageMasterInstance {
-	/**
-	 * Creates a village master.
-	 * @param template the village master NPC template
-	 */
+	
 	public L2VillageMasterFighterInstance(L2NpcTemplate template) {
 		super(template);
 	}
@@ -37,7 +34,6 @@ public final class L2VillageMasterFighterInstance extends L2VillageMasterInstanc
 		if (pclass == null) {
 			return false;
 		}
-		
 		return pclass.isOfRace(Race.HUMAN) || pclass.isOfRace(Race.ELF);
 	}
 	

@@ -27,6 +27,7 @@ import com.l2jserver.gameserver.model.skills.Skill;
 import com.l2jserver.gameserver.model.zone.L2ZoneType;
 
 /**
+ * Inside zone Id condition.
  * @author UnAfraid
  */
 public class ConditionPlayerInsideZoneId extends Condition {

@@ -41,10 +41,7 @@ public class ZoneCylinder extends L2ZoneForm {
 	
 	@Override
 	public boolean isInsideZone(int x, int y, int z) {
-		if (((Math.pow(_x - x, 2) + Math.pow(_y - y, 2)) > _radS) || (z < _z1) || (z > _z2)) {
-			return false;
-		}
-		return true;
+		return (!((Math.pow(_x - x, 2) + Math.pow(_y - y, 2)) > _radS)) && (z >= _z1) && (z <= _z2);
 	}
 	
 	@Override
@@ -81,11 +78,8 @@ public class ZoneCylinder extends L2ZoneForm {
 			if (Math.abs(_x - ax2) < _rad) {
 				return true;
 			}
-			if (Math.abs(_x - ax1) < _rad) {
-				return true;
-			}
+			return Math.abs(_x - ax1) < _rad;
 		}
-		
 		return false;
 	}
 	
@@ -94,7 +88,7 @@ public class ZoneCylinder extends L2ZoneForm {
 		return Math.hypot(_x - x, _y - y) - _rad;
 	}
 	
-	// getLowZ() / getHighZ() - These two functions were added to cope with the demand of the new fishing algorithms, wich are now able to correctly place the hook in the water, thanks to getHighZ(). getLowZ() was added, considering potential future modifications.
+	// getLowZ() / getHighZ() - These two functions were added to cope with the demand of the new fishing algorithms, which are now able to correctly place the hook in the water, thanks to getHighZ(). getLowZ() was added, considering potential future modifications.
 	@Override
 	public int getLowZ() {
 		return _z1;

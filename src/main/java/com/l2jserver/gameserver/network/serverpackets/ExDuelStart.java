@@ -20,7 +20,8 @@ package com.l2jserver.gameserver.network.serverpackets;
 
 /**
  * Duel Start packet implementation.
- * @author KenM, Zoey76
+ * @author KenM
+ * @author Zoey76
  */
 public class ExDuelStart extends L2GameServerPacket {
 	public static final ExDuelStart PLAYER_DUEL = new ExDuelStart(false);

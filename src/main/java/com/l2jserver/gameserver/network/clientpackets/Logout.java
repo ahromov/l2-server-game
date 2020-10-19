@@ -33,7 +33,7 @@ import com.l2jserver.gameserver.taskmanager.AttackStanceTaskManager;
 
 /**
  * Logout client packet.
- * @version $Revision: 1.9.4.3 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class Logout extends L2GameClientPacket {
 	

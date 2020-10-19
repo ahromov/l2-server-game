@@ -28,8 +28,7 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.serverpackets.ActionFailed;
 
 /**
- * This class ...
- * @version $Revision: 1.2.2.1.2.4 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class RequestPrivateStoreSell extends L2GameClientPacket {
 	private static final String _C__9F_REQUESTPRIVATESTORESELL = "[C] 9F RequestPrivateStoreSell";
@@ -81,12 +80,11 @@ public final class RequestPrivateStoreSell extends L2GameClientPacket {
 			return;
 		}
 		
-		L2PcInstance object = L2World.getInstance().getPlayer(_storePlayerId);
-		if (object == null) {
+		L2PcInstance storePlayer = L2World.getInstance().getPlayer(_storePlayerId);
+		if (storePlayer == null) {
 			return;
 		}
 		
-		L2PcInstance storePlayer = object;
 		if (!player.isInsideRadius(storePlayer, INTERACTION_DISTANCE, true, false)) {
 			return;
 		}

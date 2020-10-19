@@ -18,16 +18,16 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
-import com.l2jserver.gameserver.model.L2Clan;
+import static com.l2jserver.gameserver.network.SystemMessageId.S2_ALLIANCE_LEADER_OF_S1_REQUESTED_ALLIANCE;
+import static com.l2jserver.gameserver.network.SystemMessageId.YOU_ARE_NOT_A_CLAN_MEMBER;
+import static com.l2jserver.gameserver.network.SystemMessageId.YOU_HAVE_INVITED_THE_WRONG_TARGET;
+
 import com.l2jserver.gameserver.model.L2World;
-import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
-import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.network.serverpackets.AskJoinAlly;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 /**
- * This class ...
- * @version $Revision: 1.3.4.2 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class RequestJoinAlly extends L2GameClientPacket {
 	private static final String _C__8C_REQUESTJOINALLY = "[C] 8C RequestJoinAlly";
@@ -41,37 +41,36 @@ public final class RequestJoinAlly extends L2GameClientPacket {
 	
 	@Override
 	protected void runImpl() {
-		L2PcInstance activeChar = getClient().getActiveChar();
-		if (activeChar == null) {
+		final var player = getClient().getActiveChar();
+		if (player == null) {
 			return;
 		}
 		
-		L2PcInstance ob = L2World.getInstance().getPlayer(_id);
-		
-		if (ob == null) {
-			activeChar.sendPacket(SystemMessageId.YOU_HAVE_INVITED_THE_WRONG_TARGET);
+		final var targetPlayer = L2World.getInstance().getPlayer(_id);
+		if (targetPlayer == null) {
+			player.sendPacket(YOU_HAVE_INVITED_THE_WRONG_TARGET);
 			return;
 		}
 		
-		if (activeChar.getClan() == null) {
-			activeChar.sendPacket(SystemMessageId.YOU_ARE_NOT_A_CLAN_MEMBER);
+		final var clan = player.getClan();
+		if (clan == null) {
+			player.sendPacket(YOU_ARE_NOT_A_CLAN_MEMBER);
 			return;
 		}
 		
-		L2PcInstance target = ob;
-		L2Clan clan = activeChar.getClan();
-		if (!clan.checkAllyJoinCondition(activeChar, target)) {
-			return;
-		}
-		if (!activeChar.getRequest().setRequest(target, this)) {
+		if (!clan.checkAllyJoinCondition(player, targetPlayer)) {
 			return;
 		}
 		
-		SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.S2_ALLIANCE_LEADER_OF_S1_REQUESTED_ALLIANCE);
-		sm.addString(activeChar.getClan().getAllyName());
-		sm.addString(activeChar.getName());
-		target.sendPacket(sm);
-		target.sendPacket(new AskJoinAlly(activeChar.getObjectId(), activeChar.getClan().getAllyName()));
+		if (!player.getRequest().setRequest(targetPlayer, this)) {
+			return;
+		}
+		
+		final var sm = SystemMessage.getSystemMessage(S2_ALLIANCE_LEADER_OF_S1_REQUESTED_ALLIANCE);
+		sm.addString(player.getClan().getAllyName());
+		sm.addString(player.getName());
+		targetPlayer.sendPacket(sm);
+		targetPlayer.sendPacket(new AskJoinAlly(player.getObjectId(), player.getClan().getAllyName()));
 	}
 	
 	@Override

@@ -53,7 +53,7 @@ public class ExQuestNpcLogList extends L2GameServerPacket {
 		}
 	}
 	
-	private class NpcHolder {
+	private static class NpcHolder {
 		private final int _npcId;
 		private final int _unknown;
 		private final int _count;

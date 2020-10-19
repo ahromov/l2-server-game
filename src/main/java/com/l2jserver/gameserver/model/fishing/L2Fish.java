@@ -203,31 +203,20 @@ public class L2Fish implements Cloneable {
 	 * @return the fish Group Id.
 	 */
 	private int getGroupId(String name) {
-		switch (name) {
-			case "swift":
-				return 1;
-			case "ugly":
-				return 2;
-			case "fish_box":
-				return 3;
-			case "easy_wide":
-				return 4;
-			case "easy_swift":
-				return 5;
-			case "easy_ugly":
-				return 6;
-			case "hard_wide":
-				return 7;
-			case "hard_swift":
-				return 8;
-			case "hard_ugly":
-				return 9;
-			case "hs_fish":
-				return 10; // FIXME: Verify the ID
-			case "wide":
-			default:
-				return 0;
-		}
+		return switch (name) {
+			case "swift" -> 1;
+			case "ugly" -> 2;
+			case "fish_box" -> 3;
+			case "easy_wide" -> 4;
+			case "easy_swift" -> 5;
+			case "easy_ugly" -> 6;
+			case "hard_wide" -> 7;
+			case "hard_swift" -> 8;
+			case "hard_ugly" -> 9;
+			// FIXME: Verify the ID
+			case "hs_fish" -> 10;
+			default -> 0;
+		};
 	}
 	
 	/**
@@ -235,14 +224,10 @@ public class L2Fish implements Cloneable {
 	 * @return the fish Grade Id.
 	 */
 	private int getGradeId(String name) {
-		switch (name) {
-			case "fish_easy":
-				return 0;
-			case "fish_hard":
-				return 2;
-			case "fish_normal":
-			default:
-				return 1;
-		}
+		return switch (name) {
+			case "fish_easy" -> 0;
+			case "fish_hard" -> 2;
+			default -> 1;
+		};
 	}
 }

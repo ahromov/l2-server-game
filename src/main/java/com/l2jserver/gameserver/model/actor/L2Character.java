@@ -145,7 +145,7 @@ import com.l2jserver.gameserver.network.serverpackets.CreatureSay;
 import com.l2jserver.gameserver.network.serverpackets.ExRotation;
 import com.l2jserver.gameserver.network.serverpackets.FlyToLocation.FlyType;
 import com.l2jserver.gameserver.network.serverpackets.L2GameServerPacket;
-import com.l2jserver.gameserver.network.serverpackets.MagicSkillCanceld;
+import com.l2jserver.gameserver.network.serverpackets.MagicSkillCanceled;
 import com.l2jserver.gameserver.network.serverpackets.MagicSkillLaunched;
 import com.l2jserver.gameserver.network.serverpackets.MagicSkillUse;
 import com.l2jserver.gameserver.network.serverpackets.MoveToLocation;
@@ -181,7 +181,7 @@ import com.l2jserver.gameserver.util.Util;
  * Each template is loaded once in the server cache memory (reduce memory use).<br>
  * When a new instance of L2Character is spawned, server just create a link between the instance and the template.<br>
  * This link is stored in {@link #_template}
- * @version $Revision: 1.53.2.45.2.34 $ $Date: 2005/04/11 10:06:08 $
+ * @since 2005/04/11 10:06:08
  */
 public abstract class L2Character extends L2Object implements ISkillsHolder, IDeletable {
 	private static final Logger LOG = LoggerFactory.getLogger(L2Character.class);
@@ -769,9 +769,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 				return false;
 			}
 		} else if (isNpc()) {
-			if (_disableBowAttackEndTime > GameTimeController.getInstance().getGameTicks()) {
-				return false;
-			}
+			return _disableBowAttackEndTime <= GameTimeController.getInstance().getGameTicks();
 		}
 		return true;
 	}
@@ -899,7 +897,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 			setHeading(Util.calculateHeadingFrom(this, target));
 			int reuse = calculateReuseTime(weaponItem);
 			
-			boolean hitted = false;
+			boolean hitted;
 			switch (getAttackType()) {
 				case BOW: {
 					if (!canUseRangeWeapon()) {
@@ -1439,7 +1437,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 		stopEffectsOnAction();
 		
 		// Set the target of the skill in function of Skill Type and Target Type
-		L2Character target = null;
+		L2Character target;
 		// Get all possible targets of the skill in a table in function of the skill target type
 		L2Object[] targets = skill.getTargetList(this);
 		
@@ -1645,23 +1643,16 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 		if (isPlayer() && !skill.isAbnormalInstant()) {
 			SystemMessage sm = null;
 			switch (magicId) {
-				case 1312: // Fishing
-				{
+				case 1312 -> {
+					// Fishing
 					// Done in L2PcInstance.startFishing()
-					break;
 				}
-				case 2046: // Wolf Collar
-				{
-					sm = SystemMessage.getSystemMessage(SystemMessageId.SUMMON_A_PET);
-					break;
-				}
-				default: {
+				case 2046 -> sm = SystemMessage.getSystemMessage(SystemMessageId.SUMMON_A_PET); // Wolf Collar
+				default -> {
 					sm = SystemMessage.getSystemMessage(SystemMessageId.USE_S1);
 					sm.addSkillName(skill);
-					break;
 				}
 			}
-			
 			sendPacket(sm);
 		}
 		
@@ -1793,6 +1784,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 				for (SkillHolder sh : wep.getSkills()) {
 					if (sh.getSkillId() == skill.getId()) {
 						found = true;
+						break;
 					}
 				}
 				
@@ -2221,7 +2213,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 	
 	public void setAI(L2CharacterAI newAI) {
 		final L2CharacterAI oldAI = _ai;
-		if ((oldAI != null) && (oldAI != newAI) && (oldAI instanceof L2AttackableAI)) {
+		if ((oldAI != newAI) && (oldAI instanceof L2AttackableAI)) {
 			oldAI.stopAITask();
 		}
 		_ai = newAI;
@@ -2728,7 +2720,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 		abortCast();
 		stopMove(null);
 		getAI().notifyEvent(CtrlEvent.EVT_FAKE_DEATH);
-		broadcastPacket(new ChangeWaitType(this, ChangeWaitType.WT_START_FAKEDEATH));
+		broadcastPacket(new ChangeWaitType(this, ChangeWaitType.WT_START_FAKE_DEATH));
 	}
 	
 	/**
@@ -2825,7 +2817,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 			getActingPlayer().setRecentFakeDeath(true);
 		}
 		
-		broadcastPacket(new ChangeWaitType(this, ChangeWaitType.WT_STOP_FAKEDEATH));
+		broadcastPacket(new ChangeWaitType(this, ChangeWaitType.WT_STOP_FAKE_DEATH));
 		// TODO: Temp hack: players see FD on ppl that are moving: Teleport to someone who uses FD - if he gets up he will fall down again for that client -
 		// even tho he is actually standing... Probably bad info in CharInfo packet?
 		broadcastPacket(new Revive(this));
@@ -3273,15 +3265,9 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 		if (m.onGeodataPathIndex == -1) {
 			return false;
 		}
-		if (m.onGeodataPathIndex == (m.geoPath.size() - 1)) {
-			return false;
-		}
-		return true;
+		return m.onGeodataPathIndex != (m.geoPath.size() - 1);
 	}
 	
-	/**
-	 * @return True if the L2Character is casting.
-	 */
 	public final boolean isCastingNow() {
 		return _isCastingNow;
 	}
@@ -3298,9 +3284,6 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 		_isCastingSimultaneouslyNow = value;
 	}
 	
-	/**
-	 * @return True if the cast of the L2Character can be aborted.
-	 */
 	public final boolean canAbortCast() {
 		return _castInterruptTime > GameTimeController.getInstance().getGameTicks();
 	}
@@ -3359,7 +3342,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 			if (isPlayer()) {
 				getAI().notifyEvent(CtrlEvent.EVT_FINISH_CASTING); // setting back previous intention
 			}
-			broadcastPacket(new MagicSkillCanceld(getObjectId())); // broadcast packet to stop animations client-side
+			broadcastPacket(new MagicSkillCanceled(getObjectId())); // broadcast packet to stop animations client-side
 			sendPacket(ActionFailed.STATIC_PACKET); // send an "action failed" packet to the caster
 		}
 	}
@@ -4689,76 +4672,72 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 			return;
 		}
 		
-		try {
-			// Go through targets table
-			for (L2Object tgt : targets) {
-				if (tgt.isPlayable()) {
-					if (isPlayer() && tgt.isSummon()) {
-						((L2Summon) tgt).updateAndBroadcastStatus(1);
-					}
-				} else if (isPlayable() && tgt.isAttackable()) {
-					L2Character target = (L2Character) tgt;
-					if (skill.getEffectPoint() > 0) {
-						((L2Attackable) target).reduceHate(this, skill.getEffectPoint());
-					} else if (skill.getEffectPoint() < 0) {
-						((L2Attackable) target).addDamageHate(this, 0, -skill.getEffectPoint());
-					}
+		// Go through targets table
+		for (L2Object tgt : targets) {
+			if (tgt.isPlayable()) {
+				if (isPlayer() && tgt.isSummon()) {
+					((L2Summon) tgt).updateAndBroadcastStatus(1);
+				}
+			} else if (isPlayable() && tgt.isAttackable()) {
+				L2Character target = (L2Character) tgt;
+				if (skill.getEffectPoint() > 0) {
+					((L2Attackable) target).reduceHate(this, skill.getEffectPoint());
+				} else if (skill.getEffectPoint() < 0) {
+					((L2Attackable) target).addDamageHate(this, 0, -skill.getEffectPoint());
 				}
 			}
-			
-			rechargeShots(skill.useSoulShot(), skill.useSpiritShot());
-			
-			final StatusUpdate su = new StatusUpdate(this);
-			boolean isSendStatus = false;
-			
-			// Consume MP of the L2Character and Send the Server->Client packet StatusUpdate with current HP and MP to all other L2PcInstance to inform
-			double mpConsume2 = getStat().getMpConsume2(skill);
-			
-			if (mpConsume2 > 0) {
-				if (mpConsume2 > getCurrentMp()) {
-					sendPacket(SystemMessageId.NOT_ENOUGH_MP);
-					abortCast();
-					return;
-				}
-				
-				getStatus().reduceMp(mpConsume2);
-				su.addAttribute(StatusUpdate.CUR_MP, (int) getCurrentMp());
-				isSendStatus = true;
-			}
-			
-			// Consume HP if necessary and Send the Server->Client packet StatusUpdate with current HP and MP to all other L2PcInstance to inform
-			if (skill.getHpConsume() > 0) {
-				double consumeHp = skill.getHpConsume();
-				
-				if (consumeHp >= getCurrentHp()) {
-					sendPacket(SystemMessageId.NOT_ENOUGH_HP);
-					abortCast();
-					return;
-				}
-				
-				getStatus().reduceHp(consumeHp, this, true);
-				
-				su.addAttribute(StatusUpdate.CUR_HP, (int) getCurrentHp());
-				isSendStatus = true;
-			}
-			
-			// Send a Server->Client packet StatusUpdate with MP modification to the L2PcInstance
-			if (isSendStatus) {
-				sendPacket(su);
-			}
-			
-			if (isPlayer()) {
-				// Consume Charges
-				if (skill.getChargeConsume() > 0) {
-					getActingPlayer().decreaseCharges(skill.getChargeConsume());
-				}
-			}
-			
-			// Launch the magic skill in order to calculate its effects
-			callSkill(mut.getSkill(), mut.getTargets());
-		} catch (NullPointerException e) {
-			LOG.warn("{}", e);
 		}
+		
+		rechargeShots(skill.useSoulShot(), skill.useSpiritShot());
+		
+		final StatusUpdate su = new StatusUpdate(this);
+		boolean isSendStatus = false;
+		
+		// Consume MP of the L2Character and Send the Server->Client packet StatusUpdate with current HP and MP to all other L2PcInstance to inform
+		double mpConsume2 = getStat().getMpConsume2(skill);
+		
+		if (mpConsume2 > 0) {
+			if (mpConsume2 > getCurrentMp()) {
+				sendPacket(SystemMessageId.NOT_ENOUGH_MP);
+				abortCast();
+				return;
+			}
+			
+			getStatus().reduceMp(mpConsume2);
+			su.addAttribute(StatusUpdate.CUR_MP, (int) getCurrentMp());
+			isSendStatus = true;
+		}
+		
+		// Consume HP if necessary and Send the Server->Client packet StatusUpdate with current HP and MP to all other L2PcInstance to inform
+		if (skill.getHpConsume() > 0) {
+			double consumeHp = skill.getHpConsume();
+			
+			if (consumeHp >= getCurrentHp()) {
+				sendPacket(SystemMessageId.NOT_ENOUGH_HP);
+				abortCast();
+				return;
+			}
+			
+			getStatus().reduceHp(consumeHp, this, true);
+			
+			su.addAttribute(StatusUpdate.CUR_HP, (int) getCurrentHp());
+			isSendStatus = true;
+		}
+		
+		// Send a Server->Client packet StatusUpdate with MP modification to the L2PcInstance
+		if (isSendStatus) {
+			sendPacket(su);
+		}
+		
+		if (isPlayer()) {
+			// Consume Charges
+			if (skill.getChargeConsume() > 0) {
+				getActingPlayer().decreaseCharges(skill.getChargeConsume());
+			}
+		}
+		
+		// Launch the magic skill in order to calculate its effects
+		callSkill(mut.getSkill(), mut.getTargets());
 		
 		if (mut.getSkillTime() > 0) {
 			mut.setCount(mut.getCount() + 1);
@@ -5046,9 +5025,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 			if (angleDiff >= (360 - maxAngleDiff)) {
 				angleDiff -= 360;
 			}
-			if (Math.abs(angleDiff) <= maxAngleDiff) {
-				return true;
-			}
+			return Math.abs(angleDiff) <= maxAngleDiff;
 		}
 		return false;
 	}

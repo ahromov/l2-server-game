@@ -21,9 +21,6 @@ package com.l2jserver.gameserver.network.serverpackets;
 public final class AutoAttackStart extends L2GameServerPacket {
 	private final int _targetObjId;
 	
-	/**
-	 * @param targetId
-	 */
 	public AutoAttackStart(int targetId) {
 		_targetObjId = targetId;
 	}

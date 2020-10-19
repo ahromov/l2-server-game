@@ -36,7 +36,7 @@ import com.l2jserver.gameserver.model.skills.Skill;
 import com.l2jserver.gameserver.util.IXmlReader;
 
 /**
- * This class holds the Enchant Groups information.
+ * Enchant skill group data parser.
  * @author Micr0
  */
 public class EnchantSkillGroupsData implements IXmlReader {

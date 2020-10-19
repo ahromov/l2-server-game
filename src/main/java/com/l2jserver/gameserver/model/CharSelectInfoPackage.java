@@ -24,7 +24,7 @@ import com.l2jserver.gameserver.model.itemcontainer.PcInventory;
 /**
  * Used to Store data sent to Client for Character.<br>
  * Selection screen.
- * @version $Revision: 1.2.2.2.2.4 $ $Date: 2005/03/27 15:29:33 $
+ * @since 2005/03/27 15:29:33
  */
 public class CharSelectInfoPackage {
 	private String _name;

@@ -27,9 +27,9 @@ import com.l2jserver.commons.util.Util;
 import com.l2jserver.gameserver.network.L2GameClient.GameClientState;
 import com.l2jserver.gameserver.network.clientpackets.*;
 import com.l2jserver.mmocore.ClientFactory;
+import com.l2jserver.mmocore.MMOConnection;
 import com.l2jserver.mmocore.MMOExecutor;
 import com.l2jserver.mmocore.PacketHandler;
-import com.l2jserver.mmocore.MMOConnection;
 import com.l2jserver.mmocore.ReceivablePacket;
 
 /**
@@ -43,9 +43,9 @@ import com.l2jserver.mmocore.ReceivablePacket;
  * @author KenM
  */
 public final class L2GamePacketHandler implements PacketHandler<L2GameClient>, ClientFactory<L2GameClient>, MMOExecutor<L2GameClient> {
+	
 	private static final Logger _log = Logger.getLogger(L2GamePacketHandler.class.getName());
 	
-	// implementation
 	@Override
 	public ReceivablePacket<L2GameClient> handlePacket(ByteBuffer buf, L2GameClient client) {
 		if (client.dropPacket()) {
@@ -61,39 +61,21 @@ public final class L2GamePacketHandler implements PacketHandler<L2GameClient>, C
 		switch (state) {
 			case CONNECTED:
 				switch (opcode) {
-					case 0x0e:
-						msg = new ProtocolVersion();
-						break;
-					case 0x2b:
-						msg = new AuthLogin();
-						break;
-					default:
-						printDebug(opcode, buf, state, client);
-						break;
+					case 0x0e -> msg = new ProtocolVersion();
+					case 0x2b -> msg = new AuthLogin();
+					default -> printDebug(opcode, buf, state, client);
 				}
 				break;
 			case AUTHED:
 				switch (opcode) {
-					case 0x00:
-						msg = new Logout();
-						break;
-					case 0x0c:
-						msg = new CharacterCreate();
-						break;
-					case 0x0d:
-						msg = new CharacterDelete();
-						break;
-					case 0x12:
-						msg = new CharacterSelect();
-						break;
-					case 0x13:
-						msg = new NewCharacter();
-						break;
-					case 0x7b:
-						msg = new CharacterRestore();
-						break;
-					case 0xd0:
-						int id2 = -1;
+					case 0x00 -> msg = new Logout();
+					case 0x0c -> msg = new CharacterCreate();
+					case 0x0d -> msg = new CharacterDelete();
+					case 0x12 -> msg = new CharacterSelect();
+					case 0x13 -> msg = new NewCharacter();
+					case 0x7b -> msg = new CharacterRestore();
+					case 0xd0 -> {
+						int id2;
 						if (buf.remaining() >= 2) {
 							id2 = buf.getShort() & 0xffff;
 						} else {
@@ -102,37 +84,22 @@ public final class L2GamePacketHandler implements PacketHandler<L2GameClient>, C
 							}
 							break;
 						}
-						
 						switch (id2) {
-							case 0x36:
-								msg = new RequestGotoLobby();
-								break;
-							case 0x93:
-								msg = new RequestEx2ndPasswordCheck();
-								break;
-							case 0x94:
-								msg = new RequestEx2ndPasswordVerify();
-								break;
-							case 0x95:
-								msg = new RequestEx2ndPasswordReq();
-								break;
-							default:
-								printDebugDoubleOpcode(opcode, id2, buf, state, client);
+							case 0x36 -> msg = new RequestGotoLobby();
+							case 0x93 -> msg = new RequestEx2ndPasswordCheck();
+							case 0x94 -> msg = new RequestEx2ndPasswordVerify();
+							case 0x95 -> msg = new RequestEx2ndPasswordReq();
+							default -> printDebugDoubleOpcode(opcode, id2, buf, state, client);
 						}
-						break;
-					default:
-						printDebug(opcode, buf, state, client);
-						break;
+					}
+					default -> printDebug(opcode, buf, state, client);
 				}
 				break;
 			case JOINING: {
 				switch (opcode) {
-					case 0x11: {
-						msg = new EnterWorld();
-						break;
-					}
-					case 0xd0: {
-						int id2 = -1;
+					case 0x11 -> msg = new EnterWorld();
+					case 0xd0 -> {
+						int id2;
 						if (buf.remaining() >= 2) {
 							id2 = buf.getShort() & 0xffff;
 						} else {
@@ -142,22 +109,13 @@ public final class L2GamePacketHandler implements PacketHandler<L2GameClient>, C
 							break;
 						}
 						
-						switch (id2) {
-							case 0x01: {
-								msg = new RequestManorList();
-								break;
-							}
-							default: {
-								printDebugDoubleOpcode(opcode, id2, buf, state, client);
-								break;
-							}
+						if (id2 == 0x01) {
+							msg = new RequestManorList();
+						} else {
+							printDebugDoubleOpcode(opcode, id2, buf, state, client);
 						}
-						break;
 					}
-					default: {
-						printDebug(opcode, buf, state, client);
-						break;
-					}
+					default -> printDebug(opcode, buf, state, client);
 				}
 				break;
 			}
@@ -200,7 +158,7 @@ public final class L2GamePacketHandler implements PacketHandler<L2GameClient>, C
 						// Say
 						break;
 					case 0x12:
-						// CharacterSelect, in case of player spam clicks on loginscreen
+						// CharacterSelect, in case of player spam clicks on login screen
 						break;
 					case 0x14:
 						msg = new RequestItemList();
@@ -296,7 +254,7 @@ public final class L2GamePacketHandler implements PacketHandler<L2GameClient>, C
 					case 0x39:
 						msg = new RequestMagicSkillUse();
 						break;
-					case 0x3a: // SendApperingPacket
+					case 0x3a: // SendAppearingPacket
 						msg = new Appearing();
 						break;
 					case 0x3b:
@@ -344,7 +302,7 @@ public final class L2GamePacketHandler implements PacketHandler<L2GameClient>, C
 						msg = new Say2();
 						break;
 					case 0x4a:
-						int id_2 = -1;
+						int id_2;
 						if (buf.remaining() >= 2) {
 							id_2 = buf.getShort() & 0xffff;
 						} else {
@@ -708,7 +666,7 @@ public final class L2GamePacketHandler implements PacketHandler<L2GameClient>, C
 						// msg = new RequestBuyProcure();
 						break;
 					case 0xd0:
-						int id2 = -1;
+						int id2;
 						if (buf.remaining() >= 2) {
 							id2 = buf.getShort() & 0xffff;
 						} else {
@@ -735,9 +693,12 @@ public final class L2GamePacketHandler implements PacketHandler<L2GameClient>, C
 								msg = new RequestWriteHeroWords();
 								break;
 							case 0x5F:
-								/**
-								 * Server Packets: ExMpccRoomInfo FE:9B ExListMpccWaiting FE:9C ExDissmissMpccRoom FE:9D ExManageMpccRoomMember FE:9E ExMpccRoomMember FE:9F
-								 */
+								// Server Packets:
+								// ExMpccRoomInfo FE:9B
+								// ExListMpccWaiting FE:9C
+								// ExDismissMpccRoom FE:9D
+								// ExManageMpccRoomMember FE:9E
+								// ExMpccRoomMember FE:9F
 								// TODO: RequestJoinMpccRoom chdd
 								break;
 							case 0x5D:
@@ -963,7 +924,6 @@ public final class L2GamePacketHandler implements PacketHandler<L2GameClient>, C
 								msg = new RequestResetNickname();
 								break;
 							case 0x51:
-								id3 = 0;
 								if (buf.remaining() >= 4) {
 									id3 = buf.getInt();
 								} else {

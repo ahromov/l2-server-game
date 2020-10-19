@@ -32,17 +32,12 @@ import com.l2jserver.gameserver.network.serverpackets.BuyList;
 import com.l2jserver.gameserver.network.serverpackets.ExBuySellList;
 
 /**
- * This class ...
- * @version $Revision: 1.10.4.9 $ $Date: 2005/04/11 10:06:08 $
+ * @since 2005/04/11 10:06:08
  */
 public class L2MerchantInstance extends L2NpcInstance {
 	private static final Logger LOG = LoggerFactory.getLogger(L2MerchantInstance.class);
 	private MerchantPriceConfig _mpc;
 	
-	/**
-	 * Creates a merchant,
-	 * @param template the merchant NPC template
-	 */
 	public L2MerchantInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2MerchantInstance);
@@ -56,20 +51,15 @@ public class L2MerchantInstance extends L2NpcInstance {
 	
 	@Override
 	public String getHtmlPath(int npcId, int val) {
-		String pom = "";
-		
+		String pom;
 		if (val == 0) {
 			pom = "" + npcId;
 		} else {
 			pom = npcId + "-" + val;
 		}
-		
 		return "data/html/merchant/" + pom + ".htm";
 	}
 	
-	/**
-	 * @return Returns the mpc.
-	 */
 	public MerchantPriceConfig getMpc() {
 		return _mpc;
 	}

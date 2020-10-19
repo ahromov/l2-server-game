@@ -57,7 +57,7 @@ public final class RequestPreviewItem extends L2GameClientPacket {
 	private int _count;
 	private int[] _items;
 	
-	private class RemoveWearItemsTask implements Runnable {
+	private static class RemoveWearItemsTask implements Runnable {
 		private final L2PcInstance activeChar;
 		
 		protected RemoveWearItemsTask(L2PcInstance player) {
@@ -121,7 +121,7 @@ public final class RequestPreviewItem extends L2GameClientPacket {
 		
 		// Check current target of the player and the INTERACTION_DISTANCE
 		final L2Object target = activeChar.getTarget();
-		if (!activeChar.isGM() && ((target == null) || !(target instanceof L2MerchantInstance) || //
+		if (!activeChar.isGM() && (!(target instanceof L2MerchantInstance) || //
 			!activeChar.isInsideRadius(target, L2Npc.INTERACTION_DISTANCE, false, false))) {
 			return;
 		}

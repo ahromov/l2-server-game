@@ -21,8 +21,7 @@ package com.l2jserver.gameserver.network.clientpackets;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 /**
- * This class ...
- * @version $Revision: 1.2.2.1.2.4 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class RequestPrivateStoreManageBuy extends L2GameClientPacket {
 	private static final String _C__99_REQUESTPRIVATESTOREMANAGEBUY = "[C] 99 RequestPrivateStoreManageBuy";

@@ -88,10 +88,8 @@ public interface IXmlReader {
 			parseDocument(db.parse(f), f);
 		} catch (SAXParseException e) {
 			LOG.warn("{}: Could not parse file {} at line {}, column {}", getClass().getSimpleName(), f.getName(), e.getLineNumber(), e.getColumnNumber(), e);
-			return;
 		} catch (Exception e) {
 			LOG.warn("{}: Could not parse file {}", getClass().getSimpleName(), f.getName(), e);
-			return;
 		}
 	}
 	
@@ -585,7 +583,7 @@ public interface IXmlReader {
 	 * Simple XML error handler.
 	 * @author Zoey76
 	 */
-	static class XMLErrorHandler implements ErrorHandler {
+	class XMLErrorHandler implements ErrorHandler {
 		@Override
 		public void warning(SAXParseException e) throws SAXParseException {
 			throw e;

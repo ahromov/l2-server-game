@@ -27,8 +27,6 @@ package com.l2jserver.gameserver.model.conditions;
  * @author mkizub
  */
 public interface ConditionListener {
-	/**
-	 * Notify changed.
-	 */
+	
 	void notifyChanged();
 }

@@ -24,16 +24,12 @@ import com.l2jserver.gameserver.model.items.L2Weapon;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionTargetUsesWeaponKind.
+ * Target uses weapon kind condition.
  * @author mkizub
  */
 public class ConditionTargetUsesWeaponKind extends Condition {
 	private final int _weaponMask;
 	
-	/**
-	 * Instantiates a new condition target uses weapon kind.
-	 * @param weaponMask the weapon mask
-	 */
 	public ConditionTargetUsesWeaponKind(int weaponMask) {
 		_weaponMask = weaponMask;
 	}

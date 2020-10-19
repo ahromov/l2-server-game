@@ -145,7 +145,7 @@ public abstract class AbstractPlayerGroup {
 	
 	/**
 	 * Iterates over the group and executes procedure on each member
-	 * @param procedure the prodecure to be executed on each member.<br>
+	 * @param procedure the procedure to be executed on each member.<br>
 	 *            If executing the procedure on a member returns {@code true}, the loop continues to the next member, otherwise it breaks the loop
 	 * @return {@code true} if the procedure executed correctly, {@code false} if the loop was broken prematurely
 	 */

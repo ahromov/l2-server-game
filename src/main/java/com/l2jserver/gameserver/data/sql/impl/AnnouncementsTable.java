@@ -59,17 +59,9 @@ public final class AnnouncementsTable {
 				final var content = rs.getString("content");
 				final Announcement announce;
 				switch (type) {
-					case NORMAL:
-					case CRITICAL: {
-						announce = new Announcement(rs.getInt("id"), type, content, author);
-						break;
-					}
-					case AUTO_NORMAL:
-					case AUTO_CRITICAL: {
-						announce = new AutoAnnouncement(type, content, author, rs.getLong("initial"), rs.getLong("delay"), rs.getInt("repeat"));
-						break;
-					}
-					default: {
+					case NORMAL, CRITICAL -> announce = new Announcement(rs.getInt("id"), type, content, author);
+					case AUTO_NORMAL, AUTO_CRITICAL -> announce = new AutoAnnouncement(type, content, author, rs.getLong("initial"), rs.getLong("delay"), rs.getInt("repeat"));
+					default -> {
 						continue;
 					}
 				}

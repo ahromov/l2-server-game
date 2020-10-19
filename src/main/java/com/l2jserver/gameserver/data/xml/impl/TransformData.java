@@ -78,29 +78,22 @@ public final class TransformData implements IXmlReader {
 								TransformTemplate templateData = null;
 								for (Node z = cd.getFirstChild(); z != null; z = z.getNextSibling()) {
 									switch (z.getNodeName()) {
-										case "common": {
+										case "common" -> {
 											for (Node s = z.getFirstChild(); s != null; s = s.getNextSibling()) {
 												switch (s.getNodeName()) {
-													case "base":
-													case "stats":
-													case "defense":
-													case "magicDefense":
-													case "collision":
-													case "moving": {
+													case "base", "stats", "defense", "magicDefense", "collision", "moving" -> {
 														attrs = s.getAttributes();
 														for (int i = 0; i < attrs.getLength(); i++) {
 															Node att = attrs.item(i);
 															set.set(att.getNodeName(), att.getNodeValue());
 														}
-														break;
 													}
 												}
 											}
 											templateData = new TransformTemplate(set);
 											transform.setTemplate(isMale, templateData);
-											break;
 										}
-										case "skills": {
+										case "skills" -> {
 											if (templateData == null) {
 												templateData = new TransformTemplate(set);
 												transform.setTemplate(isMale, templateData);
@@ -113,9 +106,8 @@ public final class TransformData implements IXmlReader {
 													templateData.addSkill(new SkillHolder(skillId, skillLevel));
 												}
 											}
-											break;
 										}
-										case "actions": {
+										case "actions" -> {
 											if (templateData == null) {
 												templateData = new TransformTemplate(set);
 												transform.setTemplate(isMale, templateData);
@@ -123,9 +115,8 @@ public final class TransformData implements IXmlReader {
 											set.set("actions", z.getTextContent());
 											final int[] actions = set.getIntArray("actions", " ");
 											templateData.setBasicActionList(new ExBasicActionList(actions));
-											break;
 										}
-										case "additionalSkills": {
+										case "additionalSkills" -> {
 											if (templateData == null) {
 												templateData = new TransformTemplate(set);
 												transform.setTemplate(isMale, templateData);
@@ -139,9 +130,8 @@ public final class TransformData implements IXmlReader {
 													templateData.addAdditionalSkill(new AdditionalSkillHolder(skillId, skillLevel, minLevel));
 												}
 											}
-											break;
 										}
-										case "items": {
+										case "items" -> {
 											if (templateData == null) {
 												templateData = new TransformTemplate(set);
 												transform.setTemplate(isMale, templateData);
@@ -154,9 +144,8 @@ public final class TransformData implements IXmlReader {
 													templateData.addAdditionalItem(new AdditionalItemHolder(itemId, allowed));
 												}
 											}
-											break;
 										}
-										case "levels": {
+										case "levels" -> {
 											if (templateData == null) {
 												templateData = new TransformTemplate(set);
 												transform.setTemplate(isMale, templateData);
@@ -173,7 +162,6 @@ public final class TransformData implements IXmlReader {
 												}
 											}
 											templateData.addLevelData(new TransformLevelData(levelsSet));
-											break;
 										}
 									}
 								}

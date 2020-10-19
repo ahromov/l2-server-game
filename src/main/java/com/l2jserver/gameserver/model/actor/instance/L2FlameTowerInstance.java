@@ -28,17 +28,13 @@ import com.l2jserver.gameserver.model.actor.templates.L2NpcTemplate;
 import com.l2jserver.gameserver.model.zone.L2ZoneType;
 
 /**
- * Class for Flame Control Tower instance.
+ * Flame Control Tower instance.
  * @author JIV
  */
 public class L2FlameTowerInstance extends L2Tower {
 	private int _upgradeLevel = 0;
 	private List<Integer> _zoneList;
 	
-	/**
-	 * Creates a flame tower.
-	 * @param template the flame tower NPC template
-	 */
 	public L2FlameTowerInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2FlameTowerInstance);

@@ -21,8 +21,8 @@ package com.l2jserver.gameserver.network.clientpackets;
 import com.l2jserver.gameserver.data.xml.impl.AdminData;
 
 /**
- * This class handles RequestGmLista packet triggered by /gmlist command
- * @version $Revision: 1.1.4.2 $ $Date: 2005/03/27 15:29:30 $
+ * RequestGmList packet triggered by /gmlist command.
+ * @since 2005/03/27 15:29:30
  */
 public final class RequestGmList extends L2GameClientPacket {
 	private static final String _C__8B_REQUESTGMLIST = "[C] 8B RequestGmList";

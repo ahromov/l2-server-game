@@ -20,6 +20,7 @@ package com.l2jserver.gameserver.cache;
 
 import static com.l2jserver.gameserver.config.Configuration.general;
 import static com.l2jserver.gameserver.config.Configuration.server;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -110,7 +111,7 @@ public class HtmCache {
 			byte[] raw = new byte[bytes];
 			
 			bis.read(raw);
-			content = new String(raw, "UTF-8");
+			content = new String(raw, UTF_8);
 			content = content.replaceAll("(?s)<!--.*?-->", ""); // Remove html comments
 			
 			String oldContent = HTML_CACHE.put(file.getCanonicalPath(), content);

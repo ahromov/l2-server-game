@@ -283,7 +283,7 @@ public final class BlockCheckerEngine {
 				}
 			}
 		} catch (Exception e) {
-			_log.log(Level.SEVERE, "Couldnt end Block Checker event at " + _arena, e);
+			_log.log(Level.SEVERE, "Couldn't end Block Checker event at " + _arena, e);
 		}
 	}
 	
@@ -376,7 +376,7 @@ public final class BlockCheckerEngine {
 		public void run() {
 			// Wrong arena passed, stop event
 			if (_arena == -1) {
-				_log.severe("Couldnt set up the arena Id for the Block Checker event, cancelling event...");
+				_log.severe("Couldn't set up the arena Id for the Block Checker event, cancelling event...");
 				return;
 			}
 			_isStarted = true;
@@ -407,19 +407,13 @@ public final class BlockCheckerEngine {
 				return;
 			}
 			
+			// Schedule second spawn round
+			// Schedule third spawn round
+			// Schedule Event End Count Down
 			switch (_round) {
-				case 1:
-					// Schedule second spawn round
-					_task = ThreadPoolManager.getInstance().scheduleGeneral(new SpawnRound(20, 2), 60000);
-					break;
-				case 2:
-					// Schedule third spawn round
-					_task = ThreadPoolManager.getInstance().scheduleGeneral(new SpawnRound(14, 3), 60000);
-					break;
-				case 3:
-					// Schedule Event End Count Down
-					_task = ThreadPoolManager.getInstance().scheduleGeneral(new EndEvent(), 180000);
-					break;
+				case 1 -> _task = ThreadPoolManager.getInstance().scheduleGeneral(new SpawnRound(20, 2), 60000);
+				case 2 -> _task = ThreadPoolManager.getInstance().scheduleGeneral(new SpawnRound(14, 3), 60000);
+				case 3 -> _task = ThreadPoolManager.getInstance().scheduleGeneral(new EndEvent(), 180000);
 			}
 			// random % 2, if == 0 will spawn a red block
 			// if != 0, will spawn a blue block
@@ -439,11 +433,7 @@ public final class BlockCheckerEngine {
 					spawn.init();
 					L2BlockInstance block = (L2BlockInstance) spawn.getLastSpawn();
 					// switch color
-					if ((random % 2) == 0) {
-						block.setRed(true);
-					} else {
-						block.setRed(false);
-					}
+					block.setRed((random % 2) == 0);
 					
 					block.disableCoreAI(true);
 					_spawns.add(spawn);
@@ -468,7 +458,7 @@ public final class BlockCheckerEngine {
 					// Schedule his deletion after 9 secs of spawn
 					ThreadPoolManager.getInstance().scheduleGeneral(new CarryingGirlUnspawn(girlSpawn), 9000);
 				} catch (Exception e) {
-					_log.warning("Couldnt Spawn Block Checker NPCs! Wrong instance type at npc table?");
+					_log.warning("Couldn't Spawn Block Checker NPCs! Wrong instance type at npc table?");
 					_log.warning(getClass().getSimpleName() + ": " + e.getMessage());
 				}
 			}
@@ -482,7 +472,7 @@ public final class BlockCheckerEngine {
 		}
 	}
 	
-	private class CarryingGirlUnspawn implements Runnable {
+	private static class CarryingGirlUnspawn implements Runnable {
 		private final L2Spawn _spawn;
 		
 		protected CarryingGirlUnspawn(L2Spawn spawn) {
@@ -545,7 +535,7 @@ public final class BlockCheckerEngine {
 				return;
 			}
 			
-			_isRedWinner = _redPoints > _bluePoints ? true : false;
+			_isRedWinner = _redPoints > _bluePoints;
 			
 			if (_isRedWinner) {
 				rewardAsWinner(true);
@@ -553,15 +543,12 @@ public final class BlockCheckerEngine {
 				SystemMessage msg = SystemMessage.getSystemMessage(SystemMessageId.TEAM_C1_WON);
 				msg.addString("Red Team");
 				_holder.broadCastPacketToTeam(msg);
-			} else if (_bluePoints > _redPoints) {
+			} else {
 				rewardAsWinner(false);
 				rewardAsLooser(true);
 				SystemMessage msg = SystemMessage.getSystemMessage(SystemMessageId.TEAM_C1_WON);
 				msg.addString("Blue Team");
 				_holder.broadCastPacketToTeam(msg);
-			} else {
-				rewardAsLooser(true);
-				rewardAsLooser(false);
 			}
 		}
 		

@@ -65,7 +65,7 @@ public final class RequestConfirmCancelItem extends L2GameClientPacket {
 			return;
 		}
 		
-		int price = 0;
+		int price;
 		switch (item.getItem().getCrystalType()) {
 			case C:
 				if (item.getCrystalCount() < 1720) {

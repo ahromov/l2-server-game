@@ -23,7 +23,8 @@ import java.util.List;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 /**
- * @author UnAfraid, mrTJO
+ * @author UnAfraid
+ * @author mrTJO
  */
 public class ExShowContactList extends L2GameServerPacket {
 	private final List<String> _contacts;

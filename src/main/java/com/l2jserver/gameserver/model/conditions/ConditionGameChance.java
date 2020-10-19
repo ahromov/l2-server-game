@@ -30,18 +30,10 @@ import com.l2jserver.gameserver.model.skills.Skill;
 public class ConditionGameChance extends Condition {
 	private final int _chance;
 	
-	/**
-	 * Instantiates a new condition game chance.
-	 * @param chance the chance
-	 */
 	public ConditionGameChance(int chance) {
 		_chance = chance;
 	}
 	
-	/**
-	 * Test impl.
-	 * @return true, if successful
-	 */
 	@Override
 	public boolean testImpl(L2Character effector, L2Character effected, Skill skill, L2Item item) {
 		return Rnd.get(100) < _chance;

@@ -44,7 +44,7 @@ public final class CastleManager implements InstanceListManager {
 	
 	private final Map<Integer, Long> _castleSiegeDate = new ConcurrentHashMap<>();
 	
-	private static final int _castleCirclets[] = {
+	private static final int[] _castleCirclets = {
 		0,
 		6838,
 		6835,
@@ -163,18 +163,11 @@ public final class CastleManager implements InstanceListManager {
 	}
 	
 	public void validateTaxes(int sealStrifeOwner) {
-		int maxTax;
-		switch (sealStrifeOwner) {
-			case SevenSigns.CABAL_DUSK:
-				maxTax = 5;
-				break;
-			case SevenSigns.CABAL_DAWN:
-				maxTax = 25;
-				break;
-			default: // no owner
-				maxTax = 15;
-				break;
-		}
+		int maxTax = switch (sealStrifeOwner) {
+			case SevenSigns.CABAL_DUSK -> 5;
+			case SevenSigns.CABAL_DAWN -> 25;
+			default -> 15; // no owner
+		};
 		for (Castle castle : _castles) {
 			if (castle.getTaxPercent() > maxTax) {
 				castle.setTaxPercent(maxTax);

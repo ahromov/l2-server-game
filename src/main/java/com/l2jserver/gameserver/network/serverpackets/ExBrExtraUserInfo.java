@@ -22,7 +22,8 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 /**
  * ExBrExtraUserInfo server packet implementation.
- * @author Kerberos, Zoey76
+ * @author Kerberos
+ * @author Zoey76
  */
 public class ExBrExtraUserInfo extends L2GameServerPacket {
 	/** Player object ID. */

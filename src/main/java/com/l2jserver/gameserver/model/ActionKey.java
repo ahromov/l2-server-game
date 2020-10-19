@@ -20,19 +20,17 @@ package com.l2jserver.gameserver.model;
 
 /**
  * Action Key DTO.
- * @author mrTJO, Zoey76
+ * @author mrTJO
+ * @author Zoey76
  */
 public class ActionKey {
 	private final int _cat;
 	private int _cmd = 0;
 	private int _key = 0;
-	private int _tgKey1 = 0;
-	private int _tgKey2 = 0;
+	private int _toggleKey1 = 0;
+	private int _toggleKey2 = 0;
 	private int _show = 1;
 	
-	/**
-	 * @param cat category Id
-	 */
 	public ActionKey(int cat) {
 		_cat = cat;
 	}
@@ -50,8 +48,8 @@ public class ActionKey {
 		_cat = cat;
 		_cmd = cmd;
 		_key = key;
-		_tgKey1 = tgKey1;
-		_tgKey2 = tgKey2;
+		_toggleKey1 = tgKey1;
+		_toggleKey2 = tgKey2;
 		_show = show;
 	}
 	
@@ -75,20 +73,20 @@ public class ActionKey {
 		_key = key;
 	}
 	
-	public int getToogleKey1() {
-		return _tgKey1;
+	public int getToggleKey1() {
+		return _toggleKey1;
 	}
 	
-	public void setToogleKey1(int tKey1) {
-		_tgKey1 = tKey1;
+	public void setToggleKey1(int tKey1) {
+		_toggleKey1 = tKey1;
 	}
 	
-	public int getToogleKey2() {
-		return _tgKey2;
+	public int getToggleKey2() {
+		return _toggleKey2;
 	}
 	
-	public void setToogleKey2(int tKey2) {
-		_tgKey2 = tKey2;
+	public void setToggleKey2(int tKey2) {
+		_toggleKey2 = tKey2;
 	}
 	
 	public int getShowStatus() {
@@ -100,6 +98,6 @@ public class ActionKey {
 	}
 	
 	public String getSqlSaveString(int playerId, int order) {
-		return "(" + playerId + ", " + _cat + ", " + order + ", " + _cmd + "," + _key + ", " + _tgKey1 + ", " + _tgKey2 + ", " + _show + ")";
+		return "(" + playerId + ", " + _cat + ", " + order + ", " + _cmd + "," + _key + ", " + _toggleKey1 + ", " + _toggleKey2 + ", " + _show + ")";
 	}
 }

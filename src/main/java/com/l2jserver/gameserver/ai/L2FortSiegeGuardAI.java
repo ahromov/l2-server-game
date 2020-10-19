@@ -45,7 +45,7 @@ import com.l2jserver.gameserver.model.skills.Skill;
 import com.l2jserver.gameserver.util.Util;
 
 /**
- * This class manages AI of L2Attackable.
+ * Fort siege guards AI.
  */
 public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable {
 	private static final int MAX_ATTACK_TIMEOUT = 300; // int ticks, i.e. 30 seconds
@@ -134,7 +134,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable {
 		}
 		
 		// Check if the target isn't invulnerable
-		if ((target != null) && target.isInvul()) {
+		if (target.isInvul()) {
 			// However EffectInvincible requires to check GMs specially
 			if (target.isPlayer() && target.isGM()) {
 				return false;
@@ -355,7 +355,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable {
 		attackPrepare();
 	}
 	
-	private final void factionNotifyAndSupport() {
+	private void factionNotifyAndSupport() {
 		L2Character target = getAttackTarget();
 		// Call all L2Object of its Faction inside the Faction Range
 		if ((((L2Npc) _actor).getTemplate().getClans() == null) || (target == null)) {
@@ -374,9 +374,9 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable {
 			}
 			
 			if (!(cha instanceof L2Npc)) {
-				if (_selfAnalysis.hasHealOrResurrect && (cha instanceof L2PcInstance) && ((L2Npc) _actor).getFort().getSiege().checkIsDefender(((L2PcInstance) cha).getClan())) {
+				if (_selfAnalysis.hasHealOrResurrect && (cha instanceof L2PcInstance) && ((L2Npc) _actor).getFort().getSiege().checkIsDefender(cha.getClan())) {
 					// heal friends
-					if (!_actor.isAttackingDisabled() && (cha.getCurrentHp() < (cha.getMaxHp() * 0.6)) && (_actor.getCurrentHp() > (_actor.getMaxHp() / 2)) && (_actor.getCurrentMp() > (_actor.getMaxMp() / 2)) && cha.isInCombat()) {
+					if (!_actor.isAttackingDisabled() && (cha.getCurrentHp() < (cha.getMaxHp() * 0.6)) && (_actor.getCurrentHp() > (_actor.getMaxHp() / 2.0)) && (_actor.getCurrentMp() > (_actor.getMaxMp() / 2.0)) && cha.isInCombat()) {
 						for (Skill sk : _selfAnalysis.healSkills) {
 							if (_actor.getCurrentMp() < sk.getMpConsume2()) {
 								continue;
@@ -426,7 +426,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable {
 					return;
 				}
 				// heal friends
-				if (_selfAnalysis.hasHealOrResurrect && !_actor.isAttackingDisabled() && (npc.getCurrentHp() < (npc.getMaxHp() * 0.6)) && (_actor.getCurrentHp() > (_actor.getMaxHp() / 2)) && (_actor.getCurrentMp() > (_actor.getMaxMp() / 2)) && npc.isInCombat()) {
+				if (_selfAnalysis.hasHealOrResurrect && !_actor.isAttackingDisabled() && (npc.getCurrentHp() < (npc.getMaxHp() * 0.6)) && (_actor.getCurrentHp() > (_actor.getMaxHp() / 2.0)) && (_actor.getCurrentMp() > (_actor.getMaxMp() / 2.0)) && npc.isInCombat()) {
 					for (Skill sk : _selfAnalysis.healSkills) {
 						if (_actor.getCurrentMp() < sk.getMpConsume2()) {
 							continue;
@@ -460,9 +460,9 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable {
 	
 	private void attackPrepare() {
 		// Get all information needed to choose between physical or magical attack
-		Collection<Skill> skills = null;
-		double dist_2 = 0;
-		int range = 0;
+		Collection<Skill> skills;
+		double dist_2;
+		int range;
 		L2DefenderInstance sGuard;
 		if (_actor instanceof L2FortCommanderInstance) {
 			sGuard = (L2FortCommanderInstance) _actor;
@@ -487,7 +487,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable {
 		}
 		
 		// never attack defenders
-		if ((attackTarget instanceof L2PcInstance) && sGuard.getFort().getSiege().checkIsDefender(((L2PcInstance) attackTarget).getClan())) {
+		if ((attackTarget instanceof L2PcInstance) && sGuard.getFort().getSiege().checkIsDefender(attackTarget.getClan())) {
 			// Cancel the target
 			sGuard.stopHating(attackTarget);
 			_actor.setTarget(null);
@@ -577,9 +577,6 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable {
 					}
 				}
 			}
-			
-			return;
-			
 		}
 		// Else, if the actor is muted and far from target, just "move to pawn"
 		else if (_actor.isMuted() && (dist_2 > (range * range))) {
@@ -600,12 +597,11 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable {
 					moveToPawn(attackTarget, range);
 				}
 			}
-			return;
 		}
 		// Else, if this is close enough to attack
 		else if (dist_2 <= (range * range)) {
 			// Force mobs to attack anybody if confused
-			L2Character hated = null;
+			L2Character hated;
 			if (_actor.isConfused()) {
 				hated = attackTarget;
 			} else {
@@ -787,8 +783,8 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable {
 				return;
 			}
 			
-			for (L2Character aggroed : me.getAggroList().keySet()) {
-				me.addDamageHate(aggroed, 0, aggro);
+			for (var attacker : me.getAggroList().keySet()) {
+				me.addDamageHate(attacker, 0, aggro);
 			}
 			
 			aggro = me.getHating(mostHated);

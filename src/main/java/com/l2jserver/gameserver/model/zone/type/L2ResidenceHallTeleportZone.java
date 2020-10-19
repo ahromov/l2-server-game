@@ -33,9 +33,6 @@ public class L2ResidenceHallTeleportZone extends L2ResidenceTeleportZone {
 	private int _id;
 	private ScheduledFuture<?> _teleTask;
 	
-	/**
-	 * @param id
-	 */
 	public L2ResidenceHallTeleportZone(int id) {
 		super(id);
 	}
@@ -53,7 +50,7 @@ public class L2ResidenceHallTeleportZone extends L2ResidenceTeleportZone {
 		return _id;
 	}
 	
-	public synchronized void checkTeleporTask() {
+	public synchronized void checkTeleportTask() {
 		if ((_teleTask == null) || _teleTask.isDone()) {
 			_teleTask = ThreadPoolManager.getInstance().scheduleGeneral(new TeleportTask(), 30000);
 		}

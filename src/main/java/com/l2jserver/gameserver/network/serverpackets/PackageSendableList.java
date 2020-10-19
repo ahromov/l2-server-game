@@ -22,7 +22,8 @@ import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
 
 /**
  * @author -Wooden-
- * @author UnAfraid, mrTJO
+ * @author UnAfraid
+ * @author mrTJO
  */
 public class PackageSendableList extends AbstractItemPacket {
 	private final L2ItemInstance[] _items;

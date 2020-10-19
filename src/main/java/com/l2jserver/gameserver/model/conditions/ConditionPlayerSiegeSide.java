@@ -23,15 +23,11 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerSiegeSide.
+ * Siege side condition.
  */
 public class ConditionPlayerSiegeSide extends Condition {
 	private final int _siegeSide;
 	
-	/**
-	 * Instantiates a new condition player siege side.
-	 * @param side the side
-	 */
 	public ConditionPlayerSiegeSide(int side) {
 		_siegeSide = side;
 	}

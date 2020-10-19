@@ -25,7 +25,6 @@ import java.util.Set;
 
 import com.l2jserver.gameserver.enums.PrivateStoreType;
 import com.l2jserver.gameserver.model.ItemRequest;
-import com.l2jserver.gameserver.model.L2Object;
 import com.l2jserver.gameserver.model.L2World;
 import com.l2jserver.gameserver.model.TradeList;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -80,8 +79,8 @@ public final class RequestPrivateStoreBuy extends L2GameClientPacket {
 			return;
 		}
 		
-		L2Object object = L2World.getInstance().getPlayer(_storePlayerId);
-		if (object == null) {
+		L2PcInstance storePlayer = L2World.getInstance().getPlayer(_storePlayerId);
+		if (storePlayer == null) {
 			return;
 		}
 		
@@ -89,7 +88,6 @@ public final class RequestPrivateStoreBuy extends L2GameClientPacket {
 			return;
 		}
 		
-		L2PcInstance storePlayer = (L2PcInstance) object;
 		if (!player.isInsideRadius(storePlayer, INTERACTION_DISTANCE, true, false)) {
 			return;
 		}

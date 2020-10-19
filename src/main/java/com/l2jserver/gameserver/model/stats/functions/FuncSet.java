@@ -28,13 +28,13 @@ import com.l2jserver.gameserver.model.stats.Stats;
  * @author Zoey76
  */
 public class FuncSet extends AbstractFunction {
-	public FuncSet(Stats stat, int order, Object owner, double value, Condition applayCond) {
-		super(stat, order, owner, value, applayCond);
+	public FuncSet(Stats stat, int order, Object owner, double value, Condition applyCond) {
+		super(stat, order, owner, value, applyCond);
 	}
 	
 	@Override
 	public double calc(L2Character effector, L2Character effected, Skill skill, double initVal) {
-		if ((getApplayCond() == null) || getApplayCond().test(effector, effected, skill)) {
+		if ((getApplyCond() == null) || getApplyCond().test(effector, effected, skill)) {
 			return getValue();
 		}
 		return initVal;

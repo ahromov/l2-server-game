@@ -19,7 +19,8 @@
 package com.l2jserver.gameserver.network.serverpackets;
 
 /**
- * @author mrTJO & UnAfraid
+ * @author mrTJO
+ * @author UnAfraid
  */
 public class ExConfirmAddingContact extends L2GameServerPacket {
 	private final String _charName;

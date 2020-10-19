@@ -90,7 +90,7 @@ public final class ItemAuctionInstance {
 	
 	private ScheduledFuture<?> _stateTask;
 	
-	public ItemAuctionInstance(final int instanceId, final AtomicInteger auctionIds, final Node node) throws Exception {
+	public ItemAuctionInstance(final int instanceId, final AtomicInteger auctionIds, final Node node) {
 		_instanceId = instanceId;
 		_auctionIds = auctionIds;
 		_auctions = new HashMap<>();
@@ -112,18 +112,18 @@ public final class ItemAuctionInstance {
 				if ("item".equalsIgnoreCase(na.getNodeName())) {
 					final NamedNodeMap naa = na.getAttributes();
 					final int auctionItemId = Integer.parseInt(naa.getNamedItem("auctionItemId").getNodeValue());
-					final int auctionLenght = Integer.parseInt(naa.getNamedItem("auctionLenght").getNodeValue());
+					final int auctionLength = Integer.parseInt(naa.getNamedItem("auctionLength").getNodeValue());
 					final long auctionInitBid = Integer.parseInt(naa.getNamedItem("auctionInitBid").getNodeValue());
 					
 					final int itemId = Integer.parseInt(naa.getNamedItem("itemId").getNodeValue());
 					final int itemCount = Integer.parseInt(naa.getNamedItem("itemCount").getNodeValue());
 					
-					if (auctionLenght < 1) {
-						throw new IllegalArgumentException("auctionLenght < 1 for instanceId: " + _instanceId + ", itemId " + itemId);
+					if (auctionLength < 1) {
+						throw new IllegalArgumentException("auctionLength < 1 for instanceId: " + _instanceId + ", itemId " + itemId);
 					}
 					
 					final StatsSet itemExtra = new StatsSet();
-					final AuctionItem item = new AuctionItem(auctionItemId, auctionLenght, auctionInitBid, itemId, itemCount, itemExtra);
+					final AuctionItem item = new AuctionItem(auctionItemId, auctionLength, auctionInitBid, itemId, itemCount, itemExtra);
 					
 					if (!item.checkItemExists()) {
 						throw new IllegalArgumentException("Item with id " + itemId + " not found");
@@ -131,7 +131,7 @@ public final class ItemAuctionInstance {
 					
 					for (final AuctionItem tmp : _items) {
 						if (tmp.getAuctionItemId() == auctionItemId) {
-							throw new IllegalArgumentException("Dublicated auction item id " + auctionItemId);
+							throw new IllegalArgumentException("Duplicated auction item id " + auctionItemId);
 						}
 					}
 					
@@ -161,9 +161,9 @@ public final class ItemAuctionInstance {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement(SELECT_AUCTION_ID_BY_INSTANCE_ID)) {
 			ps.setInt(1, _instanceId);
-			try (var rset = ps.executeQuery()) {
-				while (rset.next()) {
-					final int auctionId = rset.getInt(1);
+			try (var rs = ps.executeQuery()) {
+				while (rs.next()) {
+					final int auctionId = rs.getInt(1);
 					try {
 						final ItemAuction auction = loadAuction(auctionId);
 						if (auction != null) {
@@ -217,42 +217,29 @@ public final class ItemAuctionInstance {
 		ItemAuction nextAuction = null;
 		
 		switch (auctions.length) {
-			case 0: {
-				nextAuction = createAuction(System.currentTimeMillis() + START_TIME_SPACE);
-				break;
-			}
-			
-			case 1: {
+			case 0 -> nextAuction = createAuction(System.currentTimeMillis() + START_TIME_SPACE);
+			case 1 -> {
 				switch (auctions[0].getAuctionState()) {
-					case CREATED: {
+					case CREATED -> {
 						if (auctions[0].getStartingTime() < (System.currentTimeMillis() + START_TIME_SPACE)) {
 							currentAuction = auctions[0];
 							nextAuction = createAuction(System.currentTimeMillis() + START_TIME_SPACE);
 						} else {
 							nextAuction = auctions[0];
 						}
-						break;
 					}
-					
-					case STARTED: {
+					case STARTED -> {
 						currentAuction = auctions[0];
 						nextAuction = createAuction(Math.max(currentAuction.getEndingTime() + FINISH_TIME_SPACE, System.currentTimeMillis() + START_TIME_SPACE));
-						break;
 					}
-					
-					case FINISHED: {
+					case FINISHED -> {
 						currentAuction = auctions[0];
 						nextAuction = createAuction(System.currentTimeMillis() + START_TIME_SPACE);
-						break;
 					}
-					
-					default:
-						throw new IllegalArgumentException();
+					default -> throw new IllegalArgumentException();
 				}
-				break;
 			}
-			
-			default: {
+			default -> {
 				Arrays.sort(auctions, Comparator.comparingLong(ItemAuction::getStartingTime).reversed());
 				
 				// just to make sure we won't skip any auction because of little different times
@@ -278,7 +265,6 @@ public final class ItemAuctionInstance {
 				if (nextAuction == null) {
 					nextAuction = createAuction(System.currentTimeMillis() + START_TIME_SPACE);
 				}
-				break;
 			}
 		}
 		
@@ -346,49 +332,41 @@ public final class ItemAuctionInstance {
 			}
 		}
 		
-		private void runImpl() throws Exception {
+		private void runImpl() {
 			final ItemAuctionState state = _auction.getAuctionState();
 			switch (state) {
-				case CREATED: {
+				case CREATED -> {
 					if (!_auction.setAuctionState(state, ItemAuctionState.STARTED)) {
 						throw new IllegalStateException("Could not set auction state: " + ItemAuctionState.STARTED.toString() + ", expected: " + state.toString());
 					}
 					
 					LOG.info("Auction ID {} has started for NPC ID {}.", _auction.getAuctionId(), _auction.getInstanceId());
 					checkAndSetCurrentAndNextAuction();
-					break;
 				}
-				
-				case STARTED: {
+				case STARTED -> {
 					switch (_auction.getAuctionEndingExtendState()) {
-						case EXTEND_BY_5_MIN: {
+						case EXTEND_BY_5_MIN -> {
 							if (_auction.getScheduledAuctionEndingExtendState() == ItemAuctionExtendState.INITIAL) {
 								_auction.setScheduledAuctionEndingExtendState(ItemAuctionExtendState.EXTEND_BY_5_MIN);
 								setStateTask(ThreadPoolManager.getInstance().scheduleGeneral(this, Math.max(_auction.getEndingTime() - System.currentTimeMillis(), 0L)));
 								return;
 							}
-							break;
 						}
-						
-						case EXTEND_BY_3_MIN: {
+						case EXTEND_BY_3_MIN -> {
 							if (_auction.getScheduledAuctionEndingExtendState() != ItemAuctionExtendState.EXTEND_BY_3_MIN) {
 								_auction.setScheduledAuctionEndingExtendState(ItemAuctionExtendState.EXTEND_BY_3_MIN);
 								setStateTask(ThreadPoolManager.getInstance().scheduleGeneral(this, Math.max(_auction.getEndingTime() - System.currentTimeMillis(), 0L)));
 								return;
 							}
-							break;
 						}
-						
-						case EXTEND_BY_CONFIG_PHASE_A: {
+						case EXTEND_BY_CONFIG_PHASE_A -> {
 							if (_auction.getScheduledAuctionEndingExtendState() != ItemAuctionExtendState.EXTEND_BY_CONFIG_PHASE_B) {
 								_auction.setScheduledAuctionEndingExtendState(ItemAuctionExtendState.EXTEND_BY_CONFIG_PHASE_B);
 								setStateTask(ThreadPoolManager.getInstance().scheduleGeneral(this, Math.max(_auction.getEndingTime() - System.currentTimeMillis(), 0L)));
 								return;
 							}
-							break;
 						}
-						
-						case EXTEND_BY_CONFIG_PHASE_B: {
+						case EXTEND_BY_CONFIG_PHASE_B -> {
 							if (_auction.getScheduledAuctionEndingExtendState() != ItemAuctionExtendState.EXTEND_BY_CONFIG_PHASE_A) {
 								_auction.setScheduledAuctionEndingExtendState(ItemAuctionExtendState.EXTEND_BY_CONFIG_PHASE_A);
 								setStateTask(ThreadPoolManager.getInstance().scheduleGeneral(this, Math.max(_auction.getEndingTime() - System.currentTimeMillis(), 0L)));
@@ -403,11 +381,8 @@ public final class ItemAuctionInstance {
 					
 					onAuctionFinished(_auction);
 					checkAndSetCurrentAndNextAuction();
-					break;
 				}
-				
-				default:
-					throw new IllegalStateException("Invalid state: " + state);
+				default -> throw new IllegalStateException("Invalid state: " + state);
 			}
 		}
 	}
@@ -461,26 +436,26 @@ public final class ItemAuctionInstance {
 	
 	private ItemAuction loadAuction(final int auctionId) throws Exception {
 		try (var con = ConnectionFactory.getInstance().getConnection()) {
-			int auctionItemId = 0;
-			long startingTime = 0;
-			long endingTime = 0;
-			byte auctionStateId = 0;
+			int auctionItemId;
+			long startingTime;
+			long endingTime;
+			byte auctionStateId;
 			try (var ps = con.prepareStatement(SELECT_AUCTION_INFO)) {
 				ps.setInt(1, auctionId);
-				try (var rset = ps.executeQuery()) {
-					if (!rset.next()) {
+				try (var rs = ps.executeQuery()) {
+					if (!rs.next()) {
 						LOG.warn("Auction data not found for auction ID {}!", auctionId);
 						return null;
 					}
-					auctionItemId = rset.getInt(1);
-					startingTime = rset.getLong(2);
-					endingTime = rset.getLong(3);
-					auctionStateId = rset.getByte(4);
+					auctionItemId = rs.getInt(1);
+					startingTime = rs.getLong(2);
+					endingTime = rs.getLong(3);
+					auctionStateId = rs.getByte(4);
 				}
 			}
 			
 			if (startingTime >= endingTime) {
-				LOG.warn("Invalid starting/ending paramaters for auction ID {}!", auctionId);
+				LOG.warn("Invalid starting/ending parameters for auction ID {}!", auctionId);
 				return null;
 			}
 			

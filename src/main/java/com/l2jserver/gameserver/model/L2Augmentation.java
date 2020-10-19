@@ -29,11 +29,12 @@ import com.l2jserver.gameserver.model.options.Options;
 
 /**
  * Used to store an augmentation and its bonuses.
- * @author durgus, UnAfraid
+ * @author durgus
+ * @author UnAfraid
  */
 public final class L2Augmentation {
-	private int _effectsId = 0;
-	private AugmentationStatBoni _boni = null;
+	private final int _effectsId;
+	private final AugmentationStatBoni _boni;
 	
 	public L2Augmentation(int effects) {
 		_effectsId = effects;
@@ -93,7 +94,7 @@ public final class L2Augmentation {
 	}
 	
 	/**
-	 * Get the augmentation "id" used in serverpackets.
+	 * Get the augmentation "id" used in server packets.
 	 * @return augmentationId
 	 */
 	public int getAugmentationId() {

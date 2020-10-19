@@ -31,8 +31,7 @@ import com.l2jserver.gameserver.network.serverpackets.AskJoinParty;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 /**
- * sample 29 42 00 00 10 01 00 00 00 format cdd
- * @version $Revision: 1.7.4.4 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class RequestJoinParty extends L2GameClientPacket {
 	private static final String _C__42_REQUESTJOINPARTY = "[C] 42 RequestJoinParty";

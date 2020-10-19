@@ -47,7 +47,10 @@ import com.l2jserver.gameserver.network.clientpackets.AbstractRefinePacket;
 
 /**
  * Loads augmentation bonuses and skills.
- * @author durgus, Gigiikun, Sandro, UnAfraid
+ * @author durgus
+ * @author Gigiikun
+ * @author Sandro
+ * @author UnAfraid
  */
 public class AugmentationData {
 	
@@ -97,9 +100,9 @@ public class AugmentationData {
 	
 	protected AugmentationData() {
 		for (int i = 0; i < 10; i++) {
-			_blueSkills.add(new ArrayList<Integer>());
-			_purpleSkills.add(new ArrayList<Integer>());
-			_redSkills.add(new ArrayList<Integer>());
+			_blueSkills.add(new ArrayList<>());
+			_purpleSkills.add(new ArrayList<>());
+			_redSkills.add(new ArrayList<>());
 		}
 		
 		load();
@@ -435,14 +438,10 @@ public class AugmentationData {
 	 * @return
 	 */
 	public L2Augmentation generateRandomAugmentation(int lifeStoneLevel, int lifeStoneGrade, int bodyPart, int lifeStoneId, L2ItemInstance targetItem) {
-		switch (bodyPart) {
-			case L2Item.SLOT_LR_FINGER:
-			case L2Item.SLOT_LR_EAR:
-			case L2Item.SLOT_NECK:
-				return generateRandomAccessoryAugmentation(lifeStoneLevel, bodyPart, lifeStoneId);
-			default:
-				return generateRandomWeaponAugmentation(lifeStoneLevel, lifeStoneGrade, lifeStoneId, targetItem);
-		}
+		return switch (bodyPart) {
+			case L2Item.SLOT_LR_FINGER, L2Item.SLOT_LR_EAR, L2Item.SLOT_NECK -> generateRandomAccessoryAugmentation(lifeStoneLevel, bodyPart, lifeStoneId);
+			default -> generateRandomWeaponAugmentation(lifeStoneLevel, lifeStoneGrade, lifeStoneId, targetItem);
+		};
 	}
 	
 	private L2Augmentation generateRandomWeaponAugmentation(int lifeStoneLevel, int lifeStoneGrade, int lifeStoneId, L2ItemInstance item) {
@@ -469,23 +468,13 @@ public class AugmentationData {
 						stat12 = ac.getAugmentId();
 					}
 				}
-				List<Integer> gradeChance = null;
-				switch (lifeStoneGrade) {
-					case AbstractRefinePacket.GRADE_NONE:
-						gradeChance = character().getRetailLikeAugmentationNoGradeChance();
-						break;
-					case AbstractRefinePacket.GRADE_MID:
-						gradeChance = character().getRetailLikeAugmentationMidGradeChance();
-						break;
-					case AbstractRefinePacket.GRADE_HIGH:
-						gradeChance = character().getRetailLikeAugmentationHighGradeChance();
-						break;
-					case AbstractRefinePacket.GRADE_TOP:
-						gradeChance = character().getRetailLikeAugmentationTopGradeChance();
-						break;
-					default:
-						gradeChance = character().getRetailLikeAugmentationNoGradeChance();
-				}
+				List<Integer> gradeChance = switch (lifeStoneGrade) {
+					case AbstractRefinePacket.GRADE_NONE -> character().getRetailLikeAugmentationNoGradeChance();
+					case AbstractRefinePacket.GRADE_MID -> character().getRetailLikeAugmentationMidGradeChance();
+					case AbstractRefinePacket.GRADE_HIGH -> character().getRetailLikeAugmentationHighGradeChance();
+					case AbstractRefinePacket.GRADE_TOP -> character().getRetailLikeAugmentationTopGradeChance();
+					default -> character().getRetailLikeAugmentationNoGradeChance();
+				};
 				
 				int c = Rnd.get(100);
 				if (c < gradeChance.get(0)) {
@@ -533,23 +522,13 @@ public class AugmentationData {
 						stat12 = ac.getAugmentId();
 					}
 				}
-				List<Integer> gradeChance = null;
-				switch (lifeStoneGrade) {
-					case AbstractRefinePacket.GRADE_NONE:
-						gradeChance = character().getRetailLikeAugmentationNoGradeChance();
-						break;
-					case AbstractRefinePacket.GRADE_MID:
-						gradeChance = character().getRetailLikeAugmentationMidGradeChance();
-						break;
-					case AbstractRefinePacket.GRADE_HIGH:
-						gradeChance = character().getRetailLikeAugmentationHighGradeChance();
-						break;
-					case AbstractRefinePacket.GRADE_TOP:
-						gradeChance = character().getRetailLikeAugmentationTopGradeChance();
-						break;
-					default:
-						gradeChance = character().getRetailLikeAugmentationNoGradeChance();
-				}
+				List<Integer> gradeChance = switch (lifeStoneGrade) {
+					case AbstractRefinePacket.GRADE_NONE -> character().getRetailLikeAugmentationNoGradeChance();
+					case AbstractRefinePacket.GRADE_MID -> character().getRetailLikeAugmentationMidGradeChance();
+					case AbstractRefinePacket.GRADE_HIGH -> character().getRetailLikeAugmentationHighGradeChance();
+					case AbstractRefinePacket.GRADE_TOP -> character().getRetailLikeAugmentationTopGradeChance();
+					default -> character().getRetailLikeAugmentationNoGradeChance();
+				};
 				
 				int c = Rnd.get(100);
 				if (c < gradeChance.get(0)) {
@@ -651,17 +630,12 @@ public class AugmentationData {
 		
 		// generate a skill if necessary
 		if (generateSkill) {
-			switch (resultColor) {
-				case 1: // blue skill
-					stat34 = _blueSkills.get(lifeStoneLevel).get(Rnd.get(0, _blueSkills.get(lifeStoneLevel).size() - 1));
-					break;
-				case 2: // purple skill
-					stat34 = _purpleSkills.get(lifeStoneLevel).get(Rnd.get(0, _purpleSkills.get(lifeStoneLevel).size() - 1));
-					break;
-				case 3: // red skill
-					stat34 = _redSkills.get(lifeStoneLevel).get(Rnd.get(0, _redSkills.get(lifeStoneLevel).size() - 1));
-					break;
-			}
+			stat34 = switch (resultColor) {
+				case 1 -> _blueSkills.get(lifeStoneLevel).get(Rnd.get(0, _blueSkills.get(lifeStoneLevel).size() - 1));
+				case 2 -> _purpleSkills.get(lifeStoneLevel).get(Rnd.get(0, _purpleSkills.get(lifeStoneLevel).size() - 1));
+				case 3 -> _redSkills.get(lifeStoneLevel).get(Rnd.get(0, _redSkills.get(lifeStoneLevel).size() - 1));
+				default -> stat34;
+			};
 		}
 		
 		// Third: Calculate the subblock offset for the chosen color,

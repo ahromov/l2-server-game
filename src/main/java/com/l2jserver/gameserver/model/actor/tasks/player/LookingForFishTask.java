@@ -22,7 +22,7 @@ import com.l2jserver.commons.util.Rnd;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 /**
- * Task dedicated for looking for fishes.
+ * Task dedicated for looking for fish.
  * @author UnAfraid
  */
 public class LookingForFishTask implements Runnable {

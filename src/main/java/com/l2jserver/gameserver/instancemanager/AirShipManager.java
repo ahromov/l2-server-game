@@ -42,7 +42,7 @@ public class AirShipManager {
 	private static final String ADD_DB = "INSERT INTO airships (owner_id,fuel) VALUES (?,?)";
 	private static final String UPDATE_DB = "UPDATE airships SET fuel=? WHERE owner_id=?";
 	
-	private L2CharTemplate _airShipTemplate = null;
+	private final L2CharTemplate _airShipTemplate;
 	private final Map<Integer, StatsSet> _airShipsInfo = new HashMap<>();
 	private final Map<Integer, L2AirShipInstance> _airShips = new HashMap<>();
 	private final Map<Integer, AirShipTeleportList> _teleports = new HashMap<>();
@@ -167,11 +167,7 @@ public class AirShipManager {
 	
 	public boolean hasAirShip(int ownerId) {
 		final L2AirShipInstance ship = _airShips.get(ownerId);
-		if ((ship == null) || !(ship.isVisible() || ship.isTeleporting())) {
-			return false;
-		}
-		
-		return true;
+		return (ship != null) && (ship.isVisible() || ship.isTeleporting());
 	}
 	
 	public void registerAirShipTeleportList(int dockId, int locationId, VehiclePathPoint[][] tp, int[] fuelConsumption) {
@@ -259,7 +255,7 @@ public class AirShipManager {
 		}
 	}
 	
-	public static final AirShipManager getInstance() {
+	public static AirShipManager getInstance() {
 		return SingletonHolder._instance;
 	}
 	

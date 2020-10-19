@@ -78,7 +78,7 @@ public final class RequestAcquireSkillInfo extends L2GameClientPacket {
 		final int prevSkillLevel = activeChar.getSkillLevel(_id);
 		if ((prevSkillLevel > 0) && !((_skillType == AcquireSkillType.TRANSFER) || (_skillType == AcquireSkillType.SUBPLEDGE))) {
 			if (prevSkillLevel == _level) {
-				_log.warning(RequestAcquireSkillInfo.class.getSimpleName() + ": Player " + activeChar.getName() + " is trequesting info for a skill that already knows, Id: " + _id + " level: " + _level + "!");
+				_log.warning(RequestAcquireSkillInfo.class.getSimpleName() + ": Player " + activeChar.getName() + " is requesting info for a skill that already knows, Id: " + _id + " level: " + _level + "!");
 			} else if (prevSkillLevel != (_level - 1)) {
 				_log.warning(RequestAcquireSkillInfo.class.getSimpleName() + ": Player " + activeChar.getName() + " is requesting info for skill Id: " + _id + " level " + _level + " without knowing it's previous level!");
 			}
@@ -90,34 +90,24 @@ public final class RequestAcquireSkillInfo extends L2GameClientPacket {
 		}
 		
 		switch (_skillType) {
-			case TRANSFORM:
-			case FISHING:
-			case SUBCLASS:
-			case COLLECT:
-			case TRANSFER: {
-				sendPacket(new AcquireSkillInfo(_skillType, s));
-				break;
-			}
-			case CLASS: {
+			case TRANSFORM, FISHING, SUBCLASS, COLLECT, TRANSFER -> sendPacket(new AcquireSkillInfo(_skillType, s));
+			case CLASS -> {
 				if (trainer.getTemplate().canTeach(activeChar.getLearningClass())) {
 					final int customSp = s.getCalculatedLevelUpSp(activeChar.getClassId(), activeChar.getLearningClass());
 					sendPacket(new AcquireSkillInfo(_skillType, s, customSp));
 				}
-				break;
 			}
-			case PLEDGE: {
+			case PLEDGE -> {
 				if (!activeChar.isClanLeader()) {
 					return;
 				}
 				sendPacket(new AcquireSkillInfo(_skillType, s));
-				break;
 			}
-			case SUBPLEDGE: {
+			case SUBPLEDGE -> {
 				if (!activeChar.isClanLeader() || !activeChar.hasClanPrivilege(ClanPrivilege.CL_TROOPS_FAME)) {
 					return;
 				}
 				sendPacket(new AcquireSkillInfo(_skillType, s));
-				break;
 			}
 		}
 	}

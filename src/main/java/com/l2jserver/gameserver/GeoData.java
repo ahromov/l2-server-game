@@ -302,7 +302,7 @@ public class GeoData {
 		z = getNearestZ(geoX, geoY, z);
 		tz = getNearestZ(tGeoX, tGeoY, tz);
 		
-		// fastpath
+		// fast path
 		if ((geoX == tGeoX) && (geoY == tGeoY)) {
 			if (hasGeoPos(tGeoX, tGeoY)) {
 				return z == tz;
@@ -513,12 +513,8 @@ public class GeoData {
 			prevZ = curZ;
 		}
 		
-		if (hasGeoPos(prevX, prevY) && (prevZ != toZ)) {
-			// different floors
-			return false;
-		}
-		
-		return true;
+		// different floors
+		return !hasGeoPos(prevX, prevY) || (prevZ == toZ);
 	}
 	
 	public int traceTerrainZ(int x, int y, int z, int tx, int ty) {

@@ -23,9 +23,6 @@ import com.l2jserver.gameserver.SevenSigns;
 public class ShowMiniMap extends L2GameServerPacket {
 	private final int _mapId;
 	
-	/**
-	 * @param mapId
-	 */
 	public ShowMiniMap(int mapId) {
 		_mapId = mapId;
 	}

@@ -39,11 +39,10 @@ public final class FourSepulchersChangeWarmUpTimeTask implements Runnable {
 		manager.setIsAttackTime(false);
 		manager.setIsCoolDownTime(false);
 		
-		long interval = 0;
+		long interval;
 		// searching time when warmup time will be ended:
 		// counting difference between time when warmup time ends and
-		// current time
-		// and then launching change time task
+		// current time and then launching change time task
 		if (manager.isFirstTimeRun()) {
 			interval = manager.getWarmUpTimeEnd() - Calendar.getInstance().getTimeInMillis();
 		} else {

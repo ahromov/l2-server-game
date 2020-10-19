@@ -228,6 +228,7 @@ public class Lottery {
 					for (int j = 0; j < i; j++) {
 						if (luckynums[j] == luckynum) {
 							found = true;
+							break;
 						}
 					}
 				}
@@ -373,7 +374,7 @@ public class Lottery {
 	}
 	
 	public int[] decodeNumbers(int enchant, int type2) {
-		int res[] = new int[5];
+		int[] res = new int[5];
 		int id = 0;
 		int nr = 1;
 		
@@ -405,7 +406,7 @@ public class Lottery {
 	}
 	
 	public long[] checkTicket(int id, int enchant, int type2) {
-		long res[] = {
+		long[] res = {
 			0,
 			0
 		};

@@ -29,14 +29,14 @@ public abstract class BaseBBSManager {
 	
 	public abstract void parsewrite(String ar1, String ar2, String ar3, String ar4, String ar5, L2PcInstance activeChar);
 	
-	protected void send1001(String html, L2PcInstance acha) {
+	protected void send1001(String html, L2PcInstance player) {
 		if (html.length() < 8192) {
-			acha.sendPacket(new ShowBoard(html, "1001"));
+			player.sendPacket(new ShowBoard(html, "1001"));
 		}
 	}
 	
-	protected void send1002(L2PcInstance acha) {
-		send1002(acha, " ", " ", "0");
+	protected void send1002(L2PcInstance player) {
+		send1002(player, " ", " ", "0");
 	}
 	
 	protected void send1002(L2PcInstance activeChar, String string, String string2, String string3) {

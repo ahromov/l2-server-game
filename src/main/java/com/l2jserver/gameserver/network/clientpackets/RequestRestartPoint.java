@@ -36,8 +36,7 @@ import com.l2jserver.gameserver.model.entity.Fort;
 import com.l2jserver.gameserver.model.entity.clanhall.SiegableHall;
 
 /**
- * This class ...
- * @version $Revision: 1.7.2.3.2.6 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class RequestRestartPoint extends L2GameClientPacket {
 	private static final String _C__7D_REQUESTRESTARTPOINT = "[C] 7D RequestRestartPoint";

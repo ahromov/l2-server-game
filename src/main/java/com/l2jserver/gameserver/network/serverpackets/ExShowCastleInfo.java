@@ -28,9 +28,6 @@ import com.l2jserver.gameserver.model.entity.Castle;
  * @author KenM
  */
 public class ExShowCastleInfo extends L2GameServerPacket {
-	public ExShowCastleInfo() {
-		
-	}
 	
 	@Override
 	protected void writeImpl() {

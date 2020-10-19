@@ -106,9 +106,9 @@ public class Announcement implements IAnnouncement {
 			ps.setString(2, _content);
 			ps.setString(3, _author);
 			ps.execute();
-			try (var rset = ps.getGeneratedKeys()) {
-				if (rset.next()) {
-					_id = rset.getInt(1);
+			try (var rs = ps.getGeneratedKeys()) {
+				if (rs.next()) {
+					_id = rs.getInt(1);
 				}
 			}
 		} catch (Exception e) {

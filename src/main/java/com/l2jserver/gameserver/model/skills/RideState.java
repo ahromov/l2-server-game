@@ -30,5 +30,5 @@ public enum RideState {
 	/** Riding a wolf. */
 	WOLF,
 	/** Riding a wyvern. */
-	WYVERN,
+	WYVERN
 }

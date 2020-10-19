@@ -29,15 +29,15 @@ import com.l2jserver.gameserver.model.skills.Skill;
 import com.l2jserver.gameserver.model.stats.Stats;
 
 public class FuncEnchant extends AbstractFunction {
-	public FuncEnchant(Stats stat, int order, Object owner, double value, Condition applayCond) {
-		super(stat, order, owner, value, applayCond);
+	public FuncEnchant(Stats stat, int order, Object owner, double value, Condition applyCond) {
+		super(stat, order, owner, value, applyCond);
 	}
 	
 	@SuppressWarnings("incomplete-switch")
 	@Override
 	public double calc(L2Character effector, L2Character effected, Skill skill, double initVal) {
 		double value = initVal;
-		if ((getApplayCond() != null) && !getApplayCond().test(effector, effected, skill)) {
+		if ((getApplyCond() != null) && !getApplyCond().test(effector, effected, skill)) {
 			return value;
 		}
 		
@@ -47,47 +47,38 @@ public class FuncEnchant extends AbstractFunction {
 			return value;
 		}
 		
-		int overenchant = 0;
+		int overEnchant = 0;
 		if (enchant > 3) {
-			overenchant = enchant - 3;
+			overEnchant = enchant - 3;
 			enchant = 3;
 		}
 		
 		if (effector.isPlayer()) {
-			if (effector.getActingPlayer().isInOlympiadMode() && (olympiad().getEnchantLimit() >= 0) && ((enchant + overenchant) > olympiad().getEnchantLimit())) {
+			if (effector.getActingPlayer().isInOlympiadMode() && (olympiad().getEnchantLimit() >= 0) && ((enchant + overEnchant) > olympiad().getEnchantLimit())) {
 				if (olympiad().getEnchantLimit() > 3) {
-					overenchant = olympiad().getEnchantLimit() - 3;
+					overEnchant = olympiad().getEnchantLimit() - 3;
 				} else {
-					overenchant = 0;
+					overEnchant = 0;
 					enchant = olympiad().getEnchantLimit();
 				}
 			}
 		}
 		
 		if ((getStat() == Stats.MAGIC_DEFENCE) || (getStat() == Stats.POWER_DEFENCE)) {
-			return value + enchant + (3 * overenchant);
+			return value + enchant + (3 * overEnchant);
 		}
 		
 		if (getStat() == Stats.MAGIC_ATTACK) {
+			// M. Atk. increases by 4 for all weapons.
+			// Starting at +4, M. Atk. bonus double.
+			// M. Atk. increases by 3 for all weapons.
+			// Starting at +4, M. Atk. bonus double.
+			// M. Atk. increases by 2 for all weapons. Starting at +4, M. Atk. bonus double.
+			// Starting at +4, M. Atk. bonus double.
 			switch (item.getItem().getItemGradeSPlus()) {
-				case S:
-					// M. Atk. increases by 4 for all weapons.
-					// Starting at +4, M. Atk. bonus double.
-					value += (4 * enchant) + (8 * overenchant);
-					break;
-				case A:
-				case B:
-				case C:
-					// M. Atk. increases by 3 for all weapons.
-					// Starting at +4, M. Atk. bonus double.
-					value += (3 * enchant) + (6 * overenchant);
-					break;
-				case D:
-				case NONE:
-					// M. Atk. increases by 2 for all weapons. Starting at +4, M. Atk. bonus double.
-					// Starting at +4, M. Atk. bonus double.
-					value += (2 * enchant) + (4 * overenchant);
-					break;
+				case S -> value += (4 * enchant) + (8 * overEnchant);
+				case A, B, C -> value += (3 * enchant) + (6 * overEnchant);
+				case D, NONE -> value += (2 * enchant) + (4 * overEnchant);
 			}
 			return value;
 		}
@@ -100,16 +91,16 @@ public class FuncEnchant extends AbstractFunction {
 						if ((type == WeaponType.BOW) || (type == WeaponType.CROSSBOW)) {
 							// P. Atk. increases by 10 for bows.
 							// Starting at +4, P. Atk. bonus double.
-							value += (10 * enchant) + (20 * overenchant);
+							value += (10 * enchant) + (20 * overEnchant);
 						} else {
 							// P. Atk. increases by 6 for two-handed swords, two-handed blunts, dualswords, and two-handed combat weapons.
 							// Starting at +4, P. Atk. bonus double.
-							value += (6 * enchant) + (12 * overenchant);
+							value += (6 * enchant) + (12 * overEnchant);
 						}
 					} else {
 						// P. Atk. increases by 5 for one-handed swords, one-handed blunts, daggers, spears, and other weapons.
 						// Starting at +4, P. Atk. bonus double.
-						value += (5 * enchant) + (10 * overenchant);
+						value += (5 * enchant) + (10 * overEnchant);
 					}
 					break;
 				case A:
@@ -117,16 +108,16 @@ public class FuncEnchant extends AbstractFunction {
 						if ((type == WeaponType.BOW) || (type == WeaponType.CROSSBOW)) {
 							// P. Atk. increases by 8 for bows.
 							// Starting at +4, P. Atk. bonus double.
-							value += (8 * enchant) + (16 * overenchant);
+							value += (8 * enchant) + (16 * overEnchant);
 						} else {
 							// P. Atk. increases by 5 for two-handed swords, two-handed blunts, dualswords, and two-handed combat weapons.
 							// Starting at +4, P. Atk. bonus double.
-							value += (5 * enchant) + (10 * overenchant);
+							value += (5 * enchant) + (10 * overEnchant);
 						}
 					} else {
 						// P. Atk. increases by 4 for one-handed swords, one-handed blunts, daggers, spears, and other weapons.
 						// Starting at +4, P. Atk. bonus double.
-						value += (4 * enchant) + (8 * overenchant);
+						value += (4 * enchant) + (8 * overEnchant);
 					}
 					break;
 				case B:
@@ -135,33 +126,29 @@ public class FuncEnchant extends AbstractFunction {
 						if ((type == WeaponType.BOW) || (type == WeaponType.CROSSBOW)) {
 							// P. Atk. increases by 6 for bows.
 							// Starting at +4, P. Atk. bonus double.
-							value += (6 * enchant) + (12 * overenchant);
+							value += (6 * enchant) + (12 * overEnchant);
 						} else {
 							// P. Atk. increases by 4 for two-handed swords, two-handed blunts, dualswords, and two-handed combat weapons.
 							// Starting at +4, P. Atk. bonus double.
-							value += (4 * enchant) + (8 * overenchant);
+							value += (4 * enchant) + (8 * overEnchant);
 						}
 					} else {
 						// P. Atk. increases by 3 for one-handed swords, one-handed blunts, daggers, spears, and other weapons.
 						// Starting at +4, P. Atk. bonus double.
-						value += (3 * enchant) + (6 * overenchant);
+						value += (3 * enchant) + (6 * overEnchant);
 					}
 					break;
 				case D:
 				case NONE:
+					// P. Atk. increases by 2 for all weapons with the exception of bows.
+					// Starting at +4, P. Atk. bonus double.
 					switch (type) {
-						case BOW:
-						case CROSSBOW: {
+						case BOW, CROSSBOW -> {
 							// Bows increase by 4.
 							// Starting at +4, P. Atk. bonus double.
-							value += (4 * enchant) + (8 * overenchant);
-							break;
+							value += (4 * enchant) + (8 * overEnchant);
 						}
-						default:
-							// P. Atk. increases by 2 for all weapons with the exception of bows.
-							// Starting at +4, P. Atk. bonus double.
-							value += (2 * enchant) + (4 * overenchant);
-							break;
+						default -> value += (2 * enchant) + (4 * overEnchant);
 					}
 					break;
 			}

@@ -24,7 +24,8 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.stats.Stats;
 
 /**
- * @author -Wooden-, KenM
+ * @author -Wooden-
+ * @author KenM
  */
 public class ExStorageMaxCount extends L2GameServerPacket {
 	private final int _inventory;
@@ -32,7 +33,7 @@ public class ExStorageMaxCount extends L2GameServerPacket {
 	private final int _clan;
 	private final int _privateSell;
 	private final int _privateBuy;
-	private final int _receipeD;
+	private final int _recipeD;
 	private final int _recipe;
 	private final int _inventoryExtraSlots;
 	private final int _inventoryQuestItems;
@@ -43,7 +44,7 @@ public class ExStorageMaxCount extends L2GameServerPacket {
 		_privateSell = activeChar.getPrivateSellStoreLimit();
 		_privateBuy = activeChar.getPrivateBuyStoreLimit();
 		_clan = character().getMaximumWarehouseSlotsForClan();
-		_receipeD = activeChar.getDwarfRecipeLimit();
+		_recipeD = activeChar.getDwarfRecipeLimit();
 		_recipe = activeChar.getCommonRecipeLimit();
 		_inventoryExtraSlots = (int) activeChar.getStat().calcStat(Stats.INV_LIM, 0, null, null);
 		_inventoryQuestItems = character().getMaximumSlotsForQuestItems();
@@ -59,7 +60,7 @@ public class ExStorageMaxCount extends L2GameServerPacket {
 		writeD(_clan);
 		writeD(_privateSell);
 		writeD(_privateBuy);
-		writeD(_receipeD);
+		writeD(_recipeD);
 		writeD(_recipe);
 		writeD(_inventoryExtraSlots); // Belt inventory slots increase count
 		writeD(_inventoryQuestItems);

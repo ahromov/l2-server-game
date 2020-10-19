@@ -39,7 +39,7 @@ import com.l2jserver.gameserver.model.stats.functions.FuncTemplate;
 import com.l2jserver.gameserver.util.IXmlReader;
 
 /**
- * This class holds the Enchant HP Bonus Data.
+ * Enchant HP Bonus data parser.
  * @author MrPoke
  * @author Zoey76
  */
@@ -126,7 +126,7 @@ public class EnchantItemHPBonusData implements IXmlReader {
 		return bonus;
 	}
 	
-	public static final EnchantItemHPBonusData getInstance() {
+	public static EnchantItemHPBonusData getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 	

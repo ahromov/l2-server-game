@@ -54,7 +54,7 @@ public final class AuctionableHall extends ClanHall {
 		
 		if (getOwnerId() != 0) {
 			_isFree = false;
-			initialyzeTask(false);
+			initializeTask(false);
 			loadFunctions();
 		}
 	}
@@ -95,14 +95,14 @@ public final class AuctionableHall extends ClanHall {
 	public void setOwner(L2Clan clan) {
 		super.setOwner(clan);
 		_paidUntil = System.currentTimeMillis();
-		initialyzeTask(true);
+		initializeTask(true);
 	}
 	
 	/**
 	 * Initialize Fee Task
 	 * @param forced
 	 */
-	private void initialyzeTask(boolean forced) {
+	private void initializeTask(boolean forced) {
 		long currentTime = System.currentTimeMillis();
 		if (_paidUntil > currentTime) {
 			ThreadPoolManager.getInstance().scheduleGeneral(new FeeTask(), _paidUntil - currentTime);

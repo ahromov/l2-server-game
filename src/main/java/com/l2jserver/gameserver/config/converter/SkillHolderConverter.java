@@ -39,6 +39,6 @@ public class SkillHolderConverter implements Converter<SkillHolder> {
 		}
 		
 		final var tokens = input.replaceAll(" ", "").split(",");
-		return new SkillHolder(Integer.valueOf(tokens[0]), Integer.valueOf(tokens[1]));
+		return new SkillHolder(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]));
 	}
 }

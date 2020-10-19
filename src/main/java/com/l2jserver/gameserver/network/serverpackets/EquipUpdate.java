@@ -32,60 +32,28 @@ public final class EquipUpdate extends L2GameServerPacket {
 	
 	@Override
 	protected void writeImpl() {
-		int bodypart = 0;
+		int bodyPart = 0;
 		writeC(0x4b);
 		writeD(_change);
 		writeD(_item.getObjectId());
 		switch (_item.getItem().getBodyPart()) {
-			case L2Item.SLOT_L_EAR:
-				bodypart = 0x01;
-				break;
-			case L2Item.SLOT_R_EAR:
-				bodypart = 0x02;
-				break;
-			case L2Item.SLOT_NECK:
-				bodypart = 0x03;
-				break;
-			case L2Item.SLOT_R_FINGER:
-				bodypart = 0x04;
-				break;
-			case L2Item.SLOT_L_FINGER:
-				bodypart = 0x05;
-				break;
-			case L2Item.SLOT_HEAD:
-				bodypart = 0x06;
-				break;
-			case L2Item.SLOT_R_HAND:
-				bodypart = 0x07;
-				break;
-			case L2Item.SLOT_L_HAND:
-				bodypart = 0x08;
-				break;
-			case L2Item.SLOT_GLOVES:
-				bodypart = 0x09;
-				break;
-			case L2Item.SLOT_CHEST:
-				bodypart = 0x0a;
-				break;
-			case L2Item.SLOT_LEGS:
-				bodypart = 0x0b;
-				break;
-			case L2Item.SLOT_FEET:
-				bodypart = 0x0c;
-				break;
-			case L2Item.SLOT_BACK:
-				bodypart = 0x0d;
-				break;
-			case L2Item.SLOT_LR_HAND:
-				bodypart = 0x0e;
-				break;
-			case L2Item.SLOT_HAIR:
-				bodypart = 0x0f;
-				break;
-			case L2Item.SLOT_BELT:
-				bodypart = 0x10;
-				break;
+			case L2Item.SLOT_L_EAR -> bodyPart = 0x01;
+			case L2Item.SLOT_R_EAR -> bodyPart = 0x02;
+			case L2Item.SLOT_NECK -> bodyPart = 0x03;
+			case L2Item.SLOT_R_FINGER -> bodyPart = 0x04;
+			case L2Item.SLOT_L_FINGER -> bodyPart = 0x05;
+			case L2Item.SLOT_HEAD -> bodyPart = 0x06;
+			case L2Item.SLOT_R_HAND -> bodyPart = 0x07;
+			case L2Item.SLOT_L_HAND -> bodyPart = 0x08;
+			case L2Item.SLOT_GLOVES -> bodyPart = 0x09;
+			case L2Item.SLOT_CHEST -> bodyPart = 0x0a;
+			case L2Item.SLOT_LEGS -> bodyPart = 0x0b;
+			case L2Item.SLOT_FEET -> bodyPart = 0x0c;
+			case L2Item.SLOT_BACK -> bodyPart = 0x0d;
+			case L2Item.SLOT_LR_HAND -> bodyPart = 0x0e;
+			case L2Item.SLOT_HAIR -> bodyPart = 0x0f;
+			case L2Item.SLOT_BELT -> bodyPart = 0x10;
 		}
-		writeD(bodypart);
+		writeD(bodyPart);
 	}
 }

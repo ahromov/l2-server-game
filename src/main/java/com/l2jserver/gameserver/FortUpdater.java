@@ -55,7 +55,7 @@ public class FortUpdater implements Runnable {
 	public void run() {
 		try {
 			switch (_updaterType) {
-				case PERIODIC_UPDATE: {
+				case PERIODIC_UPDATE -> {
 					_runCount++;
 					if ((_fort.getOwnerClan() == null) || (_fort.getOwnerClan() != _clan)) {
 						return;
@@ -73,9 +73,8 @@ public class FortUpdater implements Runnable {
 						}
 					}
 					_fort.saveFortVariables();
-					break;
 				}
-				case MAX_OWN_TIME: {
+				case MAX_OWN_TIME -> {
 					if ((_fort.getOwnerClan() == null) || (_fort.getOwnerClan() != _clan)) {
 						return;
 					}
@@ -83,7 +82,6 @@ public class FortUpdater implements Runnable {
 						_fort.removeOwner(true);
 						_fort.setFortState(0, 0);
 					}
-					break;
 				}
 			}
 		} catch (Exception e) {

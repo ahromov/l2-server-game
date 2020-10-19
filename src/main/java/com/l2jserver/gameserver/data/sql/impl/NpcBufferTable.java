@@ -69,18 +69,18 @@ public class NpcBufferTable {
 	protected NpcBufferTable() {
 		int skillCount = 0;
 		try (var con = ConnectionFactory.getInstance().getConnection();
-			var s = con.createStatement();
-			var rset = s.executeQuery("SELECT `npc_id`,`skill_id`,`skill_level`,`skill_fee_id`,`skill_fee_amount`,`buff_group` FROM `npc_buffer` ORDER BY `npc_id` ASC")) {
+			var st = con.createStatement();
+			var rs = st.executeQuery("SELECT `npc_id`,`skill_id`,`skill_level`,`skill_fee_id`,`skill_fee_amount`,`buff_group` FROM `npc_buffer` ORDER BY `npc_id`")) {
 			int lastNpcId = 0;
 			NpcBufferSkills skills = null;
 			
-			while (rset.next()) {
-				int npcId = rset.getInt("npc_id");
-				int skillId = rset.getInt("skill_id");
-				int skillLevel = rset.getInt("skill_level");
-				int skillFeeId = rset.getInt("skill_fee_id");
-				int skillFeeAmount = rset.getInt("skill_fee_amount");
-				int buffGroup = rset.getInt("buff_group");
+			while (rs.next()) {
+				int npcId = rs.getInt("npc_id");
+				int skillId = rs.getInt("skill_id");
+				int skillLevel = rs.getInt("skill_level");
+				int skillFeeId = rs.getInt("skill_fee_id");
+				int skillFeeAmount = rs.getInt("skill_fee_amount");
+				int buffGroup = rs.getInt("buff_group");
 				
 				if (npcId != lastNpcId) {
 					if (lastNpcId != 0) {
@@ -106,17 +106,17 @@ public class NpcBufferTable {
 		
 		if (general().customNpcBufferTables()) {
 			try (var con = ConnectionFactory.getInstance().getConnection();
-				var s = con.createStatement();
-				var rset = s.executeQuery("SELECT `npc_id`,`skill_id`,`skill_level`,`skill_fee_id`,`skill_fee_amount`,`buff_group` FROM `custom_npc_buffer` ORDER BY `npc_id` ASC")) {
+				var st = con.createStatement();
+				var rs = st.executeQuery("SELECT `npc_id`,`skill_id`,`skill_level`,`skill_fee_id`,`skill_fee_amount`,`buff_group` FROM `custom_npc_buffer` ORDER BY `npc_id`")) {
 				int lastNpcId = 0;
 				NpcBufferSkills skills = null;
-				while (rset.next()) {
-					int npcId = rset.getInt("npc_id");
-					int skillId = rset.getInt("skill_id");
-					int skillLevel = rset.getInt("skill_level");
-					int skillFeeId = rset.getInt("skill_fee_id");
-					int skillFeeAmount = rset.getInt("skill_fee_amount");
-					int buffGroup = rset.getInt("buff_group");
+				while (rs.next()) {
+					int npcId = rs.getInt("npc_id");
+					int skillId = rs.getInt("skill_id");
+					int skillLevel = rs.getInt("skill_level");
+					int skillFeeId = rs.getInt("skill_fee_id");
+					int skillFeeAmount = rs.getInt("skill_fee_amount");
+					int buffGroup = rs.getInt("buff_group");
 					
 					if (npcId != lastNpcId) {
 						if (lastNpcId != 0) {

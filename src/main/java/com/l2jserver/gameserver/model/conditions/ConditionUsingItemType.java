@@ -26,17 +26,13 @@ import com.l2jserver.gameserver.model.items.type.ArmorType;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionUsingItemType.
+ * Using item type condition.
  * @author mkizub
  */
 public final class ConditionUsingItemType extends Condition {
 	private final boolean _armor;
 	private final int _mask;
 	
-	/**
-	 * Instantiates a new condition using item type.
-	 * @param mask the mask
-	 */
 	public ConditionUsingItemType(int mask) {
 		_mask = mask;
 		_armor = (_mask & (ArmorType.MAGIC.mask() | ArmorType.LIGHT.mask() | ArmorType.HEAVY.mask())) != 0;
@@ -49,13 +45,13 @@ public final class ConditionUsingItemType extends Condition {
 		}
 		
 		if (!effector.isPlayer()) {
-			return _armor ? false : (_mask & effector.getAttackType().mask()) != 0;
+			return !_armor && (_mask & effector.getAttackType().mask()) != 0;
 		}
 		
 		final Inventory inv = effector.getInventory();
 		// If ConditionUsingItemType is one between Light, Heavy or Magic
 		if (_armor) {
-			// Get the itemMask of the weared chest (if exists)
+			// Get the itemMask of the worn chest (if exists)
 			L2ItemInstance chest = inv.getPaperdollItem(Inventory.PAPERDOLL_CHEST);
 			if (chest == null) {
 				return false;

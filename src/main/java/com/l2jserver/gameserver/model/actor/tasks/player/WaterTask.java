@@ -43,7 +43,7 @@ public class WaterTask implements Runnable {
 			}
 			
 			_player.reduceCurrentHp(reduceHp, _player, false, false, null);
-			// reduced hp, becouse not rest
+			// reduced hp, because not rest
 			SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.DROWN_DAMAGE_S1);
 			sm.addInt((int) reduceHp);
 			_player.sendPacket(sm);

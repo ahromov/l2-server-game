@@ -20,6 +20,8 @@ package com.l2jserver.gameserver.network.clientpackets;
 
 import static com.l2jserver.gameserver.config.Configuration.general;
 
+import java.util.Objects;
+
 import com.l2jserver.gameserver.enums.ItemLocation;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
 import com.l2jserver.gameserver.instancemanager.MailManager;
@@ -38,7 +40,8 @@ import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 import com.l2jserver.gameserver.util.Util;
 
 /**
- * @author Migi, DS
+ * @author Migi
+ * @author DS
  */
 public final class RequestCancelPostAttachment extends L2GameClientPacket {
 	private static final String _C__D0_6F_REQUESTCANCELPOSTATTACHMENT = "[C] D0:6F RequestCancelPostAttachment";
@@ -171,11 +174,7 @@ public final class RequestCancelPostAttachment extends L2GameClientPacket {
 		msg.removeAttachments();
 		
 		// Send updated item list to the player
-		if (playerIU != null) {
-			activeChar.sendPacket(playerIU);
-		} else {
-			activeChar.sendPacket(new ItemList(activeChar, false));
-		}
+		activeChar.sendPacket(Objects.requireNonNullElseGet(playerIU, () -> new ItemList(activeChar, false)));
 		
 		// Update current load status on player
 		StatusUpdate su = new StatusUpdate(activeChar);

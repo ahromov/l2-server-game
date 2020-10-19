@@ -25,7 +25,7 @@ import com.l2jserver.gameserver.model.PartyMatchWaitingList;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.network.serverpackets.ExClosePartyRoom;
-import com.l2jserver.gameserver.network.serverpackets.ListPartyWating;
+import com.l2jserver.gameserver.network.serverpackets.ListPartyWaiting;
 
 /**
  * format (ch) d
@@ -73,7 +73,7 @@ public final class RequestOustFromPartyRoom extends L2GameClientPacket {
 			
 			// Send Room list
 			int loc = 0; // TODO: Closes town
-			member.sendPacket(new ListPartyWating(member, 0, loc, member.getLevel()));
+			member.sendPacket(new ListPartyWaiting(member, 0, loc, member.getLevel()));
 			
 			// Clean player's LFP title
 			member.broadcastUserInfo();

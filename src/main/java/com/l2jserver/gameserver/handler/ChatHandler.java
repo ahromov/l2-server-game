@@ -23,22 +23,16 @@ import java.util.Map;
 
 /**
  * This class handles all chat handlers
- * @author durgus, UnAfraid
+ * @author durgus
+ * @author UnAfraid
  */
 public class ChatHandler implements IHandler<IChatHandler, Integer> {
 	private final Map<Integer, IChatHandler> _datatable;
 	
-	/**
-	 * Singleton constructor
-	 */
 	protected ChatHandler() {
 		_datatable = new HashMap<>();
 	}
 	
-	/**
-	 * Register a new chat handler
-	 * @param handler
-	 */
 	@Override
 	public void registerHandler(IChatHandler handler) {
 		int[] ids = handler.getChatTypeList();
@@ -65,10 +59,6 @@ public class ChatHandler implements IHandler<IChatHandler, Integer> {
 		return _datatable.get(chatType);
 	}
 	
-	/**
-	 * Returns the size
-	 * @return
-	 */
 	@Override
 	public int size() {
 		return _datatable.size();

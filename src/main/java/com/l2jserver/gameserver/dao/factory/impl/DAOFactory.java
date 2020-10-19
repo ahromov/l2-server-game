@@ -41,23 +41,12 @@ public class DAOFactory {
 	private static class SingletonHolder {
 		private static final Logger LOG = LoggerFactory.getLogger(DAOFactory.class);
 		
-		protected static final IDAOFactory INSTANCE;
+		protected static IDAOFactory INSTANCE = null;
 		
 		static {
 			switch (database().getEngine()) {
-				default:
-				case "MSSQL":
-				case "OracleDB":
-				case "PostgreSQL":
-				case "H2":
-				case "HSQLDB": {
-					throw new UnsupportedOperationException(database().getEngine() + " is not supported!");
-				}
-				case "MariaDB":
-				case "MySQL": {
-					INSTANCE = MySQLDAOFactory.INSTANCE;
-					break;
-				}
+				case "MSSQL", "OracleDB", "PostgreSQL", "H2", "HSQLDB" -> throw new UnsupportedOperationException(database().getEngine() + " is not supported!");
+				case "MariaDB", "MySQL" -> INSTANCE = MySQLDAOFactory.INSTANCE;
 			}
 			LOG.info("Using {} DAO Factory.", INSTANCE.getClass().getSimpleName().replace("DAOFactory", ""));
 		}

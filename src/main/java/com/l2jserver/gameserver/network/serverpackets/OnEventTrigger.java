@@ -21,7 +21,8 @@ package com.l2jserver.gameserver.network.serverpackets;
 import com.l2jserver.gameserver.model.actor.instance.L2DoorInstance;
 
 /**
- * @author Gnacik, UnAfraid
+ * @author Gnacik
+ * @author UnAfraid
  */
 public class OnEventTrigger extends L2GameServerPacket {
 	private final int _emitterId;

@@ -40,16 +40,12 @@ public class L2MotherTreeZone extends L2ZoneType {
 	
 	@Override
 	public void setParameter(String name, String value) {
-		if (name.equals("enterMsgId")) {
-			_enterMsg = Integer.parseInt(value);
-		} else if (name.equals("leaveMsgId")) {
-			_leaveMsg = Integer.parseInt(value);
-		} else if (name.equals("MpRegenBonus")) {
-			_mpRegen = Integer.parseInt(value);
-		} else if (name.equals("HpRegenBonus")) {
-			_hpRegen = Integer.parseInt(value);
-		} else {
-			super.setParameter(name, value);
+		switch (name) {
+			case "enterMsgId" -> _enterMsg = Integer.parseInt(value);
+			case "leaveMsgId" -> _leaveMsg = Integer.parseInt(value);
+			case "MpRegenBonus" -> _mpRegen = Integer.parseInt(value);
+			case "HpRegenBonus" -> _hpRegen = Integer.parseInt(value);
+			default -> super.setParameter(name, value);
 		}
 	}
 	

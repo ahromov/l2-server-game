@@ -25,17 +25,13 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionTargetAggro.
+ * Target aggro condition.
  * @author mkizub
  */
 public class ConditionTargetAggro extends Condition {
 	
 	private final boolean _isAggro;
 	
-	/**
-	 * Instantiates a new condition target aggro.
-	 * @param isAggro the is aggro
-	 */
 	public ConditionTargetAggro(boolean isAggro) {
 		_isAggro = isAggro;
 	}

@@ -71,63 +71,63 @@ public final class Forum {
 	public void addChild(Forum child) {
 		children.put(child.getName(), child);
 	}
-
+	
 	public int getId() {
 		return id;
 	}
-
+	
 	public void setId(int id) {
 		this.id = id;
 	}
-
+	
 	public String getName() {
 		return name;
 	}
-
+	
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
 	public ForumType getType() {
 		return type;
 	}
-
+	
 	public void setType(ForumType type) {
 		this.type = type;
 	}
-
+	
 	public int getPost() {
 		return post;
 	}
-
+	
 	public void setPost(int post) {
 		this.post = post;
 	}
-
+	
 	public ForumVisibility getVisibility() {
 		return visibility;
 	}
-
+	
 	public void setVisibility(ForumVisibility visibility) {
 		this.visibility = visibility;
 	}
-
+	
 	public int getOwnerId() {
 		return ownerId;
 	}
-
+	
 	public void setOwnerId(int ownerId) {
 		this.ownerId = ownerId;
 	}
-
+	
 	public Forum getParent() {
 		return parent;
 	}
-
+	
 	public Map<String, Forum> getChildren() {
 		return children;
 	}
-
+	
 	public Map<Integer, Topic> getTopics() {
 		return topics;
 	}

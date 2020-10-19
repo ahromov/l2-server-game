@@ -74,7 +74,7 @@ public final class RequestPledgeSetAcademyMaster extends L2GameClientPacket {
 		L2PcInstance apprentice = apprenticeMember.getPlayerInstance();
 		L2PcInstance sponsor = sponsorMember.getPlayerInstance();
 		
-		SystemMessage sm = null;
+		SystemMessage sm;
 		if (_set == 0) {
 			// test: do we get the current sponsor & apprentice from this packet or no?
 			if (apprentice != null) {

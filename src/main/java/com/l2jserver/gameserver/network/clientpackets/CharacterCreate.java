@@ -139,7 +139,7 @@ public final class CharacterCreate extends L2GameClientPacket {
 			return;
 		}
 		
-		L2PcInstance newChar = null;
+		L2PcInstance newChar;
 		
 		/*
 		 * DrHouse: Since checks for duplicate names are done using SQL, lock must be held until data is written to DB as well.

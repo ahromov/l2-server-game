@@ -64,72 +64,21 @@ public final class ArmorSetsData implements IXmlReader {
 						for (Node a = d.getFirstChild(); a != null; a = a.getNextSibling()) {
 							final NamedNodeMap attrs = a.getAttributes();
 							switch (a.getNodeName()) {
-								case "chest": {
-									set.addChest(parseInteger(attrs, "id"));
-									break;
-								}
-								case "feet": {
-									set.addFeet(parseInteger(attrs, "id"));
-									break;
-								}
-								case "gloves": {
-									set.addGloves(parseInteger(attrs, "id"));
-									break;
-								}
-								case "head": {
-									set.addHead(parseInteger(attrs, "id"));
-									break;
-								}
-								case "legs": {
-									set.addLegs(parseInteger(attrs, "id"));
-									break;
-								}
-								case "shield": {
-									set.addShield(parseInteger(attrs, "id"));
-									break;
-								}
-								case "skill": {
-									int skillId = parseInteger(attrs, "id");
-									int skillLevel = parseInteger(attrs, "level");
-									set.addSkill(new SkillHolder(skillId, skillLevel));
-									break;
-								}
-								case "shield_skill": {
-									int skillId = parseInteger(attrs, "id");
-									int skillLevel = parseInteger(attrs, "level");
-									set.addShieldSkill(new SkillHolder(skillId, skillLevel));
-									break;
-								}
-								case "enchant6skill": {
-									int skillId = parseInteger(attrs, "id");
-									int skillLevel = parseInteger(attrs, "level");
-									set.addEnchant6Skill(new SkillHolder(skillId, skillLevel));
-									break;
-								}
-								case "con": {
-									set.addCon(parseInteger(attrs, "val"));
-									break;
-								}
-								case "dex": {
-									set.addDex(parseInteger(attrs, "val"));
-									break;
-								}
-								case "str": {
-									set.addStr(parseInteger(attrs, "val"));
-									break;
-								}
-								case "men": {
-									set.addMen(parseInteger(attrs, "val"));
-									break;
-								}
-								case "wit": {
-									set.addWit(parseInteger(attrs, "val"));
-									break;
-								}
-								case "int": {
-									set.addInt(parseInteger(attrs, "val"));
-									break;
-								}
+								case "chest" -> set.addChest(parseInteger(attrs, "id"));
+								case "feet" -> set.addFeet(parseInteger(attrs, "id"));
+								case "gloves" -> set.addGloves(parseInteger(attrs, "id"));
+								case "head" -> set.addHead(parseInteger(attrs, "id"));
+								case "legs" -> set.addLegs(parseInteger(attrs, "id"));
+								case "shield" -> set.addShield(parseInteger(attrs, "id"));
+								case "skill" -> set.addSkill(new SkillHolder(parseInteger(attrs, "id"), parseInteger(attrs, "level")));
+								case "shield_skill" -> set.addShieldSkill(new SkillHolder(parseInteger(attrs, "id"), parseInteger(attrs, "level")));
+								case "enchant6skill" -> set.addEnchant6Skill(new SkillHolder(parseInteger(attrs, "id"), parseInteger(attrs, "level")));
+								case "con" -> set.addCon(parseInteger(attrs, "val"));
+								case "dex" -> set.addDex(parseInteger(attrs, "val"));
+								case "str" -> set.addStr(parseInteger(attrs, "val"));
+								case "men" -> set.addMen(parseInteger(attrs, "val"));
+								case "wit" -> set.addWit(parseInteger(attrs, "val"));
+								case "int" -> set.addInt(parseInteger(attrs, "val"));
 							}
 						}
 						_armorSets.put(set.getChestId(), set);

@@ -120,7 +120,7 @@ public class TopicBBSManager extends BaseBBSManager {
 				return;
 			}
 			
-			final var posts = PostBBSManager.getInstance().getGPosttByTopic(topic);
+			final var posts = PostBBSManager.getInstance().getGPostByTopic(topic);
 			if (!posts.isEmpty()) {
 				PostBBSManager.getInstance().delPostByTopic(topic);
 				DAOFactory.getInstance().getPostRepository().delete(topic);
@@ -147,7 +147,7 @@ public class TopicBBSManager extends BaseBBSManager {
 			if (st.hasMoreTokens()) {
 				index = st.nextToken();
 			}
-			int ind = 0;
+			int ind;
 			if (index == null) {
 				ind = 1;
 			} else {
@@ -174,7 +174,7 @@ public class TopicBBSManager extends BaseBBSManager {
 				if (t == null) {
 					CommunityBoardHandler.separateAndSend("<html><body><br><br><center>the topic: " + idt + " does not exist !</center><br><br></body></html>", activeChar);
 				} else {
-					final var p = PostBBSManager.getInstance().getGPosttByTopic(t);
+					final var p = PostBBSManager.getInstance().getGPostByTopic(t);
 					if (p != null) {
 						PostBBSManager.getInstance().delPostByTopic(t);
 						DAOFactory.getInstance().getPostRepository().delete(t);

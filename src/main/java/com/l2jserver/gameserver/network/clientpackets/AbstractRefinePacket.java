@@ -188,7 +188,7 @@ public abstract class AbstractRefinePacket extends L2GameClientPacket {
 		_lifeStones.put(16178, new LifeStone(GRADE_ACC, 13));
 	}
 	
-	protected static final LifeStone getLifeStone(int itemId) {
+	protected static LifeStone getLifeStone(int itemId) {
 		return _lifeStones.get(itemId);
 	}
 	
@@ -200,7 +200,7 @@ public abstract class AbstractRefinePacket extends L2GameClientPacket {
 	 * @param gemStones
 	 * @return
 	 */
-	protected static final boolean isValid(L2PcInstance player, L2ItemInstance item, L2ItemInstance refinerItem, L2ItemInstance gemStones) {
+	protected static boolean isValid(L2PcInstance player, L2ItemInstance item, L2ItemInstance refinerItem, L2ItemInstance gemStones) {
 		if (!isValid(player, item, refinerItem)) {
 			return false;
 		}
@@ -222,11 +222,7 @@ public abstract class AbstractRefinePacket extends L2GameClientPacket {
 			return false;
 		}
 		// Count must be greater or equal of required number
-		if (getGemStoneCount(grade, ls.getGrade()) > gemStones.getCount()) {
-			return false;
-		}
-		
-		return true;
+		return getGemStoneCount(grade, ls.getGrade()) <= gemStones.getCount();
 	}
 	
 	/**
@@ -236,7 +232,7 @@ public abstract class AbstractRefinePacket extends L2GameClientPacket {
 	 * @param refinerItem
 	 * @return
 	 */
-	protected static final boolean isValid(L2PcInstance player, L2ItemInstance item, L2ItemInstance refinerItem) {
+	protected static boolean isValid(L2PcInstance player, L2ItemInstance item, L2ItemInstance refinerItem) {
 		if (!isValid(player, item)) {
 			return false;
 		}
@@ -263,11 +259,7 @@ public abstract class AbstractRefinePacket extends L2GameClientPacket {
 			return false;
 		}
 		// check for level of the lifestone
-		if (player.getLevel() < ls.getPlayerLevel()) {
-			return false;
-		}
-		
-		return true;
+		return player.getLevel() >= ls.getPlayerLevel();
 	}
 	
 	/**
@@ -276,7 +268,7 @@ public abstract class AbstractRefinePacket extends L2GameClientPacket {
 	 * @param item
 	 * @return
 	 */
-	protected static final boolean isValid(L2PcInstance player, L2ItemInstance item) {
+	protected static boolean isValid(L2PcInstance player, L2ItemInstance item) {
 		if (!isValid(player)) {
 			return false;
 		}
@@ -342,10 +334,7 @@ public abstract class AbstractRefinePacket extends L2GameClientPacket {
 		}
 		
 		// Blacklist check
-		if (character().getAugmentationBlacklist().contains(item.getId())) {
-			return false;
-		}
-		return true;
+		return !character().getAugmentationBlacklist().contains(item.getId());
 	}
 	
 	/**
@@ -353,7 +342,7 @@ public abstract class AbstractRefinePacket extends L2GameClientPacket {
 	 * @param player
 	 * @return
 	 */
-	protected static final boolean isValid(L2PcInstance player) {
+	protected static boolean isValid(L2PcInstance player) {
 		if (player.getPrivateStoreType() != PrivateStoreType.NONE) {
 			player.sendPacket(SystemMessageId.YOU_CANNOT_AUGMENT_ITEMS_WHILE_A_PRIVATE_STORE_OR_PRIVATE_WORKSHOP_IS_IN_OPERATION);
 			return false;
@@ -381,31 +370,20 @@ public abstract class AbstractRefinePacket extends L2GameClientPacket {
 		if (player.isCursedWeaponEquipped()) {
 			return false;
 		}
-		if (player.isEnchanting() || player.isProcessingTransaction()) {
-			return false;
-		}
-		
-		return true;
+		return !player.isEnchanting() && !player.isProcessingTransaction();
 	}
 	
 	/**
 	 * @param itemGrade
 	 * @return GemStone itemId based on item grade
 	 */
-	protected static final int getGemStoneId(CrystalType itemGrade) {
-		switch (itemGrade) {
-			case C:
-			case B:
-				return GEMSTONE_D;
-			case A:
-			case S:
-				return GEMSTONE_C;
-			case S80:
-			case S84:
-				return GEMSTONE_B;
-			default:
-				return 0;
-		}
+	protected static int getGemStoneId(CrystalType itemGrade) {
+		return switch (itemGrade) {
+			case C, B -> GEMSTONE_D;
+			case A, S -> GEMSTONE_C;
+			case S80, S84 -> GEMSTONE_B;
+			default -> 0;
+		};
 	}
 	
 	/**
@@ -414,41 +392,25 @@ public abstract class AbstractRefinePacket extends L2GameClientPacket {
 	 * @param lifeStoneGrade
 	 * @return GemStone count based on item grade and life stone grade
 	 */
-	protected static final int getGemStoneCount(CrystalType itemGrade, int lifeStoneGrade) {
-		switch (lifeStoneGrade) {
-			case GRADE_ACC:
-				switch (itemGrade) {
-					case C:
-						return 200;
-					case B:
-						return 300;
-					case A:
-						return 200;
-					case S:
-						return 250;
-					case S80:
-						return 360;
-					case S84:
-						return 480;
-					default:
-						return 0;
-				}
-			default:
-				switch (itemGrade) {
-					case C:
-						return 20;
-					case B:
-						return 30;
-					case A:
-						return 20;
-					case S:
-						return 25;
-					case S80:
-					case S84:
-						return 36;
-					default:
-						return 0;
-				}
+	protected static int getGemStoneCount(CrystalType itemGrade, int lifeStoneGrade) {
+		if (lifeStoneGrade == GRADE_ACC) {
+			return switch (itemGrade) {
+				case C -> 200;
+				case B -> 300;
+				case A -> 200;
+				case S -> 250;
+				case S80 -> 360;
+				case S84 -> 480;
+				default -> 0;
+			};
 		}
+		return switch (itemGrade) {
+			case C -> 20;
+			case B -> 30;
+			case A -> 20;
+			case S -> 25;
+			case S80, S84 -> 36;
+			default -> 0;
+		};
 	}
 }

@@ -30,10 +30,6 @@ public class MyTargetSelected extends L2GameServerPacket {
 	private final int _objectId;
 	private final int _color;
 	
-	/**
-	 * @param player
-	 * @param target
-	 */
 	public MyTargetSelected(L2PcInstance player, L2Character target) {
 		_objectId = (target instanceof L2ControllableAirShipInstance) ? ((L2ControllableAirShipInstance) target).getHelmObjectId() : target.getObjectId();
 		_color = target.isAutoAttackable(player) ? (player.getLevel() - target.getLevel()) : 0;

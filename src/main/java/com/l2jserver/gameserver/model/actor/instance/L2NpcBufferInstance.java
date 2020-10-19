@@ -47,10 +47,6 @@ public class L2NpcBufferInstance extends L2Npc {
 	
 	private static final Map<Integer, Integer> pageVal = new HashMap<>();
 	
-	/**
-	 * Creates a NPC buffer.
-	 * @param template the template
-	 */
 	public L2NpcBufferInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2NpcBufferInstance);

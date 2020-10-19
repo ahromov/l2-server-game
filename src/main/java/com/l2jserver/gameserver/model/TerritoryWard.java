@@ -31,12 +31,11 @@ import com.l2jserver.gameserver.network.serverpackets.ItemList;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 public class TerritoryWard {
-	// private static final Logger _log = Logger.getLogger(CombatFlag.class.getName());
 	
 	protected L2PcInstance _player = null;
 	public int playerId = 0;
 	private L2ItemInstance _item = null;
-	private L2Npc _npc = null;
+	private L2Npc _npc;
 	
 	private Location _location;
 	private Location _oldLocation;

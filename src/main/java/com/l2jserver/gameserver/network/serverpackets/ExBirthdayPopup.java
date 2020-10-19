@@ -20,8 +20,7 @@ package com.l2jserver.gameserver.network.serverpackets;
 
 /**
  * @author Gnat
- **/
-
+ */
 public class ExBirthdayPopup extends L2GameServerPacket {
 	public ExBirthdayPopup() {
 	}

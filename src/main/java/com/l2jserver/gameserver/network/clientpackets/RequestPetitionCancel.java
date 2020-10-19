@@ -28,13 +28,8 @@ import com.l2jserver.gameserver.network.serverpackets.CreatureSay;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 /**
- * <p>
- * Format: (c) d
- * <ul>
- * <li>d: Unknown</li>
- * </ul>
- * </p>
- * @author -Wooden-, TempyIncursion
+ * @author -Wooden-
+ * @author TempyIncursion
  */
 public final class RequestPetitionCancel extends L2GameClientPacket {
 	private static final String _C__8A_REQUEST_PETITIONCANCEL = "[C] 8A RequestPetitionCancel";

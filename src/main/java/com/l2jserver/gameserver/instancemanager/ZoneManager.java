@@ -189,7 +189,7 @@ public final class ZoneManager implements IXmlReader {
 							coords = rs.toArray(new int[rs.size()][2]);
 							rs.clear();
 							
-							if ((coords == null) || (coords.length == 0)) {
+							if (coords.length == 0) {
 								LOG.warn("Missing data for zone {} XML file {}!", zoneId, f);
 								continue;
 							}
@@ -243,8 +243,8 @@ public final class ZoneManager implements IXmlReader {
 						}
 						
 						// Create the zone
-						Class<?> newZone = null;
-						Constructor<?> zoneConstructor = null;
+						Class<?> newZone;
+						Constructor<?> zoneConstructor;
 						L2ZoneType temp;
 						try {
 							newZone = Class.forName("com.l2jserver.gameserver.model.zone.type.L2" + zoneType);
@@ -501,7 +501,7 @@ public final class ZoneManager implements IXmlReader {
 	 * @return link to zone form
 	 */
 	public NpcSpawnTerritory getSpawnTerritory(String name) {
-		return _spawnTerritories.containsKey(name) ? _spawnTerritories.get(name) : null;
+		return _spawnTerritories.get(name);
 	}
 	
 	/**

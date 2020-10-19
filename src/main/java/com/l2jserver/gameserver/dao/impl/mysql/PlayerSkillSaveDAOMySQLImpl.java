@@ -47,7 +47,7 @@ public class PlayerSkillSaveDAOMySQLImpl implements PlayerSkillSaveDAO {
 	
 	private static final String INSERT = "INSERT INTO character_skills_save (charId,skill_id,skill_level,remaining_time,reuse_delay,systime,restore_type,class_index,buff_index) VALUES (?,?,?,?,?,?,?,?,?)";
 	
-	private static final String SELECT = "SELECT skill_id,skill_level,remaining_time, reuse_delay, systime, restore_type FROM character_skills_save WHERE charId=? AND class_index=? ORDER BY buff_index ASC";
+	private static final String SELECT = "SELECT skill_id,skill_level,remaining_time, reuse_delay, systime, restore_type FROM character_skills_save WHERE charId=? AND class_index=? ORDER BY buff_index";
 	
 	private static final String DELETE = "DELETE FROM character_skills_save WHERE charId=? AND class_index=?";
 	
@@ -58,8 +58,8 @@ public class PlayerSkillSaveDAOMySQLImpl implements PlayerSkillSaveDAO {
 			ps.setInt(1, player.getObjectId());
 			ps.setInt(2, classIndex);
 			ps.execute();
-		} catch (Exception e) {
-			LOG.error("Could not delete all effect data!", player, e);
+		} catch (Exception ex) {
+			LOG.error("Could not delete all effect data for player {}!", player, ex);
 		}
 	}
 	

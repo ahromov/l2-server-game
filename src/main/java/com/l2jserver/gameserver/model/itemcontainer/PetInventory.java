@@ -100,7 +100,7 @@ public class PetInventory extends Inventory {
 	@Override
 	public void restore() {
 		super.restore();
-		// check for equiped items from other pets
+		// check for equipped items from other pets
 		for (L2ItemInstance item : _items) {
 			if (item.isEquipped()) {
 				if (!item.getItem().checkCondition(getOwner(), getOwner(), false)) {

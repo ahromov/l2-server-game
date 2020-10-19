@@ -54,7 +54,7 @@ import com.l2jserver.gameserver.util.Broadcast;
 /**
  * This class provides the functions for shutting down and restarting the server.<br>
  * It closes all open client connections and saves all data.
- * @version $Revision: 1.2.4.5 $ $Date: 2005/03/27 15:29:09 $
+ * @since 2005/03/27 15:29:09
  */
 public class Shutdown extends Thread {
 	
@@ -94,28 +94,26 @@ public class Shutdown extends Thread {
 			_shutdownMode = GM_SHUTDOWN;
 		}
 		
-		if (_shutdownMode > 0) {
-			switch (seconds) {
-				case 540:
-				case 480:
-				case 420:
-				case 360:
-				case 300:
-				case 240:
-				case 180:
-				case 120:
-				case 60:
-				case 30:
-				case 10:
-				case 5:
-				case 4:
-				case 3:
-				case 2:
-				case 1:
-					break;
-				default:
-					SendServerQuit(seconds);
-			}
+		switch (seconds) {
+			case 540:
+			case 480:
+			case 420:
+			case 360:
+			case 300:
+			case 240:
+			case 180:
+			case 120:
+			case 60:
+			case 30:
+			case 10:
+			case 5:
+			case 4:
+			case 3:
+			case 2:
+			case 1:
+				break;
+			default:
+				SendServerQuit(seconds);
 		}
 		
 		if (_counterInstance != null) {
@@ -215,12 +213,12 @@ public class Shutdown extends Thread {
 			
 			try {
 				LoginServerThread.getInstance().interrupt();
-				LOG.info("Login Server Thread: Thread interruped({}ms).", tc.getEstimatedTimeAndRestartCounter());
+				LOG.info("Login Server Thread: Thread interrupted({}ms).", tc.getEstimatedTimeAndRestartCounter());
 			} catch (Exception e) {
 				// ignore
 			}
 			
-			// last byebye, save all data and quit this server
+			// last bye bye, save all data and quit this server
 			saveData();
 			tc.restartCounter();
 			
@@ -250,17 +248,15 @@ public class Shutdown extends Thread {
 			// last point where logging is operational :(
 			LOG.warn("GM shutdown countdown is over. {} NOW!", MODE_TEXT[_shutdownMode]);
 			switch (_shutdownMode) {
-				case GM_SHUTDOWN:
+				case GM_SHUTDOWN -> {
 					getInstance().setMode(GM_SHUTDOWN);
 					System.exit(0);
-					break;
-				case GM_RESTART:
+				}
+				case GM_RESTART -> {
 					getInstance().setMode(GM_RESTART);
 					System.exit(2);
-					break;
-				case ABORT:
-					LoginServerThread.getInstance().setServerStatus(ServerStatus.STATUS_AUTO);
-					break;
+				}
+				case ABORT -> LoginServerThread.getInstance().setServerStatus(ServerStatus.STATUS_AUTO);
 			}
 		}
 	}
@@ -346,57 +342,26 @@ public class Shutdown extends Thread {
 	private void countdown() {
 		try {
 			while (_secondsShut > 0) {
-				
 				switch (_secondsShut) {
-					case 540:
-						SendServerQuit(540);
-						break;
-					case 480:
-						SendServerQuit(480);
-						break;
-					case 420:
-						SendServerQuit(420);
-						break;
-					case 360:
-						SendServerQuit(360);
-						break;
-					case 300:
-						SendServerQuit(300);
-						break;
-					case 240:
-						SendServerQuit(240);
-						break;
-					case 180:
-						SendServerQuit(180);
-						break;
-					case 120:
-						SendServerQuit(120);
-						break;
-					case 60:
+					case 540 -> SendServerQuit(540);
+					case 480 -> SendServerQuit(480);
+					case 420 -> SendServerQuit(420);
+					case 360 -> SendServerQuit(360);
+					case 300 -> SendServerQuit(300);
+					case 240 -> SendServerQuit(240);
+					case 180 -> SendServerQuit(180);
+					case 120 -> SendServerQuit(120);
+					case 60 -> {
 						LoginServerThread.getInstance().setServerStatus(ServerStatus.STATUS_DOWN); // avoids new players from logging in
 						SendServerQuit(60);
-						break;
-					case 30:
-						SendServerQuit(30);
-						break;
-					case 10:
-						SendServerQuit(10);
-						break;
-					case 5:
-						SendServerQuit(5);
-						break;
-					case 4:
-						SendServerQuit(4);
-						break;
-					case 3:
-						SendServerQuit(3);
-						break;
-					case 2:
-						SendServerQuit(2);
-						break;
-					case 1:
-						SendServerQuit(1);
-						break;
+					}
+					case 30 -> SendServerQuit(30);
+					case 10 -> SendServerQuit(10);
+					case 5 -> SendServerQuit(5);
+					case 4 -> SendServerQuit(4);
+					case 3 -> SendServerQuit(3);
+					case 2 -> SendServerQuit(2);
+					case 1 -> SendServerQuit(1);
 				}
 				
 				_secondsShut--;
@@ -414,19 +379,13 @@ public class Shutdown extends Thread {
 	}
 	
 	/**
-	 * This sends a last byebye, disconnects all players and saves data.
+	 * This sends a last bye bye, disconnects all players and saves data.
 	 */
 	private void saveData() {
 		switch (_shutdownMode) {
-			case SIGTERM:
-				LOG.info("SIGTERM received. Shutting down NOW!");
-				break;
-			case GM_SHUTDOWN:
-				LOG.info("GM shutdown received. Shutting down NOW!");
-				break;
-			case GM_RESTART:
-				LOG.info("GM restart received. Restarting NOW!");
-				break;
+			case SIGTERM -> LOG.info("SIGTERM received. Shutting down NOW!");
+			case GM_SHUTDOWN -> LOG.info("GM shutdown received. Shutting down NOW!");
+			case GM_RESTART -> LOG.info("GM restart received. Restarting NOW!");
 		}
 		
 		TimeCounter tc = new TimeCounter();
@@ -513,7 +472,7 @@ public class Shutdown extends Thread {
 				}
 				player.deleteMe();
 			} catch (Exception e) {
-				LOG.warn("Failed logour char {}", player, e);
+				LOG.warn("Failed logout char {}", player, e);
 			}
 		}
 	}

@@ -23,16 +23,12 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerLevel.
+ * Level condition.
  * @author mkizub
  */
 public class ConditionPlayerLevel extends Condition {
 	private final int _level;
 	
-	/**
-	 * Instantiates a new condition player level.
-	 * @param level the level
-	 */
 	public ConditionPlayerLevel(int level) {
 		_level = level;
 	}

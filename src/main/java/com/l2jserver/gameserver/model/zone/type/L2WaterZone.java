@@ -18,8 +18,6 @@
  */
 package com.l2jserver.gameserver.model.zone.type;
 
-import java.util.Collection;
-
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.L2Npc;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
@@ -46,9 +44,7 @@ public class L2WaterZone extends L2ZoneType {
 				player.broadcastUserInfo();
 			}
 		} else if (character.isNpc()) {
-			Collection<L2PcInstance> plrs = character.getKnownList().getKnownPlayers().values();
-			
-			for (L2PcInstance player : plrs) {
+			for (L2PcInstance player : character.getKnownList().getKnownPlayers().values()) {
 				if (character.getRunSpeed() == 0) {
 					player.sendPacket(new ServerObjectInfo((L2Npc) character, player));
 				} else {
@@ -66,8 +62,7 @@ public class L2WaterZone extends L2ZoneType {
 		if (character.isPlayer()) {
 			character.getActingPlayer().broadcastUserInfo();
 		} else if (character.isNpc()) {
-			Collection<L2PcInstance> plrs = character.getKnownList().getKnownPlayers().values();
-			for (L2PcInstance player : plrs) {
+			for (L2PcInstance player : character.getKnownList().getKnownPlayers().values()) {
 				if (character.getRunSpeed() == 0) {
 					player.sendPacket(new ServerObjectInfo((L2Npc) character, player));
 				} else {

@@ -23,17 +23,18 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
+ * Target level range condition.
  * @author UnAfraid
+ * @author Zoey76
  */
 public class ConditionTargetLevelRange extends Condition {
-	private final int[] _levels;
+	private final int minimumLevel;
 	
-	/**
-	 * Instantiates a new condition target levels range.
-	 * @param levels the {@code levels} range.
-	 */
-	public ConditionTargetLevelRange(int[] levels) {
-		_levels = levels;
+	private final int maximumLevel;
+	
+	public ConditionTargetLevelRange(int minimumLevel, int maximumLevel) {
+		this.minimumLevel = minimumLevel;
+		this.maximumLevel = maximumLevel;
 	}
 	
 	@Override
@@ -42,6 +43,6 @@ public class ConditionTargetLevelRange extends Condition {
 			return false;
 		}
 		final int level = effected.getLevel();
-		return ((level >= _levels[0]) && (level <= _levels[1]));
+		return (level >= minimumLevel) && (level <= maximumLevel);
 	}
 }

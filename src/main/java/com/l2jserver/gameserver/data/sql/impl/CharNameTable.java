@@ -55,7 +55,7 @@ public class CharNameTable {
 		}
 	}
 	
-	private final void addName(int objectId, String name) {
+	private void addName(int objectId, String name) {
 		if (name != null) {
 			if (!name.equals(_chars.get(objectId))) {
 				_chars.put(objectId, name);
@@ -125,11 +125,11 @@ public class CharNameTable {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("SELECT char_name,accesslevel FROM characters WHERE charId=?")) {
 			ps.setInt(1, id);
-			try (var rset = ps.executeQuery()) {
-				if (rset.next()) {
-					name = rset.getString(1);
+			try (var rs = ps.executeQuery()) {
+				if (rs.next()) {
+					name = rs.getString(1);
 					_chars.put(id, name);
-					_accessLevels.put(id, rset.getInt(2));
+					_accessLevels.put(id, rs.getInt(2));
 					return name;
 				}
 			}
@@ -156,7 +156,7 @@ public class CharNameTable {
 				return rs.next();
 			}
 		} catch (Exception ex) {
-			LOG.warn("Could not check existing charname!", ex);
+			LOG.warn("Could not check existing player name!", ex);
 		}
 		return false;
 	}
@@ -165,9 +165,9 @@ public class CharNameTable {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("SELECT COUNT(char_name) FROM characters WHERE account_name=?")) {
 			ps.setString(1, account);
-			try (var rset = ps.executeQuery()) {
-				while (rset.next()) {
-					return rset.getInt(1);
+			try (var rs = ps.executeQuery()) {
+				if (rs.next()) {
+					return rs.getInt(1);
 				}
 			}
 		} catch (Exception ex) {

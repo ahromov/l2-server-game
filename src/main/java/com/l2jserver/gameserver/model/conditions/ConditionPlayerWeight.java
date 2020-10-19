@@ -24,17 +24,13 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerWeight.
+ * Weight condition.
  * @author Kerberos
  */
 public class ConditionPlayerWeight extends Condition {
 	
 	private final int _weight;
 	
-	/**
-	 * Instantiates a new condition player weight.
-	 * @param weight the weight
-	 */
 	public ConditionPlayerWeight(int weight) {
 		_weight = weight;
 	}

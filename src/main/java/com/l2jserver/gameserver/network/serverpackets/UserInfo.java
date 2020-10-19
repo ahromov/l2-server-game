@@ -33,7 +33,7 @@ import com.l2jserver.gameserver.model.zone.ZoneId;
 public final class UserInfo extends L2GameServerPacket {
 	private final L2PcInstance _activeChar;
 	private int _relation;
-	private int _airShipHelm;
+	private final int _airShipHelm;
 	
 	private final int _runSpd, _walkSpd;
 	private final int _swimRunSpd, _swimWalkSpd;

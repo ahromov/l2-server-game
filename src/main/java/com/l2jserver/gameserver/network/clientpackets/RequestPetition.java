@@ -27,14 +27,8 @@ import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 /**
- * <p>
- * Format: (c) Sd
- * <ul>
- * <li>S: content</li>
- * <li>d: type</li>
- * </ul>
- * </p>
- * @author -Wooden-, TempyIncursion
+ * @author -Wooden-
+ * @author TempyIncursion
  */
 public final class RequestPetition extends L2GameClientPacket {
 	private static final String _C__89_RequestPetition = "[C] 89 RequestPetition";

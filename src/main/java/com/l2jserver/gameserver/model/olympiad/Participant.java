@@ -23,7 +23,8 @@ import com.l2jserver.gameserver.model.StatsSet;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 /**
- * @author DS, Zoey76
+ * @author DS
+ * @author Zoey76
  */
 public final class Participant {
 	private final int objectId;

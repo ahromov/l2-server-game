@@ -37,7 +37,7 @@ public final class L2Crest implements IIdentifiable {
 		
 		private final int _id;
 		
-		private CrestType(int id) {
+		CrestType(int id) {
 			_id = id;
 		}
 		
@@ -86,20 +86,17 @@ public final class L2Crest implements IIdentifiable {
 	public String getClientPath(L2PcInstance activeChar) {
 		String path = null;
 		switch (getType()) {
-			case PLEDGE: {
+			case PLEDGE -> {
 				activeChar.sendPacket(new PledgeCrest(getId(), getData()));
 				path = "Crest.crest_" + hexId().getServerID() + "_" + getId();
-				break;
 			}
-			case PLEDGE_LARGE: {
+			case PLEDGE_LARGE -> {
 				activeChar.sendPacket(new ExPledgeCrestLarge(getId(), getData()));
 				path = "Crest.crest_" + hexId().getServerID() + "_" + getId() + "_l";
-				break;
 			}
-			case ALLY: {
+			case ALLY -> {
 				activeChar.sendPacket(new AllyCrest(getId(), getData()));
 				path = "Crest.crest_" + hexId().getServerID() + "_" + getId();
-				break;
 			}
 		}
 		return path;

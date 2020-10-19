@@ -24,7 +24,9 @@ import com.l2jserver.gameserver.model.ItemInfo;
 import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
 
 /**
- * @author Yme, Advi, UnAfraid
+ * @author Yme
+ * @author Advi
+ * @author UnAfraid
  */
 public class PetInventoryUpdate extends AbstractInventoryUpdate {
 	public PetInventoryUpdate() {

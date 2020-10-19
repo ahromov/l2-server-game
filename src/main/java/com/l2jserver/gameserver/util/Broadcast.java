@@ -18,7 +18,6 @@
  */
 package com.l2jserver.gameserver.util;
 
-import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,11 +32,10 @@ import com.l2jserver.gameserver.network.serverpackets.L2GameServerPacket;
 import com.l2jserver.gameserver.network.serverpackets.RelationChanged;
 
 /**
- * This class ...
- * @version $Revision: 1.2 $ $Date: 2004/06/27 08:12:59 $
+ * @since 2004/06/27 08:12:59
  */
 public final class Broadcast {
-	private static Logger _log = Logger.getLogger(Broadcast.class.getName());
+	private static final Logger _log = Logger.getLogger(Broadcast.class.getName());
 	
 	/**
 	 * Send a packet to all L2PcInstance in the _KnownPlayers of the L2Character that have the Character targeted.<BR>
@@ -49,15 +47,13 @@ public final class Broadcast {
 	 * @param mov
 	 */
 	public static void toPlayersTargettingMyself(L2Character character, L2GameServerPacket mov) {
-		Collection<L2PcInstance> plrs = character.getKnownList().getKnownPlayers().values();
-		for (L2PcInstance player : plrs) {
+		for (L2PcInstance player : character.getKnownList().getKnownPlayers().values()) {
 			if (player.getTarget() != character) {
 				continue;
 			}
 			
 			player.sendPacket(mov);
 		}
-		
 	}
 	
 	/**
@@ -70,8 +66,7 @@ public final class Broadcast {
 	 * @param mov
 	 */
 	public static void toKnownPlayers(L2Character character, L2GameServerPacket mov) {
-		Collection<L2PcInstance> plrs = character.getKnownList().getKnownPlayers().values();
-		for (L2PcInstance player : plrs) {
+		for (L2PcInstance player : character.getKnownList().getKnownPlayers().values()) {
 			if (player == null) {
 				continue;
 			}
@@ -109,8 +104,7 @@ public final class Broadcast {
 			radius = 1500;
 		}
 		
-		Collection<L2PcInstance> plrs = character.getKnownList().getKnownPlayers().values();
-		for (L2PcInstance player : plrs) {
+		for (L2PcInstance player : character.getKnownList().getKnownPlayers().values()) {
 			if (character.isInsideRadius(player, radius, false, false)) {
 				player.sendPacket(mov);
 			}
@@ -143,8 +137,7 @@ public final class Broadcast {
 			character.sendPacket(mov);
 		}
 		
-		Collection<L2PcInstance> plrs = character.getKnownList().getKnownPlayers().values();
-		for (L2PcInstance player : plrs) {
+		for (L2PcInstance player : character.getKnownList().getKnownPlayers().values()) {
 			if ((player != null) && Util.checkIfInRange(radius, character, player, false)) {
 				player.sendPacket(mov);
 			}

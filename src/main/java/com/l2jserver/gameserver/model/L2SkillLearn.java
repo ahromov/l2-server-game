@@ -49,7 +49,7 @@ public final class L2SkillLearn {
 	private final boolean _learnedByNpc;
 	private final boolean _learnedByFS;
 	
-	public class SubClassData {
+	public static class SubClassData {
 		private final int slot;
 		private final int lvl;
 		
@@ -58,16 +58,10 @@ public final class L2SkillLearn {
 			lvl = pLvl;
 		}
 		
-		/**
-		 * @return the sub-class slot.
-		 */
 		public int getSlot() {
 			return slot;
 		}
 		
-		/**
-		 * @return the required sub-class level.
-		 */
 		public int getLvl() {
 			return lvl;
 		}
@@ -196,7 +190,7 @@ public final class L2SkillLearn {
 	/**
 	 * @return {@code true} if this skill is a Residence skill.
 	 */
-	public boolean isResidencialSkill() {
+	public boolean isResidentialSkill() {
 		return _residenceSkill;
 	}
 	

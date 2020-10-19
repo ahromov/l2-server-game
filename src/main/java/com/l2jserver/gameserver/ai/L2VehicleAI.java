@@ -27,10 +27,7 @@ import com.l2jserver.gameserver.model.skills.Skill;
  * @author DS
  */
 public abstract class L2VehicleAI extends L2CharacterAI {
-	/**
-	 * Simple AI for vehicles
-	 * @param creature
-	 */
+	
 	public L2VehicleAI(L2Vehicle creature) {
 		super(creature);
 	}

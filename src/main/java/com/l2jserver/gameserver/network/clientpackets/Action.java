@@ -54,7 +54,7 @@ public final class Action extends L2GameClientPacket {
 	@Override
 	protected void runImpl() {
 		if (general().debug()) {
-			_log.info(getType() + ": " + (_actionId == 0 ? "Simple-click" : "Shift-click") + " Target object ID: " + _objectId + " orignX: " + _originX + " orignY: " + _originY + " orignZ: " + _originZ);
+			_log.info(getType() + ": " + (_actionId == 0 ? "Simple-click" : "Shift-click") + " Target object ID: " + _objectId + " originX: " + _originX + " originY: " + _originY + " originZ: " + _originZ);
 		}
 		
 		// Get the current L2PcInstance of the player
@@ -126,23 +126,18 @@ public final class Action extends L2GameClientPacket {
 		}
 		
 		switch (_actionId) {
-			case 0: {
-				obj.onAction(activeChar);
-				break;
-			}
-			case 1: {
+			case 0 -> obj.onAction(activeChar);
+			case 1 -> {
 				if (!activeChar.isGM() && !(obj.isNpc() && npc().viewNpc())) {
 					obj.onAction(activeChar, false);
 				} else {
 					obj.onActionShift(activeChar);
 				}
-				break;
 			}
-			default: {
+			default -> {
 				// Invalid action detected (probably client cheating), log this
 				_log.warning(getType() + ": Character: " + activeChar.getName() + " requested invalid action: " + _actionId);
 				sendPacket(ActionFailed.STATIC_PACKET);
-				break;
 			}
 		}
 	}

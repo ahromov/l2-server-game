@@ -33,10 +33,10 @@ import com.l2jserver.gameserver.config.Configuration;
 
 /**
  * Thread to check for deadlocked threads.
- * @author -Nemesiss- L2M
+ * @author -Nemesiss-
  */
 public class DeadLockDetector extends Thread {
-	private static Logger _log = Logger.getLogger(DeadLockDetector.class.getName());
+	private static final Logger _log = Logger.getLogger(DeadLockDetector.class.getName());
 	
 	private final ThreadMXBean tmx;
 	

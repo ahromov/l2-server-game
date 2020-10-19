@@ -40,7 +40,7 @@ public class RequestExChangeName extends L2GameClientPacket {
 	
 	@Override
 	protected void runImpl() {
-		_log.info("Recieved " + getType() + " name: " + _newName + " type: " + _type + " CharSlot: " + _charSlot);
+		_log.info("Received " + getType() + " name: " + _newName + " type: " + _type + " CharSlot: " + _charSlot);
 		
 	}
 	

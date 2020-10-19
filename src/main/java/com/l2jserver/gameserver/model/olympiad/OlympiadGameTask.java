@@ -285,10 +285,7 @@ public final class OlympiadGameTask implements Runnable {
 			ThreadPoolManager.getInstance().scheduleGeneral(this, delay * 1000);
 		} catch (Exception e) {
 			switch (_state) {
-				case GAME_STOPPED:
-				case TELEPORT_TO_TOWN:
-				case CLEANUP:
-				case IDLE: {
+				case GAME_STOPPED, TELEPORT_TO_TOWN, CLEANUP, IDLE -> {
 					_log.log(Level.WARNING, "Unable to return players back in town, exception: " + e.getMessage());
 					_state = GameState.IDLE;
 					_game = null;

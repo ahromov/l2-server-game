@@ -34,10 +34,6 @@ import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 public final class L2TerritoryWardInstance extends L2Attackable {
 	private static final Logger LOG = LoggerFactory.getLogger(L2TerritoryWardInstance.class);
 	
-	/**
-	 * Creates territory ward.
-	 * @param template the territory ward NPC template
-	 */
 	public L2TerritoryWardInstance(L2NpcTemplate template) {
 		super(template);
 		
@@ -60,11 +56,7 @@ public final class L2TerritoryWardInstance extends L2Attackable {
 		if (actingPlayer.getSiegeSide() == 0) {
 			return false;
 		}
-		if (TerritoryWarManager.getInstance().isAllyField(actingPlayer, getCastle().getResidenceId())) {
-			return false;
-		}
-		
-		return true;
+		return !TerritoryWarManager.getInstance().isAllyField(actingPlayer, getCastle().getResidenceId());
 	}
 	
 	@Override
@@ -120,7 +112,7 @@ public final class L2TerritoryWardInstance extends L2Attackable {
 		}
 		
 		if (killer instanceof L2PcInstance) {
-			if ((((L2PcInstance) killer).getSiegeSide() > 0) && !((L2PcInstance) killer).isCombatFlagEquipped()) {
+			if ((killer.getSiegeSide() > 0) && !((L2PcInstance) killer).isCombatFlagEquipped()) {
 				((L2PcInstance) killer).addItem("Pickup", getId() - 23012, 1, null, false);
 			} else {
 				TerritoryWarManager.getInstance().getTerritoryWard(getId() - 36491).spawnMe();

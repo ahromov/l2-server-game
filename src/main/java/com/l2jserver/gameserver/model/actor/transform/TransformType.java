@@ -28,5 +28,5 @@ public enum TransformType {
 	RIDING_MODE,
 	PURE_STAT,
 	FLYING,
-	COMBAT;
+	COMBAT
 }

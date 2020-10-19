@@ -21,9 +21,6 @@ package com.l2jserver.gameserver.network.serverpackets;
 public class AutoAttackStop extends L2GameServerPacket {
 	private final int _targetObjId;
 	
-	/**
-	 * @param targetObjId
-	 */
 	public AutoAttackStop(int targetObjId) {
 		_targetObjId = targetObjId;
 	}

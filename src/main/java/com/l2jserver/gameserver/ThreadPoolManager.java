@@ -113,11 +113,11 @@ public class ThreadPoolManager {
 		_effectsScheduledThreadPool = new ScheduledThreadPoolExecutor(general().getThreadPoolSizeEffects(), new PriorityThreadFactory("EffectsSTPool", Thread.NORM_PRIORITY));
 		_generalScheduledThreadPool = new ScheduledThreadPoolExecutor(general().getThreadPoolSizeGeneral(), new PriorityThreadFactory("GeneralSTPool", Thread.NORM_PRIORITY));
 		_eventScheduledThreadPool = new ScheduledThreadPoolExecutor(general().getThreadPoolSizeEvents(), new PriorityThreadFactory("EventSTPool", Thread.NORM_PRIORITY));
-		_ioPacketsThreadPool = new ThreadPoolExecutor(general().getUrgentPacketThreadCoreSize(), Integer.MAX_VALUE, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new PriorityThreadFactory("I/O Packet Pool", Thread.NORM_PRIORITY + 1));
-		_generalPacketsThreadPool = new ThreadPoolExecutor(general().getGeneralPacketThreadCoreSize(), general().getGeneralPacketThreadCoreSize() + 2, 15L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new PriorityThreadFactory("Normal Packet Pool", Thread.NORM_PRIORITY + 1));
-		_generalThreadPool = new ThreadPoolExecutor(general().getGeneralThreadCoreSize(), general().getGeneralThreadCoreSize() + 2, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new PriorityThreadFactory("General Pool", Thread.NORM_PRIORITY));
+		_ioPacketsThreadPool = new ThreadPoolExecutor(general().getUrgentPacketThreadCoreSize(), Integer.MAX_VALUE, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new PriorityThreadFactory("I/O Packet Pool", Thread.NORM_PRIORITY + 1));
+		_generalPacketsThreadPool = new ThreadPoolExecutor(general().getGeneralPacketThreadCoreSize(), general().getGeneralPacketThreadCoreSize() + 2, 15L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new PriorityThreadFactory("Normal Packet Pool", Thread.NORM_PRIORITY + 1));
+		_generalThreadPool = new ThreadPoolExecutor(general().getGeneralThreadCoreSize(), general().getGeneralThreadCoreSize() + 2, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new PriorityThreadFactory("General Pool", Thread.NORM_PRIORITY));
 		_aiScheduledThreadPool = new ScheduledThreadPoolExecutor(general().getAiMaxThread(), new PriorityThreadFactory("AISTPool", Thread.NORM_PRIORITY));
-		_eventThreadPool = new ThreadPoolExecutor(general().getEventsMaxThread(), general().getEventsMaxThread() + 2, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new PriorityThreadFactory("Event Pool", Thread.NORM_PRIORITY));
+		_eventThreadPool = new ThreadPoolExecutor(general().getEventsMaxThread(), general().getEventsMaxThread() + 2, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new PriorityThreadFactory("Event Pool", Thread.NORM_PRIORITY));
 		
 		scheduleGeneralAtFixedRate(new PurgeTask(_effectsScheduledThreadPool, _generalScheduledThreadPool, _aiScheduledThreadPool, _eventThreadPool), 10, 5, TimeUnit.MINUTES);
 	}
@@ -454,13 +454,13 @@ public class ThreadPoolManager {
 	}
 	
 	private static class PriorityThreadFactory implements ThreadFactory {
-		private final int _prio;
+		private final int _priority;
 		private final String _name;
 		private final AtomicInteger _threadNumber = new AtomicInteger(1);
 		private final ThreadGroup _group;
 		
-		public PriorityThreadFactory(String name, int prio) {
-			_prio = prio;
+		public PriorityThreadFactory(String name, int priority) {
+			_priority = priority;
 			_name = name;
 			_group = new ThreadGroup(_name);
 		}
@@ -468,7 +468,7 @@ public class ThreadPoolManager {
 		@Override
 		public Thread newThread(Runnable r) {
 			Thread t = new Thread(_group, r, _name + "-" + _threadNumber.getAndIncrement());
-			t.setPriority(_prio);
+			t.setPriority(_priority);
 			return t;
 		}
 		
@@ -495,7 +495,7 @@ public class ThreadPoolManager {
 			LOG.info("All ThreadPools are now stopped");
 			
 		} catch (InterruptedException e) {
-			LOG.warn("There has been a problem shuting down the thread pool manager!", e);
+			LOG.warn("There has been a problem shutting down the thread pool manager!", e);
 		}
 	}
 	
@@ -601,7 +601,7 @@ public class ThreadPoolManager {
 		return sb.toString();
 	}
 	
-	protected class PurgeTask implements Runnable {
+	protected static class PurgeTask implements Runnable {
 		private final ScheduledThreadPoolExecutor _effectsScheduled;
 		
 		private final ScheduledThreadPoolExecutor _generalScheduled;

@@ -106,7 +106,7 @@ public final class AntiFeedManager {
 	 * @param eventId
 	 */
 	public void registerEvent(int eventId) {
-		_eventIPs.putIfAbsent(eventId, new ConcurrentHashMap<Integer, AtomicInteger>());
+		_eventIPs.putIfAbsent(eventId, new ConcurrentHashMap<>());
 	}
 	
 	/**
@@ -137,7 +137,7 @@ public final class AntiFeedManager {
 			return false; // no such event registered
 		}
 		
-		final Integer addrHash = Integer.valueOf(client.getConnectionAddress().hashCode());
+		final Integer addrHash = client.getConnectionAddress().hashCode();
 		final AtomicInteger connectionCount = event.computeIfAbsent(addrHash, k -> new AtomicInteger());
 		int whiteListCount = customs().getDualboxCheckWhitelist().getOrDefault(addrHash, 0);
 		if ((whiteListCount < 0) || ((connectionCount.get() + 1) <= (max + whiteListCount))) {
@@ -173,10 +173,10 @@ public final class AntiFeedManager {
 			return false; // no such event registered
 		}
 		
-		final Integer addrHash = Integer.valueOf(client.getConnectionAddress().hashCode());
+		final Integer addrHash = client.getConnectionAddress().hashCode();
 		
 		return event.computeIfPresent(addrHash, (k, v) -> {
-			if ((v == null) || (v.decrementAndGet() == 0)) {
+			if (v.decrementAndGet() == 0) {
 				return null;
 			}
 			return v;
@@ -192,9 +192,7 @@ public final class AntiFeedManager {
 			return;
 		}
 		
-		_eventIPs.forEach((k, v) -> {
-			removeClient(k, client);
-		});
+		_eventIPs.forEach((k, v) -> removeClient(k, client));
 	}
 	
 	/**
@@ -227,7 +225,7 @@ public final class AntiFeedManager {
 			return max;
 		}
 		
-		final Integer addrHash = Integer.valueOf(client.getConnectionAddress().hashCode());
+		final Integer addrHash = client.getConnectionAddress().hashCode();
 		int limit = max;
 		if (customs().getDualboxCheckWhitelist().containsKey(addrHash)) {
 			limit += customs().getDualboxCheckWhitelist().get(addrHash);

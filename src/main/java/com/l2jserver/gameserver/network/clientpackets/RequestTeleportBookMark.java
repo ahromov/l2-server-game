@@ -21,7 +21,7 @@ package com.l2jserver.gameserver.network.clientpackets;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 /**
- * @author ShanSoft Packets Structure: chdd
+ * @author ShanSoft
  */
 public final class RequestTeleportBookMark extends L2GameClientPacket {
 	private static final String _C__D0_51_04_REQUESTTELEPORTBOOKMARK = "[C] D0:51:04 RequestTeleportBookMark";

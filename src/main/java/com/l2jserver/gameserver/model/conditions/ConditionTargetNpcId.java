@@ -25,15 +25,11 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionTargetNpcId.
+ * Target NPC Id condition.
  */
 public class ConditionTargetNpcId extends Condition {
 	private final List<Integer> _npcIds;
 	
-	/**
-	 * Instantiates a new condition target npc id.
-	 * @param npcIds the npc ids
-	 */
 	public ConditionTargetNpcId(List<Integer> npcIds) {
 		_npcIds = npcIds;
 	}

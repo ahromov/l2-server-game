@@ -29,7 +29,7 @@ import com.l2jserver.gameserver.model.actor.instance.L2ControllableMobInstance;
 import com.l2jserver.gameserver.model.actor.templates.L2NpcTemplate;
 
 /**
- * @author littlecrow A special spawn implementation to spawn controllable mob
+ * @author littlecrow
  */
 public class L2GroupSpawn extends L2Spawn {
 	private final L2NpcTemplate _template;
@@ -47,9 +47,9 @@ public class L2GroupSpawn extends L2Spawn {
 				return null;
 			}
 			
-			int newlocx = 0;
-			int newlocy = 0;
-			int newlocz = 0;
+			int newLocX = 0;
+			int newLocY = 0;
+			int newLocZ = 0;
 			
 			if ((getX() == 0) && (getY() == 0)) {
 				if (getLocationId() == 0) {
@@ -58,14 +58,14 @@ public class L2GroupSpawn extends L2Spawn {
 				
 				final Location location = TerritoryTable.getInstance().getRandomPoint(getLocationId());
 				if (location != null) {
-					newlocx = location.getX();
-					newlocy = location.getY();
-					newlocz = location.getZ();
+					newLocX = location.getX();
+					newLocY = location.getY();
+					newLocZ = location.getZ();
 				}
 			} else {
-				newlocx = getX();
-				newlocy = getY();
-				newlocz = getZ();
+				newLocX = getX();
+				newLocY = getY();
+				newLocZ = getZ();
 			}
 			
 			final L2Npc mob = new L2ControllableMobInstance(_template);
@@ -78,7 +78,7 @@ public class L2GroupSpawn extends L2Spawn {
 			}
 			
 			mob.setSpawn(this);
-			mob.spawnMe(newlocx, newlocy, newlocz);
+			mob.spawnMe(newLocX, newLocY, newLocZ);
 			mob.onSpawn();
 			
 			if (general().debug()) {

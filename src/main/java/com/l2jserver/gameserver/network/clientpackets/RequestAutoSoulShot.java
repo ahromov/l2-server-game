@@ -28,8 +28,7 @@ import com.l2jserver.gameserver.network.serverpackets.ExAutoSoulShot;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 /**
- * This class ...
- * @version $Revision: 1.0.0.0 $ $Date: 2005/07/11 15:29:30 $
+ * @since 2005/07/11 15:29:30
  */
 public final class RequestAutoSoulShot extends L2GameClientPacket {
 	private static final String _C__D0_0D_REQUESTAUTOSOULSHOT = "[C] D0:0D RequestAutoSoulShot";

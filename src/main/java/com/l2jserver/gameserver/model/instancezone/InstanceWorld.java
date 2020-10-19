@@ -43,7 +43,7 @@ public class InstanceWorld {
 	}
 	
 	public void removeAllowed(int id) {
-		_allowed.remove(_allowed.indexOf(Integer.valueOf(id)));
+		_allowed.remove(Integer.valueOf(id));
 	}
 	
 	public void addAllowed(int id) {

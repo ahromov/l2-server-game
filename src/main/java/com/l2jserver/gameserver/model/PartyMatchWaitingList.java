@@ -57,7 +57,7 @@ public class PartyMatchWaitingList {
 			.filter(p -> p.getLevel() <= maxLevel) //
 			.filter(p -> classes.isEmpty() || classes.contains(p.getClassId().getId())) //
 			.filter(p -> Strings.isBlank(filter) || p.getName().toLowerCase().contains(filter.toLowerCase())) //
-			.filter(p -> p.isPartyWaiting()) //
+			.filter(L2PcInstance::isPartyWaiting) //
 			.collect(Collectors.toList());
 	}
 	

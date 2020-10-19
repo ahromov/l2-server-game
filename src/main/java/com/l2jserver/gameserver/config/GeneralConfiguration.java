@@ -348,6 +348,7 @@ public interface GeneralConfiguration extends Mutable, Reloadable {
 	Boolean allowSummonInInstance();
 	
 	@Key("EjectDeadPlayerTime")
+	@ConverterClass(Seconds2MillisecondsConverter.class)
 	Integer getEjectDeadPlayerTime();
 	
 	@Key("InstanceFinishTime")

@@ -24,24 +24,16 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionPlayerHasFort.
+ * Has fort condition.
  * @author MrPoke
  */
 public final class ConditionPlayerHasFort extends Condition {
 	private final int _fort;
 	
-	/**
-	 * Instantiates a new condition player has fort.
-	 * @param fort the fort
-	 */
 	public ConditionPlayerHasFort(int fort) {
 		_fort = fort;
 	}
 	
-	/**
-	 * Test impl.
-	 * @return true, if successful
-	 */
 	@Override
 	public boolean testImpl(L2Character effector, L2Character effected, Skill skill, L2Item item) {
 		if (effector.getActingPlayer() == null) {

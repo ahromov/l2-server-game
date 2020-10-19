@@ -79,7 +79,7 @@ public class L2RaceManagerInstance extends L2Npc {
 	};
 	private static boolean _notInitialized = true;
 	protected static MonRaceInfo _packet;
-	protected static final int _cost[] = {
+	protected static final int[] _cost = {
 		100,
 		500,
 		1000,
@@ -90,10 +90,6 @@ public class L2RaceManagerInstance extends L2Npc {
 		100000
 	};
 	
-	/**
-	 * Creates a race manager.
-	 * @param template the race manager NPC template
-	 */
 	public L2RaceManagerInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2RaceManagerInstance);
@@ -171,7 +167,6 @@ public class L2RaceManagerInstance extends L2Npc {
 				_minutes--;
 				break;
 			case 819: // SystemMessageId.MONSRACE_S1_TICKET_SALES_CLOSED
-				// _log.info("Sales closed");
 				sm.addInt(_raceNumber);
 				_state = WAITING;
 				_minutes = 2;
@@ -183,19 +178,15 @@ public class L2RaceManagerInstance extends L2Npc {
 				_minutes = 5;
 				break;
 			case 826: // SystemMessageId.MONSRACE_FIRST_PLACE_S1_SECOND_S2
-				// _log.info("Placing");
 				_state = RACE_END;
 				sm.addInt(MonsterRace.getInstance().getFirstPlace());
 				sm.addInt(MonsterRace.getInstance().getSecondPlace());
 				break;
 		}
-		// _logn.info("Counter: "+minutes);
-		// _log.info("State: "+state);
+		
 		broadcast(sm);
-		// _log.info("Player's known: "+getKnownPlayers().size());
 		
 		if (type == SystemMessageId.MONSRACE_RACE_START) {
-			// _log.info("Starting race");
 			_state = STARTING_RACE;
 			startRace();
 			_minutes = 5;
@@ -217,7 +208,6 @@ public class L2RaceManagerInstance extends L2Npc {
 	private void startRace() {
 		MonsterRace race = MonsterRace.getInstance();
 		if (_state == STARTING_RACE) {
-			// state++;
 			PlaySound SRace = Music.S_RACE.getPacket();
 			broadcast(SRace);
 			// TODO find correct sender 121209259, 12125, 182487, -3559
@@ -228,13 +218,11 @@ public class L2RaceManagerInstance extends L2Npc {
 			
 			ThreadPoolManager.getInstance().scheduleGeneral(new RunRace(), 5000);
 		} else {
-			// state++;
 			race.newRace();
 			race.newSpeeds();
 			_packet = new MonRaceInfo(_codes[0][0], _codes[0][1], race.getMonsters(), race.getSpeeds());
 			sendMonsterInfo();
 		}
-		
 	}
 	
 	@Override
@@ -412,7 +400,7 @@ public class L2RaceManagerInstance extends L2Npc {
 			return _info[lane];
 		}
 		
-		public class Info {
+		public static class Info {
 			private final int _id;
 			private final int _place;
 			private final int _odds;
@@ -460,12 +448,9 @@ public class L2RaceManagerInstance extends L2Npc {
 			makeAnnouncement(SystemMessageId.MONSRACE_S1_RACE_END);
 			_raceNumber++;
 			
-			DeleteObject obj = null;
 			for (int i = 0; i < 8; i++) {
-				obj = new DeleteObject(MonsterRace.getInstance().getMonsters()[i]);
-				broadcast(obj);
+				broadcast(new DeleteObject(MonsterRace.getInstance().getMonsters()[i]));
 			}
 		}
 	}
-	
 }

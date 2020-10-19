@@ -115,7 +115,7 @@ public class NpcData implements IXmlReader {
 						for (Node npcNode = listNode.getFirstChild(); npcNode != null; npcNode = npcNode.getNextSibling()) {
 							attrs = npcNode.getAttributes();
 							switch (npcNode.getNodeName().toLowerCase()) {
-								case "parameters": {
+								case "parameters" -> {
 									if (parameters == null) {
 										parameters = new HashMap<>();
 									}
@@ -123,15 +123,9 @@ public class NpcData implements IXmlReader {
 									for (Node parametersNode = npcNode.getFirstChild(); parametersNode != null; parametersNode = parametersNode.getNextSibling()) {
 										attrs = parametersNode.getAttributes();
 										switch (parametersNode.getNodeName().toLowerCase()) {
-											case "param": {
-												parameters.put(parseString(attrs, "name"), parseString(attrs, "value"));
-												break;
-											}
-											case "skill": {
-												parameters.put(parseString(attrs, "name"), new SkillHolder(parseInteger(attrs, "id"), parseInteger(attrs, "level")));
-												break;
-											}
-											case "minions": {
+											case "param" -> parameters.put(parseString(attrs, "name"), parseString(attrs, "value"));
+											case "skill" -> parameters.put(parseString(attrs, "name"), new SkillHolder(parseInteger(attrs, "id"), parseInteger(attrs, "level")));
+											case "minions" -> {
 												final List<MinionHolder> minions = new ArrayList<>(1);
 												for (Node minionsNode = parametersNode.getFirstChild(); minionsNode != null; minionsNode = minionsNode.getNextSibling()) {
 													if (minionsNode.getNodeName().equalsIgnoreCase("npc")) {
@@ -143,31 +137,23 @@ public class NpcData implements IXmlReader {
 												if (!minions.isEmpty()) {
 													parameters.put(parseString(parametersNode.getAttributes(), "name"), minions);
 												}
-												
-												break;
 											}
 										}
 									}
-									break;
 								}
-								case "race":
-								case "sex":
-									set.set(npcNode.getNodeName(), npcNode.getTextContent().toUpperCase());
-									break;
-								case "equipment": {
+								case "race", "sex" -> set.set(npcNode.getNodeName(), npcNode.getTextContent().toUpperCase());
+								case "equipment" -> {
 									set.set("chestId", parseInteger(attrs, "chest"));
 									set.set("rhandId", parseInteger(attrs, "rhand"));
 									set.set("lhandId", parseInteger(attrs, "lhand"));
 									set.set("weaponEnchant", parseInteger(attrs, "weaponEnchant"));
-									break;
 								}
-								case "acquire": {
+								case "acquire" -> {
 									set.set("expRate", parseDouble(attrs, "expRate"));
 									set.set("sp", parseDouble(attrs, "sp"));
 									set.set("raidPoints", parseDouble(attrs, "raidPoints"));
-									break;
 								}
-								case "stats": {
+								case "stats" -> {
 									set.set("baseSTR", parseInteger(attrs, "str"));
 									set.set("baseINT", parseInteger(attrs, "int"));
 									set.set("baseDEX", parseInteger(attrs, "dex"));
@@ -177,14 +163,13 @@ public class NpcData implements IXmlReader {
 									for (Node statsNode = npcNode.getFirstChild(); statsNode != null; statsNode = statsNode.getNextSibling()) {
 										attrs = statsNode.getAttributes();
 										switch (statsNode.getNodeName().toLowerCase()) {
-											case "vitals": {
+											case "vitals" -> {
 												set.set("baseHpMax", parseDouble(attrs, "hp"));
 												set.set("baseHpReg", parseDouble(attrs, "hpRegen"));
 												set.set("baseMpMax", parseDouble(attrs, "mp"));
 												set.set("baseMpReg", parseDouble(attrs, "mpRegen"));
-												break;
 											}
-											case "attack": {
+											case "attack" -> {
 												set.set("basePAtk", parseDouble(attrs, "physical"));
 												set.set("baseMAtk", parseDouble(attrs, "magical"));
 												set.set("baseRndDam", parseInteger(attrs, "random"));
@@ -196,45 +181,30 @@ public class NpcData implements IXmlReader {
 												set.set("baseAtkRange", parseInteger(attrs, "range"));
 												set.set("distance", parseInteger(attrs, "distance"));// TODO: Implement me
 												set.set("width", parseInteger(attrs, "width"));// TODO: Implement me
-												break;
 											}
-											case "defence": {
+											case "defence" -> {
 												set.set("basePDef", parseDouble(attrs, "physical"));
 												set.set("baseMDef", parseDouble(attrs, "magical"));
 												set.set("evasion", parseInteger(attrs, "evasion"));// TODO: Implement me
 												set.set("baseShldDef", parseInteger(attrs, "shield"));
 												set.set("baseShldRate", parseInteger(attrs, "shieldRate"));
-												break;
 											}
-											case "attribute": {
+											case "attribute" -> {
 												for (Node attributeNode = statsNode.getFirstChild(); attributeNode != null; attributeNode = attributeNode.getNextSibling()) {
 													attrs = attributeNode.getAttributes();
 													switch (attributeNode.getNodeName().toLowerCase()) {
-														case "attack": {
+														case "attack" -> {
 															String attackAttributeType = parseString(attrs, "type");
 															switch (attackAttributeType.toUpperCase()) {
-																case "FIRE":
-																	set.set("baseFire", parseInteger(attrs, "value"));
-																	break;
-																case "WATER":
-																	set.set("baseWater", parseInteger(attrs, "value"));
-																	break;
-																case "WIND":
-																	set.set("baseWind", parseInteger(attrs, "value"));
-																	break;
-																case "EARTH":
-																	set.set("baseEarth", parseInteger(attrs, "value"));
-																	break;
-																case "DARK":
-																	set.set("baseDark", parseInteger(attrs, "value"));
-																	break;
-																case "HOLY":
-																	set.set("baseHoly", parseInteger(attrs, "value"));
-																	break;
+																case "FIRE" -> set.set("baseFire", parseInteger(attrs, "value"));
+																case "WATER" -> set.set("baseWater", parseInteger(attrs, "value"));
+																case "WIND" -> set.set("baseWind", parseInteger(attrs, "value"));
+																case "EARTH" -> set.set("baseEarth", parseInteger(attrs, "value"));
+																case "DARK" -> set.set("baseDark", parseInteger(attrs, "value"));
+																case "HOLY" -> set.set("baseHoly", parseInteger(attrs, "value"));
 															}
-															break;
 														}
-														case "defence": {
+														case "defence" -> {
 															set.set("baseFireRes", parseInteger(attrs, "fire"));
 															set.set("baseWaterRes", parseInteger(attrs, "water"));
 															set.set("baseWindRes", parseInteger(attrs, "wind"));
@@ -242,40 +212,32 @@ public class NpcData implements IXmlReader {
 															set.set("baseHolyRes", parseInteger(attrs, "holy"));
 															set.set("baseDarkRes", parseInteger(attrs, "dark"));
 															set.set("baseElementRes", parseInteger(attrs, "default"));
-															break;
 														}
 													}
 												}
-												break;
 											}
-											case "speed": {
+											case "speed" -> {
 												for (Node speedNode = statsNode.getFirstChild(); speedNode != null; speedNode = speedNode.getNextSibling()) {
 													attrs = speedNode.getAttributes();
 													switch (speedNode.getNodeName().toLowerCase()) {
-														case "walk": {
+														case "walk" -> {
 															set.set("baseWalkSpd", parseDouble(attrs, "ground"));
 															set.set("baseSwimWalkSpd", parseDouble(attrs, "swim"));
 															set.set("baseFlyWalkSpd", parseDouble(attrs, "fly"));
-															break;
 														}
-														case "run": {
+														case "run" -> {
 															set.set("baseRunSpd", parseDouble(attrs, "ground"));
 															set.set("baseSwimRunSpd", parseDouble(attrs, "swim"));
 															set.set("baseFlyRunSpd", parseDouble(attrs, "fly"));
-															break;
 														}
 													}
 												}
-												break;
 											}
-											case "hittime":
-												set.set("hitTime", npcNode.getTextContent());// TODO: Implement me default 600 (value in ms)
-												break;
+											case "hittime" -> set.set("hitTime", npcNode.getTextContent());// TODO: Implement me default 600 (value in ms)
 										}
 									}
-									break;
 								}
-								case "status": {
+								case "status" -> {
 									set.set("unique", parseBoolean(attrs, "unique"));
 									set.set("attackable", parseBoolean(attrs, "attackable"));
 									set.set("targetable", parseBoolean(attrs, "targetable"));
@@ -287,9 +249,8 @@ public class NpcData implements IXmlReader {
 									set.set("passableDoor", parseBoolean(attrs, "passableDoor"));
 									set.set("hasSummoner", parseBoolean(attrs, "hasSummoner"));
 									set.set("canBeSown", parseBoolean(attrs, "canBeSown"));
-									break;
 								}
-								case "skilllist": {
+								case "skilllist" -> {
 									skills = new HashMap<>();
 									for (Node skillListNode = npcNode.getFirstChild(); skillListNode != null; skillListNode = skillListNode.getNextSibling()) {
 										if ("skill".equalsIgnoreCase(skillListNode.getNodeName())) {
@@ -304,25 +265,17 @@ public class NpcData implements IXmlReader {
 											}
 										}
 									}
-									break;
 								}
-								case "shots": {
+								case "shots" -> {
 									set.set("soulShot", parseInteger(attrs, "soul"));
 									set.set("spiritShot", parseInteger(attrs, "spirit"));
 									set.set("shotShotChance", parseInteger(attrs, "shotChance"));
 									set.set("spiritShotChance", parseInteger(attrs, "spiritChance"));
-									break;
 								}
-								case "corpsetime":
-									set.set("corpseTime", npcNode.getTextContent());
-									break;
-								case "excrteffect":
-									set.set("exCrtEffect", npcNode.getTextContent()); // TODO: Implement me default ? type boolean
-									break;
-								case "snpcprophprate":
-									set.set("sNpcPropHpRate", npcNode.getTextContent()); // TODO: Implement me default 1 type double
-									break;
-								case "ai": {
+								case "corpsetime" -> set.set("corpseTime", npcNode.getTextContent());
+								case "excrteffect" -> set.set("exCrtEffect", npcNode.getTextContent()); // TODO: Implement me default ? type boolean
+								case "snpcprophprate" -> set.set("sNpcPropHpRate", npcNode.getTextContent()); // TODO: Implement me default 1 type double
+								case "ai" -> {
 									set.set("aiType", parseString(attrs, "type"));
 									set.set("aggroRange", parseInteger(attrs, "aggroRange"));
 									set.set("clanHelpRange", parseInteger(attrs, "clanHelpRange"));
@@ -332,7 +285,7 @@ public class NpcData implements IXmlReader {
 									for (Node aiNode = npcNode.getFirstChild(); aiNode != null; aiNode = aiNode.getNextSibling()) {
 										attrs = aiNode.getAttributes();
 										switch (aiNode.getNodeName().toLowerCase()) {
-											case "skill": {
+											case "skill" -> {
 												set.set("minSkillChance", parseInteger(attrs, "minChance"));
 												set.set("maxSkillChance", parseInteger(attrs, "maxChance"));
 												set.set("primarySkillId", parseInteger(attrs, "primaryId"));
@@ -340,35 +293,30 @@ public class NpcData implements IXmlReader {
 												set.set("shortRangeSkillChance", parseInteger(attrs, "shortRangeChance"));
 												set.set("longRangeSkillId", parseInteger(attrs, "longRangeId"));
 												set.set("longRangeSkillChance", parseInteger(attrs, "longRangeChance"));
-												break;
 											}
-											case "clanlist": {
+											case "clanlist" -> {
 												for (Node clanListNode = aiNode.getFirstChild(); clanListNode != null; clanListNode = clanListNode.getNextSibling()) {
 													attrs = clanListNode.getAttributes();
 													switch (clanListNode.getNodeName().toLowerCase()) {
-														case "clan": {
+														case "clan" -> {
 															if (clans == null) {
 																clans = new HashSet<>(1);
 															}
 															clans.add(getOrCreateClanId(clanListNode.getTextContent()));
-															break;
 														}
-														case "ignorenpcid": {
+														case "ignorenpcid" -> {
 															if (ignoreClanNpcIds == null) {
 																ignoreClanNpcIds = new HashSet<>(1);
 															}
 															ignoreClanNpcIds.add(Integer.parseInt(clanListNode.getTextContent()));
-															break;
 														}
 													}
 												}
-												break;
 											}
 										}
 									}
-									break;
 								}
-								case "droplists": {
+								case "droplists" -> {
 									for (Node dropListsNode = npcNode.getFirstChild(); dropListsNode != null; dropListsNode = dropListsNode.getNextSibling()) {
 										DropListScope dropListScope = null;
 										
@@ -387,25 +335,21 @@ public class NpcData implements IXmlReader {
 											dropLists.put(dropListScope, Collections.unmodifiableList(dropList));
 										}
 									}
-									break;
 								}
-								case "collision": {
+								case "collision" -> {
 									for (Node collisionNode = npcNode.getFirstChild(); collisionNode != null; collisionNode = collisionNode.getNextSibling()) {
 										attrs = collisionNode.getAttributes();
 										switch (collisionNode.getNodeName().toLowerCase()) {
-											case "radius": {
+											case "radius" -> {
 												set.set("collisionRadius", parseDouble(attrs, "normal"));
 												set.set("collisionRadiusGrown", parseDouble(attrs, "grown"));
-												break;
 											}
-											case "height": {
+											case "height" -> {
 												set.set("collisionHeight", parseDouble(attrs, "normal"));
 												set.set("collisionHeightGrown", parseDouble(attrs, "grown"));
-												break;
 											}
 										}
 									}
-									break;
 								}
 							}
 						}
@@ -490,12 +434,7 @@ public class NpcData implements IXmlReader {
 								}
 								
 								for (AISkillScope aiSkillScope : aiSkillScopes) {
-									List<Skill> aiSkills = aiSkillLists.get(aiSkillScope);
-									if (aiSkills == null) {
-										aiSkills = new ArrayList<>();
-										aiSkillLists.put(aiSkillScope, aiSkills);
-									}
-									
+									List<Skill> aiSkills = aiSkillLists.computeIfAbsent(aiSkillScope, k -> new ArrayList<>());
 									aiSkills.add(skill);
 								}
 							}
@@ -520,44 +459,36 @@ public class NpcData implements IXmlReader {
 	private void parseDropList(File f, Node dropListNode, DropListScope dropListScope, List<IDropItem> drops) {
 		for (Node dropNode = dropListNode.getFirstChild(); dropNode != null; dropNode = dropNode.getNextSibling()) {
 			NamedNodeMap attrs = dropNode.getAttributes();
-			switch (dropNode.getNodeName().toLowerCase()) {
-				case "group": {
-					GroupedGeneralDropItem dropItem = dropListScope.newGroupedDropItem(parseDouble(attrs, "chance"));
-					List<IDropItem> groupedDropList = new ArrayList<>(2);
-					for (Node groupNode = dropNode.getFirstChild(); groupNode != null; groupNode = groupNode.getNextSibling()) {
-						parseDropListItem(groupNode, dropListScope, groupedDropList);
-					}
-					
-					List<GeneralDropItem> items = new ArrayList<>(groupedDropList.size());
-					for (IDropItem item : groupedDropList) {
-						if (item instanceof GeneralDropItem) {
-							items.add((GeneralDropItem) item);
-						} else {
-							LOG.warn("{} grouped general drop item supports only general drop item.", f);
-						}
-					}
-					dropItem.setItems(items);
-					
-					drops.add(dropItem);
-					break;
+			if ("group".equals(dropNode.getNodeName().toLowerCase())) {
+				GroupedGeneralDropItem dropItem = dropListScope.newGroupedDropItem(parseDouble(attrs, "chance"));
+				List<IDropItem> groupedDropList = new ArrayList<>(2);
+				for (Node groupNode = dropNode.getFirstChild(); groupNode != null; groupNode = groupNode.getNextSibling()) {
+					parseDropListItem(groupNode, dropListScope, groupedDropList);
 				}
-				default: {
-					parseDropListItem(dropNode, dropListScope, drops);
-					break;
+				
+				List<GeneralDropItem> items = new ArrayList<>(groupedDropList.size());
+				for (IDropItem item : groupedDropList) {
+					if (item instanceof GeneralDropItem) {
+						items.add((GeneralDropItem) item);
+					} else {
+						LOG.warn("{} grouped general drop item supports only general drop item.", f);
+					}
 				}
+				dropItem.setItems(items);
+				
+				drops.add(dropItem);
+			} else {
+				parseDropListItem(dropNode, dropListScope, drops);
 			}
 		}
 	}
 	
 	private void parseDropListItem(Node dropListItem, DropListScope dropListScope, List<IDropItem> drops) {
 		NamedNodeMap attrs = dropListItem.getAttributes();
-		switch (dropListItem.getNodeName().toLowerCase()) {
-			case "item": {
-				final IDropItem dropItem = dropListScope.newDropItem(parseInteger(attrs, "id"), parseLong(attrs, "min"), parseLong(attrs, "max"), parseDouble(attrs, "chance"));
-				if (dropItem != null) {
-					drops.add(dropItem);
-				}
-				break;
+		if ("item".equals(dropListItem.getNodeName().toLowerCase())) {
+			final IDropItem dropItem = dropListScope.newDropItem(parseInteger(attrs, "id"), parseLong(attrs, "min"), parseLong(attrs, "max"), parseDouble(attrs, "chance"));
+			if (dropItem != null) {
+				drops.add(dropItem);
 			}
 		}
 	}

@@ -25,9 +25,9 @@ package com.l2jserver.gameserver.network.serverpackets;
 public class L2FriendSay extends L2GameServerPacket {
 	private final String _sender, _receiver, _message;
 	
-	public L2FriendSay(String sender, String reciever, String message) {
+	public L2FriendSay(String sender, String receiver, String message) {
 		_sender = sender;
-		_receiver = reciever;
+		_receiver = receiver;
 		_message = message;
 	}
 	

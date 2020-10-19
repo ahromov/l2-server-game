@@ -77,17 +77,17 @@ public class PetDAOMySQLImpl implements PetDAO {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("SELECT item_obj_id, name, level, curHp, curMp, exp, sp, fed FROM pets WHERE item_obj_id=?")) {
 			ps.setInt(1, control.getObjectId());
-			try (var rset = ps.executeQuery()) {
+			try (var rs = ps.executeQuery()) {
 				L2PetInstance pet;
-				if (!rset.next()) {
+				if (!rs.next()) {
 					return new L2PetInstance(template, owner, control);
 				}
 				
-				pet = new L2PetInstance(template, owner, control, rset.getByte("level"));
+				pet = new L2PetInstance(template, owner, control, rs.getByte("level"));
 				pet.setRespawned(true);
-				pet.setName(rset.getString("name"));
+				pet.setName(rs.getString("name"));
 				
-				long exp = rset.getLong("exp");
+				long exp = rs.getLong("exp");
 				L2PetLevelData info = PetDataTable.getInstance().getPetLevelData(pet.getId(), pet.getLevel());
 				// DS: update experience based by level
 				// Avoiding pet delevels due to exp per level values changed.
@@ -96,17 +96,17 @@ public class PetDAOMySQLImpl implements PetDAO {
 				}
 				
 				pet.setExp(exp);
-				pet.setSp(rset.getInt("sp"));
+				pet.setSp(rs.getInt("sp"));
 				
-				pet.getStatus().setCurrentHp(rset.getInt("curHp"));
-				pet.getStatus().setCurrentMp(rset.getInt("curMp"));
+				pet.getStatus().setCurrentHp(rs.getInt("curHp"));
+				pet.getStatus().setCurrentMp(rs.getInt("curMp"));
 				pet.getStatus().setCurrentCp(pet.getMaxCp());
-				if (rset.getDouble("curHp") < 1) {
+				if (rs.getDouble("curHp") < 1) {
 					pet.setIsDead(true);
 					pet.stopHpMpRegeneration();
 				}
 				
-				pet.setCurrentFed(rset.getInt("fed"));
+				pet.setCurrentFed(rs.getInt("fed"));
 				return pet;
 			}
 		} catch (Exception e) {

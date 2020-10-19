@@ -27,6 +27,8 @@ public class Agathion {
 	
 	private final int npcId;
 	
+	private final int id;
+	
 	private final int itemId;
 	
 	private final int energy;
@@ -35,6 +37,7 @@ public class Agathion {
 	
 	public Agathion(int npcId, int id, int itemId, int energy, int maxEnergy) {
 		this.npcId = npcId;
+		this.id = id;
 		this.itemId = itemId;
 		this.energy = energy;
 		this.maxEnergy = maxEnergy;
@@ -42,6 +45,10 @@ public class Agathion {
 	
 	public int getNpcId() {
 		return npcId;
+	}
+	
+	public int getId() {
+		return id;
 	}
 	
 	public int getItemId() {

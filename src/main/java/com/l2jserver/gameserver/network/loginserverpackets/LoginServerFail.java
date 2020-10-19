@@ -34,9 +34,6 @@ public class LoginServerFail extends BaseRecievePacket {
 	};
 	private final int _reason;
 	
-	/**
-	 * @param decrypt
-	 */
 	public LoginServerFail(byte[] decrypt) {
 		super(decrypt);
 		_reason = readC();
@@ -49,5 +46,4 @@ public class LoginServerFail extends BaseRecievePacket {
 	public int getReason() {
 		return _reason;
 	}
-	
 }

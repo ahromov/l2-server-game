@@ -38,13 +38,14 @@ import com.l2jserver.gameserver.util.Util;
 
 /**
  * @author -Wooden-
- * @author UnAfraid Thanks mrTJO
+ * @author UnAfraid
+ * @author mrTJO
  */
 public class RequestPackageSend extends L2GameClientPacket {
 	private static final String _C_A8_REQUESTPACKAGESEND = "[C] A8 RequestPackageSend";
 	private static final int BATCH_LENGTH = 12; // length of the one item
 	
-	private ItemHolder _items[] = null;
+	private ItemHolder[] _items = null;
 	private int _objectId;
 	
 	@Override

@@ -29,10 +29,7 @@ import com.l2jserver.gameserver.network.serverpackets.ActionFailed;
  * @author Zoey76
  */
 public abstract class L2Tower extends L2Npc {
-	/**
-	 * Creates an abstract Tower.
-	 * @param template the tower template
-	 */
+	
 	public L2Tower(L2NpcTemplate template) {
 		super(template);
 		setIsInvul(false);
@@ -47,7 +44,7 @@ public abstract class L2Tower extends L2Npc {
 	@Override
 	public boolean isAutoAttackable(L2Character attacker) {
 		// Attackable during siege by attacker only
-		return ((attacker != null) && attacker.isPlayer() && (getCastle() != null) && (getCastle().getResidenceId() > 0) && getCastle().getSiege().isInProgress() && getCastle().getSiege().checkIsAttacker(((L2PcInstance) attacker).getClan()));
+		return ((attacker != null) && attacker.isPlayer() && (getCastle() != null) && (getCastle().getResidenceId() > 0) && getCastle().getSiege().isInProgress() && getCastle().getSiege().checkIsAttacker(attacker.getClan()));
 	}
 	
 	@Override

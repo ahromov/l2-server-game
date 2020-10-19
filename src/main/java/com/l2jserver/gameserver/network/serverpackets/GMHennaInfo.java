@@ -26,7 +26,8 @@ import com.l2jserver.gameserver.model.items.L2Henna;
 
 /**
  * This server packet sends the player's henna information using the Game Master's UI.
- * @author KenM, Zoey76
+ * @author KenM
+ * @author Zoey76
  */
 public final class GMHennaInfo extends L2GameServerPacket {
 	private final L2PcInstance _activeChar;

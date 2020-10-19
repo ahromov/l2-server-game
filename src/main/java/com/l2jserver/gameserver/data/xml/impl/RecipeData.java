@@ -72,17 +72,15 @@ public class RecipeData implements IXmlReader {
 						recipeStatUseList.clear();
 						recipeAltStatChangeList.clear();
 						NamedNodeMap attrs = d.getAttributes();
-						Node att;
-						int id = -1;
 						boolean haveRare = false;
 						StatsSet set = new StatsSet();
 						
-						att = attrs.getNamedItem("id");
+						Node att = attrs.getNamedItem("id");
 						if (att == null) {
 							LOG.error("Missing id for recipe item, skipping!");
 							continue;
 						}
-						id = Integer.parseInt(att.getNodeValue());
+						int id = Integer.parseInt(att.getNodeValue());
 						set.set("id", id);
 						
 						att = attrs.getNamedItem("recipeId");

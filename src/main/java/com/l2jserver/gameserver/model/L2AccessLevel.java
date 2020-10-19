@@ -25,33 +25,33 @@ import com.l2jserver.gameserver.data.xml.impl.AdminData;
  */
 public class L2AccessLevel {
 	/** The access level. */
-	private int _accessLevel = 0;
+	private final int _accessLevel;
 	/** The access level name. */
-	private String _name = null;
+	private final String _name;
 	/** Child access levels. */
-	private L2AccessLevel _childsAccessLevel = null;
+	private L2AccessLevel _childrenAccessLevel = null;
 	/** Child access levels. */
-	private int _child = 0;
+	private final int _child;
 	/** The name color for the access level. */
-	private int _nameColor = 0;
+	private final int _nameColor;
 	/** The title color for the access level. */
-	private int _titleColor = 0;
+	private final int _titleColor;
 	/** Flag to determine if the access level has GM access. */
-	private boolean _isGm = false;
+	private final boolean _isGm;
 	/** Flag for peace zone attack */
-	private boolean _allowPeaceAttack = false;
+	private final boolean _allowPeaceAttack;
 	/** Flag for fixed res */
-	private boolean _allowFixedRes = false;
+	private final boolean _allowFixedRes;
 	/** Flag for transactions */
-	private boolean _allowTransaction = false;
+	private final boolean _allowTransaction;
 	/** Flag for AltG commands */
-	private boolean _allowAltG = false;
+	private final boolean _allowAltG;
 	/** Flag to give damage */
-	private boolean _giveDamage = false;
+	private final boolean _giveDamage;
 	/** Flag to take aggro */
-	private boolean _takeAggro = false;
+	private final boolean _takeAggro;
 	/** Flag to gain exp in party */
-	private boolean _gainExp = false;
+	private final boolean _gainExp;
 	
 	public L2AccessLevel(StatsSet set) {
 		_accessLevel = set.getInt("level");
@@ -187,13 +187,13 @@ public class L2AccessLevel {
 	 * @return {@ode true} if a child access level is equals to allowedAccess, otherwise {@code false}
 	 */
 	public boolean hasChildAccess(L2AccessLevel accessLevel) {
-		if (_childsAccessLevel == null) {
+		if (_childrenAccessLevel == null) {
 			if (_child <= 0) {
 				return false;
 			}
 			
-			_childsAccessLevel = AdminData.getInstance().getAccessLevel(_child);
+			_childrenAccessLevel = AdminData.getInstance().getAccessLevel(_child);
 		}
-		return ((_childsAccessLevel.getLevel() == accessLevel.getLevel()) || _childsAccessLevel.hasChildAccess(accessLevel));
+		return ((_childrenAccessLevel.getLevel() == accessLevel.getLevel()) || _childrenAccessLevel.hasChildAccess(accessLevel));
 	}
 }

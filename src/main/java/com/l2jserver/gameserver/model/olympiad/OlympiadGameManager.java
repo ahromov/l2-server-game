@@ -30,7 +30,8 @@ import com.l2jserver.gameserver.model.zone.type.L2OlympiadStadiumZone;
 
 /**
  * Olympiad Game Manager.
- * @author GodKratos, DS
+ * @author GodKratos
+ * @author DS
  */
 public class OlympiadGameManager implements Runnable {
 	
@@ -42,7 +43,7 @@ public class OlympiadGameManager implements Runnable {
 	
 	protected OlympiadGameManager() {
 		final Collection<L2OlympiadStadiumZone> zones = ZoneManager.getInstance().getAllZones(L2OlympiadStadiumZone.class);
-		if ((zones == null) || zones.isEmpty()) {
+		if (zones.isEmpty()) {
 			throw new Error("No olympiad stadium zones defined !");
 		}
 		
@@ -171,7 +172,7 @@ public class OlympiadGameManager implements Runnable {
 		}
 	}
 	
-	public static final OlympiadGameManager getInstance() {
+	public static OlympiadGameManager getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 	

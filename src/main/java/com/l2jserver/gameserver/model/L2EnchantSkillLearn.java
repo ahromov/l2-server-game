@@ -38,22 +38,16 @@ public final class L2EnchantSkillLearn {
 		_enchantRoutes.put(route, group);
 	}
 	
-	/**
-	 * @return Returns the id.
-	 */
 	public int getId() {
 		return _id;
 	}
 	
-	/**
-	 * @return Returns the minLevel.
-	 */
 	public int getBaseLevel() {
 		return _baseLvl;
 	}
 	
 	public static int getEnchantRoute(int level) {
-		return (int) Math.floor(level / 100);
+		return (int) Math.floor(level / 100.0);
 	}
 	
 	public static int getEnchantIndex(int level) {
@@ -86,10 +80,7 @@ public final class L2EnchantSkillLearn {
 		}
 		int index = getEnchantIndex(level);
 		
-		if ((index + 1) >= EnchantSkillGroupsData.getInstance().getEnchantSkillGroupById(_enchantRoutes.get(enchantType)).getEnchantGroupDetails().size()) {
-			return true;
-		}
-		return false;
+		return (index + 1) >= EnchantSkillGroupsData.getInstance().getEnchantSkillGroupById(_enchantRoutes.get(enchantType)).getEnchantGroupDetails().size();
 	}
 	
 	public EnchantSkillHolder getEnchantSkillHolder(int level) {

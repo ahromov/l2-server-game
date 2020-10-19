@@ -28,7 +28,7 @@ import com.l2jserver.gameserver.network.SystemMessageId;
 /**
  * Seven Signs Record Update
  * @author Tempy
- * @editor shansoft
+ * @author shansoft
  */
 public class SSQStatus extends L2GameServerPacket {
 	private final int _objectId;
@@ -62,29 +62,15 @@ public class SSQStatus extends L2GameServerPacket {
 				int currentPeriod = SevenSigns.getInstance().getCurrentPeriod();
 				
 				switch (currentPeriod) {
-					case SevenSigns.PERIOD_COMP_RECRUITING:
-						writeD(SystemMessageId.INITIAL_PERIOD.getId());
-						break;
-					case SevenSigns.PERIOD_COMPETITION:
-						writeD(SystemMessageId.SSQ_COMPETITION_UNDERWAY.getId());
-						break;
-					case SevenSigns.PERIOD_COMP_RESULTS:
-						writeD(SystemMessageId.RESULTS_PERIOD.getId());
-						break;
-					case SevenSigns.PERIOD_SEAL_VALIDATION:
-						writeD(SystemMessageId.VALIDATION_PERIOD.getId());
-						break;
+					case SevenSigns.PERIOD_COMP_RECRUITING -> writeD(SystemMessageId.INITIAL_PERIOD.getId());
+					case SevenSigns.PERIOD_COMPETITION -> writeD(SystemMessageId.SSQ_COMPETITION_UNDERWAY.getId());
+					case SevenSigns.PERIOD_COMP_RESULTS -> writeD(SystemMessageId.RESULTS_PERIOD.getId());
+					case SevenSigns.PERIOD_SEAL_VALIDATION -> writeD(SystemMessageId.VALIDATION_PERIOD.getId());
 				}
 				
 				switch (currentPeriod) {
-					case SevenSigns.PERIOD_COMP_RECRUITING:
-					case SevenSigns.PERIOD_COMP_RESULTS:
-						writeD(SystemMessageId.UNTIL_TODAY_6PM.getId());
-						break;
-					case SevenSigns.PERIOD_COMPETITION:
-					case SevenSigns.PERIOD_SEAL_VALIDATION:
-						writeD(SystemMessageId.UNTIL_MONDAY_6PM.getId());
-						break;
+					case SevenSigns.PERIOD_COMP_RECRUITING, SevenSigns.PERIOD_COMP_RESULTS -> writeD(SystemMessageId.UNTIL_TODAY_6PM.getId());
+					case SevenSigns.PERIOD_COMPETITION, SevenSigns.PERIOD_SEAL_VALIDATION -> writeD(SystemMessageId.UNTIL_MONDAY_6PM.getId());
 				}
 				
 				writeC(SevenSigns.getInstance().getPlayerCabal(_objectId));
@@ -169,14 +155,10 @@ public class SSQStatus extends L2GameServerPacket {
 					StatsSet highScoreData = SevenSignsFestival.getInstance().getHighestScoreData(SevenSigns.CABAL_DUSK, i);
 					String[] partyMembers = highScoreData.getString("members").split(",");
 					
-					if (partyMembers != null) {
-						writeC(partyMembers.length);
-						
-						for (String partyMember : partyMembers) {
-							writeS(partyMember);
-						}
-					} else {
-						writeC(0);
+					writeC(partyMembers.length);
+					
+					for (String partyMember : partyMembers) {
+						writeS(partyMember);
 					}
 					
 					// Dawn Score \\
@@ -185,14 +167,10 @@ public class SSQStatus extends L2GameServerPacket {
 					highScoreData = SevenSignsFestival.getInstance().getHighestScoreData(SevenSigns.CABAL_DAWN, i);
 					partyMembers = highScoreData.getString("members").split(",");
 					
-					if (partyMembers != null) {
-						writeC(partyMembers.length);
-						
-						for (String partyMember : partyMembers) {
-							writeS(partyMember);
-						}
-					} else {
-						writeC(0);
+					writeC(partyMembers.length);
+					
+					for (String partyMember : partyMembers) {
+						writeS(partyMember);
 					}
 				}
 				break;

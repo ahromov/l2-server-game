@@ -82,7 +82,7 @@ public final class RequestRefundItem extends L2GameClientPacket {
 		}
 		
 		L2Object target = player.getTarget();
-		if (!player.isGM() && ((target == null) || !(target instanceof L2MerchantInstance) || (player.getInstanceId() != target.getInstanceId()) || !player.isInsideRadius(target, INTERACTION_DISTANCE, true, false))) {
+		if (!player.isGM() && (!(target instanceof L2MerchantInstance) || (player.getInstanceId() != target.getInstanceId()) || !player.isInsideRadius(target, INTERACTION_DISTANCE, true, false))) {
 			sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
@@ -177,7 +177,6 @@ public final class RequestRefundItem extends L2GameClientPacket {
 			L2ItemInstance item = player.getRefund().transferItem("Refund", objectIds[i], Long.MAX_VALUE, player.getInventory(), player, player.getLastFolkNPC());
 			if (item == null) {
 				_log.warning("Error refunding object for char " + player.getName() + " (newitem == null)");
-				continue;
 			}
 		}
 		

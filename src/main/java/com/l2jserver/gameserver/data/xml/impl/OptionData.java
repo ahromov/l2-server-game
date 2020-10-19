@@ -67,44 +67,18 @@ public class OptionData implements IXmlReader {
 						
 						for (Node cd = d.getFirstChild(); cd != null; cd = cd.getNextSibling()) {
 							switch (cd.getNodeName()) {
-								case "for": {
+								case "for" -> {
 									for (Node fd = cd.getFirstChild(); fd != null; fd = fd.getNextSibling()) {
 										switch (fd.getNodeName()) {
-											case "add":
-											case "sub":
-											case "mul":
-											case "div":
-											case "set":
-											case "share":
-											case "enchant":
-											case "enchanthp": {
-												parseFuncs(fd.getAttributes(), fd.getNodeName(), op);
-											}
+											case "add", "sub", "mul", "div", "set", "share", "enchant", "enchanthp" -> parseFuncs(fd.getAttributes(), fd.getNodeName(), op);
 										}
-										
 									}
-									break;
 								}
-								case "active_skill": {
-									op.setActiveSkill(new SkillHolder(parseInteger(cd.getAttributes(), "id"), parseInteger(cd.getAttributes(), "level")));
-									break;
-								}
-								case "passive_skill": {
-									op.setPassiveSkill(new SkillHolder(parseInteger(cd.getAttributes(), "id"), parseInteger(cd.getAttributes(), "level")));
-									break;
-								}
-								case "attack_skill": {
-									op.addActivationSkill(new OptionsSkillHolder(parseInteger(cd.getAttributes(), "id"), parseInteger(cd.getAttributes(), "level"), parseDouble(cd.getAttributes(), "chance"), OptionsSkillType.ATTACK));
-									break;
-								}
-								case "magic_skill": {
-									op.addActivationSkill(new OptionsSkillHolder(parseInteger(cd.getAttributes(), "id"), parseInteger(cd.getAttributes(), "level"), parseDouble(cd.getAttributes(), "chance"), OptionsSkillType.MAGIC));
-									break;
-								}
-								case "critical_skill": {
-									op.addActivationSkill(new OptionsSkillHolder(parseInteger(cd.getAttributes(), "id"), parseInteger(cd.getAttributes(), "level"), parseDouble(cd.getAttributes(), "chance"), OptionsSkillType.CRITICAL));
-									break;
-								}
+								case "active_skill" -> op.setActiveSkill(new SkillHolder(parseInteger(cd.getAttributes(), "id"), parseInteger(cd.getAttributes(), "level")));
+								case "passive_skill" -> op.setPassiveSkill(new SkillHolder(parseInteger(cd.getAttributes(), "id"), parseInteger(cd.getAttributes(), "level")));
+								case "attack_skill" -> op.addActivationSkill(new OptionsSkillHolder(parseInteger(cd.getAttributes(), "id"), parseInteger(cd.getAttributes(), "level"), parseDouble(cd.getAttributes(), "chance"), OptionsSkillType.ATTACK));
+								case "magic_skill" -> op.addActivationSkill(new OptionsSkillHolder(parseInteger(cd.getAttributes(), "id"), parseInteger(cd.getAttributes(), "level"), parseDouble(cd.getAttributes(), "chance"), OptionsSkillType.MAGIC));
+								case "critical_skill" -> op.addActivationSkill(new OptionsSkillHolder(parseInteger(cd.getAttributes(), "id"), parseInteger(cd.getAttributes(), "level"), parseDouble(cd.getAttributes(), "chance"), OptionsSkillType.CRITICAL));
 							}
 						}
 						_optionData.put(op.getId(), op);
@@ -129,7 +103,7 @@ public class OptionData implements IXmlReader {
 		return _optionData.get(id);
 	}
 	
-	public static final OptionData getInstance() {
+	public static OptionData getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 	

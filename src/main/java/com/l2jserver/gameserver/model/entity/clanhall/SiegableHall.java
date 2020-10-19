@@ -60,7 +60,7 @@ public final class SiegableHall extends ClanHall {
 	
 	public SiegableHall(StatsSet set) {
 		super(set);
-		_siegeLength = set.getLong("siegeLenght");
+		_siegeLength = set.getLong("siegeLength");
 		String[] rawSchConfig = set.getString("scheduleConfig").split(";");
 		if (rawSchConfig.length == 5) {
 			for (int i = 0; i < 5; i++) {
@@ -97,7 +97,7 @@ public final class SiegableHall extends ClanHall {
 			if (door.isDead()) {
 				door.doRevive();
 				if (isDoorWeak) {
-					door.setCurrentHp(door.getMaxHp() / 2);
+					door.setCurrentHp(door.getMaxHp() / 2.0);
 				} else {
 					door.setCurrentHp(door.getMaxHp());
 				}
@@ -139,7 +139,7 @@ public final class SiegableHall extends ClanHall {
 		return _nextSiege.getTimeInMillis();
 	}
 	
-	public long getSiegeLenght() {
+	public long getSiegeLength() {
 		return _siegeLength;
 	}
 	

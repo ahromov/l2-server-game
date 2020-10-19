@@ -24,12 +24,11 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.SystemMessageId;
 
 /**
- * This class ...
- * @version $Revision: 1.3.4.4 $ $Date: 2005/04/06 16:13:48 $
+ * @since 2005/04/06 16:13:48
  */
 public final class RequestChangePetName extends L2GameClientPacket {
 	private static final String _C__93_REQUESTCHANGEPETNAME = "[C] 93 RequestChangePetName";
-	private static final int PET_NAME_MAX_LENGHT = 16;
+	private static final int PET_NAME_MAX_LENGTH = 16;
 	
 	private String _name;
 	
@@ -65,7 +64,7 @@ public final class RequestChangePetName extends L2GameClientPacket {
 			return;
 		}
 		
-		if (_name.isEmpty() || (_name.length() > PET_NAME_MAX_LENGHT)) {
+		if (_name.isEmpty() || (_name.length() > PET_NAME_MAX_LENGTH)) {
 			activeChar.sendPacket(SystemMessageId.NAMING_CHARNAME_UP_TO_16CHARS);
 			return;
 		}

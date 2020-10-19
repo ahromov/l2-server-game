@@ -122,10 +122,10 @@ public final class CursedWeaponsManager {
 									attrs = cd.getAttributes();
 									val = Integer.parseInt(attrs.getNamedItem("val").getNodeValue());
 									cw.setDurationLost(val);
-								} else if ("disapearChance".equalsIgnoreCase(cd.getNodeName())) {
+								} else if ("disappearChance".equalsIgnoreCase(cd.getNodeName())) {
 									attrs = cd.getAttributes();
 									val = Integer.parseInt(attrs.getNamedItem("val").getNodeValue());
-									cw.setDisapearChance(val);
+									cw.setDisappearChance(val);
 								} else if ("stageKills".equalsIgnoreCase(cd.getNodeName())) {
 									attrs = cd.getAttributes();
 									val = Integer.parseInt(attrs.getNamedItem("val").getNodeValue());

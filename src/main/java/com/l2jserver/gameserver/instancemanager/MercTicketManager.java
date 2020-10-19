@@ -40,7 +40,8 @@ import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
  * These tickets (a.k.a. badges) need to be read after each server reboot except when the server crashed in the middle of an ongoing siege.<br>
  * In addition, this class keeps track of the added tickets, in order to properly limit the number of mercenaries in each castle and the number of mercenaries from each mercenary type.<br>
  * Finally, we provide auxiliary functions to identify the castle in which each item (and its corresponding NPC) belong to, in order to help avoid mixing them up.
- * @author yellowperil, Fulminus
+ * @author yellowperil
+ * @author Fulminus
  */
 public final class MercTicketManager {
 	
@@ -141,7 +142,7 @@ public final class MercTicketManager {
 			int npcId;
 			int itemId;
 			int x, y, z;
-			int mercPlaced[] = new int[20];
+			int[] mercPlaced = new int[20];
 			// start index to begin the search for the itemId corresponding to this NPC
 			// this will help with:
 			// a) skip unnecessary iterations in the search loop
@@ -216,10 +217,7 @@ public final class MercTicketManager {
 				count++;
 			}
 		}
-		if (count >= limit) {
-			return true;
-		}
-		return false;
+		return count >= limit;
 	}
 	
 	/**
@@ -243,10 +241,7 @@ public final class MercTicketManager {
 				count++;
 			}
 		}
-		if (count >= limit) {
-			return true;
-		}
-		return false;
+		return count >= limit;
 	}
 	
 	public int getMaxAllowedMerc(int castleId) {

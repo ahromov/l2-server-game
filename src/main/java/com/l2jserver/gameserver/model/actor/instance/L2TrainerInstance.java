@@ -22,10 +22,7 @@ import com.l2jserver.gameserver.enums.InstanceType;
 import com.l2jserver.gameserver.model.actor.templates.L2NpcTemplate;
 
 public class L2TrainerInstance extends L2NpcInstance {
-	/**
-	 * Creates a trainer.
-	 * @param template the trainer NPC template
-	 */
+	
 	public L2TrainerInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2TrainerInstance);
@@ -33,13 +30,12 @@ public class L2TrainerInstance extends L2NpcInstance {
 	
 	@Override
 	public String getHtmlPath(int npcId, int val) {
-		String pom = "";
+		String pom;
 		if (val == 0) {
 			pom = "" + npcId;
 		} else {
 			pom = npcId + "-" + val;
 		}
-		
 		return "data/html/trainer/" + pom + ".htm";
 	}
 }

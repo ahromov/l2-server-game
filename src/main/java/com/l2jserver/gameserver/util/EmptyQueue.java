@@ -52,7 +52,7 @@ public final class EmptyQueue<E> implements Queue<E> {
 	
 	@Override
 	public Iterator<E> iterator() {
-		return Collections.<E> emptyIterator();
+		return Collections.emptyIterator();
 	}
 	
 	@Override

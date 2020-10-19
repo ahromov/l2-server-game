@@ -505,7 +505,7 @@ public final class Castle extends AbstractResidence {
 		for (L2DoorInstance door : _doors) {
 			if (door.isDead()) {
 				door.doRevive();
-				door.setCurrentHp((isDoorWeak) ? (door.getMaxHp() / 2) : (door.getMaxHp()));
+				door.setCurrentHp((isDoorWeak) ? (door.getMaxHp() / 2.0) : (door.getMaxHp()));
 			}
 			
 			if (door.getOpen()) {

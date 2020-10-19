@@ -22,8 +22,7 @@ import com.l2jserver.gameserver.model.L2Party.messageType;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 /**
- * This class ...
- * @version $Revision: 1.3.4.2 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class RequestOustPartyMember extends L2GameClientPacket {
 	private static final String _C__45_REQUESTOUSTPARTYMEMBER = "[C] 45 RequestOustPartyMember";

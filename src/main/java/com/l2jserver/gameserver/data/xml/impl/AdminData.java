@@ -149,7 +149,7 @@ public final class AdminData implements IXmlReader {
 			if ((accessLevel.getLevel() > 0) && (accessLevel.getLevel() == _highestLevel)) {
 				acar = new L2AdminCommandAccessRight(adminCommand, true, accessLevel.getLevel());
 				_adminCommandAccessRights.put(adminCommand, acar);
-				LOG.info("No rights defined for admin command {} auto setting accesslevel {}!", adminCommand, accessLevel.getLevel());
+				LOG.info("No rights defined for admin command {} auto setting access level {}!", adminCommand, accessLevel.getLevel());
 			} else {
 				LOG.info("No rights defined for admin command {}!", adminCommand);
 				return false;

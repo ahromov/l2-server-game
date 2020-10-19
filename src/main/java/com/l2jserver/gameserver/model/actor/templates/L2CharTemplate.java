@@ -566,18 +566,10 @@ public class L2CharTemplate extends ListenersContainer {
 		return Collections.emptyMap();
 	}
 	
-	/**
-	 * Gets the craeture's race.
-	 * @return the race
-	 */
 	public Race getRace() {
 		return _race;
 	}
 	
-	/**
-	 * Sets the creature's race.
-	 * @param race the race
-	 */
 	public void setRace(Race race) {
 		_race = race;
 	}

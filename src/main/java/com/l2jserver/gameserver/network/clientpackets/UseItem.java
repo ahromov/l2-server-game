@@ -69,6 +69,7 @@ import com.l2jserver.gameserver.model.holders.SkillHolder;
 import com.l2jserver.gameserver.model.items.L2EtcItem;
 import com.l2jserver.gameserver.model.items.L2Weapon;
 import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
+import com.l2jserver.gameserver.model.items.type.WeaponType;
 import com.l2jserver.gameserver.model.skills.Skill;
 import com.l2jserver.gameserver.network.serverpackets.ExUseSharedGroupItem;
 import com.l2jserver.gameserver.network.serverpackets.ItemList;
@@ -204,9 +205,7 @@ public final class UseItem extends L2GameClientPacket {
 			}
 			
 			switch (item.getItem().getBodyPart()) {
-				case SLOT_LR_HAND:
-				case SLOT_L_HAND:
-				case SLOT_R_HAND: {
+				case SLOT_LR_HAND, SLOT_L_HAND, SLOT_R_HAND -> {
 					// Prevent players to equip weapon while wearing combat flag
 					if ((activeChar.getActiveWeaponItem() != null) && (activeChar.getActiveWeaponItem().getId() == 9819)) {
 						activeChar.sendPacket(CANNOT_EQUIP_ITEM_DUE_TO_BAD_CONDITION);
@@ -232,46 +231,30 @@ public final class UseItem extends L2GameClientPacket {
 						L2Weapon wpn = (L2Weapon) item.getItem();
 						
 						switch (activeChar.getRace()) {
-							case KAMAEL: {
-								switch (wpn.getItemType()) {
-									case NONE:
-										activeChar.sendPacket(CANNOT_EQUIP_ITEM_DUE_TO_BAD_CONDITION);
-										return;
+							case KAMAEL -> {
+								if (wpn.getItemType() == WeaponType.NONE) {
+									activeChar.sendPacket(CANNOT_EQUIP_ITEM_DUE_TO_BAD_CONDITION);
+									return;
 								}
-								break;
 							}
-							case HUMAN:
-							case DWARF:
-							case ELF:
-							case DARK_ELF:
-							case ORC: {
+							case HUMAN, DWARF, ELF, DARK_ELF, ORC -> {
 								switch (wpn.getItemType()) {
-									case RAPIER:
-									case CROSSBOW:
-									case ANCIENTSWORD:
+									case RAPIER, CROSSBOW, ANCIENTSWORD -> {
 										activeChar.sendPacket(CANNOT_EQUIP_ITEM_DUE_TO_BAD_CONDITION);
 										return;
+									}
 								}
-								break;
 							}
 						}
 					}
-					break;
 				}
-				case SLOT_CHEST:
-				case SLOT_BACK:
-				case SLOT_GLOVES:
-				case SLOT_FEET:
-				case SLOT_HEAD:
-				case SLOT_FULL_ARMOR:
-				case SLOT_LEGS: {
+				case SLOT_CHEST, SLOT_BACK, SLOT_GLOVES, SLOT_FEET, SLOT_HEAD, SLOT_FULL_ARMOR, SLOT_LEGS -> {
 					if ((activeChar.getRace() == KAMAEL) && ((item.getItem().getItemType() == HEAVY) || (item.getItem().getItemType() == MAGIC))) {
 						activeChar.sendPacket(CANNOT_EQUIP_ITEM_DUE_TO_BAD_CONDITION);
 						return;
 					}
-					break;
 				}
-				case SLOT_DECO: {
+				case SLOT_DECO -> {
 					if (!item.isEquipped() && (activeChar.getInventory().getTalismanSlots() == 0)) {
 						activeChar.sendPacket(CANNOT_EQUIP_ITEM_DUE_TO_BAD_CONDITION);
 						return;
@@ -296,7 +279,7 @@ public final class UseItem extends L2GameClientPacket {
 				&& (((_itemId >= 6519) && (_itemId <= 6527)) || ((_itemId >= 7610) && (_itemId <= 7613)) || ((_itemId >= 7807) && (_itemId <= 7809)) || ((_itemId >= 8484) && (_itemId <= 8486)) || ((_itemId >= 8505) && (_itemId <= 8513)))) {
 				activeChar.getInventory().setPaperdollItem(PAPERDOLL_LHAND, item);
 				activeChar.broadcastUserInfo();
-				// Send a Server->Client packet ItemList to this L2PcINstance to update left hand equipment.
+				// Send a Server->Client packet ItemList to this L2PcInstance to update left hand equipment.
 				sendPacket(new ItemList(activeChar, false));
 				return;
 			}

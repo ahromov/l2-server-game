@@ -28,13 +28,13 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 /**
  * @author Gnacik
  */
-public class ListPartyWating extends L2GameServerPacket {
+public class ListPartyWaiting extends L2GameServerPacket {
 	private final L2PcInstance _cha;
 	private final int _loc;
 	private final int _lim;
 	private final List<PartyMatchRoom> _rooms;
 	
-	public ListPartyWating(L2PcInstance player, int auto, int location, int limit) {
+	public ListPartyWaiting(L2PcInstance player, int auto, int location, int limit) {
 		_cha = player;
 		_loc = location;
 		_lim = limit;

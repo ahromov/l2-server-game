@@ -28,5 +28,4 @@ public class GrandBossManagerStoreTask implements Runnable {
 	public void run() {
 		GrandBossManager.getInstance().storeMe();
 	}
-	
 }

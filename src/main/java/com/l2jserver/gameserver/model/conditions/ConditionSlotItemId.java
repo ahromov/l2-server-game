@@ -24,19 +24,13 @@ import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionSlotItemId.
+ * Slot item Id condition.
  * @author mkizub
  */
 public final class ConditionSlotItemId extends ConditionInventory {
 	private final int _itemId;
 	private final int _enchantLevel;
 	
-	/**
-	 * Instantiates a new condition slot item id.
-	 * @param slot the slot
-	 * @param itemId the item id
-	 * @param enchantLevel the enchant level
-	 */
 	public ConditionSlotItemId(int slot, int itemId, int enchantLevel) {
 		super(slot);
 		_itemId = itemId;

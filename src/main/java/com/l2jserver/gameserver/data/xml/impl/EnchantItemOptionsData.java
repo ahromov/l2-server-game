@@ -59,7 +59,7 @@ public class EnchantItemOptionsData implements IXmlReader {
 					if ("item".equalsIgnoreCase(d.getNodeName())) {
 						int itemId = parseInteger(d.getAttributes(), "id");
 						if (!_data.containsKey(itemId)) {
-							_data.put(itemId, new HashMap<Integer, EnchantOptions>());
+							_data.put(itemId, new HashMap<>());
 						}
 						for (Node cd = d.getFirstChild(); cd != null; cd = cd.getNextSibling()) {
 							if ("options".equalsIgnoreCase(cd.getNodeName())) {
@@ -93,7 +93,7 @@ public class EnchantItemOptionsData implements IXmlReader {
 		return item != null ? getOptions(item.getId(), item.getEnchantLevel()) : null;
 	}
 	
-	public static final EnchantItemOptionsData getInstance() {
+	public static EnchantItemOptionsData getInstance() {
 		return SingletonHolder._instance;
 	}
 	

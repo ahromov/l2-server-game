@@ -31,7 +31,8 @@ import com.l2jserver.gameserver.network.L2GameClient.GameClientState;
 
 /**
  * Request Save Key Mapping client packet.
- * @author mrTJO, Zoey76
+ * @author mrTJO
+ * @author Zoey76
  */
 public class RequestSaveKeyMapping extends L2GameClientPacket {
 	private static final String _C__D0_22_REQUESTSAVEKEYMAPPING = "[C] D0:22 RequestSaveKeyMapping";

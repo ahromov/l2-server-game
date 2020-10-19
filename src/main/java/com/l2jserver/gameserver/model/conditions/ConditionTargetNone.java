@@ -23,15 +23,13 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionTargetNone.
+ * None condition.
  * @author mkizub
  */
 public class ConditionTargetNone extends Condition {
-	/**
-	 * Instantiates a new condition target none.
-	 */
+	
 	public ConditionTargetNone() {
-		//
+		// Do nothing.
 	}
 	
 	@Override

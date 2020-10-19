@@ -42,7 +42,7 @@ public enum PcCondOverride {
 	private final int _mask;
 	private final String _descr;
 	
-	private PcCondOverride(int id, String descr) {
+	PcCondOverride(int id, String descr) {
 		_mask = 1 << id;
 		_descr = descr;
 	}

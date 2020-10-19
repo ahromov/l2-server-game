@@ -104,8 +104,8 @@ public class ExUISetting extends L2GameServerPacket {
 				for (ActionKey akey : keyElList) {
 					writeD(akey.getCommandId());
 					writeD(akey.getKeyId());
-					writeD(akey.getToogleKey1());
-					writeD(akey.getToogleKey2());
+					writeD(akey.getToggleKey1());
+					writeD(akey.getToggleKey2());
 					writeD(akey.getShowStatus());
 				}
 			} else {

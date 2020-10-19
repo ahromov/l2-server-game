@@ -55,7 +55,7 @@ public final class HandysBlockCheckerManager {
 	private static final Map<Integer, Boolean> _arenaStatus = new HashMap<>();
 	
 	// Registration request penalty (10 seconds)
-	protected static Set<Integer> _registrationPenalty = Collections.synchronizedSet(new HashSet<Integer>());
+	protected static Set<Integer> _registrationPenalty = Collections.synchronizedSet(new HashSet<>());
 	
 	/**
 	 * Return the number of event-start votes for the specified arena id
@@ -201,7 +201,7 @@ public final class HandysBlockCheckerManager {
 	public void removePlayer(L2PcInstance player, int arenaId, int team) {
 		ArenaParticipantsHolder holder = _arenaPlayers[arenaId];
 		synchronized (holder) {
-			boolean isRed = team == 0 ? true : false;
+			boolean isRed = team == 0;
 			
 			holder.removePlayer(player, team);
 			holder.broadCastPacketToTeam(new ExCubeGameRemovePlayer(player, isRed));

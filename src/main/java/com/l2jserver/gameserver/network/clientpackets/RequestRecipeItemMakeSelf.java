@@ -22,9 +22,6 @@ import com.l2jserver.gameserver.RecipeController;
 import com.l2jserver.gameserver.enums.PrivateStoreType;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
-/**
- * @author Administrator
- */
 public final class RequestRecipeItemMakeSelf extends L2GameClientPacket {
 	private static final String _C__B8_REQUESTRECIPEITEMMAKESELF = "[C] B8 RequestRecipeItemMakeSelf";
 	

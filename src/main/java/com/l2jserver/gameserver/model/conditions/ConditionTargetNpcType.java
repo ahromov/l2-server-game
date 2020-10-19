@@ -24,15 +24,11 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionTargetNpcType.
+ * Target NPC type condition.
  */
 public class ConditionTargetNpcType extends Condition {
 	private final InstanceType[] _npcType;
 	
-	/**
-	 * Instantiates a new condition target npc type.
-	 * @param type the type
-	 */
 	public ConditionTargetNpcType(InstanceType[] type) {
 		_npcType = type;
 	}

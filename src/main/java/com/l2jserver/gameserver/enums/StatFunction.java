@@ -31,8 +31,8 @@ public enum StatFunction {
 	SHARE("Share", 30),
 	SUB("Sub", 30);
 	
-	private String _name;
-	private int _order;
+	private final String _name;
+	private final int _order;
 	
 	StatFunction(String name, int order) {
 		_name = name;

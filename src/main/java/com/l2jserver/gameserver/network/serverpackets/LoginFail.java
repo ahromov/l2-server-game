@@ -33,9 +33,6 @@ public class LoginFail extends L2GameServerPacket {
 	
 	private final int _reason;
 	
-	/**
-	 * @param reason
-	 */
 	public LoginFail(int reason) {
 		_reason = reason;
 	}

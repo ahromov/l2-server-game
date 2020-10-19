@@ -94,7 +94,7 @@ public final class DimensionalRiftManager {
 				boolean isBossRoom = rs.getByte("boss") > 0;
 				
 				if (!_rooms.containsKey(type)) {
-					_rooms.put(type, new HashMap<Byte, DimensionalRiftRoom>(9));
+					_rooms.put(type, new HashMap<>(9));
 				}
 				
 				_rooms.get(type).put(room_id, new DimensionalRiftRoom(type, room_id, xMin, xMax, yMin, yMax, z1, z2, xT, yT, zT, isBossRoom));
@@ -160,7 +160,7 @@ public final class DimensionalRiftManager {
 												final DimensionalRiftRoom riftRoom = _rooms.get(type).get(roomId);
 												x = riftRoom.getRandomX();
 												y = riftRoom.getRandomY();
-												z = riftRoom.getTeleportCoorinates().getZ();
+												z = riftRoom.getTeleportCoordinates().getZ();
 												
 												if (_rooms.containsKey(type) && _rooms.get(type).containsKey(roomId)) {
 													final L2Spawn spawnDat = new L2Spawn(mobId);
@@ -221,7 +221,7 @@ public final class DimensionalRiftManager {
 	}
 	
 	public void teleportToWaitingRoom(L2PcInstance player) {
-		player.teleToLocation(getRoom((byte) 0, (byte) 0).getTeleportCoorinates());
+		player.teleToLocation(getRoom((byte) 0, (byte) 0).getTeleportCoordinates());
 	}
 	
 	public synchronized void start(L2PcInstance player, byte type, L2Npc npc) {
@@ -344,22 +344,15 @@ public final class DimensionalRiftManager {
 	}
 	
 	private int getNeededItems(byte type) {
-		switch (type) {
-			case 1:
-				return general().getRecruitCost();
-			case 2:
-				return general().getSoldierCost();
-			case 3:
-				return general().getOfficerCost();
-			case 4:
-				return general().getCaptainCost();
-			case 5:
-				return general().getCommanderCost();
-			case 6:
-				return general().getHeroCost();
-			default:
-				throw new IndexOutOfBoundsException();
-		}
+		return switch (type) {
+			case 1 -> general().getRecruitCost();
+			case 2 -> general().getSoldierCost();
+			case 3 -> general().getOfficerCost();
+			case 4 -> general().getCaptainCost();
+			case 5 -> general().getCommanderCost();
+			case 6 -> general().getHeroCost();
+			default -> throw new IndexOutOfBoundsException();
+		};
 	}
 	
 	public void showHtmlFile(L2PcInstance player, String file, L2Npc npc) {

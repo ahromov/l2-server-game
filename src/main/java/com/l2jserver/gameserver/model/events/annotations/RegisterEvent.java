@@ -31,5 +31,5 @@ import com.l2jserver.gameserver.model.events.EventType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface RegisterEvent {
-	public EventType value();
+	EventType value();
 }

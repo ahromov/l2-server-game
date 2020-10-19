@@ -24,16 +24,12 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionTargetInvSize.
+ * Target inventory size condition.
  * @author Zoey76
  */
 public class ConditionTargetInvSize extends Condition {
 	private final int _size;
 	
-	/**
-	 * Instantiates a new condition player inv size.
-	 * @param size the size
-	 */
 	public ConditionTargetInvSize(int size) {
 		_size = size;
 	}

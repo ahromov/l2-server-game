@@ -26,8 +26,8 @@ import com.l2jserver.gameserver.model.actor.L2Npc;
  * @author xban1x
  */
 public final class StartMovingTask implements Runnable {
-	final L2Npc _npc;
-	final String _routeName;
+	private final L2Npc _npc;
+	private final String _routeName;
 	
 	public StartMovingTask(L2Npc npc, String routeName) {
 		_npc = npc;

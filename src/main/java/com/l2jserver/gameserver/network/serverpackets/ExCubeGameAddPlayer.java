@@ -27,11 +27,6 @@ public class ExCubeGameAddPlayer extends L2GameServerPacket {
 	L2PcInstance _player;
 	boolean _isRedTeam;
 	
-	/**
-	 * Add Player To Minigame Waiting List
-	 * @param player Player Instance
-	 * @param isRedTeam Is Player from Red Team?
-	 */
 	public ExCubeGameAddPlayer(L2PcInstance player, boolean isRedTeam) {
 		_player = player;
 		_isRedTeam = isRedTeam;
@@ -42,9 +37,7 @@ public class ExCubeGameAddPlayer extends L2GameServerPacket {
 		writeC(0xfe);
 		writeH(0x97);
 		writeD(0x01);
-		
 		writeD(0xffffffff);
-		
 		writeD(_isRedTeam ? 0x01 : 0x00);
 		writeD(_player.getObjectId());
 		writeS(_player.getName());

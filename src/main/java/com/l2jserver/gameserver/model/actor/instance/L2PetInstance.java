@@ -228,7 +228,7 @@ public class L2PetInstance extends L2Summon {
 		final L2PetInstance pet = DAOFactory.getInstance().getPetDAO().load(control, template, owner);
 		if (pet != null) {
 			pet.setTitle(owner.getName());
-			if (data.isSynchLevel() && (pet.getLevel() != owner.getLevel())) {
+			if (data.isSyncLevel() && (pet.getLevel() != owner.getLevel())) {
 				pet.getStat().setLevel(owner.getLevel());
 				pet.getStat().setExp(pet.getStat().getExpForLevel(owner.getLevel()));
 			}
@@ -276,10 +276,10 @@ public class L2PetInstance extends L2Summon {
 	public void setCurrentFed(int num) {
 		if (num <= 0) {
 			sendPacket(new ExChangeNpcState(getObjectId(), 0x64));
-		} else if ((_curFed <= 0) && (num > 0)) {
+		} else if (_curFed <= 0) {
 			sendPacket(new ExChangeNpcState(getObjectId(), 0x65));
 		}
-		_curFed = num > getMaxFed() ? getMaxFed() : num;
+		_curFed = Math.min(num, getMaxFed());
 	}
 	
 	/**
@@ -334,7 +334,7 @@ public class L2PetInstance extends L2Summon {
 	 * @param count : int Quantity of items to be destroyed
 	 * @param reference : L2Object Object referencing current action like NPC selling item or previous item in transformation
 	 * @param sendMessage : boolean Specifies whether to send message to Client about this action
-	 * @return boolean informing if the action was successfull
+	 * @return boolean informing if the action was successful
 	 */
 	@Override
 	public boolean destroyItem(String process, int objectId, long count, L2Object reference, boolean sendMessage) {
@@ -375,7 +375,7 @@ public class L2PetInstance extends L2Summon {
 	 * @param count : int Quantity of items to be destroyed
 	 * @param reference : L2Object Object referencing current action like NPC selling item or previous item in transformation
 	 * @param sendMessage : boolean Specifies whether to send message to Client about this action
-	 * @return boolean informing if the action was successfull
+	 * @return boolean informing if the action was successful
 	 */
 	@Override
 	public boolean destroyItemByItemId(String process, int itemId, long count, L2Object reference, boolean sendMessage) {
@@ -438,7 +438,7 @@ public class L2PetInstance extends L2Summon {
 			return;
 		}
 		
-		SystemMessage smsg = null;
+		SystemMessage sm;
 		synchronized (target) {
 			// Check if the target to pick up is visible
 			if (!target.isVisible()) {
@@ -449,9 +449,9 @@ public class L2PetInstance extends L2Summon {
 			
 			if (!target.getDropProtection().tryPickUp(this)) {
 				sendPacket(ActionFailed.STATIC_PACKET);
-				smsg = SystemMessage.getSystemMessage(SystemMessageId.FAILED_TO_PICKUP_S1);
-				smsg.addItemName(target);
-				sendPacket(smsg);
+				sm = SystemMessage.getSystemMessage(SystemMessageId.FAILED_TO_PICKUP_S1);
+				sm.addItemName(target);
+				sendPacket(sm);
 				return;
 			}
 			
@@ -463,18 +463,18 @@ public class L2PetInstance extends L2Summon {
 			
 			if ((target.getOwnerId() != 0) && (target.getOwnerId() != getOwner().getObjectId()) && !getOwner().isInLooterParty(target.getOwnerId())) {
 				if (target.getId() == Inventory.ADENA_ID) {
-					smsg = SystemMessage.getSystemMessage(SystemMessageId.FAILED_TO_PICKUP_S1_ADENA);
-					smsg.addLong(target.getCount());
+					sm = SystemMessage.getSystemMessage(SystemMessageId.FAILED_TO_PICKUP_S1_ADENA);
+					sm.addLong(target.getCount());
 				} else if (target.getCount() > 1) {
-					smsg = SystemMessage.getSystemMessage(SystemMessageId.FAILED_TO_PICKUP_S2_S1_S);
-					smsg.addItemName(target);
-					smsg.addLong(target.getCount());
+					sm = SystemMessage.getSystemMessage(SystemMessageId.FAILED_TO_PICKUP_S2_S1_S);
+					sm.addItemName(target);
+					sm.addLong(target.getCount());
 				} else {
-					smsg = SystemMessage.getSystemMessage(SystemMessageId.FAILED_TO_PICKUP_S1);
-					smsg.addItemName(target);
+					sm = SystemMessage.getSystemMessage(SystemMessageId.FAILED_TO_PICKUP_S1);
+					sm.addItemName(target);
 				}
 				sendPacket(ActionFailed.STATIC_PACKET);
-				sendPacket(smsg);
+				sendPacket(sm);
 				return;
 			}
 			
@@ -503,26 +503,26 @@ public class L2PetInstance extends L2Summon {
 			broadcastStatusUpdate();
 		} else {
 			if (target.getId() == Inventory.ADENA_ID) {
-				smsg = SystemMessage.getSystemMessage(SystemMessageId.PET_PICKED_S1_ADENA);
-				smsg.addLong(target.getCount());
-				sendPacket(smsg);
+				sm = SystemMessage.getSystemMessage(SystemMessageId.PET_PICKED_S1_ADENA);
+				sm.addLong(target.getCount());
+				sendPacket(sm);
 			} else if (target.getEnchantLevel() > 0) {
-				smsg = SystemMessage.getSystemMessage(SystemMessageId.PET_PICKED_S1_S2);
-				smsg.addInt(target.getEnchantLevel());
-				smsg.addItemName(target);
-				sendPacket(smsg);
+				sm = SystemMessage.getSystemMessage(SystemMessageId.PET_PICKED_S1_S2);
+				sm.addInt(target.getEnchantLevel());
+				sm.addItemName(target);
+				sendPacket(sm);
 			} else if (target.getCount() > 1) {
-				smsg = SystemMessage.getSystemMessage(SystemMessageId.PET_PICKED_S2_S1_S);
-				smsg.addLong(target.getCount());
-				smsg.addItemName(target);
-				sendPacket(smsg);
+				sm = SystemMessage.getSystemMessage(SystemMessageId.PET_PICKED_S2_S1_S);
+				sm.addLong(target.getCount());
+				sm.addItemName(target);
+				sendPacket(sm);
 			} else {
-				smsg = SystemMessage.getSystemMessage(SystemMessageId.PET_PICKED_S1);
-				smsg.addItemName(target);
-				sendPacket(smsg);
+				sm = SystemMessage.getSystemMessage(SystemMessageId.PET_PICKED_S1);
+				sm.addItemName(target);
+				sendPacket(sm);
 			}
 			
-			// If owner is in party and it isnt finders keepers, distribute the item instead of stealing it -.-
+			// If owner is in party and it isn't finders keepers, distribute the item instead of stealing it -.-
 			if (getOwner().isInParty() && (getOwner().getParty().getDistributionType() != PartyDistributionType.FINDERS_KEEPERS)) {
 				getOwner().getParty().distributeItem(getOwner(), target);
 			} else {
@@ -589,8 +589,8 @@ public class L2PetInstance extends L2Summon {
 	/**
 	 * Transfers item to another inventory
 	 * @param process string identifier of process triggering this action
-	 * @param objectId Item Identifier of the item to be transfered
-	 * @param count Quantity of items to be transfered
+	 * @param objectId Item Identifier of the item to be transferred
+	 * @param count Quantity of items to be transferred
 	 * @param target
 	 * @param actor the player requesting the item transfer
 	 * @param reference Object referencing current action like NPC selling item or previous item in transformation
@@ -619,12 +619,11 @@ public class L2PetInstance extends L2Summon {
 			InventoryUpdate iu = new InventoryUpdate();
 			iu.addNewItem(newItem);
 			sendPacket(iu);
-		} else if ((playerOldItem != null) && newItem.isStackable()) {
+		} else if (playerOldItem != null) {
 			InventoryUpdate iu = new InventoryUpdate();
 			iu.addModifiedItem(newItem);
 			sendPacket(iu);
 		}
-		
 		return newItem;
 	}
 	
@@ -667,8 +666,8 @@ public class L2PetInstance extends L2Summon {
 				
 				L2World.getInstance().removeObject(removedItem);
 			}
-		} catch (Exception e) {
-			LOG.error("Destroying control item: {}", e);
+		} catch (Exception ex) {
+			LOG.error("Error destroying control item for pet {} and player {}!", this, owner, ex);
 		}
 		
 		// Pet control item no longer exists, delete the pet from the database.
@@ -680,8 +679,8 @@ public class L2PetInstance extends L2Summon {
 			for (L2ItemInstance item : getInventory().getItems()) {
 				dropItemHere(item);
 			}
-		} catch (Exception e) {
-			LOG.warn("Pet Drop Error: {}", e);
+		} catch (Exception ex) {
+			LOG.warn("Error dropping all items for pet {}!", this, ex);
 		}
 	}
 	

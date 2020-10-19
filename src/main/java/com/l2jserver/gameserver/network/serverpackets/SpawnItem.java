@@ -23,10 +23,10 @@ import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
 
 public final class SpawnItem extends L2GameServerPacket {
 	private final int _objectId;
-	private int _itemId;
+	private final int _itemId;
 	private final int _x, _y, _z;
-	private int _stackable;
-	private long _count;
+	private final int _stackable;
+	private final long _count;
 	
 	public SpawnItem(L2Object obj) {
 		_objectId = obj.getObjectId();

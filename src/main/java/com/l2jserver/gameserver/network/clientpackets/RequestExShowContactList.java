@@ -25,7 +25,8 @@ import com.l2jserver.gameserver.network.serverpackets.ExShowContactList;
 
 /**
  * Format: (ch)
- * @author mrTJO & UnAfraid
+ * @author mrTJO
+ * @author UnAfraid
  */
 public final class RequestExShowContactList extends L2GameClientPacket {
 	private static final String _C__D0_86_REQUESTEXSHOWCONTACTLIST = "[C] D0:86 RequestExShowContactList";

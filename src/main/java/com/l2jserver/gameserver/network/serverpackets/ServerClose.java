@@ -19,7 +19,8 @@
 package com.l2jserver.gameserver.network.serverpackets;
 
 /**
- * @author devScarlet, mrTJO
+ * @author devScarlet
+ * @author mrTJO
  */
 public class ServerClose extends L2GameServerPacket {
 	public static final ServerClose STATIC_PACKET = new ServerClose();

@@ -2,8 +2,8 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:element name="gameserver">
 		<xs:complexType>
-			<xs:sequence minOccurs="1" maxOccurs="1">
-				<xs:element name="define" minOccurs="1" maxOccurs="unbounded">
+			<xs:sequence>
+				<xs:element name="define" maxOccurs="unbounded">
 					<xs:complexType>
 						<xs:attribute name="address" use="required">
 							<xs:simpleType>

@@ -28,11 +28,6 @@ public class GetOnVehicle extends L2GameServerPacket {
 	private final int _boatObjId;
 	private final Location _pos;
 	
-	/**
-	 * @param charObjId
-	 * @param boatObjId
-	 * @param pos
-	 */
 	public GetOnVehicle(int charObjId, int boatObjId, Location pos) {
 		_charObjId = charObjId;
 		_boatObjId = boatObjId;

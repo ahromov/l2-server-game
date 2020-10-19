@@ -44,10 +44,6 @@ import com.l2jserver.gameserver.network.serverpackets.SocialAction;
 public class L2GuardInstance extends L2Attackable {
 	private static final Logger LOG = LoggerFactory.getLogger(L2GuardInstance.class);
 	
-	/**
-	 * Creates a guard.
-	 * @param template the guard NPC template
-	 */
 	public L2GuardInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2GuardInstance);
@@ -64,7 +60,7 @@ public class L2GuardInstance extends L2Attackable {
 	}
 	
 	/**
-	 * Return True if hte attacker is a L2MonsterInstance.
+	 * Return True if the attacker is a L2MonsterInstance.
 	 */
 	@Override
 	public boolean isAutoAttackable(L2Character attacker) {
@@ -98,7 +94,7 @@ public class L2GuardInstance extends L2Attackable {
 	 */
 	@Override
 	public String getHtmlPath(int npcId, int val) {
-		String pom = "";
+		String pom;
 		if (val == 0) {
 			pom = "" + npcId;
 		} else {

@@ -20,7 +20,8 @@ package com.l2jserver.gameserver.network.serverpackets;
 
 /**
  * Duel End packet implementation.
- * @author KenM, Zoey76
+ * @author KenM
+ * @author Zoey76
  */
 public class ExDuelEnd extends L2GameServerPacket {
 	public static final ExDuelEnd PLAYER_DUEL = new ExDuelEnd(false);

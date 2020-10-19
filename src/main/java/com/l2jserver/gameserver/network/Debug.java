@@ -41,7 +41,7 @@ public class Debug {
 		
 		final StringBuilder sb = new StringBuilder();
 		for (Entry<String, Object> entry : set.getSet().entrySet()) {
-			sb.append("<tr><td>" + entry.getKey() + "</td><td><font color=\"LEVEL\">" + entry.getValue() + "</font></td></tr>");
+			sb.append("<tr><td>").append(entry.getKey()).append("</td><td><font color=\"LEVEL\">").append(entry.getValue()).append("</font></td></tr>");
 		}
 		
 		final NpcHtmlMessage msg = new NpcHtmlMessage();
@@ -78,7 +78,7 @@ public class Debug {
 	public static void sendItemDebug(L2PcInstance player, L2ItemInstance item, StatsSet set) {
 		final StringBuilder sb = new StringBuilder();
 		for (Entry<String, Object> entry : set.getSet().entrySet()) {
-			sb.append("<tr><td>" + entry.getKey() + "</td><td><font color=\"LEVEL\">" + entry.getValue() + "</font></td></tr>");
+			sb.append("<tr><td>").append(entry.getKey()).append("</td><td><font color=\"LEVEL\">").append(entry.getValue()).append("</font></td></tr>");
 		}
 		
 		final NpcHtmlMessage msg = new NpcHtmlMessage();

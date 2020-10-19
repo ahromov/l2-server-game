@@ -25,7 +25,9 @@ import com.l2jserver.gameserver.model.entity.Hero;
 import com.l2jserver.gameserver.model.olympiad.Olympiad;
 
 /**
- * @author -Wooden-, KenM, godson
+ * @author -Wooden-
+ * @author KenM
+ * @author godson
  */
 public class ExHeroList extends L2GameServerPacket {
 	private final Map<Integer, StatsSet> _heroList;

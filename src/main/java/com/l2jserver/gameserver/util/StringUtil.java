@@ -201,14 +201,14 @@ public final class StringUtil {
 	}
 	
 	/**
-	 * Creates new string builder with size initializated to <code>sizeHint</code>, unless total length of strings is greater than <code>sizeHint</code>.
+	 * Creates new string builder with size initialized to <code>sizeHint</code>, unless total length of strings is greater than <code>sizeHint</code>.
 	 * @param sizeHint hint for string builder size allocation
 	 * @param strings strings to be appended
 	 * @return created string builder
 	 */
 	public static StringBuilder startAppend(final int sizeHint, final String... strings) {
 		final int length = getLength(strings);
-		final StringBuilder sbString = new StringBuilder(sizeHint > length ? sizeHint : length);
+		final StringBuilder sbString = new StringBuilder(Math.max(sizeHint, length));
 		for (final String string : strings) {
 			sbString.append(string);
 		}

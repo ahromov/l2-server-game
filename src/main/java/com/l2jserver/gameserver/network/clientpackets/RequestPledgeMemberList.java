@@ -23,8 +23,7 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.serverpackets.PledgeShowMemberListAll;
 
 /**
- * This class ...
- * @version $Revision: 1.5.4.2 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class RequestPledgeMemberList extends L2GameClientPacket {
 	private static final String _C__4D_REQUESTPLEDGEMEMBERLIST = "[C] 4D RequestPledgeMemberList";

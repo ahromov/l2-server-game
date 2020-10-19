@@ -22,7 +22,8 @@ import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.L2Npc;
 
 /**
- * @author devScarlet, mrTJO
+ * @author devScarlet
+ * @author mrTJO
  */
 public final class ServerObjectInfo extends L2GameServerPacket {
 	private final L2Npc _activeChar;

@@ -22,7 +22,8 @@ import com.l2jserver.gameserver.network.SystemMessageId;
 
 /**
  * ConfirmDlg server packet implementation.
- * @author kombat, UnAfraid
+ * @author kombat
+ * @author UnAfraid
  */
 public class ConfirmDlg extends AbstractMessagePacket<ConfirmDlg> {
 	private int _time;

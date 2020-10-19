@@ -41,7 +41,9 @@ import com.l2jserver.gameserver.network.serverpackets.L2GameServerPacket;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 /**
- * @author GodKratos, Pere, DS
+ * @author GodKratos
+ * @author Pere
+ * @author DS
  */
 public abstract class OlympiadGameNormal extends AbstractOlympiadGame {
 	
@@ -61,14 +63,14 @@ public abstract class OlympiadGameNormal extends AbstractOlympiadGame {
 		_playerTwo.getPlayer().setOlympiadGameId(id);
 	}
 	
-	protected static final Participant[] createListOfParticipants(List<Integer> list) {
+	protected static Participant[] createListOfParticipants(List<Integer> list) {
 		if ((list == null) || list.isEmpty() || (list.size() < 2)) {
 			return null;
 		}
 		
-		int playerOneObjectId = 0;
-		L2PcInstance playerOne = null;
-		L2PcInstance playerTwo = null;
+		int playerOneObjectId;
+		L2PcInstance playerOne;
+		L2PcInstance playerTwo;
 		
 		while (list.size() > 1) {
 			playerOneObjectId = list.remove(Rnd.nextInt(list.size()));
@@ -122,9 +124,9 @@ public abstract class OlympiadGameNormal extends AbstractOlympiadGame {
 	
 	@Override
 	protected final boolean portPlayersToArena(List<Location> spawns) {
-		boolean result = true;
+		boolean result;
 		try {
-			result &= portPlayerToArena(_playerOne, spawns.get(0), _stadiumID);
+			result = portPlayerToArena(_playerOne, spawns.get(0), _stadiumID);
 			result &= portPlayerToArena(_playerTwo, spawns.get(spawns.size() / 2), _stadiumID);
 		} catch (Exception e) {
 			_log.log(Level.WARNING, "", e);
@@ -224,11 +226,7 @@ public abstract class OlympiadGameNormal extends AbstractOlympiadGame {
 			return false;
 		}
 		
-		if ((_playerTwo.getPlayer() == null) || _playerTwo.isDisconnected()) {
-			return false;
-		}
-		
-		return true;
+		return (_playerTwo.getPlayer() != null) && !_playerTwo.isDisconnected();
 	}
 	
 	@Override
@@ -238,21 +236,13 @@ public abstract class OlympiadGameNormal extends AbstractOlympiadGame {
 		}
 		
 		boolean playerOneLost = true;
-		try {
-			if (_playerOne.getPlayer().getOlympiadGameId() == _stadiumID) {
-				playerOneLost = _playerOne.getPlayer().isDead();
-			}
-		} catch (Exception e) {
-			playerOneLost = true;
+		if (_playerOne.getPlayer().getOlympiadGameId() == _stadiumID) {
+			playerOneLost = _playerOne.getPlayer().isDead();
 		}
 		
 		boolean playerTwoLost = true;
-		try {
-			if (_playerTwo.getPlayer().getOlympiadGameId() == _stadiumID) {
-				playerTwoLost = _playerTwo.getPlayer().isDead();
-			}
-		} catch (Exception e) {
-			playerTwoLost = true;
+		if (_playerTwo.getPlayer().getOlympiadGameId() == _stadiumID) {
+			playerTwoLost = _playerTwo.getPlayer().isDead();
 		}
 		
 		return playerOneLost || playerTwoLost;
@@ -264,7 +254,7 @@ public abstract class OlympiadGameNormal extends AbstractOlympiadGame {
 			return;
 		}
 		
-		ExOlympiadMatchResult result = null;
+		ExOlympiadMatchResult result;
 		
 		boolean tie = false;
 		int winside = 0;
@@ -396,7 +386,7 @@ public abstract class OlympiadGameNormal extends AbstractOlympiadGame {
 					
 					// Notify to scripts
 					EventDispatcher.getInstance().notifyEventAsync(new OnOlympiadMatchResult(_playerOne, _playerTwo, getType()), Olympiad.getInstance());
-				} else if (_pOneCrash && !_pTwoCrash) {
+				} else if (!_pTwoCrash) {
 					sm = SystemMessage.getSystemMessage(SystemMessageId.C1_HAS_WON_THE_GAME);
 					sm.addString(_playerTwo.getName());
 					stadium.broadcastPacket(sm);
@@ -429,7 +419,7 @@ public abstract class OlympiadGameNormal extends AbstractOlympiadGame {
 					}
 					// Notify to scripts
 					EventDispatcher.getInstance().notifyEventAsync(new OnOlympiadMatchResult(_playerTwo, _playerOne, getType()), Olympiad.getInstance());
-				} else if (_pOneCrash && _pTwoCrash) {
+				} else {
 					stadium.broadcastPacket(SystemMessage.getSystemMessage(SystemMessageId.THE_GAME_ENDED_IN_A_TIE));
 					
 					_playerOne.updateStat(COMP_LOST, 1);
@@ -504,7 +494,7 @@ public abstract class OlympiadGameNormal extends AbstractOlympiadGame {
 				}
 			}
 			
-			// if players crashed, search if they've relogged
+			// if players crashed, search if they've re-logged
 			_playerOne.updatePlayer();
 			_playerTwo.updatePlayer();
 			
@@ -662,7 +652,7 @@ public abstract class OlympiadGameNormal extends AbstractOlympiadGame {
 		_damageP2 = 0;
 	}
 	
-	protected static final void saveResults(Participant one, Participant two, int winner, long startTime, long fightTime, CompetitionType type) {
+	protected static void saveResults(Participant one, Participant two, int winner, long startTime, long fightTime, CompetitionType type) {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("INSERT INTO olympiad_fights (charOneId, charTwoId, charOneClass, charTwoClass, winner, start, time, classed) values(?,?,?,?,?,?,?,?)")) {
 			ps.setInt(1, one.getObjectId());

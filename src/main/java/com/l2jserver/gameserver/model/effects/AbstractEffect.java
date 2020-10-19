@@ -79,7 +79,7 @@ public abstract class AbstractEffect {
 	 * @param params the parameters
 	 * @return the new effect
 	 */
-	public static final AbstractEffect createEffect(Condition attachCond, Condition applyCond, StatsSet set, StatsSet params) {
+	public static AbstractEffect createEffect(Condition attachCond, Condition applyCond, StatsSet set, StatsSet params) {
 		final String name = set.getString("name");
 		final Class<? extends AbstractEffect> handler = EffectHandler.getInstance().getHandler(name);
 		if (handler == null) {
@@ -223,7 +223,7 @@ public abstract class AbstractEffect {
 	 */
 	public List<AbstractFunction> getStatFuncs(L2Character caster, L2Character target, Skill skill) {
 		if (getFuncTemplates() == null) {
-			return Collections.<AbstractFunction> emptyList();
+			return Collections.emptyList();
 		}
 		
 		final List<AbstractFunction> functions = new ArrayList<>(getFuncTemplates().size());

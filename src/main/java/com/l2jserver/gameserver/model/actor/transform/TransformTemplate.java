@@ -164,7 +164,7 @@ public final class TransformTemplate {
 	}
 	
 	public List<SkillHolder> getSkills() {
-		return _skills != null ? _skills : Collections.<SkillHolder> emptyList();
+		return _skills != null ? _skills : Collections.emptyList();
 	}
 	
 	public void addAdditionalSkill(AdditionalSkillHolder holder) {
@@ -175,7 +175,7 @@ public final class TransformTemplate {
 	}
 	
 	public List<AdditionalSkillHolder> getAdditionalSkills() {
-		return _additionalSkills != null ? _additionalSkills : Collections.<AdditionalSkillHolder> emptyList();
+		return _additionalSkills != null ? _additionalSkills : Collections.emptyList();
 	}
 	
 	public void addAdditionalItem(AdditionalItemHolder holder) {
@@ -186,7 +186,7 @@ public final class TransformTemplate {
 	}
 	
 	public List<AdditionalItemHolder> getAdditionalItems() {
-		return _additionalItems != null ? _additionalItems : Collections.<AdditionalItemHolder> emptyList();
+		return _additionalItems != null ? _additionalItems : Collections.emptyList();
 	}
 	
 	public void setBasicActionList(ExBasicActionList list) {

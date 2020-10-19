@@ -24,7 +24,8 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 /**
  * Format: (ch)S S: Character Name
- * @author UnAfraid & mrTJO
+ * @author UnAfraid
+ * @author mrTJO
  */
 public class RequestExDeleteContactFromContactList extends L2GameClientPacket {
 	private static final String _C__D0_85_REQUESTEXDELETECONTACTFROMCONTACTLIST = "[C] D0:85 RequestExDeleteContactFromContactList";

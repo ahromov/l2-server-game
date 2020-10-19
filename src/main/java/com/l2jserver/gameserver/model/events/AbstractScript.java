@@ -151,7 +151,9 @@ import com.l2jserver.gameserver.util.MinionList;
 
 /**
  * Abstract script.
- * @author KenM, UnAfraid, Zoey76
+ * @author KenM
+ * @author UnAfraid
+ * @author Zoey76
  */
 public abstract class AbstractScript implements INamable {
 	
@@ -1216,44 +1218,37 @@ public abstract class AbstractScript implements INamable {
 		if (ids.length > 0) {
 			for (int id : ids) {
 				switch (registerType) {
-					case NPC: {
+					case NPC -> {
 						final L2NpcTemplate template = NpcData.getInstance().getTemplate(id);
 						if (template != null) {
 							listeners.add(template.addListener(action.apply(template)));
 						}
-						break;
 					}
-					case ZONE: {
+					case ZONE -> {
 						final L2ZoneType template = ZoneManager.getInstance().getZoneById(id);
 						if (template != null) {
 							listeners.add(template.addListener(action.apply(template)));
 						}
-						break;
 					}
-					case ITEM: {
+					case ITEM -> {
 						final L2Item template = ItemTable.getInstance().getTemplate(id);
 						if (template != null) {
 							listeners.add(template.addListener(action.apply(template)));
 						}
-						break;
 					}
-					case CASTLE: {
+					case CASTLE -> {
 						final Castle template = CastleManager.getInstance().getCastleById(id);
 						if (template != null) {
 							listeners.add(template.addListener(action.apply(template)));
 						}
-						break;
 					}
-					case FORTRESS: {
+					case FORTRESS -> {
 						final Fort template = FortManager.getInstance().getFortById(id);
 						if (template != null) {
 							listeners.add(template.addListener(action.apply(template)));
 						}
-						break;
 					}
-					default: {
-						_log.log(Level.WARNING, getClass().getSimpleName() + ": Unhandled register type: " + registerType);
-					}
+					default -> _log.log(Level.WARNING, getClass().getSimpleName() + ": Unhandled register type: " + registerType);
 				}
 				
 				_registeredIds.putIfAbsent(registerType, ConcurrentHashMap.newKeySet(1));
@@ -1261,34 +1256,25 @@ public abstract class AbstractScript implements INamable {
 			}
 		} else {
 			switch (registerType) {
-				case OLYMPIAD: {
+				case OLYMPIAD -> {
 					final Olympiad template = Olympiad.getInstance();
 					listeners.add(template.addListener(action.apply(template)));
-					break;
 				}
-				case GLOBAL: // Global Listener
-				{
+				case GLOBAL -> {
 					final ListenersContainer template = Containers.Global();
 					listeners.add(template.addListener(action.apply(template)));
-					break;
 				}
-				case GLOBAL_NPCS: // Global Npcs Listener
-				{
+				case GLOBAL_NPCS -> {
 					final ListenersContainer template = Containers.Npcs();
 					listeners.add(template.addListener(action.apply(template)));
-					break;
 				}
-				case GLOBAL_MONSTERS: // Global Monsters Listener
-				{
+				case GLOBAL_MONSTERS -> {
 					final ListenersContainer template = Containers.Monsters();
 					listeners.add(template.addListener(action.apply(template)));
-					break;
 				}
-				case GLOBAL_PLAYERS: // Global Players Listener
-				{
+				case GLOBAL_PLAYERS -> {
 					final ListenersContainer template = Containers.Players();
 					listeners.add(template.addListener(action.apply(template)));
-					break;
 				}
 			}
 		}
@@ -1310,44 +1296,37 @@ public abstract class AbstractScript implements INamable {
 		if (!ids.isEmpty()) {
 			for (int id : ids) {
 				switch (registerType) {
-					case NPC: {
+					case NPC -> {
 						final L2NpcTemplate template = NpcData.getInstance().getTemplate(id);
 						if (template != null) {
 							listeners.add(template.addListener(action.apply(template)));
 						}
-						break;
 					}
-					case ZONE: {
+					case ZONE -> {
 						final L2ZoneType template = ZoneManager.getInstance().getZoneById(id);
 						if (template != null) {
 							listeners.add(template.addListener(action.apply(template)));
 						}
-						break;
 					}
-					case ITEM: {
+					case ITEM -> {
 						final L2Item template = ItemTable.getInstance().getTemplate(id);
 						if (template != null) {
 							listeners.add(template.addListener(action.apply(template)));
 						}
-						break;
 					}
-					case CASTLE: {
+					case CASTLE -> {
 						final Castle template = CastleManager.getInstance().getCastleById(id);
 						if (template != null) {
 							listeners.add(template.addListener(action.apply(template)));
 						}
-						break;
 					}
-					case FORTRESS: {
+					case FORTRESS -> {
 						final Fort template = FortManager.getInstance().getFortById(id);
 						if (template != null) {
 							listeners.add(template.addListener(action.apply(template)));
 						}
-						break;
 					}
-					default: {
-						_log.log(Level.WARNING, getClass().getSimpleName() + ": Unhandled register type: " + registerType);
-					}
+					default -> _log.log(Level.WARNING, getClass().getSimpleName() + ": Unhandled register type: " + registerType);
 				}
 			}
 			
@@ -1355,34 +1334,25 @@ public abstract class AbstractScript implements INamable {
 			_registeredIds.get(registerType).addAll(ids);
 		} else {
 			switch (registerType) {
-				case OLYMPIAD: {
+				case OLYMPIAD -> {
 					final Olympiad template = Olympiad.getInstance();
 					listeners.add(template.addListener(action.apply(template)));
-					break;
 				}
-				case GLOBAL: // Global Listener
-				{
+				case GLOBAL -> {
 					final ListenersContainer template = Containers.Global();
 					listeners.add(template.addListener(action.apply(template)));
-					break;
 				}
-				case GLOBAL_NPCS: // Global Npcs Listener
-				{
+				case GLOBAL_NPCS -> {
 					final ListenersContainer template = Containers.Npcs();
 					listeners.add(template.addListener(action.apply(template)));
-					break;
 				}
-				case GLOBAL_MONSTERS: // Global Monsters Listener
-				{
+				case GLOBAL_MONSTERS -> {
 					final ListenersContainer template = Containers.Monsters();
 					listeners.add(template.addListener(action.apply(template)));
-					break;
 				}
-				case GLOBAL_PLAYERS: // Global Players Listener
-				{
+				case GLOBAL_PLAYERS -> {
 					final ListenersContainer template = Containers.Players();
 					listeners.add(template.addListener(action.apply(template)));
-					break;
 				}
 			}
 		}
@@ -1391,16 +1361,12 @@ public abstract class AbstractScript implements INamable {
 	}
 	
 	public Set<Integer> getRegisteredIds(ListenerRegisterType type) {
-		return _registeredIds.containsKey(type) ? _registeredIds.get(type) : Collections.emptySet();
+		return _registeredIds.getOrDefault(type, Collections.emptySet());
 	}
 	
 	public List<AbstractEventListener> getListeners() {
 		return _listeners;
 	}
-	
-	/**
-	 * -------------------------------------------------------------------------------------------------------
-	 */
 	
 	/**
 	 * Show an on screen message to the player.
@@ -1712,10 +1678,12 @@ public abstract class AbstractScript implements INamable {
 			
 			for (int itemId : itemIds) {
 				if (item.getId() == itemId) {
-					if ((count + item.getCount()) > Long.MAX_VALUE) {
-						return Long.MAX_VALUE;
+					try {
+						count = Math.addExact(count, item.getCount());
+					} catch (ArithmeticException ae) {
+						count = Long.MAX_VALUE;
+						break;
 					}
-					count += item.getCount();
 				}
 			}
 		}
@@ -1874,22 +1842,11 @@ public abstract class AbstractScript implements INamable {
 			} else if (rates().useQuestRewardMultipliers()) {
 				if (item instanceof L2EtcItem) {
 					switch (((L2EtcItem) item).getItemType()) {
-						case POTION:
-							count *= rates().getRateQuestRewardPotion();
-							break;
-						case SCRL_ENCHANT_WP:
-						case SCRL_ENCHANT_AM:
-						case SCROLL:
-							count *= rates().getRateQuestRewardScroll();
-							break;
-						case RECIPE:
-							count *= rates().getRateQuestRewardRecipe();
-							break;
-						case MATERIAL:
-							count *= rates().getRateQuestRewardMaterial();
-							break;
-						default:
-							count *= rates().getRateQuestReward();
+						case POTION -> count *= rates().getRateQuestRewardPotion();
+						case SCRL_ENCHANT_WP, SCRL_ENCHANT_AM, SCROLL -> count *= rates().getRateQuestRewardScroll();
+						case RECIPE -> count *= rates().getRateQuestRewardRecipe();
+						case MATERIAL -> count *= rates().getRateQuestRewardMaterial();
+						default -> count *= rates().getRateQuestReward();
 					}
 				}
 			} else {
@@ -2106,9 +2063,7 @@ public abstract class AbstractScript implements INamable {
 					playSound(player, Sound.ITEMSOUND_QUEST_ITEMGET);
 				}
 				// if there is no limit, return true every time an item is given
-				if (limit <= 0) {
-					return true;
-				}
+				return limit <= 0;
 			}
 		}
 		return false;
@@ -2465,7 +2420,7 @@ public abstract class AbstractScript implements INamable {
 	private static Map<L2PcInstance, Map<Integer, Long>> calculateDistribution(Collection<L2PcInstance> players, Collection<ItemHolder> items, Function<Integer, Long> limit) {
 		Map<L2PcInstance, Map<Integer, Long>> rewardedCounts = new HashMap<>();
 		for (L2PcInstance player : players) {
-			rewardedCounts.put(player, new HashMap<Integer, Long>());
+			rewardedCounts.put(player, new HashMap<>());
 		}
 		NEXT_ITEM:
 		for (ItemHolder item : items) {
@@ -2911,7 +2866,7 @@ public abstract class AbstractScript implements INamable {
 	 * @param isWide
 	 * @param relAngle
 	 */
-	public static final void specialCamera(L2PcInstance player, L2Character creature, int force, int angle1, int angle2, int time, int range, int duration, int relYaw, int relPitch, int isWide, int relAngle) {
+	public static void specialCamera(L2PcInstance player, L2Character creature, int force, int angle1, int angle2, int time, int range, int duration, int relYaw, int relPitch, int isWide, int relAngle) {
 		player.sendPacket(new SpecialCamera(creature, force, angle1, angle2, time, range, duration, relYaw, relPitch, isWide, relAngle));
 	}
 	
@@ -2929,7 +2884,7 @@ public abstract class AbstractScript implements INamable {
 	 * @param isWide
 	 * @param relAngle
 	 */
-	public static final void specialCameraEx(L2PcInstance player, L2Character creature, int force, int angle1, int angle2, int time, int duration, int relYaw, int relPitch, int isWide, int relAngle) {
+	public static void specialCameraEx(L2PcInstance player, L2Character creature, int force, int angle1, int angle2, int time, int duration, int relYaw, int relPitch, int isWide, int relAngle) {
 		player.sendPacket(new SpecialCamera(creature, player, force, angle1, angle2, time, duration, relYaw, relPitch, isWide, relAngle));
 	}
 	
@@ -2949,7 +2904,7 @@ public abstract class AbstractScript implements INamable {
 	 * @param relAngle
 	 * @param unk
 	 */
-	public static final void specialCamera3(L2PcInstance player, L2Character creature, int force, int angle1, int angle2, int time, int range, int duration, int relYaw, int relPitch, int isWide, int relAngle, int unk) {
+	public static void specialCamera3(L2PcInstance player, L2Character creature, int force, int angle1, int angle2, int time, int range, int duration, int relYaw, int relPitch, int isWide, int relAngle, int unk) {
 		player.sendPacket(new SpecialCamera(creature, force, angle1, angle2, time, range, duration, relYaw, relPitch, isWide, relAngle, unk));
 	}
 	

@@ -28,7 +28,7 @@ import com.l2jserver.gameserver.model.drops.strategy.IPreciseDeterminationStrate
  * @author NosBit
  */
 public enum DropListScope implements IDropItemFactory, IGroupedDropItemFactory {
-	DEATH((itemId, min, max, chance) -> new GeneralDropItem(itemId, min, max, chance, IAmountMultiplierStrategy.DROP, IChanceMultiplierStrategy.DROP), chance -> new GroupedGeneralDropItem(chance)),
+	DEATH((itemId, min, max, chance) -> new GeneralDropItem(itemId, min, max, chance, IAmountMultiplierStrategy.DROP, IChanceMultiplierStrategy.DROP), GroupedGeneralDropItem::new),
 	CORPSE((itemId, min, max, chance) -> new GeneralDropItem(itemId, min, max, chance, IAmountMultiplierStrategy.SPOIL, IChanceMultiplierStrategy.SPOIL), DEATH),
 	
 	/**
@@ -42,7 +42,7 @@ public enum DropListScope implements IDropItemFactory, IGroupedDropItemFactory {
 	private final IDropItemFactory _factory;
 	private final IGroupedDropItemFactory _groupFactory;
 	
-	private DropListScope(IDropItemFactory factory, IGroupedDropItemFactory groupFactory) {
+	DropListScope(IDropItemFactory factory, IGroupedDropItemFactory groupFactory) {
 		_factory = factory;
 		_groupFactory = groupFactory;
 	}

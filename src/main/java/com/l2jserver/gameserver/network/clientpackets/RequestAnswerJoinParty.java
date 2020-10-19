@@ -52,21 +52,18 @@ public final class RequestAnswerJoinParty extends L2GameClientPacket {
 		requestor.sendPacket(new JoinParty(_response));
 		
 		switch (_response) {
-			case -1: // Party disable by player client config
-			{
+			// Party disable by player client config
+			case -1 -> {
 				SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.C1_IS_SET_TO_REFUSE_PARTY_REQUEST);
 				sm.addPcName(player);
 				requestor.sendPacket(sm);
-				break;
 			}
-			case 0: // Party cancel by player
-			{
-				
+			// Party cancel by player
+			case 0 -> {
 				// requestor.sendPacket(SystemMessageId.PLAYER_DECLINED); FIXME: Done in client?
-				break;
 			}
-			case 1: // Party accept by player
-			{
+			// Party accept by player
+			case 1 -> {
 				if (requestor.isInParty()) {
 					if (requestor.getParty().getMemberCount() >= 9) {
 						SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.PARTY_FULL);
@@ -111,7 +108,6 @@ public final class RequestAnswerJoinParty extends L2GameClientPacket {
 						}
 					}
 				}
-				break;
 			}
 		}
 		

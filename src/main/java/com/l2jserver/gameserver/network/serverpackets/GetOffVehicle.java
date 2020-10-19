@@ -24,13 +24,6 @@ package com.l2jserver.gameserver.network.serverpackets;
 public class GetOffVehicle extends L2GameServerPacket {
 	private final int _charObjId, _boatObjId, _x, _y, _z;
 	
-	/**
-	 * @param charObjId
-	 * @param boatObjId
-	 * @param x
-	 * @param y
-	 * @param z
-	 */
 	public GetOffVehicle(int charObjId, int boatObjId, int x, int y, int z) {
 		_charObjId = charObjId;
 		_boatObjId = boatObjId;

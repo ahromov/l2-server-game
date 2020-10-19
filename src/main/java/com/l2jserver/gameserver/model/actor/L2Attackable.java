@@ -526,8 +526,8 @@ public class L2Attackable extends L2Npc {
 					}
 				}
 			}
-		} catch (Exception e) {
-			LOG.error("{}", e);
+		} catch (Exception ex) {
+			LOG.error("Error calculating rewards!", ex);
 		}
 	}
 	
@@ -565,8 +565,8 @@ public class L2Attackable extends L2Npc {
 				if (player != null) {
 					EventDispatcher.getInstance().notifyEventAsync(new OnAttackableAttack(player, this, damage, skill, attacker.isSummon()), this);
 				}
-			} catch (Exception e) {
-				LOG.error("{}", e);
+			} catch (Exception ex) {
+				LOG.error("Error adding damage!", ex);
 			}
 		}
 	}
@@ -1150,15 +1150,14 @@ public class L2Attackable extends L2Npc {
 				sp = 0;
 			}
 		}
-		int[] tmp = {
+		return new int[] {
 			(int) xp,
 			(int) sp
 		};
-		return tmp;
 	}
 	
 	public long calculateOverhitExp(long normalExp) {
-		// Get the percentage based on the total of extra (over-hit) damage done relative to the total (maximum) ammount of HP on the L2Attackable
+		// Get the percentage based on the total of extra (over-hit) damage done relative to the total (maximum) amount of HP on the L2Attackable
 		double overhitPercentage = ((getOverhitDamage() * 100) / getMaxHp());
 		
 		// Over-hit damage percentages are limited to 25% max
@@ -1170,14 +1169,10 @@ public class L2Attackable extends L2Npc {
 		// (1/1 basis - 13% of over-hit damage, 13% of extra exp is given, and so on...)
 		double overhitExp = ((overhitPercentage / 100) * normalExp);
 		
-		// Return the rounded ammount of exp points to be added to the player's normal exp reward
-		long bonusOverhit = Math.round(overhitExp);
-		return bonusOverhit;
+		// Return the rounded amount of exp points to be added to the player's normal exp reward
+		return Math.round(overhitExp);
 	}
 	
-	/**
-	 * Return True.
-	 */
 	@Override
 	public boolean canBeAttacked() {
 		return true;
@@ -1247,30 +1242,14 @@ public class L2Attackable extends L2Npc {
 			int count = 1;
 			for (int skillId : getTemplate().getSkills().keySet()) {
 				switch (skillId) {
-					case 4303: // Strong type x2
-						count *= 2;
-						break;
-					case 4304: // Strong type x3
-						count *= 3;
-						break;
-					case 4305: // Strong type x4
-						count *= 4;
-						break;
-					case 4306: // Strong type x5
-						count *= 5;
-						break;
-					case 4307: // Strong type x6
-						count *= 6;
-						break;
-					case 4308: // Strong type x7
-						count *= 7;
-						break;
-					case 4309: // Strong type x8
-						count *= 8;
-						break;
-					case 4310: // Strong type x9
-						count *= 9;
-						break;
+					case 4303 -> count *= 2; // Strong type x2
+					case 4304 -> count *= 3; // Strong type x3
+					case 4305 -> count *= 4; // Strong type x4
+					case 4306 -> count *= 5; // Strong type x5
+					case 4307 -> count *= 6; // Strong type x6
+					case 4308 -> count *= 7; // Strong type x7
+					case 4309 -> count *= 8; // Strong type x8
+					case 4310 -> count *= 9; // Strong type x9
 				}
 			}
 			

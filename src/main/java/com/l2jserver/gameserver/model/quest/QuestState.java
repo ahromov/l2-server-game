@@ -58,7 +58,7 @@ public final class QuestState {
 	private final L2PcInstance _player;
 	
 	/** The current state of the quest */
-	private byte _state;
+	private int _state;
 	
 	/** A map of key->value pairs containing the quest state variables and their values */
 	private Map<String, String> _vars;
@@ -74,7 +74,7 @@ public final class QuestState {
 	 * @param player the owner of this {@link QuestState} object
 	 * @param state the initial state of the quest
 	 */
-	public QuestState(Quest quest, L2PcInstance player, byte state) {
+	public QuestState(Quest quest, L2PcInstance player, int state) {
 		_questName = quest.getName();
 		_player = player;
 		_state = state;
@@ -107,7 +107,7 @@ public final class QuestState {
 	 * @return the current State of this QuestState
 	 * @see com.l2jserver.gameserver.model.quest.State
 	 */
-	public byte getState() {
+	public int getState() {
 		return _state;
 	}
 	
@@ -138,10 +138,10 @@ public final class QuestState {
 	/**
 	 * @param state the new state of the quest to set
 	 * @return {@code true} if state was changed, {@code false} otherwise
-	 * @see #setState(byte state, boolean saveInDb)
+	 * @see #setState(int state, boolean saveInDb)
 	 * @see com.l2jserver.gameserver.model.quest.State
 	 */
-	public boolean setState(byte state) {
+	public boolean setState(int state) {
 		return setState(state, true);
 	}
 	
@@ -152,7 +152,7 @@ public final class QuestState {
 	 * @return {@code true} if state was changed, {@code false} otherwise
 	 * @see com.l2jserver.gameserver.model.quest.State
 	 */
-	public boolean setState(byte state, boolean saveInDb) {
+	public boolean setState(int state, boolean saveInDb) {
 		if (_state == state) {
 			return false;
 		}
@@ -226,7 +226,7 @@ public final class QuestState {
 		
 		if ("cond".equals(var)) {
 			try {
-				int previousVal = 0;
+				int previousVal;
 				try {
 					previousVal = Integer.parseInt(old);
 				} catch (Exception ex) {
@@ -986,18 +986,11 @@ public final class QuestState {
 	 * @see #exitQuest(boolean repeatable, boolean playExitQuest)
 	 */
 	public QuestState exitQuest(QuestType type) {
-		switch (type) {
-			case DAILY: {
-				exitQuest(false);
-				setRestartTime();
-				break;
-			}
-			// case ONE_TIME:
-			// case REPEATABLE:
-			default: {
-				exitQuest(type == QuestType.REPEATABLE);
-				break;
-			}
+		if (type == QuestType.DAILY) {
+			exitQuest(false);
+			setRestartTime();
+		} else {
+			exitQuest(type == QuestType.REPEATABLE);
 		}
 		return this;
 	}
@@ -1089,7 +1082,7 @@ public final class QuestState {
 	 */
 	public boolean isNowAvailable() {
 		final String val = get("restartTime");
-		return ((val == null) || !Util.isDigit(val)) || (Long.parseLong(val) <= System.currentTimeMillis());
+		return !Util.isDigit(val) || (Long.parseLong(val) <= System.currentTimeMillis());
 	}
 	
 	public void setNRMemo(L2PcInstance talker, int value) {

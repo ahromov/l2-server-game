@@ -32,7 +32,7 @@ import com.l2jserver.gameserver.model.fishing.L2FishingRod;
 import com.l2jserver.gameserver.util.IXmlReader;
 
 /**
- * This class holds the Fishing Rods information.
+ * Fishing rods data parser.
  * @author nonom
  */
 public final class FishingRodsData implements IXmlReader {

@@ -20,11 +20,13 @@ package com.l2jserver.gameserver.network.clientpackets;
 
 /**
  * Format: (ch) S
- * @author -Wooden- TODO: GodKratos: This packet is wrong in Gracia Final!!
+ * @author -Wooden-
  */
 public final class RequestPCCafeCouponUse extends L2GameClientPacket {
 	private static final String _C__D0_19_REQUESTPCCAFECOUPONUSE = "[C] D0:19 RequestPCCafeCouponUse";
 	private String _str;
+	
+	// TODO: GodKratos: This packet is wrong in Gracia Final!
 	
 	@Override
 	protected void readImpl() {

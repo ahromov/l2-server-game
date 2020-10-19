@@ -155,7 +155,7 @@ public final class Say2 extends L2GameClientPacket {
 		}
 		
 		if ((_type < 0) || (_type >= CHAT_NAMES.length)) {
-			_log.warning("Say2: Invalid type: " + _type + " Player : " + activeChar.getName() + " text: " + String.valueOf(_text));
+			_log.warning("Say2: Invalid type: " + _type + " Player : " + activeChar.getName() + " text: " + _text);
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			activeChar.logout();
 			return;

@@ -97,9 +97,6 @@ public final class GeoUtils {
 	public static void debugGrid(L2PcInstance player) {
 		int geoRadius = 10;
 		int blocksPerPacket = 49;
-		if (geoRadius < 0) {
-			throw new IllegalArgumentException("geoRadius < 0");
-		}
 		
 		int iBlock = blocksPerPacket;
 		int iPacket = 0;
@@ -117,10 +114,6 @@ public final class GeoUtils {
 						player.sendPacket(exsp);
 					}
 					exsp = new ExServerPrimitive("DebugGrid_" + iPacket, player.getX(), player.getY(), -16000);
-				}
-				
-				if (exsp == null) {
-					throw new IllegalStateException();
 				}
 				
 				int gx = playerGx + dx;

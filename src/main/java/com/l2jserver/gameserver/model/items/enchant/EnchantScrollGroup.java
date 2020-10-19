@@ -57,7 +57,7 @@ public final class EnchantScrollGroup {
 	 * @return {@code List} of all enchant rate items, Empty list if none.
 	 */
 	public List<EnchantRateItem> getRateGroups() {
-		return _rateGroups != null ? _rateGroups : Collections.<EnchantRateItem> emptyList();
+		return _rateGroups != null ? _rateGroups : Collections.emptyList();
 	}
 	
 	/**

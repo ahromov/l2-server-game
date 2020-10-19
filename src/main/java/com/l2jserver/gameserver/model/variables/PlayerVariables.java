@@ -52,9 +52,9 @@ public class PlayerVariables extends AbstractVariables {
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement(SELECT_QUERY)) {
 			ps.setInt(1, _objectId);
-			try (var rset = ps.executeQuery()) {
-				while (rset.next()) {
-					set(rset.getString("var"), rset.getString("val"));
+			try (var rs = ps.executeQuery()) {
+				while (rs.next()) {
+					set(rs.getString("var"), rs.getString("val"));
 				}
 			}
 		} catch (Exception e) {

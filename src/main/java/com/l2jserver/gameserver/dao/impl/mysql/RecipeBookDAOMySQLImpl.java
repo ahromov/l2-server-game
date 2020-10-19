@@ -52,8 +52,8 @@ public class RecipeBookDAOMySQLImpl implements RecipeBookDAO {
 			ps.setInt(3, isDwarf ? player.getClassIndex() : 0);
 			ps.setInt(4, isDwarf ? 1 : 0);
 			ps.execute();
-		} catch (Exception e) {
-			LOG.warn("SQL exception while inserting recipe: {} from player {}", recipeId, player, e);
+		} catch (Exception ex) {
+			LOG.warn("Error inserting recipe Id {} from player {}!", recipeId, player, ex);
 		}
 	}
 	
@@ -65,8 +65,8 @@ public class RecipeBookDAOMySQLImpl implements RecipeBookDAO {
 			ps.setInt(2, recipeId);
 			ps.setInt(3, isDwarf ? player.getClassIndex() : 0);
 			ps.execute();
-		} catch (Exception e) {
-			LOG.warn("SQL exception while deleting recipe: {} from player {}", recipeId, player, e);
+		} catch (Exception ex) {
+			LOG.warn("Error deleting recipe Id {} from player {}!", recipeId, player, ex);
 		}
 	}
 	
@@ -81,16 +81,16 @@ public class RecipeBookDAOMySQLImpl implements RecipeBookDAO {
 				ps.setInt(2, player.getClassIndex());
 			}
 			
-			try (var rset = ps.executeQuery()) {
+			try (var rs = ps.executeQuery()) {
 				// TODO(Zoey76): Why only dwarven is cleared?
 				player.getDwarvenRecipeBookClear();
 				
 				final RecipeData rd = RecipeData.getInstance();
-				while (rset.next()) {
-					final L2RecipeList recipe = rd.getRecipeList(rset.getInt("id"));
+				while (rs.next()) {
+					final L2RecipeList recipe = rd.getRecipeList(rs.getInt("id"));
 					if (loadCommon) {
-						if (rset.getInt(2) == 1) {
-							if (rset.getInt(3) == player.getClassIndex()) {
+						if (rs.getInt(2) == 1) {
+							if (rs.getInt(3) == player.getClassIndex()) {
 								player.registerDwarvenRecipeList(recipe, false);
 							}
 						} else {
@@ -101,8 +101,8 @@ public class RecipeBookDAOMySQLImpl implements RecipeBookDAO {
 					}
 				}
 			}
-		} catch (Exception e) {
-			LOG.error("Could not restore recipe book data: {}", e);
+		} catch (Exception ex) {
+			LOG.error("Could not restore recipe book data!", ex);
 		}
 	}
 }

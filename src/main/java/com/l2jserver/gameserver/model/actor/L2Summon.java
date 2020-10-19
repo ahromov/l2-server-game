@@ -411,7 +411,7 @@ public abstract class L2Summon extends L2Playable {
 	}
 	
 	public void setAttackRange(int range) {
-		_attackRange = (range < 36) ? 36 : range;
+		_attackRange = Math.max(range, 36);
 	}
 	
 	public void setFollowStatus(boolean state) {
@@ -537,28 +537,14 @@ public abstract class L2Summon extends L2Playable {
 		getOwner().setCurrentPetSkill(skill, forceUse, dontMove);
 		
 		// Get the target for the skill
-		L2Object target = null;
-		switch (skill.getTargetType()) {
+		L2Object target = switch (skill.getTargetType()) {
 			// OWNER_PET should be cast even if no target has been found
-			case OWNER_PET:
-				target = getOwner();
-				break;
+			case OWNER_PET -> getOwner();
 			// PARTY, AURA, SELF should be cast even if no target has been found
-			case PARTY:
-			case AURA:
-			case FRONT_AURA:
-			case BEHIND_AURA:
-			case SELF:
-			case AURA_CORPSE_MOB:
-			case AURA_UNDEAD_ENEMY:
-			case COMMAND_CHANNEL:
-				target = this;
-				break;
-			default:
-				// Get the first target of the list
-				target = skill.getFirstOfTargetList(this);
-				break;
-		}
+			case PARTY, AURA, FRONT_AURA, BEHIND_AURA, SELF, AURA_CORPSE_MOB, AURA_UNDEAD_ENEMY, COMMAND_CHANNEL -> this;
+			// Get the first target of the list
+			default -> skill.getFirstOfTargetList(this);
+		};
 		
 		// Check the validity of the target
 		if (target == null) {

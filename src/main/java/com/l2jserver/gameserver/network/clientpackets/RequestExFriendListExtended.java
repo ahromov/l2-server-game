@@ -24,7 +24,8 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.serverpackets.FriendListExtended;
 
 /**
- * @author mrTJO & UnAfraid
+ * @author mrTJO
+ * @author UnAfraid
  */
 public final class RequestExFriendListExtended extends L2GameClientPacket {
 	private static final String _C__D0_87_REQUESTEXFRIENDLISTEXTENDED = "[C] D0:87 RequestExFriendListExtended";

@@ -46,7 +46,7 @@ public class MacroList implements IRestorable {
 	
 	private int _macroId;
 	
-	private final Map<Integer, Macro> _macroses = Collections.synchronizedMap(new LinkedHashMap<Integer, Macro>());
+	private final Map<Integer, Macro> _macros = Collections.synchronizedMap(new LinkedHashMap<>());
 	
 	public MacroList(L2PcInstance owner) {
 		_owner = owner;
@@ -58,20 +58,20 @@ public class MacroList implements IRestorable {
 		return _revision;
 	}
 	
-	public Map<Integer, Macro> getAllMacroses() {
-		return _macroses;
+	public Map<Integer, Macro> getAllMacros() {
+		return _macros;
 	}
 	
 	public void registerMacro(Macro macro) {
 		if (macro.getId() == 0) {
 			macro.setId(_macroId++);
-			while (_macroses.containsKey(macro.getId())) {
+			while (_macros.containsKey(macro.getId())) {
 				macro.setId(_macroId++);
 			}
-			_macroses.put(macro.getId(), macro);
+			_macros.put(macro.getId(), macro);
 			registerMacroInDb(macro);
 		} else {
-			final Macro old = _macroses.put(macro.getId(), macro);
+			final Macro old = _macros.put(macro.getId(), macro);
 			if (old != null) {
 				deleteMacroFromDb(old);
 			}
@@ -81,7 +81,7 @@ public class MacroList implements IRestorable {
 	}
 	
 	public void deleteMacro(int id) {
-		final Macro removed = _macroses.remove(id);
+		final Macro removed = _macros.remove(id);
 		if (removed != null) {
 			deleteMacroFromDb(removed);
 		}
@@ -98,8 +98,8 @@ public class MacroList implements IRestorable {
 	
 	public void sendUpdate() {
 		_revision++;
-		final Collection<Macro> allMacros = _macroses.values();
-		synchronized (_macroses) {
+		final Collection<Macro> allMacros = _macros.values();
+		synchronized (_macros) {
 			if (allMacros.isEmpty()) {
 				_owner.sendPacket(new SendMacroList(_revision, 0, null));
 			} else {
@@ -152,19 +152,19 @@ public class MacroList implements IRestorable {
 	
 	@Override
 	public boolean restoreMe() {
-		_macroses.clear();
+		_macros.clear();
 		try (var con = ConnectionFactory.getInstance().getConnection();
 			var ps = con.prepareStatement("SELECT charId, id, icon, name, descr, acronym, commands FROM character_macroses WHERE charId=?")) {
 			ps.setInt(1, _owner.getObjectId());
-			try (var rset = ps.executeQuery()) {
-				while (rset.next()) {
-					int id = rset.getInt("id");
-					int icon = rset.getInt("icon");
-					String name = rset.getString("name");
-					String descr = rset.getString("descr");
-					String acronym = rset.getString("acronym");
+			try (var rs = ps.executeQuery()) {
+				while (rs.next()) {
+					int id = rs.getInt("id");
+					int icon = rs.getInt("icon");
+					String name = rs.getString("name");
+					String descr = rs.getString("descr");
+					String acronym = rs.getString("acronym");
 					List<MacroCmd> commands = new ArrayList<>();
-					StringTokenizer st1 = new StringTokenizer(rset.getString("commands"), ";");
+					StringTokenizer st1 = new StringTokenizer(rs.getString("commands"), ";");
 					while (st1.hasMoreTokens()) {
 						StringTokenizer st = new StringTokenizer(st1.nextToken(), ",");
 						if (st.countTokens() < 3) {
@@ -179,7 +179,7 @@ public class MacroList implements IRestorable {
 						}
 						commands.add(new MacroCmd(commands.size(), type, d1, d2, cmd));
 					}
-					_macroses.put(id, new Macro(id, icon, name, descr, acronym, commands));
+					_macros.put(id, new Macro(id, icon, name, descr, acronym, commands));
 				}
 			}
 		} catch (Exception e) {

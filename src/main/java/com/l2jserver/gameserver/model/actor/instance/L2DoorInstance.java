@@ -76,17 +76,13 @@ public class L2DoorInstance extends L2Character {
 	/** The fort index in the array of L2Fort this L2NpcInstance belongs to */
 	private int _fortIndex = -2;
 	private ClanHall _clanHall;
-	private boolean _open = false;
-	private boolean _isAttackableDoor = false;
+	private boolean _open;
+	private boolean _isAttackableDoor;
 	private boolean _isTargetable;
 	private int _meshindex = 1;
 	// used for autoclose on open
 	private Future<?> _autoCloseTask;
 	
-	/**
-	 * Creates a door.
-	 * @param template the door template
-	 */
 	public L2DoorInstance(L2DoorTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2DoorInstance);
@@ -251,10 +247,7 @@ public class L2DoorInstance extends L2Character {
 		if (dmg > 6) {
 			return 6;
 		}
-		if (dmg < 0) {
-			return 0;
-		}
-		return dmg;
+		return Math.max(dmg, 0);
 	}
 	
 	// TODO: Replace index with the castle id itself.
@@ -294,10 +287,7 @@ public class L2DoorInstance extends L2Character {
 		if ((getFort() != null) && (getFort().getResidenceId() > 0) && getFort().getZone().isActive() && getIsShowHp()) {
 			return true;
 		}
-		if ((getClanHall() != null) && getClanHall().isSiegableHall() && ((SiegableHall) getClanHall()).getSiegeZone().isActive() && getIsShowHp()) {
-			return true;
-		}
-		return false;
+		return (getClanHall() != null) && getClanHall().isSiegableHall() && ((SiegableHall) getClanHall()).getSiegeZone().isActive() && getIsShowHp();
 	}
 	
 	@Override
@@ -374,7 +364,7 @@ public class L2DoorInstance extends L2Character {
 	@Override
 	public void broadcastStatusUpdate() {
 		Collection<L2PcInstance> knownPlayers = getKnownList().getKnownPlayers().values();
-		if ((knownPlayers == null) || knownPlayers.isEmpty()) {
+		if (knownPlayers.isEmpty()) {
 			return;
 		}
 		
@@ -454,10 +444,7 @@ public class L2DoorInstance extends L2Character {
 	 */
 	private void notifyChildEvent(boolean open) {
 		byte openThis = open ? getTemplate().getMasterDoorOpen() : getTemplate().getMasterDoorClose();
-		
-		if (openThis == 0) {
-			return;
-		} else if (openThis == 1) {
+		if (openThis == 1) {
 			openMe();
 		} else if (openThis == -1) {
 			closeMe();

@@ -59,10 +59,9 @@ public class TvTManager {
 		try {
 			Calendar currentTime = Calendar.getInstance();
 			Calendar nextStartTime = null;
-			Calendar testStartTime = null;
 			for (String timeOfDay : tvt().getInterval()) {
 				// Creating a Calendar object from the specified interval value
-				testStartTime = Calendar.getInstance();
+				var testStartTime = Calendar.getInstance();
 				testStartTime.setLenient(true);
 				String[] splitTimeOfDay = timeOfDay.split(":");
 				testStartTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(splitTimeOfDay[0]));

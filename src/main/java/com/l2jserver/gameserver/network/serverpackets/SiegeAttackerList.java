@@ -31,9 +31,9 @@ import com.l2jserver.gameserver.model.entity.clanhall.SiegableHall;
  * <BR>
  * c = ca<BR>
  * d = CastleID<BR>
- * d = unknow (0x00)<BR>
- * d = unknow (0x01)<BR>
- * d = unknow (0x00)<BR>
+ * d = unknown (0x00)<BR>
+ * d = unknown (0x01)<BR>
+ * d = unknown (0x00)<BR>
  * d = Number of Attackers Clans?<BR>
  * d = Number of Attackers Clans<BR>
  * { //repeats<BR>
@@ -75,8 +75,8 @@ public final class SiegeAttackerList extends L2GameServerPacket {
 				
 				writeD(size);
 				writeD(size);
-				for (L2SiegeClan siegeclan : _castle.getSiege().getAttackerClans()) {
-					clan = ClanTable.getInstance().getClan(siegeclan.getClanId());
+				for (L2SiegeClan siegeClan : _castle.getSiege().getAttackerClans()) {
+					clan = ClanTable.getInstance().getClan(siegeClan.getClanId());
 					if (clan == null) {
 						continue;
 					}
@@ -85,7 +85,7 @@ public final class SiegeAttackerList extends L2GameServerPacket {
 					writeS(clan.getName());
 					writeS(clan.getLeaderName());
 					writeD(clan.getCrestId());
-					writeD(0x00); // signed time (seconds) (not storated by L2J)
+					writeD(0x00); // signed time (seconds) (not stored by L2J)
 					writeD(clan.getAllyId());
 					writeS(clan.getAllyName());
 					writeS(""); // AllyLeaderName
@@ -115,7 +115,7 @@ public final class SiegeAttackerList extends L2GameServerPacket {
 					writeS(clan.getName());
 					writeS(clan.getLeaderName());
 					writeD(clan.getCrestId());
-					writeD(0x00); // signed time (seconds) (not storated by L2J)
+					writeD(0x00); // signed time (seconds) (not stored by L2J)
 					writeD(clan.getAllyId());
 					writeS(clan.getAllyName());
 					writeS(""); // AllyLeaderName

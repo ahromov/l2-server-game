@@ -106,27 +106,26 @@ public class RaidBossSpawnManager {
 		
 		@Override
 		public void run() {
-			L2RaidBossInstance raidboss = null;
-			
+			L2RaidBossInstance raidBoss;
 			if (bossId == EILHALDER_VON_HELLMANN) {
-				raidboss = DayNightSpawnManager.getInstance().handleBoss(_spawns.get(bossId));
+				raidBoss = DayNightSpawnManager.getInstance().handleBoss(_spawns.get(bossId));
 			} else {
-				raidboss = (L2RaidBossInstance) _spawns.get(bossId).doSpawn();
+				raidBoss = (L2RaidBossInstance) _spawns.get(bossId).doSpawn();
 			}
 			
-			if (raidboss != null) {
-				raidboss.setRaidStatus(StatusEnum.ALIVE);
+			if (raidBoss != null) {
+				raidBoss.setRaidStatus(StatusEnum.ALIVE);
 				
 				final StatsSet info = new StatsSet();
-				info.set("currentHP", raidboss.getCurrentHp());
-				info.set("currentMP", raidboss.getCurrentMp());
+				info.set("currentHP", raidBoss.getCurrentHp());
+				info.set("currentMP", raidBoss.getCurrentMp());
 				info.set("respawnTime", 0L);
 				
 				_storedInfo.put(bossId, info);
 				
-				LOG.info("Spawning Raid Boss {}.", raidboss.getName());
+				LOG.info("Spawning Raid Boss {}.", raidBoss.getName());
 				
-				_bosses.put(bossId, raidboss);
+				_bosses.put(bossId, raidBoss);
 			}
 			
 			_schedules.remove(bossId);
@@ -196,20 +195,19 @@ public class RaidBossSpawnManager {
 		SpawnTable.getInstance().addNewSpawn(spawnDat, false);
 		
 		if ((respawnTime == 0L) || (time > respawnTime)) {
-			L2RaidBossInstance raidboss = null;
-			
+			L2RaidBossInstance raidBoss;
 			if (bossId == EILHALDER_VON_HELLMANN) {
-				raidboss = DayNightSpawnManager.getInstance().handleBoss(spawnDat);
+				raidBoss = DayNightSpawnManager.getInstance().handleBoss(spawnDat);
 			} else {
-				raidboss = (L2RaidBossInstance) spawnDat.doSpawn();
+				raidBoss = (L2RaidBossInstance) spawnDat.doSpawn();
 			}
 			
-			if (raidboss != null) {
-				raidboss.setCurrentHp(currentHP);
-				raidboss.setCurrentMp(currentMP);
-				raidboss.setRaidStatus(StatusEnum.ALIVE);
+			if (raidBoss != null) {
+				raidBoss.setCurrentHp(currentHP);
+				raidBoss.setCurrentMp(currentMP);
+				raidBoss.setRaidStatus(StatusEnum.ALIVE);
 				
-				_bosses.put(bossId, raidboss);
+				_bosses.put(bossId, raidBoss);
 				
 				final StatsSet info = new StatsSet();
 				info.set("currentHP", currentHP);
@@ -262,18 +260,14 @@ public class RaidBossSpawnManager {
 		SpawnTable.getInstance().deleteSpawn(spawnDat, false);
 		_spawns.remove(bossId);
 		
-		if (_bosses.containsKey(bossId)) {
-			_bosses.remove(bossId);
-		}
+		_bosses.remove(bossId);
 		
-		if (_schedules.containsKey(bossId)) {
-			final ScheduledFuture<?> f = _schedules.remove(bossId);
+		final ScheduledFuture<?> f = _schedules.remove(bossId);
+		if (f != null) {
 			f.cancel(true);
 		}
 		
-		if (_storedInfo.containsKey(bossId)) {
-			_storedInfo.remove(bossId);
-		}
+		_storedInfo.remove(bossId);
 		
 		if (updateDb) {
 			try (var con = ConnectionFactory.getInstance().getConnection();
@@ -332,21 +326,16 @@ public class RaidBossSpawnManager {
 	 * @return the all raid boss status
 	 */
 	public String[] getAllRaidBossStatus() {
-		final String[] msg = new String[(_bosses == null) ? 0 : _bosses.size()];
-		
-		if (_bosses == null) {
+		final String[] msg = new String[Math.max(_bosses.size(), 1)];
+		if (_bosses.isEmpty()) {
 			msg[0] = "None";
 			return msg;
 		}
 		
 		int index = 0;
-		
-		for (int i : _bosses.keySet()) {
-			L2RaidBossInstance boss = _bosses.get(i);
-			
+		for (var boss : _bosses.values()) {
 			msg[index++] = boss.getName() + ": " + boss.getRaidStatus().name();
 		}
-		
 		return msg;
 	}
 	
@@ -389,21 +378,21 @@ public class RaidBossSpawnManager {
 	
 	/**
 	 * Notify spawn night boss.
-	 * @param raidboss the raidboss
+	 * @param raidBoss the raid boss
 	 */
-	public void notifySpawnNightBoss(L2RaidBossInstance raidboss) {
+	public void notifySpawnNightBoss(L2RaidBossInstance raidBoss) {
 		final StatsSet info = new StatsSet();
-		info.set("currentHP", raidboss.getCurrentHp());
-		info.set("currentMP", raidboss.getCurrentMp());
+		info.set("currentHP", raidBoss.getCurrentHp());
+		info.set("currentMP", raidBoss.getCurrentMp());
 		info.set("respawnTime", 0L);
 		
-		raidboss.setRaidStatus(StatusEnum.ALIVE);
+		raidBoss.setRaidStatus(StatusEnum.ALIVE);
 		
-		_storedInfo.put(raidboss.getId(), info);
+		_storedInfo.put(raidBoss.getId(), info);
 		
-		LOG.info("Spawning Night Raid Boss {}.", raidboss.getName());
+		LOG.info("Spawning Night Raid Boss {}.", raidBoss.getName());
 		
-		_bosses.put(raidboss.getId(), raidboss);
+		_bosses.put(raidBoss.getId(), raidBoss);
 	}
 	
 	/**

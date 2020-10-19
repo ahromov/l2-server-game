@@ -23,22 +23,23 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
+ * Level range condition.
  * @author Zoey76
  */
 public class ConditionPlayerLevelRange extends Condition {
-	private final int[] _levels;
 	
-	/**
-	 * Instantiates a new condition player levels range.
-	 * @param levels the {@code levels} range.
-	 */
-	public ConditionPlayerLevelRange(int[] levels) {
-		_levels = levels;
+	private final int minimumLevel;
+	
+	private final int maximumLevel;
+	
+	public ConditionPlayerLevelRange(int minimumLevel, int maximumLevel) {
+		this.minimumLevel = minimumLevel;
+		this.maximumLevel = maximumLevel;
 	}
 	
 	@Override
 	public boolean testImpl(L2Character effector, L2Character effected, Skill skill, L2Item item) {
 		final int level = effector.getLevel();
-		return ((level >= _levels[0]) && (level <= _levels[1]));
+		return (level >= minimumLevel) && (level <= maximumLevel);
 	}
 }

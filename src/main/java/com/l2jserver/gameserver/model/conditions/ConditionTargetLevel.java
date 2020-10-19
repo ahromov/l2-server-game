@@ -23,17 +23,13 @@ import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * The Class ConditionTargetLevel.
+ * Target level condition.
  * @author mkizub
  */
 public class ConditionTargetLevel extends Condition {
 	
 	private final int _level;
 	
-	/**
-	 * Instantiates a new condition target level.
-	 * @param level the level
-	 */
 	public ConditionTargetLevel(int level) {
 		_level = level;
 	}

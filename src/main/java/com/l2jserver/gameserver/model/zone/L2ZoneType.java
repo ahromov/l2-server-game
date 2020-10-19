@@ -94,75 +94,83 @@ public abstract class L2ZoneType extends ListenersContainer {
 		_checkAffected = true;
 		
 		// Zone name
-		if (name.equals("name")) {
-			_name = value;
-		} else if (name.equals("instanceId")) {
-			_instanceId = Integer.parseInt(value);
-		} else if (name.equals("instanceTemplate")) {
-			_instanceTemplate = value;
-			_instanceId = InstanceManager.getInstance().createDynamicInstance(value);
-		}
-		// Minimum level
-		else if (name.equals("affectedLvlMin")) {
-			_minLvl = Integer.parseInt(value);
-		}
-		// Maximum level
-		else if (name.equals("affectedLvlMax")) {
-			_maxLvl = Integer.parseInt(value);
-		}
-		// Affected Races
-		else if (name.equals("affectedRace")) {
-			// Create a new array holding the affected race
-			if (_race == null) {
-				_race = new int[1];
-				_race[0] = Integer.parseInt(value);
-			} else {
-				int[] temp = new int[_race.length + 1];
-				
-				int i = 0;
-				for (; i < _race.length; i++) {
-					temp[i] = _race[i];
+		switch (name) {
+			case "name":
+				_name = value;
+				break;
+			case "instanceId":
+				_instanceId = Integer.parseInt(value);
+				break;
+			case "instanceTemplate":
+				_instanceTemplate = value;
+				_instanceId = InstanceManager.getInstance().createDynamicInstance(value);
+				break;
+			// Minimum level
+			case "affectedLvlMin":
+				_minLvl = Integer.parseInt(value);
+				break;
+			// Maximum level
+			case "affectedLvlMax":
+				_maxLvl = Integer.parseInt(value);
+				break;
+			// Affected Races
+			case "affectedRace":
+				// Create a new array holding the affected race
+				if (_race == null) {
+					_race = new int[1];
+					_race[0] = Integer.parseInt(value);
+				} else {
+					int[] temp = new int[_race.length + 1];
+					
+					int i = 0;
+					for (; i < _race.length; i++) {
+						temp[i] = _race[i];
+					}
+					
+					temp[i] = Integer.parseInt(value);
+					
+					_race = temp;
 				}
-				
-				temp[i] = Integer.parseInt(value);
-				
-				_race = temp;
-			}
-		}
-		// Affected classes
-		else if (name.equals("affectedClassId")) {
-			// Create a new array holding the affected classIds
-			if (_class == null) {
-				_class = new int[1];
-				_class[0] = Integer.parseInt(value);
-			} else {
-				int[] temp = new int[_class.length + 1];
-				
-				int i = 0;
-				for (; i < _class.length; i++) {
-					temp[i] = _class[i];
+				break;
+			// Affected classes
+			case "affectedClassId":
+				// Create a new array holding the affected classIds
+				if (_class == null) {
+					_class = new int[1];
+					_class[0] = Integer.parseInt(value);
+				} else {
+					int[] temp = new int[_class.length + 1];
+					
+					int i = 0;
+					for (; i < _class.length; i++) {
+						temp[i] = _class[i];
+					}
+					
+					temp[i] = Integer.parseInt(value);
+					
+					_class = temp;
 				}
-				
-				temp[i] = Integer.parseInt(value);
-				
-				_class = temp;
-			}
-		}
-		// Affected class type
-		else if (name.equals("affectedClassType")) {
-			if (value.equals("Fighter")) {
-				_classType = 1;
-			} else {
-				_classType = 2;
-			}
-		} else if (name.equals("targetClass")) {
-			_target = Enum.valueOf(InstanceType.class, value);
-		} else if (name.equals("allowStore")) {
-			_allowStore = Boolean.parseBoolean(value);
-		} else if (name.equals("default_enabled")) {
-			_enabled = Boolean.parseBoolean(value);
-		} else {
-			_log.info(getClass().getSimpleName() + ": Unknown parameter - " + name + " in zone: " + getId());
+				break;
+			// Affected class type
+			case "affectedClassType":
+				if (value.equals("Fighter")) {
+					_classType = 1;
+				} else {
+					_classType = 2;
+				}
+				break;
+			case "targetClass":
+				_target = Enum.valueOf(InstanceType.class, value);
+				break;
+			case "allowStore":
+				_allowStore = Boolean.parseBoolean(value);
+				break;
+			case "default_enabled":
+				_enabled = Boolean.parseBoolean(value);
+				break;
+			default:
+				_log.info(getClass().getSimpleName() + ": Unknown parameter - " + name + " in zone: " + getId());
+				break;
 		}
 	}
 	
@@ -213,16 +221,13 @@ public abstract class L2ZoneType extends ListenersContainer {
 			if (_class != null) {
 				boolean ok = false;
 				
-				for (int _clas : _class) {
-					if (((L2PcInstance) character).getClassId().ordinal() == _clas) {
+				for (int classId : _class) {
+					if (((L2PcInstance) character).getClassId().ordinal() == classId) {
 						ok = true;
 						break;
 					}
 				}
-				
-				if (!ok) {
-					return false;
-				}
+				return ok;
 			}
 		}
 		return true;

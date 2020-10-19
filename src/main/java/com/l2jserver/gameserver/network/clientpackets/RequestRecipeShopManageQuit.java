@@ -22,8 +22,7 @@ import com.l2jserver.gameserver.enums.PrivateStoreType;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 /**
- * This class ... cd(dd)
- * @version $Revision: 1.1.2.2.2.3 $ $Date: 2005/03/27 15:29:30 $
+ * @since 2005/03/27 15:29:30
  */
 public final class RequestRecipeShopManageQuit extends L2GameClientPacket {
 	private static final String _C__BC_RequestRecipeShopManageQuit = "[C] BC2 RequestRecipeShopManageQuit";

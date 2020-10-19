@@ -30,18 +30,10 @@ public abstract class ConditionInventory extends Condition {
 	
 	protected final int _slot;
 	
-	/**
-	 * Instantiates a new condition inventory.
-	 * @param slot the slot
-	 */
 	public ConditionInventory(int slot) {
 		_slot = slot;
 	}
 	
-	/**
-	 * Test impl.
-	 * @return true, if successful
-	 */
 	@Override
 	public abstract boolean testImpl(L2Character effector, L2Character effected, Skill skill, L2Item item);
 }

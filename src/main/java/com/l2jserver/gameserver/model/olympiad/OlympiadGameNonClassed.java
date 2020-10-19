@@ -52,12 +52,11 @@ public class OlympiadGameNonClassed extends OlympiadGameNormal {
 		return COMP_DONE_WEEK_NON_CLASSED;
 	}
 	
-	protected static final OlympiadGameNonClassed createGame(int id, List<Integer> list) {
+	protected static OlympiadGameNonClassed createGame(int id, List<Integer> list) {
 		final Participant[] opponents = OlympiadGameNormal.createListOfParticipants(list);
 		if (opponents == null) {
 			return null;
 		}
-		
 		return new OlympiadGameNonClassed(id, opponents);
 	}
 }

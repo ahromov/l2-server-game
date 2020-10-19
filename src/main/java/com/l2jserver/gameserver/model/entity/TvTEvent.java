@@ -76,7 +76,7 @@ public class TvTEvent {
 	/** html path **/
 	private static final String HTML_PATH = "com/l2jserver/datapack/custom/events/TvT/TvTManager/";
 	/** The teams of the TvTEvent. */
-	private static TvTEventTeam[] _teams = new TvTEventTeam[2];
+	private static final TvTEventTeam[] _teams = new TvTEventTeam[2];
 	/** The state of the TvTEvent. */
 	private static EventState _state = EventState.INACTIVE;
 	/** The spawn of the participation npc. */
@@ -172,10 +172,12 @@ public class TvTEvent {
 			}
 		}
 		
-		int balance[] = {
+		int[] balance = {
 			0,
 			0
-		}, priority = 0, highestLevelPlayerId;
+		};
+		int priority = 0;
+		int highestLevelPlayerId;
 		L2PcInstance highestLevelPlayer;
 		// TODO: allParticipants should be sorted by level instead of using highestLevelPcInstanceOf for every fetch
 		while (!allParticipants.isEmpty()) {
@@ -272,7 +274,7 @@ public class TvTEvent {
 	 * Calculates the TvTEvent reward<br>
 	 * 1. If both teams are at a tie(points equals), send it as system message to all participants, if one of the teams have 0 participants left online abort rewarding<br>
 	 * 2. Wait till teams are not at a tie anymore<br>
-	 * 3. Set state EvcentState.REWARDING<br>
+	 * 3. Set state EventState.REWARDING<br>
 	 * 4. Reward team with more points<br>
 	 * 5. Show win html to wining team participants
 	 * @return winning team name
@@ -377,7 +379,7 @@ public class TvTEvent {
 			return false;
 		}
 		
-		byte teamId = 0;
+		byte teamId;
 		
 		// Check to which team the player should be added
 		if (_teams[0].getParticipatedPlayerCount() == _teams[1].getParticipatedPlayerCount()) {
@@ -543,7 +545,7 @@ public class TvTEvent {
 	}
 	
 	/**
-	 * Called on every onAction in L2PcIstance.
+	 * Called on every onAction in L2PcInstance.
 	 * @param playerInstance
 	 * @param targetedPlayerObjectId
 	 * @return true if player is allowed to target, otherwise false
@@ -564,11 +566,8 @@ public class TvTEvent {
 			return false;
 		}
 		
-		if ((playerTeamId != -1) && (targetedPlayerTeamId != -1) && (playerTeamId == targetedPlayerTeamId) && //
-			(playerInstance.getObjectId() != targetedPlayerObjectId) && !tvt().allowTargetTeamMember()) {
-			return false;
-		}
-		return true;
+		return (targetedPlayerTeamId == -1) || (playerTeamId != targetedPlayerTeamId) || //
+			(playerInstance.getObjectId() == targetedPlayerObjectId) || tvt().allowTargetTeamMember();
 	}
 	
 	/**
@@ -580,12 +579,7 @@ public class TvTEvent {
 		if (!isStarted()) {
 			return true;
 		}
-		
-		if (isPlayerParticipant(playerObjectId) && !tvt().allowScroll()) {
-			return false;
-		}
-		
-		return true;
+		return !isPlayerParticipant(playerObjectId) || tvt().allowScroll();
 	}
 	
 	/**
@@ -597,12 +591,7 @@ public class TvTEvent {
 		if (!isStarted()) {
 			return true;
 		}
-		
-		if (isPlayerParticipant(playerObjectId) && !tvt().allowPotion()) {
-			return false;
-		}
-		
-		return true;
+		return !isPlayerParticipant(playerObjectId) || tvt().allowPotion();
 	}
 	
 	/**
@@ -614,12 +603,7 @@ public class TvTEvent {
 		if (!isStarted()) {
 			return true;
 		}
-		
-		if (isPlayerParticipant(playerObjectId)) {
-			return false;
-		}
-		
-		return true;
+		return !isPlayerParticipant(playerObjectId);
 	}
 	
 	/**
@@ -631,12 +615,7 @@ public class TvTEvent {
 		if (!isStarted()) {
 			return true;
 		}
-		
-		if (isPlayerParticipant(playerObjectId) && !tvt().allowTargetTeamMember()) {
-			return false;
-		}
-		
-		return true;
+		return !isPlayerParticipant(playerObjectId) || tvt().allowTargetTeamMember();
 	}
 	
 	/**
@@ -661,7 +640,7 @@ public class TvTEvent {
 			return;
 		}
 		
-		L2PcInstance killerPlayerInstance = null;
+		L2PcInstance killerPlayerInstance;
 		
 		if ((killerCharacter instanceof L2PetInstance) || (killerCharacter instanceof L2ServitorInstance)) {
 			killerPlayerInstance = ((L2Summon) killerCharacter).getOwner();
@@ -677,7 +656,7 @@ public class TvTEvent {
 		
 		byte killerTeamId = getParticipantTeamId(killerPlayerInstance.getObjectId());
 		
-		if ((killerTeamId != -1) && (killedTeamId != -1) && (killerTeamId != killedTeamId)) {
+		if ((killerTeamId != -1) && (killerTeamId != killedTeamId)) {
 			TvTEventTeam killerTeam = _teams[killerTeamId];
 			
 			killerTeam.increasePoints();
@@ -721,13 +700,7 @@ public class TvTEvent {
 		}
 	}
 	
-	/**
-	 * @param source
-	 * @param target
-	 * @param skill
-	 * @return true if player valid for skill
-	 */
-	public static final boolean checkForTvTSkill(L2PcInstance source, L2PcInstance target, Skill skill) {
+	public static boolean checkForTvTSkill(L2PcInstance source, L2PcInstance target, Skill skill) {
 		if (!isStarted()) {
 			return true;
 		}
@@ -747,9 +720,7 @@ public class TvTEvent {
 		}
 		// players in the different teams ?
 		if (getParticipantTeamId(sourcePlayerId) != getParticipantTeamId(targetPlayerId)) {
-			if (!skill.isBad()) {
-				return false;
-			}
+			return skill.isBad();
 		}
 		return true;
 	}
@@ -887,7 +858,7 @@ public class TvTEvent {
 	/**
 	 * Is given player participant of the event?
 	 * @param playerObjectId
-	 * @return true if player is participant, ohterwise false
+	 * @return true if player is participant, otherwise false
 	 */
 	public static boolean isPlayerParticipant(int playerObjectId) {
 		if (!isParticipating() && !isStarting() && !isStarted()) {

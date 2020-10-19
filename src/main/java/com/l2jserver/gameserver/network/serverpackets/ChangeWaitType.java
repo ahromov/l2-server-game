@@ -27,8 +27,8 @@ public class ChangeWaitType extends L2GameServerPacket {
 	
 	public static final int WT_SITTING = 0;
 	public static final int WT_STANDING = 1;
-	public static final int WT_START_FAKEDEATH = 2;
-	public static final int WT_STOP_FAKEDEATH = 3;
+	public static final int WT_START_FAKE_DEATH = 2;
+	public static final int WT_STOP_FAKE_DEATH = 3;
 	
 	public ChangeWaitType(L2Character character, int newMoveType) {
 		_charObjId = character.getObjectId();

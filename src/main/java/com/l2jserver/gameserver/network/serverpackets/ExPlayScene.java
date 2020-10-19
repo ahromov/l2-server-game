@@ -19,12 +19,14 @@
 package com.l2jserver.gameserver.network.serverpackets;
 
 /**
- * @author devScarlet, mrTJO
+ * @author devScarlet
+ * @author mrTJO
  */
 public class ExPlayScene extends L2GameServerPacket {
 	public static final ExPlayScene STATIC_PACKET = new ExPlayScene();
 	
 	private ExPlayScene() {
+		// Do nothing.
 	}
 	
 	@Override

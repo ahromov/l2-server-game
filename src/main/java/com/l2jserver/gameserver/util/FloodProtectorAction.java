@@ -105,14 +105,11 @@ public final class FloodProtectorAction {
 			if (!punishmentInProgress && (punishmentLimit > 0) && (count.get() >= punishmentLimit) && (punishmentType != null)) {
 				punishmentInProgress = true;
 				
-				if ("kick".equals(punishmentType)) {
-					kickPlayer();
-				} else if ("ban".equals(punishmentType)) {
-					banAccount();
-				} else if ("jail".equals(punishmentType)) {
-					jailChar();
+				switch (punishmentType) {
+					case "kick" -> kickPlayer();
+					case "ban" -> banAccount();
+					case "jail" -> jailChar();
 				}
-				
 				punishmentInProgress = false;
 			}
 			return false;
@@ -182,29 +179,23 @@ public final class FloodProtectorAction {
 		}
 		
 		switch (client.getState()) {
-			case JOINING:
-			case IN_GAME: {
+			case JOINING, IN_GAME -> {
 				if (client.getActiveChar() != null) {
 					StringUtil.append(output, client.getActiveChar().getName());
 					StringUtil.append(output, "(", String.valueOf(client.getActiveChar().getObjectId()), ") ");
 				}
-				break;
 			}
-			case AUTHED: {
+			case AUTHED -> {
 				if (client.getAccountName() != null) {
 					StringUtil.append(output, client.getAccountName(), " ");
 				}
-				break;
 			}
-			case CONNECTED: {
+			case CONNECTED -> {
 				if (address != null) {
 					StringUtil.append(output, address);
 				}
-				break;
 			}
-			default: {
-				throw new IllegalStateException("Missing state on switch");
-			}
+			default -> throw new IllegalStateException("Missing state on switch");
 		}
 		
 		StringUtil.append(output, lines);

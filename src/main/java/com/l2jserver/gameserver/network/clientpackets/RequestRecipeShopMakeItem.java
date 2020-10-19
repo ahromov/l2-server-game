@@ -24,9 +24,6 @@ import com.l2jserver.gameserver.model.L2World;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.util.Util;
 
-/**
- * @author Administrator
- */
 public final class RequestRecipeShopMakeItem extends L2GameClientPacket {
 	private static final String _C__BF_REQUESTRECIPESHOPMAKEITEM = "[C] BF RequestRecipeShopMakeItem";
 	

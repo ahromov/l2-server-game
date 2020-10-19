@@ -24,14 +24,11 @@ import com.l2jserver.gameserver.model.actor.templates.L2NpcTemplate;
 import com.l2jserver.gameserver.model.olympiad.Olympiad;
 
 /**
- * Olympiad Npc's Instance
+ * Olympiad Manager instance.
  * @author godson
  */
 public class L2OlympiadManagerInstance extends L2Npc {
-	/**
-	 * Creates an olympiad manager.
-	 * @param template the olympiad manager NPC template
-	 */
+	
 	public L2OlympiadManagerInstance(L2NpcTemplate template) {
 		super(template);
 		setInstanceType(InstanceType.L2OlympiadManagerInstance);

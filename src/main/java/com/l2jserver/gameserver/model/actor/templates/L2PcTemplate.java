@@ -28,7 +28,8 @@ import com.l2jserver.gameserver.model.base.ClassId;
 import com.l2jserver.gameserver.model.itemcontainer.Inventory;
 
 /**
- * @author mkizub, Zoey76
+ * @author mkizub
+ * @author Zoey76
  */
 public class L2PcTemplate extends L2CharTemplate {
 	private final ClassId _classId;
@@ -94,30 +95,12 @@ public class L2PcTemplate extends L2CharTemplate {
 	 */
 	public void setUpgainValue(String paramName, int level, double val) {
 		switch (paramName) {
-			case "hp": {
-				_baseHp[level] = (float) val;
-				break;
-			}
-			case "mp": {
-				_baseMp[level] = (float) val;
-				break;
-			}
-			case "cp": {
-				_baseCp[level] = (float) val;
-				break;
-			}
-			case "hpRegen": {
-				_baseHpReg[level] = val;
-				break;
-			}
-			case "mpRegen": {
-				_baseMpReg[level] = val;
-				break;
-			}
-			case "cpRegen": {
-				_baseCpReg[level] = val;
-				break;
-			}
+			case "hp" -> _baseHp[level] = (float) val;
+			case "mp" -> _baseMp[level] = (float) val;
+			case "cp" -> _baseCp[level] = (float) val;
+			case "hpRegen" -> _baseHpReg[level] = val;
+			case "mpRegen" -> _baseMpReg[level] = val;
+			case "cpRegen" -> _baseCpReg[level] = val;
 		}
 	}
 	
@@ -171,10 +154,10 @@ public class L2PcTemplate extends L2CharTemplate {
 	
 	/**
 	 * @param slotId id of inventory slot to return value
-	 * @return defence value of charactert for EMPTY given slot
+	 * @return defence value of character for EMPTY given slot
 	 */
 	public int getBaseDefBySlot(int slotId) {
-		return _baseSlotDef.containsKey(slotId) ? _baseSlotDef.get(slotId) : 0;
+		return _baseSlotDef.getOrDefault(slotId, 0);
 	}
 	
 	/**

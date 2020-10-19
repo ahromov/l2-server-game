@@ -19,6 +19,7 @@
 package com.l2jserver.gameserver.network.serverpackets;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.l2jserver.gameserver.network.NpcStringId;
@@ -169,9 +170,7 @@ public class ExShowScreenMessage extends L2GameServerPacket {
 		if (_parameters == null) {
 			_parameters = new ArrayList<>();
 		}
-		for (String param : params) {
-			_parameters.add(param);
-		}
+		Collections.addAll(_parameters, params);
 	}
 	
 	@Override

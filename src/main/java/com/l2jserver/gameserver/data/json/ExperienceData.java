@@ -55,10 +55,10 @@ public final class ExperienceData {
 		_expTable.clear();
 		try (JsonReader reader = new JsonReader(new FileReader(new File(server().getDatapackRoot(), "data/stats/expData.json")))) {
 			_expTable.putAll(GSON.fromJson(reader, TYPE_MAP_INTEGER_LONG));
-		} catch (FileNotFoundException fnfe) {
-			LOG.warn("data/stats/expData.json not found!");
-		} catch (IOException ioe) {
-			LOG.warn("Failed to load expData.json for: ", ioe);
+		} catch (FileNotFoundException ex) {
+			LOG.warn("data/stats/expData.json not found!", ex);
+		} catch (IOException ex) {
+			LOG.warn("Failed to load expData.json for: ", ex);
 		}
 	}
 	

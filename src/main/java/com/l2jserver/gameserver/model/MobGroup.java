@@ -70,21 +70,13 @@ public final class MobGroup {
 	public String getStatus() {
 		try {
 			L2ControllableMobAI mobGroupAI = (L2ControllableMobAI) getMobs().get(0).getAI();
-			
-			switch (mobGroupAI.getAlternateAI()) {
-				case L2ControllableMobAI.AI_NORMAL:
-					return "Idle";
-				case L2ControllableMobAI.AI_FORCEATTACK:
-					return "Force Attacking";
-				case L2ControllableMobAI.AI_FOLLOW:
-					return "Following";
-				case L2ControllableMobAI.AI_CAST:
-					return "Casting";
-				case L2ControllableMobAI.AI_ATTACK_GROUP:
-					return "Attacking Group";
-				default:
-					return "Idle";
-			}
+			return switch (mobGroupAI.getAlternateAI()) {
+				case L2ControllableMobAI.AI_FORCE_ATTACK -> "Force Attacking";
+				case L2ControllableMobAI.AI_FOLLOW -> "Following";
+				case L2ControllableMobAI.AI_CAST -> "Casting";
+				case L2ControllableMobAI.AI_ATTACK_GROUP -> "Attacking Group";
+				default -> "Idle";
+			};
 		} catch (Exception e) {
 			return "Unspawned";
 		}
@@ -130,8 +122,8 @@ public final class MobGroup {
 				SpawnTable.getInstance().addNewSpawn(spawn, false);
 				getMobs().add((L2ControllableMobInstance) spawn.doGroupSpawn());
 			}
-		} catch (ClassNotFoundException e) {
-		} catch (NoSuchMethodException e2) {
+		} catch (Exception ex) {
+			
 		}
 	}
 	

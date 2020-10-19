@@ -32,7 +32,7 @@ import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
  * @author Tempy
  */
 public class FriendList extends L2GameServerPacket {
-	private List<FriendInfo> _info;
+	private final List<FriendInfo> _info;
 	
 	private static class FriendInfo {
 		int _objId;

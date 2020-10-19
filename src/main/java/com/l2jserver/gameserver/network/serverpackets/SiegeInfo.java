@@ -42,7 +42,7 @@ import com.l2jserver.gameserver.model.entity.ClanHall;
  * S = Owner AllyName<BR>
  * d = current time (seconds)<BR>
  * d = Siege time (seconds) (0 for selectable)<BR>
- * d = (UNKNOW) Siege Time Select Related?
+ * d = (UNKNOWN) Siege Time Select Related?
  * @author KenM
  */
 public class SiegeInfo extends L2GameServerPacket {

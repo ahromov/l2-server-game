@@ -24,28 +24,18 @@ import com.l2jserver.gameserver.model.zone.type.L2TownZone;
 
 public final class TownManager {
 	public static int getTownCastle(int townId) {
-		switch (townId) {
-			case 912:
-				return 1;
-			case 916:
-				return 2;
-			case 918:
-				return 3;
-			case 922:
-				return 4;
-			case 924:
-				return 5;
-			case 926:
-				return 6;
-			case 1538:
-				return 7;
-			case 1537:
-				return 8;
-			case 1714:
-				return 9;
-			default:
-				return 0;
-		}
+		return switch (townId) {
+			case 912 -> 1;
+			case 916 -> 2;
+			case 918 -> 3;
+			case 922 -> 4;
+			case 924 -> 5;
+			case 926 -> 6;
+			case 1538 -> 7;
+			case 1537 -> 8;
+			case 1714 -> 9;
+			default -> 0;
+		};
 	}
 	
 	public static boolean townHasCastleInSiege(int townId) {

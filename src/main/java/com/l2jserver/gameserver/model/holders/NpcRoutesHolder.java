@@ -52,7 +52,7 @@ public final class NpcRoutesHolder {
 	public String getRouteName(L2Npc npc) {
 		if (npc.getSpawn() != null) {
 			String key = getUniqueKey(npc.getSpawn().getLocation());
-			return _correspondences.containsKey(key) ? _correspondences.get(key) : "";
+			return _correspondences.getOrDefault(key, "");
 		}
 		return "";
 	}

@@ -38,18 +38,11 @@ import com.l2jserver.gameserver.network.serverpackets.ActionFailed;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
 public class L2SiegeFlagInstance extends L2Npc {
-	private L2Clan _clan;
+	private final L2Clan _clan;
 	private Siegable _siege;
 	private final boolean _isAdvanced;
 	private boolean _canTalk;
 	
-	/**
-	 * Creates a siege flag.
-	 * @param player
-	 * @param template
-	 * @param advanced
-	 * @param outPost
-	 */
 	public L2SiegeFlagInstance(L2PcInstance player, L2NpcTemplate template, boolean advanced, boolean outPost) {
 		super(template);
 		setInstanceType(InstanceType.L2SiegeFlagInstance);

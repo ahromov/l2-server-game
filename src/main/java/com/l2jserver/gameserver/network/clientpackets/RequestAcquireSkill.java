@@ -88,8 +88,8 @@ public final class RequestAcquireSkill extends L2GameClientPacket {
 		}
 		
 		if ((_level < 1) || (_level > 1000) || (_id < 1) || (_id > 32000)) {
-			Util.handleIllegalPlayerAction(activeChar, "Wrong Packet Data in Aquired Skill");
-			_log.warning("Recived Wrong Packet Data in Aquired Skill - id: " + _id + " level: " + _level + " for " + activeChar);
+			Util.handleIllegalPlayerAction(activeChar, "Wrong Packet Data in Acquired Skill");
+			_log.warning("Received Wrong Packet Data in Acquired Skill - id: " + _id + " level: " + _level + " for " + activeChar);
 			return;
 		}
 		
@@ -115,13 +115,12 @@ public final class RequestAcquireSkill extends L2GameClientPacket {
 		}
 		
 		switch (_skillType) {
-			case CLASS: {
+			case CLASS -> {
 				if (checkPlayerSkill(activeChar, trainer, s)) {
 					giveSkill(activeChar, trainer, skill);
 				}
-				break;
 			}
-			case TRANSFORM: {
+			case TRANSFORM -> {
 				// Hack check.
 				if (!canTransform(activeChar)) {
 					activeChar.sendPacket(SystemMessageId.NOT_COMPLETED_QUEST_FOR_SKILL_ACQUISITION);
@@ -132,15 +131,13 @@ public final class RequestAcquireSkill extends L2GameClientPacket {
 				if (checkPlayerSkill(activeChar, trainer, s)) {
 					giveSkill(activeChar, trainer, skill);
 				}
-				break;
 			}
-			case FISHING: {
+			case FISHING -> {
 				if (checkPlayerSkill(activeChar, trainer, s)) {
 					giveSkill(activeChar, trainer, skill);
 				}
-				break;
 			}
-			case PLEDGE: {
+			case PLEDGE -> {
 				if (!activeChar.isClanLeader()) {
 					return;
 				}
@@ -181,9 +178,8 @@ public final class RequestAcquireSkill extends L2GameClientPacket {
 					activeChar.sendPacket(SystemMessageId.ACQUIRE_SKILL_FAILED_BAD_CLAN_REP_SCORE);
 					L2VillageMasterInstance.showPledgeSkillList(activeChar);
 				}
-				break;
 			}
-			case SUBPLEDGE: {
+			case SUBPLEDGE -> {
 				final L2Clan clan = activeChar.getClan();
 				final int repCost = s.getLevelUpSp();
 				if (clan.getReputationScore() < repCost) {
@@ -215,20 +211,18 @@ public final class RequestAcquireSkill extends L2GameClientPacket {
 				activeChar.sendPacket(new AcquireSkillDone());
 				
 				showSubUnitSkillList(activeChar);
-				break;
 			}
-			case TRANSFER: {
+			case TRANSFER -> {
 				if (checkPlayerSkill(activeChar, trainer, s)) {
 					giveSkill(activeChar, trainer, skill);
 				}
-				break;
 			}
-			case SUBCLASS: {
+			case SUBCLASS -> {
 				QuestState st = activeChar.getQuestState("SubClassSkills");
 				if (st == null) {
-					final Quest subClassSkilllsQuest = QuestManager.getInstance().getQuest("SubClassSkills");
-					if (subClassSkilllsQuest != null) {
-						st = subClassSkilllsQuest.newQuestState(activeChar);
+					final Quest subClassSkillsQuest = QuestManager.getInstance().getQuest("SubClassSkills");
+					if (subClassSkillsQuest != null) {
+						st = subClassSkillsQuest.newQuestState(activeChar);
 					} else {
 						_log.warning("Null SubClassSkills quest, for Sub-Class skill Id: " + _id + " level: " + _level + " for player " + activeChar.getName() + "!");
 						return;
@@ -254,7 +248,7 @@ public final class RequestAcquireSkill extends L2GameClientPacket {
 										}
 									}
 								} else {
-									_log.warning("Inexistent item for object Id " + itemObjId + ", for Sub-Class skill Id: " + _id + " level: " + _level + " for player " + activeChar.getName() + "!");
+									_log.warning("Nonexistent item for object Id " + itemObjId + ", for Sub-Class skill Id: " + _id + " level: " + _level + " for player " + activeChar.getName() + "!");
 								}
 							} else {
 								_log.warning("Invalid item object Id " + itemOID + ", for Sub-Class skill Id: " + _id + " level: " + _level + " for player " + activeChar.getName() + "!");
@@ -266,18 +260,13 @@ public final class RequestAcquireSkill extends L2GameClientPacket {
 				// Player doesn't have required item.
 				activeChar.sendPacket(SystemMessageId.ITEM_OR_PREREQUISITES_MISSING_TO_LEARN_SKILL);
 				showSkillList(trainer, activeChar);
-				break;
 			}
-			case COLLECT: {
+			case COLLECT -> {
 				if (checkPlayerSkill(activeChar, trainer, s)) {
 					giveSkill(activeChar, trainer, skill);
 				}
-				break;
 			}
-			default: {
-				_log.warning("Recived Wrong Packet Data in Aquired Skill, unknown skill type:" + _skillType);
-				break;
-			}
+			default -> _log.warning("Received Wrong Packet Data in Acquired Skill, unknown skill type:" + _skillType);
 		}
 	}
 	
@@ -410,7 +399,7 @@ public final class RequestAcquireSkill extends L2GameClientPacket {
 				// Check for required items.
 				if (!s.getRequiredItems().isEmpty()) {
 					// Then checks that the player has all the items
-					long reqItemCount = 0;
+					long reqItemCount;
 					for (ItemHolder item : s.getRequiredItems()) {
 						reqItemCount = player.getInventory().getInventoryItemCount(item.getId(), -1);
 						if (reqItemCount < item.getCount()) {

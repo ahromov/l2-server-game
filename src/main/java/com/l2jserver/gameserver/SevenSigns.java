@@ -19,7 +19,7 @@
 package com.l2jserver.gameserver;
 
 import static com.l2jserver.gameserver.config.Configuration.npc;
-import static com.l2jserver.gameserver.config.Configuration.sevenSings;
+import static com.l2jserver.gameserver.config.Configuration.sevenSigns;
 import static com.l2jserver.gameserver.network.SystemMessageId.COMPETITION_PERIOD_BEGUN;
 import static com.l2jserver.gameserver.network.SystemMessageId.DAWN_OBTAINED_AVARICE;
 import static com.l2jserver.gameserver.network.SystemMessageId.DAWN_OBTAINED_GNOSIS;
@@ -822,7 +822,7 @@ public class SevenSigns {
 			_signsDuskSealTotals.put(chosenSeal, _signsDuskSealTotals.get(chosenSeal) + 1);
 		}
 		
-		if (!sevenSings().sevenSignsLazyUpdate()) {
+		if (!sevenSigns().sevenSignsLazyUpdate()) {
 			saveSevenSignsStatus();
 		}
 		
@@ -847,7 +847,7 @@ public class SevenSigns {
 		
 		if (removeReward) {
 			_signsPlayerData.put(objectId, currPlayer);
-			if (!sevenSings().sevenSignsLazyUpdate()) {
+			if (!sevenSigns().sevenSignsLazyUpdate()) {
 				saveSevenSignsData(objectId);
 				saveSevenSignsStatus();
 			}
@@ -873,7 +873,7 @@ public class SevenSigns {
 		long totalAncientAdena = currPlayer.getLong("ancient_adena_amount") + calcAncientAdenaReward(blueCount, greenCount, redCount);
 		long totalContribScore = currPlayer.getLong("contribution_score") + contribScore;
 		
-		if (totalContribScore > sevenSings().getMaxPlayerContrib()) {
+		if (totalContribScore > sevenSigns().getMaxPlayerContrib()) {
 			return -1;
 		}
 		
@@ -889,7 +889,7 @@ public class SevenSigns {
 			case CABAL_DUSK -> _duskStoneScore += contribScore;
 		}
 		
-		if (!sevenSings().sevenSignsLazyUpdate()) {
+		if (!sevenSigns().sevenSignsLazyUpdate()) {
 			saveSevenSignsData(objectId);
 			saveSevenSignsStatus();
 		}

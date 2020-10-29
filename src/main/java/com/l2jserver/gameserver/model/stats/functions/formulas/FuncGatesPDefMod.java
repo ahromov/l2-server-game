@@ -18,7 +18,7 @@
  */
 package com.l2jserver.gameserver.model.stats.functions.formulas;
 
-import static com.l2jserver.gameserver.config.Configuration.sevenSings;
+import static com.l2jserver.gameserver.config.Configuration.sevenSigns;
 
 import com.l2jserver.gameserver.SevenSigns;
 import com.l2jserver.gameserver.model.actor.L2Character;
@@ -43,9 +43,9 @@ public class FuncGatesPDefMod extends AbstractFunction {
 	@Override
 	public double calc(L2Character effector, L2Character effected, Skill skill, double initVal) {
 		if (SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DAWN) {
-			return initVal * sevenSings().getDawnGatesPdefMult();
+			return initVal * sevenSigns().getDawnGatesPdefMult();
 		} else if (SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DUSK) {
-			return initVal * sevenSings().getDuskGatesPdefMult();
+			return initVal * sevenSigns().getDuskGatesPdefMult();
 		}
 		return initVal;
 	}

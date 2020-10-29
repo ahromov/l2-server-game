@@ -18,7 +18,7 @@
  */
 package com.l2jserver.gameserver.model.actor.instance;
 
-import static com.l2jserver.gameserver.config.Configuration.sevenSings;
+import static com.l2jserver.gameserver.config.Configuration.sevenSigns;
 
 import java.util.StringTokenizer;
 
@@ -130,14 +130,14 @@ public class L2SignsPriestInstance extends L2Npc {
 							showChatWindow(player, val, "dusk_firstclass", false);
 						}
 						return;
-					} else if ((cabal == SevenSigns.CABAL_DUSK) && sevenSings().castleForDusk()) // dusk
+					} else if ((cabal == SevenSigns.CABAL_DUSK) && sevenSigns().castleForDusk()) // dusk
 					{
 						// castle owners cannot participate with dusk side
 						if ((player.getClan() != null) && (player.getClan().getCastleId() > 0)) {
 							showChatWindow(player, SevenSigns.SEVEN_SIGNS_HTML_PATH + "signs_33_dusk_no.htm");
 							break;
 						}
-					} else if ((cabal == SevenSigns.CABAL_DAWN) && sevenSings().castleForDawn()) // dawn
+					} else if ((cabal == SevenSigns.CABAL_DAWN) && sevenSigns().castleForDawn()) // dawn
 					{
 						// clans without castle need to pay participation fee
 						if ((player.getClan() == null) || (player.getClan().getCastleId() == 0)) {
@@ -153,7 +153,7 @@ public class L2SignsPriestInstance extends L2Npc {
 					}
 					break;
 				case 34: // Pay the participation fee request
-					if ((player.getClassId().level() > 0) && ((player.getAdena() >= sevenSings().getSevenSignsJoinDawnFee()) || (player.getInventory().getInventoryItemCount(sevenSings().getSevenSignsManorsAgreementId(), -1) > 0))) {
+					if ((player.getClassId().level() > 0) && ((player.getAdena() >= sevenSigns().getSevenSignsJoinDawnFee()) || (player.getInventory().getInventoryItemCount(sevenSigns().getSevenSignsManorsAgreementId(), -1) > 0))) {
 						showChatWindow(player, SevenSigns.SEVEN_SIGNS_HTML_PATH + "signs_33_dawn.htm");
 					} else {
 						showChatWindow(player, SevenSigns.SEVEN_SIGNS_HTML_PATH + "signs_33_dawn_no.htm");
@@ -167,7 +167,7 @@ public class L2SignsPriestInstance extends L2Npc {
 					int newSeal = Integer.parseInt(command.substring(15));
 					
 					if (player.getClassId().level() >= 1) {
-						if ((cabal == SevenSigns.CABAL_DUSK) && sevenSings().castleForDusk()) {
+						if ((cabal == SevenSigns.CABAL_DUSK) && sevenSigns().castleForDusk()) {
 							if ((player.getClan() != null) && (player.getClan().getCastleId() > 0)) // even if in htmls is said that ally can have castle too, but its not
 							{
 								showChatWindow(player, SevenSigns.SEVEN_SIGNS_HTML_PATH + "signs_33_dusk_no.htm");
@@ -175,14 +175,14 @@ public class L2SignsPriestInstance extends L2Npc {
 							}
 						}
 						// If the player is trying to join the Lords of Dawn, check if they are carrying a Lord's certificate. If not then try to take the required amount of adena instead.
-						if (sevenSings().castleForDawn() && (cabal == SevenSigns.CABAL_DAWN)) {
+						if (sevenSigns().castleForDawn() && (cabal == SevenSigns.CABAL_DAWN)) {
 							boolean allowJoinDawn = false;
 							
 							if ((player.getClan() != null) && (player.getClan().getCastleId() > 0)) {
 								allowJoinDawn = true;
-							} else if (player.destroyItemByItemId("SevenSigns", sevenSings().getSevenSignsManorsAgreementId(), 1, this, true)) {
+							} else if (player.destroyItemByItemId("SevenSigns", sevenSigns().getSevenSignsManorsAgreementId(), 1, this, true)) {
 								allowJoinDawn = true;
-							} else if (player.reduceAdena("SevenSigns", sevenSings().getSevenSignsJoinDawnFee(), this, true)) {
+							} else if (player.reduceAdena("SevenSigns", sevenSigns().getSevenSignsJoinDawnFee(), this, true)) {
 								allowJoinDawn = true;
 							}
 							
@@ -257,19 +257,19 @@ public class L2SignsPriestInstance extends L2Npc {
 					
 					switch (contribStoneId) {
 						case SevenSigns.SEAL_STONE_BLUE_ID -> {
-							blueContrib = (sevenSings().getMaxPlayerContrib() - score) / SevenSigns.BLUE_CONTRIB_POINTS;
+							blueContrib = (sevenSigns().getMaxPlayerContrib() - score) / SevenSigns.BLUE_CONTRIB_POINTS;
 							if (blueContrib > contribBlueStoneCount) {
 								blueContrib = contributionCount;
 							}
 						}
 						case SevenSigns.SEAL_STONE_GREEN_ID -> {
-							greenContrib = (sevenSings().getMaxPlayerContrib() - score) / SevenSigns.GREEN_CONTRIB_POINTS;
+							greenContrib = (sevenSigns().getMaxPlayerContrib() - score) / SevenSigns.GREEN_CONTRIB_POINTS;
 							if (greenContrib > contribGreenStoneCount) {
 								greenContrib = contributionCount;
 							}
 						}
 						case SevenSigns.SEAL_STONE_RED_ID -> {
-							redContrib = (sevenSings().getMaxPlayerContrib() - score) / SevenSigns.RED_CONTRIB_POINTS;
+							redContrib = (sevenSigns().getMaxPlayerContrib() - score) / SevenSigns.RED_CONTRIB_POINTS;
 							if (redContrib > contribRedStoneCount) {
 								redContrib = contributionCount;
 							}
@@ -337,7 +337,7 @@ public class L2SignsPriestInstance extends L2Npc {
 					long contribScore = SevenSigns.getInstance().getPlayerContribScore(player.getObjectId());
 					boolean stonesFound = false;
 					
-					if (contribScore == sevenSings().getMaxPlayerContrib()) {
+					if (contribScore == sevenSigns().getMaxPlayerContrib()) {
 						player.sendPacket(SystemMessageId.CONTRIB_SCORE_EXCEEDED);
 					} else {
 						long redContribCount;
@@ -371,17 +371,17 @@ public class L2SignsPriestInstance extends L2Npc {
 							}
 							case 4 -> {
 								long tempContribScore = contribScore;
-								redContribCount = (sevenSings().getMaxPlayerContrib() - tempContribScore) / SevenSigns.RED_CONTRIB_POINTS;
+								redContribCount = (sevenSigns().getMaxPlayerContrib() - tempContribScore) / SevenSigns.RED_CONTRIB_POINTS;
 								if (redContribCount > redStoneCount) {
 									redContribCount = redStoneCount;
 								}
 								tempContribScore += redContribCount * SevenSigns.RED_CONTRIB_POINTS;
-								greenContribCount = (sevenSings().getMaxPlayerContrib() - tempContribScore) / SevenSigns.GREEN_CONTRIB_POINTS;
+								greenContribCount = (sevenSigns().getMaxPlayerContrib() - tempContribScore) / SevenSigns.GREEN_CONTRIB_POINTS;
 								if (greenContribCount > greenStoneCount) {
 									greenContribCount = greenStoneCount;
 								}
 								tempContribScore += greenContribCount * SevenSigns.GREEN_CONTRIB_POINTS;
-								blueContribCount = (sevenSings().getMaxPlayerContrib() - tempContribScore) / SevenSigns.BLUE_CONTRIB_POINTS;
+								blueContribCount = (sevenSigns().getMaxPlayerContrib() - tempContribScore) / SevenSigns.BLUE_CONTRIB_POINTS;
 								if (blueContribCount > blueStoneCount) {
 									blueContribCount = blueStoneCount;
 								}

@@ -24,7 +24,7 @@ import static com.l2jserver.gameserver.config.Configuration.general;
 import static com.l2jserver.gameserver.config.Configuration.npc;
 import static com.l2jserver.gameserver.config.Configuration.olympiad;
 import static com.l2jserver.gameserver.config.Configuration.rates;
-import static com.l2jserver.gameserver.config.Configuration.sevenSings;
+import static com.l2jserver.gameserver.config.Configuration.sevenSigns;
 import static com.l2jserver.gameserver.enums.InstanceType.L2Npc;
 
 import java.util.Collection;
@@ -873,7 +873,7 @@ public class L2Npc extends L2Character {
 				filename += "blkmrkt_1.htm";
 				break;
 			case 31113: // Merchant of Mammon
-				if (sevenSings().strictSevenSigns()) {
+				if (sevenSigns().strictSevenSigns()) {
 					switch (compWinner) {
 						case SevenSigns.CABAL_DAWN:
 							if ((playerCabal != compWinner) || (playerCabal != sealAvariceOwner)) {
@@ -897,7 +897,7 @@ public class L2Npc extends L2Character {
 				filename += "mammmerch_1.htm";
 				break;
 			case 31126: // Blacksmith of Mammon
-				if (sevenSings().strictSevenSigns()) {
+				if (sevenSigns().strictSevenSigns()) {
 					switch (compWinner) {
 						case SevenSigns.CABAL_DAWN:
 							if ((playerCabal != compWinner) || (playerCabal != sealGnosisOwner)) {

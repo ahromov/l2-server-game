@@ -28,18 +28,18 @@ import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Reloadable;
 
 /**
- * Seven Sings Configuration.
+ * Seven Signs Configuration.
  * @author Zoey76
  * @version 2.6.1.0
  */
 @Sources({
-	"file:${L2J_HOME}/custom/game/config/sevensings.properties",
-	"file:./config/sevensings.properties",
-	"classpath:config/sevensings.properties"
+	"file:${L2J_HOME}/custom/game/config/sevensigns.properties",
+	"file:./config/sevensigns.properties",
+	"classpath:config/sevensigns.properties"
 })
 @LoadPolicy(MERGE)
 @HotReload(value = 20, unit = MINUTES, type = ASYNC)
-public interface SevenSingsConfiguration extends Reloadable {
+public interface SevenSignsConfiguration extends Reloadable {
 	
 	@Key("RequireClanCastle")
 	Boolean requireClanCastle();

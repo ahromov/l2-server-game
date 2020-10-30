@@ -55,7 +55,7 @@ public class Configuration {
 	
 	private static final FortressConfiguration fortress = ConfigFactory.create(FortressConfiguration.class);
 	
-	private static final SevenSingsConfiguration sevenSings = ConfigFactory.create(SevenSingsConfiguration.class);
+	private static final SevenSignsConfiguration sevenSigns = ConfigFactory.create(SevenSignsConfiguration.class);
 	
 	private static final TvTConfiguration tvt = ConfigFactory.create(TvTConfiguration.class);
 	
@@ -149,8 +149,8 @@ public class Configuration {
 		return fortress;
 	}
 	
-	public static SevenSingsConfiguration sevenSings() {
-		return sevenSings;
+	public static SevenSignsConfiguration sevenSigns() {
+		return sevenSigns;
 	}
 	
 	public static TvTConfiguration tvt() {

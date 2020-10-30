@@ -18,7 +18,7 @@
  */
 package com.l2jserver.gameserver.model.actor.instance;
 
-import static com.l2jserver.gameserver.config.Configuration.sevenSings;
+import static com.l2jserver.gameserver.config.Configuration.sevenSigns;
 
 import com.l2jserver.gameserver.SevenSigns;
 import com.l2jserver.gameserver.SevenSignsFestival;
@@ -158,7 +158,7 @@ public final class L2FestivalGuideInstance extends L2Npc {
 		html.replace("%festivalType%", SevenSignsFestival.getFestivalName(_festivalType));
 		html.replace("%cycleMins%", String.valueOf(SevenSignsFestival.getInstance().getMinsToNextCycle()));
 		if (!isDescription && "2b".equals(val + suffix)) {
-			html.replace("%minFestivalPartyMembers%", String.valueOf(sevenSings().getFestivalMinPlayer()));
+			html.replace("%minFestivalPartyMembers%", String.valueOf(sevenSigns().getFestivalMinPlayer()));
 		}
 		
 		// If the stats or bonus table is required, construct them.

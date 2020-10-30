@@ -140,7 +140,6 @@ public class OlympiadManager {
 		return isRegistered(noble, noble, false) || isInCompetition(noble, noble, false);
 	}
 	
-	@SuppressWarnings("incomplete-switch")
 	private boolean isInCompetition(L2PcInstance noble, L2PcInstance player, boolean showMessage) {
 		if (!Olympiad._inCompPeriod) {
 			return false;

@@ -52,11 +52,11 @@ public class PlayableStat extends CharStat {
 	public int getSp() {
 		return _sp.get();
 	}
-	
+		
 	public void setExp(long exp) {
 		_exp.set(exp);
 	}
-	
+		
 	public void setSp(int sp) {
 		_sp.set(sp);
 	}
@@ -64,24 +64,15 @@ public class PlayableStat extends CharStat {
 	public boolean isExpBlock() {
 		return expBlock;
 	}
-
-	/**
-	 * @param _expBlock the _expBlock to set
-	 */
+	
 	public void setExpBlock(boolean _expBlock) {
 		this.expBlock = _expBlock;
 	}
-
-	/**
-	 * @return the _spBlock
-	 */
+	
 	public boolean isSpBlock() {
 		return spBlock;
 	}
 
-	/**
-	 * @param _spBlock the _spBlock to set
-	 */
 	public void setSpBlock(boolean _spBlock) {
 		this.spBlock = _spBlock;
 	}

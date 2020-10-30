@@ -307,7 +307,7 @@ public abstract class L2Playable extends L2Character {
 	public long getExp() {
 		return 0;
 	}
-	    	
+	
 	/**
 	 * <B><U> Overridden in </U> :</B>
 	 * <li>L2PcInstance</li>

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -117,7 +117,7 @@ public abstract class L2Item extends ListenersContainer implements IIdentifiable
 	private final int _referencePrice;
 	private final int _crystalCount;
 	private final boolean _sellable;
-	private final boolean _dropable;
+	private final boolean _droppable;
 	private final boolean _destroyable;
 	private final boolean _tradeable;
 	private final boolean _depositable;
@@ -171,7 +171,7 @@ public abstract class L2Item extends ListenersContainer implements IIdentifiable
 		
 		_stackable = set.getBoolean("is_stackable", false);
 		_sellable = set.getBoolean("is_sellable", true);
-		_dropable = set.getBoolean("is_dropable", true);
+		_droppable = set.getBoolean("is_droppable", true);
 		_destroyable = set.getBoolean("is_destroyable", true);
 		_tradeable = set.getBoolean("is_tradable", true);
 		_depositable = set.getBoolean("is_depositable", true);
@@ -506,8 +506,8 @@ public abstract class L2Item extends ListenersContainer implements IIdentifiable
 	/**
 	 * @return {@code true} if the item can be dropped, {@code false} otherwise.
 	 */
-	public final boolean isDropable() {
-		return _dropable;
+	public final boolean isDroppable() {
+		return _droppable;
 	}
 	
 	/**

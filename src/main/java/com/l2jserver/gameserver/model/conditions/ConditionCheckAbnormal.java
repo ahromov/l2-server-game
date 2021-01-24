@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -25,26 +25,27 @@ import com.l2jserver.gameserver.model.skills.BuffInfo;
 import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
- * Condition implementation to verify player's abnormal type and level.
+ * Check Abnormal type and level.
  * @author Zoey76
+ * @version 2.6.2.0
  */
-public class ConditionPlayerCheckAbnormal extends Condition {
-	private final AbnormalType _type;
-	private final int _level;
+public class ConditionCheckAbnormal extends Condition {
+	private final AbnormalType type;
+	private final int level;
+	private final boolean mustHave;
 	
-	public ConditionPlayerCheckAbnormal(AbnormalType type) {
-		_type = type;
-		_level = -1;
-	}
-	
-	public ConditionPlayerCheckAbnormal(AbnormalType type, int level) {
-		_type = type;
-		_level = level;
+	public ConditionCheckAbnormal(AbnormalType type, int level, boolean mustHave) {
+		this.type = type;
+		this.level = level;
+		this.mustHave = mustHave;
 	}
 	
 	@Override
 	public boolean testImpl(L2Character effector, L2Character effected, Skill skill, L2Item item) {
-		final BuffInfo info = effector.getEffectList().getBuffInfoByAbnormalType(_type);
-		return ((info != null) && ((_level == -1) || (_level >= info.getSkill().getAbnormalLvl())));
+		final BuffInfo info = effected.getEffectList().getBuffInfoByAbnormalType(type);
+		if (info == null) {
+			return !mustHave;
+		}
+		return (level == -1) || (level >= info.getSkill().getAbnormalLvl());
 	}
 }

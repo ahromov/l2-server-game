@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -3463,13 +3463,13 @@ public final class SystemMessageId {
 	 * ID: 605<br>
 	 * Message: You can only enter up 128 names in your friends list.
 	 */
-	public static final SystemMessageId MAY_REGISTER_UP_TO_64_PEOPLE = new SystemMessageId(605);
+	public static final SystemMessageId YOU_CAN_ONLY_ENTER_UP_128_NAMES_IN_YOUR_FRIENDS_LIST = new SystemMessageId(605);
 	
 	/**
 	 * ID: 606<br>
 	 * Message: The Friend's List of the person you are trying to add is full, so registration is not possible.
 	 */
-	public static final SystemMessageId OTHER_PERSON_ALREADY_64_PEOPLE = new SystemMessageId(606);
+	public static final SystemMessageId THE_FRIENDS_LIST_OF_THE_PERSON_YOU_ARE_TRYING_TO_ADD_IS_FULL_SO_REGISTRATION_IS_NOT_POSSIBLE = new SystemMessageId(606);
 	
 	/**
 	 * ID: 607<br>
@@ -4057,13 +4057,13 @@ public final class SystemMessageId {
 	 * ID: 705<br>
 	 * Message: You cannot exclude yourself.
 	 */
-	public static final SystemMessageId CANNOT_EXCLUDE_SELF = new SystemMessageId(705);
+	public static final SystemMessageId YOU_CANNOT_EXCLUDE_YOURSELF = new SystemMessageId(705);
 	
 	/**
 	 * ID: 706<br>
 	 * Message: You can only enter up to 128 names in your block list.
 	 */
-	public static final SystemMessageId ONLY_64_NAMES_ON_EXCLUDE_LIST = new SystemMessageId(706);
+	public static final SystemMessageId YOU_CAN_ONLY_ENTER_UP_TO_128_NAMES_IN_YOUR_BLOCK_LIST = new SystemMessageId(706);
 	
 	/**
 	 * ID: 707<br>

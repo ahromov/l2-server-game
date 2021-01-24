@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -21,7 +21,7 @@ package com.l2jserver.gameserver.handler;
 import com.l2jserver.gameserver.model.L2Object;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.skills.Skill;
-import com.l2jserver.gameserver.model.skills.targets.L2TargetType;
+import com.l2jserver.gameserver.model.skills.targets.TargetType;
 
 /**
  * @author UnAfraid
@@ -31,5 +31,5 @@ public interface ITargetTypeHandler {
 	
 	L2Object[] getTargetList(Skill skill, L2Character activeChar, boolean onlyFirst, L2Character target);
 	
-	Enum<L2TargetType> getTargetType();
+	Enum<TargetType> getTargetType();
 }

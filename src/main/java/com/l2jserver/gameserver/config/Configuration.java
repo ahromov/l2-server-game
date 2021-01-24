@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  *
  * This file is part of L2J Server.
  *
@@ -96,6 +96,8 @@ public class Configuration {
 	private static final CustomShopConfiguration customShop = ConfigFactory.create(CustomShopConfiguration.class);
 	
 	private static final BufferServiceConfiguration bufferService = ConfigFactory.create(BufferServiceConfiguration.class);
+	
+	private static final DiscordConfiguration discord = ConfigFactory.create(DiscordConfiguration.class);
 	
 	private Configuration() {
 		// Do nothing.
@@ -235,5 +237,9 @@ public class Configuration {
 	
 	public static BufferServiceConfiguration bufferService() {
 		return bufferService;
+	}
+	
+	public static DiscordConfiguration discord() {
+		return discord;
 	}
 }

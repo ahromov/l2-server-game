@@ -1,66 +1,46 @@
 /*
- * Copyright © 2004-2020 L2J Server
- * 
+ * Copyright © 2004-2021 L2J Server
+ *
  * This file is part of L2J Server.
- * 
+ *
  * L2J Server is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * L2J Server is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.l2jserver.gameserver.model.skills.targets;
+package com.l2jserver.gameserver.test;
+
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.testng.PowerMockTestCase;
+
+import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
+import com.l2jserver.gameserver.model.skills.Skill;
 
 /**
+ * Abstract test.
  * @author Zoey76
+ * @version 2.6.2.0
  */
-public enum L2TargetType {
-	AREA,
-	AREA_CORPSE_MOB,
-	AREA_FRIENDLY,
-	AREA_SUMMON,
-	AREA_UNDEAD,
-	AURA,
-	AURA_CORPSE_MOB,
-	AURA_FRIENDLY,
-	AURA_UNDEAD_ENEMY,
-	BEHIND_AREA,
-	BEHIND_AURA,
-	CLAN,
-	CLAN_MEMBER,
-	COMMAND_CHANNEL,
-	CORPSE,
-	CORPSE_CLAN,
-	CORPSE_MOB,
-	ENEMY,
-	ENEMY_ONLY,
-	ENEMY_SUMMON,
-	FLAGPOLE,
-	FRONT_AREA,
-	FRONT_AURA,
-	GROUND,
-	HOLY,
-	NONE,
-	ONE,
-	OWNER_PET,
-	PARTY,
-	PARTY_CLAN,
-	PARTY_MEMBER,
-	PARTY_NOTME,
-	PARTY_OTHER,
-	PC_BODY,
-	PET,
-	SELF,
-	SERVITOR,
-	SUMMON,
-	TARGET_PARTY,
-	UNDEAD,
-	UNLOCKABLE
+@PrepareForTest({
+	L2PcInstance.class,
+	Skill.class
+})
+@PowerMockIgnore({
+	"javax.xml.*",
+	"org.w3c.*",
+	"org.apache.*",
+	"org.slf4j.*",
+	"com.sun.*"
+})
+public class AbstractTest extends PowerMockTestCase {
+	
 }

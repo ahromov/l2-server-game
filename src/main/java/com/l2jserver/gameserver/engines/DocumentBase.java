@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -44,6 +44,7 @@ import com.l2jserver.gameserver.model.base.PlayerState;
 import com.l2jserver.gameserver.model.conditions.Condition;
 import com.l2jserver.gameserver.model.conditions.ConditionCategoryType;
 import com.l2jserver.gameserver.model.conditions.ConditionChangeWeapon;
+import com.l2jserver.gameserver.model.conditions.ConditionCheckAbnormal;
 import com.l2jserver.gameserver.model.conditions.ConditionGameChance;
 import com.l2jserver.gameserver.model.conditions.ConditionGameTime;
 import com.l2jserver.gameserver.model.conditions.ConditionGameTime.CheckGameTime;
@@ -69,7 +70,6 @@ import com.l2jserver.gameserver.model.conditions.ConditionPlayerCanTakeFort;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerCanTransform;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerCanUntransform;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerCharges;
-import com.l2jserver.gameserver.model.conditions.ConditionPlayerCheckAbnormal;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerClassIdRestriction;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerCloakStatus;
 import com.l2jserver.gameserver.model.conditions.ConditionPlayerCp;
@@ -114,7 +114,7 @@ import com.l2jserver.gameserver.model.conditions.ConditionTargetClassIdRestricti
 import com.l2jserver.gameserver.model.conditions.ConditionTargetInvSize;
 import com.l2jserver.gameserver.model.conditions.ConditionTargetLevel;
 import com.l2jserver.gameserver.model.conditions.ConditionTargetLevelRange;
-import com.l2jserver.gameserver.model.conditions.ConditionTargetMyPartyExceptMe;
+import com.l2jserver.gameserver.model.conditions.ConditionTargetMyParty;
 import com.l2jserver.gameserver.model.conditions.ConditionTargetNpcId;
 import com.l2jserver.gameserver.model.conditions.ConditionTargetNpcType;
 import com.l2jserver.gameserver.model.conditions.ConditionTargetPlayable;
@@ -620,12 +620,16 @@ public abstract class DocumentBase {
 				}
 				case "checkabnormal" -> {
 					final String value = a.getNodeValue();
-					if (value.contains(",")) {
-						final String[] values = value.split(",");
-						cond = joinAnd(cond, new ConditionPlayerCheckAbnormal(AbnormalType.valueOf(values[0]), Integer.decode(getValue(values[1], template))));
+					if (value.contains(";")) {
+						final String[] values = value.split(";");
+						final var type = AbnormalType.valueOf(values[0]);
+						final var level = Integer.decode(getValue(values[1], template));
+						final var mustHave = Boolean.parseBoolean(values[2]);
+						cond = joinAnd(cond, new ConditionCheckAbnormal(type, level, mustHave));
 					} else {
-						cond = joinAnd(cond, new ConditionPlayerCheckAbnormal(AbnormalType.valueOf(value)));
+						cond = joinAnd(cond, new ConditionCheckAbnormal(AbnormalType.valueOf(value), -1, true));
 					}
+					break;
 				}
 				case "categorytype" -> {
 					final String[] values = a.getNodeValue().split(",");
@@ -673,7 +677,7 @@ public abstract class DocumentBase {
 						cond = joinAnd(cond, new ConditionTargetLevelRange(minimumLevel, maximumLevel));
 					}
 				}
-				case "mypartyexceptme" -> cond = joinAnd(cond, new ConditionTargetMyPartyExceptMe(Boolean.parseBoolean(a.getNodeValue())));
+				case "myparty" -> cond = joinAnd(cond, new ConditionTargetMyParty(a.getNodeValue()));
 				case "playable" -> cond = joinAnd(cond, new ConditionTargetPlayable());
 				case "class_id_restriction" -> {
 					StringTokenizer st = new StringTokenizer(a.getNodeValue(), ",");
@@ -758,6 +762,19 @@ public abstract class DocumentBase {
 				case "invsize" -> {
 					int size = Integer.decode(getValue(a.getNodeValue(), null));
 					cond = joinAnd(cond, new ConditionTargetInvSize(size));
+				}
+				case "checkabnormal" -> {
+					final String value = a.getNodeValue();
+					if (value.contains(";")) {
+						final String[] values = value.split(";");
+						final var type = AbnormalType.valueOf(values[0]);
+						final var level = Integer.decode(getValue(values[1], template));
+						final var mustHave = Boolean.parseBoolean(values[2]);
+						cond = joinAnd(cond, new ConditionCheckAbnormal(type, level, mustHave));
+					} else {
+						cond = joinAnd(cond, new ConditionCheckAbnormal(AbnormalType.valueOf(value), -1, true));
+					}
+					break;
 				}
 			}
 		}

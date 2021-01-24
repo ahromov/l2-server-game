@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -27,7 +27,9 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -333,23 +335,13 @@ public final class L2World {
 	 * @return
 	 */
 	public List<L2Object> getVisibleObjects(L2Object object) {
-		L2WorldRegion reg = object.getWorldRegion();
-		
-		if (reg == null) {
-			return null;
-		}
-		
-		// Create a list in order to contain all visible objects.
 		final List<L2Object> result = new LinkedList<>();
-		for (L2WorldRegion regi : reg.getSurroundingRegions()) {
-			// Go through visible objects of the selected region
-			for (L2Object _object : regi.getVisibleObjects().values()) {
-				if ((_object == null) || _object.equals(object)) {
+		for (L2WorldRegion regi : object.getWorldRegion().getSurroundingRegions()) {
+			for (L2Object visibleObject : regi.getVisibleObjects().values()) {
+				if ((visibleObject == null) || visibleObject.equals(object) || !visibleObject.isVisible()) {
 					continue; // skip our own character
-				} else if (!_object.isVisible()) {
-					continue; // skip dying objects
 				}
-				result.add(_object);
+				result.add(visibleObject);
 			}
 		}
 		
@@ -357,38 +349,49 @@ public final class L2World {
 	}
 	
 	/**
-	 * Return all visible objects of the L2WorldRegions in the circular area (radius) centered on the object. <B><U> Concept</U> :</B> All visible object are identified in <B>_visibleObjects</B> of their current L2WorldRegion <BR>
-	 * All surrounding L2WorldRegion are identified in <B>_surroundingRegions</B> of the selected L2WorldRegion in order to scan a large area around a L2Object <B><U> Example of use </U> :</B>
-	 * <li>Define the aggrolist of monster</li>
-	 * <li>Define visible objects of a L2Object</li>
-	 * <li>Skill : Confusion...</li><BR>
-	 * @param object L2object that determine the center of the circular area
-	 * @param radius Radius of the circular area
-	 * @return
+	 * Gets the visible objects to the given object inside the given radius.
+	 * @param object the origin
+	 * @param radius the radius to check
+	 * @return the visible objects in the radius
 	 */
 	public List<L2Object> getVisibleObjects(L2Object object, int radius) {
 		if ((object == null) || !object.isVisible()) {
-			return new ArrayList<>();
+			return List.of();
 		}
 		
 		final int sqRadius = radius * radius;
-		
-		// Create a list in order to contain all visible objects.
-		final List<L2Object> result = new LinkedList<>();
-		for (L2WorldRegion regi : object.getWorldRegion().getSurroundingRegions()) {
+		final var result = new LinkedList<L2Object>();
+		for (var region : object.getWorldRegion().getSurroundingRegions()) {
 			// Go through visible objects of the selected region
-			for (L2Object _object : regi.getVisibleObjects().values()) {
-				if ((_object == null) || _object.equals(object)) {
+			for (var visibleObject : region.getVisibleObjects().values()) {
+				if ((visibleObject == null) || visibleObject.equals(object)) {
 					continue; // skip our own character
 				}
 				
-				if (sqRadius > object.calculateDistance(_object, false, true)) {
-					result.add(_object);
+				if (sqRadius > object.calculateDistance(visibleObject, false, true)) {
+					result.add(visibleObject);
 				}
 			}
 		}
-		
 		return result;
+	}
+	
+	/**
+	 * Gets the visible objects to the object taking the target as point of origin.
+	 * @param object the object to check visibility
+	 * @param target the origin
+	 * @param radius the radius to check
+	 * @return the visible objects in the radius
+	 */
+	public List<L2Object> getVisibleObjects(L2Object object, L2Object target, int radius) {
+		final int sqRadius = radius * radius;
+		return target.getWorldRegion().getSurroundingRegions() //
+			.stream() //
+			.flatMap(r -> r.getVisibleObjects().values().stream()) //
+			.filter(Objects::nonNull) //
+			.filter(o -> !o.equals(object)) //
+			.filter(o -> sqRadius > target.calculateDistance(o, false, true)) //
+			.collect(Collectors.toList());
 	}
 	
 	/**

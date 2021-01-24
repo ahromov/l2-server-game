@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,19 +18,107 @@
  */
 package com.l2jserver.gameserver.model.skills.targets;
 
+import com.l2jserver.gameserver.model.L2Object;
+import com.l2jserver.gameserver.model.actor.L2Character;
+import com.l2jserver.gameserver.model.actor.L2Npc;
+
 /**
- * Affect object enumerated.
+ * Affect Object.
  * @author Zoey76
+ * @version 2.6.2.0
  */
 public enum AffectObject {
-	ALL,
-	CLAN,
-	FRIEND,
-	HIDDEN_PLACE,
-	INVISIBLE,
-	NOE,
-	NOT_FRIEND,
-	OBJECT_DEAD_NPC_BODY,
-	UNDEAD_REAL_ENEMY,
-	WYVERN_OBJECT
+	ALL {
+		@Override
+		public boolean affectObject(L2Character caster, L2Object object) {
+			return true;
+		}
+	},
+	CLAN {
+		@Override
+		public boolean affectObject(L2Character caster, L2Object object) {
+			if (caster.isPlayable()) {
+				final var clanId = caster.getClanId();
+				if (clanId == 0) {
+					return false;
+				}
+				
+				if (!object.isPlayable()) {
+					return false;
+				}
+				
+				final var creature = (L2Character) object;
+				return clanId == creature.getClanId();
+			} else if (caster.isNpc()) {
+				// TODO(Zoey76): Implement.
+			}
+			return false;
+		}
+	},
+	FRIEND {
+		@Override
+		public boolean affectObject(L2Character caster, L2Object object) {
+			return !object.isAutoAttackable(caster);
+		}
+	},
+	HIDDEN_PLACE {
+		@Override
+		public boolean affectObject(L2Character caster, L2Object object) {
+			// TODO(Zoey76): Implement.
+			return false;
+		}
+	},
+	INVISIBLE {
+		@Override
+		public boolean affectObject(L2Character caster, L2Object object) {
+			return object.isInvisible();
+		}
+	},
+	NONE {
+		@Override
+		public boolean affectObject(L2Character caster, L2Object object) {
+			return false;
+		}
+	},
+	NOT_FRIEND {
+		@Override
+		public boolean affectObject(L2Character caster, L2Object object) {
+			return object.isAutoAttackable(caster);
+		}
+	},
+	OBJECT_DEAD_NPC_BODY {
+		@Override
+		public boolean affectObject(L2Character caster, L2Object object) {
+			if (!object.isNpc()) {
+				return false;
+			}
+			
+			final var npc = (L2Npc) object;
+			return npc.isDead();
+		}
+	},
+	UNDEAD_REAL_ENEMY {
+		@Override
+		public boolean affectObject(L2Character caster, L2Object object) {
+			if (!object.isNpc()) {
+				return false;
+			}
+			
+			final var npc = (L2Npc) object;
+			return npc.isUndead();
+		}
+	},
+	WYVERN_OBJECT {
+		@Override
+		public boolean affectObject(L2Character caster, L2Object object) {
+			if (!object.isNpc()) {
+				return false;
+			}
+			return WYVERN_ID == object.getId();
+		}
+	};
+	
+	private static final int WYVERN_ID = 12621;
+	
+	public abstract boolean affectObject(L2Character caster, L2Object object);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,15 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.network.SystemMessageId.FAILED_TO_REGISTER_TO_IGNORE_LIST;
+import static com.l2jserver.gameserver.network.SystemMessageId.MESSAGE_ACCEPTANCE_MODE;
+import static com.l2jserver.gameserver.network.SystemMessageId.MESSAGE_REFUSAL_MODE;
+import static com.l2jserver.gameserver.network.SystemMessageId.YOU_CANNOT_EXCLUDE_YOURSELF;
+import static com.l2jserver.gameserver.network.SystemMessageId.YOU_MAY_NOT_IMPOSE_A_BLOCK_ON_GM;
+
 import com.l2jserver.gameserver.data.sql.impl.CharNameTable;
 import com.l2jserver.gameserver.model.BlockList;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
-import com.l2jserver.gameserver.network.SystemMessageId;
 
 public final class RequestBlock extends L2GameClientPacket {
 	private static final String _C__A9_REQUESTBLOCK = "[C] A9 RequestBlock";
@@ -59,15 +64,16 @@ public final class RequestBlock extends L2GameClientPacket {
 			case BLOCK, UNBLOCK -> {
 				if (targetId <= 0) {
 					// Incorrect player name.
-					activeChar.sendPacket(SystemMessageId.FAILED_TO_REGISTER_TO_IGNORE_LIST);
+					activeChar.sendPacket(FAILED_TO_REGISTER_TO_IGNORE_LIST);
 					return;
 				}
 				if (targetAL > 0) {
 					// Cannot block a GM character.
-					activeChar.sendPacket(SystemMessageId.YOU_MAY_NOT_IMPOSE_A_BLOCK_ON_GM);
+					activeChar.sendPacket(YOU_MAY_NOT_IMPOSE_A_BLOCK_ON_GM);
 					return;
 				}
 				if (activeChar.getObjectId() == targetId) {
+					activeChar.sendPacket(YOU_CANNOT_EXCLUDE_YOURSELF);
 					return;
 				}
 				if (_type == BLOCK) {
@@ -78,11 +84,11 @@ public final class RequestBlock extends L2GameClientPacket {
 			}
 			case BLOCKLIST -> BlockList.sendListToOwner(activeChar);
 			case ALLBLOCK -> {
-				activeChar.sendPacket(SystemMessageId.MESSAGE_REFUSAL_MODE);
+				activeChar.sendPacket(MESSAGE_REFUSAL_MODE);
 				BlockList.setBlockAll(activeChar, true);
 			}
 			case ALLUNBLOCK -> {
-				activeChar.sendPacket(SystemMessageId.MESSAGE_ACCEPTANCE_MODE);
+				activeChar.sendPacket(MESSAGE_ACCEPTANCE_MODE);
 				BlockList.setBlockAll(activeChar, false);
 			}
 			default -> _log.info("Unknown 0xA9 block type: " + _type);

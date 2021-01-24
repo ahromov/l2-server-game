@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -252,7 +252,11 @@ public class StatsSet implements IParserAdvUtils {
 	}
 	
 	public int[] getIntArray(String key, String splitOn) {
-		Object val = _set.get(key);
+		return getIntArray(key, null, splitOn);
+	}
+	
+	public int[] getIntArray(String key, String defaultValue, String splitOn) {
+		Object val = _set.getOrDefault(key, defaultValue);
 		if (val == null) {
 			throw new IllegalArgumentException("Integer value required, but not specified");
 		}

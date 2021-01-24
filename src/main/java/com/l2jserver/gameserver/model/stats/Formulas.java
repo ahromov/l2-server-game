@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -805,10 +805,18 @@ public final class Formulas {
 	}
 	
 	public static double calcMagicDam(L2Character attacker, L2Character target, Skill skill, byte shld, boolean sps, boolean bss, boolean mcrit, double power) {
+		return calcMagicDam(attacker, target, skill, shld, 0, sps, bss, mcrit, power);
+	}
+	
+	public static double calcMagicDam(L2Character attacker, L2Character target, Skill skill, byte shld, double shieldDefensePercentage, boolean sps, boolean bss, boolean mcrit, double power) {
 		double mDef = target.getMDef(attacker, skill);
 		switch (shld) {
 			case SHIELD_DEFENSE_SUCCEED -> {
-				mDef += target.getShldDef();
+				if (shieldDefensePercentage <= 0) {
+					mDef += target.getShldDef();
+				} else {
+					mDef += target.getShldDef() * shieldDefensePercentage / 100.0;
+				}
 			}
 			case SHIELD_DEFENSE_PERFECT_BLOCK -> {
 				return 1;

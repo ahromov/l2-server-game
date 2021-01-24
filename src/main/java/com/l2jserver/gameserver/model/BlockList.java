@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,6 +18,16 @@
  */
 package com.l2jserver.gameserver.model;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.network.SystemMessageId.BLOCK_LIST_HEADER;
+import static com.l2jserver.gameserver.network.SystemMessageId.FRIEND_LIST_FOOTER;
+import static com.l2jserver.gameserver.network.SystemMessageId.S1_ALREADY_IN_FRIENDS_LIST;
+import static com.l2jserver.gameserver.network.SystemMessageId.S1_HAS_ADDED_YOU_TO_IGNORE_LIST;
+import static com.l2jserver.gameserver.network.SystemMessageId.S1_WAS_ADDED_TO_YOUR_IGNORE_LIST;
+import static com.l2jserver.gameserver.network.SystemMessageId.S1_WAS_REMOVED_FROM_YOUR_IGNORE_LIST;
+import static com.l2jserver.gameserver.network.SystemMessageId.TARGET_IS_INCORRECT;
+import static com.l2jserver.gameserver.network.SystemMessageId.YOU_CAN_ONLY_ENTER_UP_TO_128_NAMES_IN_YOUR_BLOCK_LIST;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +38,9 @@ import java.util.logging.Logger;
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.data.sql.impl.CharNameTable;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
-import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
+// TODO(Zoey76): Rewrite this class in an OOP style.
 public class BlockList {
 	
 	private static final Logger _log = Logger.getLogger(BlockList.class.getName());
@@ -141,10 +151,14 @@ public class BlockList {
 			return;
 		}
 		
-		String charName = CharNameTable.getInstance().getNameById(targetId);
+		if (listOwner.getBlockList().getBlockList().size() >= character().getBlockListLimit()) {
+			listOwner.sendPacket(YOU_CAN_ONLY_ENTER_UP_TO_128_NAMES_IN_YOUR_BLOCK_LIST);
+			return;
+		}
 		
+		String charName = CharNameTable.getInstance().getNameById(targetId);
 		if (listOwner.isFriend(targetId)) {
-			SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.S1_ALREADY_IN_FRIENDS_LIST);
+			final var sm = SystemMessage.getSystemMessage(S1_ALREADY_IN_FRIENDS_LIST);
 			sm.addString(charName);
 			listOwner.sendPacket(sm);
 			return;
@@ -157,14 +171,14 @@ public class BlockList {
 		
 		listOwner.getBlockList().addToBlockList(targetId);
 		
-		SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.S1_WAS_ADDED_TO_YOUR_IGNORE_LIST);
+		var sm = SystemMessage.getSystemMessage(S1_WAS_ADDED_TO_YOUR_IGNORE_LIST);
 		sm.addString(charName);
 		listOwner.sendPacket(sm);
 		
 		L2PcInstance player = L2World.getInstance().getPlayer(targetId);
 		
 		if (player != null) {
-			sm = SystemMessage.getSystemMessage(SystemMessageId.S1_HAS_ADDED_YOU_TO_IGNORE_LIST);
+			sm = SystemMessage.getSystemMessage(S1_HAS_ADDED_YOU_TO_IGNORE_LIST);
 			sm.addString(listOwner.getName());
 			player.sendPacket(sm);
 		}
@@ -175,19 +189,16 @@ public class BlockList {
 			return;
 		}
 		
-		SystemMessage sm;
-		
 		String charName = CharNameTable.getInstance().getNameById(targetId);
 		
 		if (!listOwner.getBlockList().getBlockList().contains(targetId)) {
-			sm = SystemMessage.getSystemMessage(SystemMessageId.TARGET_IS_INCORRECT);
-			listOwner.sendPacket(sm);
+			listOwner.sendPacket(TARGET_IS_INCORRECT);
 			return;
 		}
 		
 		listOwner.getBlockList().removeFromBlockList(targetId);
 		
-		sm = SystemMessage.getSystemMessage(SystemMessageId.S1_WAS_REMOVED_FROM_YOUR_IGNORE_LIST);
+		final var sm = SystemMessage.getSystemMessage(S1_WAS_REMOVED_FROM_YOUR_IGNORE_LIST);
 		sm.addString(charName);
 		listOwner.sendPacket(sm);
 	}
@@ -206,11 +217,11 @@ public class BlockList {
 	
 	public static void sendListToOwner(L2PcInstance listOwner) {
 		int i = 1;
-		listOwner.sendPacket(SystemMessageId.BLOCK_LIST_HEADER);
+		listOwner.sendPacket(BLOCK_LIST_HEADER);
 		for (int playerId : listOwner.getBlockList().getBlockList()) {
 			listOwner.sendMessage((i++) + ". " + CharNameTable.getInstance().getNameById(playerId));
 		}
-		listOwner.sendPacket(SystemMessageId.FRIEND_LIST_FOOTER);
+		listOwner.sendPacket(FRIEND_LIST_FOOTER);
 	}
 	
 	/**

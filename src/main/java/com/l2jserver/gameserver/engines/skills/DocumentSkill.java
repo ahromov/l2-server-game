@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -1055,8 +1055,8 @@ public class DocumentSkill extends DocumentBase {
 			try {
 				_currentSkill.currentSkills.add(i, new Skill(set));
 				count++;
-			} catch (Exception e) {
-				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + "level" + set.getInt("level"), e);
+			} catch (Exception ex) {
+				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + " level=" + set.getInt("level"), ex);
 			}
 		}
 		int _count = count;
@@ -1065,8 +1065,8 @@ public class DocumentSkill extends DocumentBase {
 			try {
 				_currentSkill.currentSkills.add(_count + i, new Skill(set));
 				count++;
-			} catch (Exception e) {
-				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + "level" + set.getInt("level"), e);
+			} catch (Exception ex) {
+				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + " level=" + set.getInt("level"), ex);
 			}
 		}
 		_count = count;
@@ -1075,8 +1075,8 @@ public class DocumentSkill extends DocumentBase {
 			try {
 				_currentSkill.currentSkills.add(_count + i, new Skill(set));
 				count++;
-			} catch (Exception e) {
-				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + "level" + set.getInt("level"), e);
+			} catch (Exception ex) {
+				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + " level=" + set.getInt("level"), ex);
 			}
 		}
 		_count = count;
@@ -1085,8 +1085,8 @@ public class DocumentSkill extends DocumentBase {
 			try {
 				_currentSkill.currentSkills.add(_count + i, new Skill(set));
 				count++;
-			} catch (Exception e) {
-				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + "level" + set.getInt("level"), e);
+			} catch (Exception ex) {
+				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + " level=" + set.getInt("level"), ex);
 			}
 		}
 		_count = count;
@@ -1095,8 +1095,8 @@ public class DocumentSkill extends DocumentBase {
 			try {
 				_currentSkill.currentSkills.add(_count + i, new Skill(set));
 				count++;
-			} catch (Exception e) {
-				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + "level" + set.getInt("level"), e);
+			} catch (Exception ex) {
+				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + " level=" + set.getInt("level"), ex);
 			}
 		}
 		_count = count;
@@ -1105,8 +1105,8 @@ public class DocumentSkill extends DocumentBase {
 			try {
 				_currentSkill.currentSkills.add(_count + i, new Skill(set));
 				count++;
-			} catch (Exception e) {
-				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + "level" + set.getInt("level"), e);
+			} catch (Exception ex) {
+				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + " level=" + set.getInt("level"), ex);
 			}
 		}
 		_count = count;
@@ -1115,8 +1115,8 @@ public class DocumentSkill extends DocumentBase {
 			try {
 				_currentSkill.currentSkills.add(_count + i, new Skill(set));
 				count++;
-			} catch (Exception e) {
-				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + "level" + set.getInt("level"), e);
+			} catch (Exception ex) {
+				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + " level=" + set.getInt("level"), ex);
 			}
 		}
 		_count = count;
@@ -1125,8 +1125,8 @@ public class DocumentSkill extends DocumentBase {
 			try {
 				_currentSkill.currentSkills.add(_count + i, new Skill(set));
 				count++;
-			} catch (Exception e) {
-				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + "level" + set.getInt("level"), e);
+			} catch (Exception ex) {
+				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + " level=" + set.getInt("level"), ex);
 			}
 		}
 		_count = count;
@@ -1135,8 +1135,8 @@ public class DocumentSkill extends DocumentBase {
 			try {
 				_currentSkill.currentSkills.add(_count + i, new Skill(set));
 				count++;
-			} catch (Exception e) {
-				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + "level" + set.getInt("level"), e);
+			} catch (Exception ex) {
+				_log.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + " level=" + set.getInt("level"), ex);
 			}
 		}
 	}

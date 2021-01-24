@@ -6,7 +6,7 @@ L2J Server is an open-source server emulator fully written in Java for the famou
 
 This page only gives very basic information, for the detailed information about building and developing L2J Server, please visit the developers forums.
 
-- master branch is the latest High Five release
+- master branch is the latest stable High Five release
 
 - develop branch is the current High Five development
 
@@ -27,7 +27,7 @@ Server and Datapack may not be not be bundled or packaged.
 Requirements
 ---
 
-Windows or Linux system with Java JDK 14+ and MariaDB 10.4+.
+Windows or Linux system with Java JDK 14+ and MariaDB 10.5+.
 
 At least 4gb of RAM and 2 Cores.
 

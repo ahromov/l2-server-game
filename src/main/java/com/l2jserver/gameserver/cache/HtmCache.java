@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -134,6 +134,14 @@ public class HtmCache {
 			content = loadFile(new File(server().getDatapackRoot(), newPath));
 			if (content == null) {
 				content = loadFile(new File(server().getScriptRoot(), newPath));
+			}
+			
+			// If multilanguage content is not present, try default location.
+			if (prefix != null && content == null) {
+				content = loadFile(new File(server().getDatapackRoot(), path));
+				if (content == null) {
+					content = loadFile(new File(server().getScriptRoot(), path));
+				}
 			}
 		}
 		return content;

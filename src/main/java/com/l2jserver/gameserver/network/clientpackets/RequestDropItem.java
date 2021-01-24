@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -71,7 +71,7 @@ public final class RequestDropItem extends L2GameClientPacket {
 		L2ItemInstance item = activeChar.getInventory().getItemByObjectId(_objectId);
 		
 		if ((item == null) || (_count == 0) || !activeChar.validateItemManipulation(_objectId, "drop") || (!general().allowDiscardItem() && !activeChar.canOverrideCond(PcCondOverride.DROP_ALL_ITEMS))
-			|| (!item.isDropable() && !(activeChar.canOverrideCond(PcCondOverride.DROP_ALL_ITEMS) && general().gmTradeRestrictedItems())) || ((item.getItemType() == EtcItemType.PET_COLLAR) && activeChar.havePetInvItems()) || activeChar.isInsideZone(ZoneId.NO_ITEM_DROP)) {
+			|| (!item.isDroppable() && !(activeChar.canOverrideCond(PcCondOverride.DROP_ALL_ITEMS) && general().gmTradeRestrictedItems())) || ((item.getItemType() == EtcItemType.PET_COLLAR) && activeChar.havePetInvItems()) || activeChar.isInsideZone(ZoneId.NO_ITEM_DROP)) {
 			activeChar.sendPacket(SystemMessageId.CANNOT_DISCARD_THIS_ITEM);
 			return;
 		}

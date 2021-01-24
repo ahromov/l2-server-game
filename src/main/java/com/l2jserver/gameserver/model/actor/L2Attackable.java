@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -836,11 +836,12 @@ public class L2Attackable extends L2Npc {
 			for (ItemHolder drop : deathItems) {
 				L2Item item = ItemTable.getInstance().getTemplate(drop.getId());
 				// Check if the autoLoot mode is active
-				if (isFlying() || (!item.hasExImmediateEffect() && ((!isRaid() && character().autoLoot()) || //
-					(isRaid() && character().autoLootRaids()))) || (item.hasExImmediateEffect() && character().autoLootHerbs())) {
-					player.doAutoLoot(this, drop); // Give the item(s) to the L2PcInstance that has killed the L2Attackable
+				if (isFlying() || (!item.hasExImmediateEffect() && ((!isRaid() && ((character().autoLoot() && (!player.isAutoLootItem())) || //
+					(player.isAutoLoot() && !player.isAutoLootItem()) || (player.isAutoLootItem() && customs().getAutoLootItemsList().contains(item.getId())))) || //
+					(isRaid() && character().autoLootRaids()))) || (item.hasExImmediateEffect() && (character().autoLootHerbs() || (player.isAutoLootHerb() && customs().getAutoLootHerbsList().contains(item.getId()))))) {
+					player.doAutoLoot(this, drop); // Give the item(s) to the L2PcInstance inventory has killed the L2Attackable
 				} else {
-					dropItem(player, drop); // drop the item on the ground
+					dropItem(player, drop); // Drop the rest or all item(s) on the ground
 				}
 				
 				// Broadcast message if RaidBoss was defeated
@@ -860,13 +861,15 @@ public class L2Attackable extends L2Npc {
 			ItemHolder item = new ItemHolder(customs().getChampionRewardItemID(), ++champqty);
 			
 			if ((player.getLevel() <= getLevel()) && (Rnd.get(100) < customs().getChampionRewardLowerLvlItemChance())) {
-				if (character().autoLoot() || isFlying()) {
+				if (isFlying() || (character().autoLoot() && (!player.isAutoLootItem())) || (player.isAutoLoot() && !player.isAutoLootItem()) || //
+					(player.isAutoLootItem() && customs().getAutoLootItemsList().contains(item.getId()))) {
 					player.addItem("ChampionLoot", item.getId(), item.getCount(), this, true); // Give the item(s) to the L2PcInstance that has killed the L2Attackable
 				} else {
 					dropItem(player, item);
 				}
 			} else if ((player.getLevel() > getLevel()) && (Rnd.get(100) < customs().getChampionRewardHigherLvlItemChance())) {
-				if (character().autoLoot() || isFlying()) {
+				if (isFlying() || (character().autoLoot() && (!player.isAutoLootItem())) || (player.isAutoLoot() && !player.isAutoLootItem()) || //
+					(player.isAutoLootItem() && customs().getAutoLootItemsList().contains(item.getId()))) {
 					player.addItem("ChampionLoot", item.getId(), item.getCount(), this, true); // Give the item(s) to the L2PcInstance that has killed the L2Attackable
 				} else {
 					dropItem(player, item);
@@ -910,7 +913,8 @@ public class L2Attackable extends L2Npc {
 			if (Rnd.get(1000000) < drop.getEventDrop().getDropChance()) {
 				final int itemId = drop.getEventDrop().getItemIdList()[Rnd.get(drop.getEventDrop().getItemIdList().length)];
 				final long itemCount = Rnd.get(drop.getEventDrop().getMinCount(), drop.getEventDrop().getMaxCount());
-				if (character().autoLoot() || isFlying()) {
+				if (isFlying() || (character().autoLoot() && (!player.isAutoLootItem())) || (player.isAutoLoot() && !player.isAutoLootItem()) || //
+					(player.isAutoLootItem() && customs().getAutoLootItemsList().contains(itemId))) {
 					player.doAutoLoot(this, itemId, itemCount); // Give the item(s) to the L2PcInstance that has killed the L2Attackable
 				} else {
 					dropItem(player, itemId, itemCount); // drop the item on the ground

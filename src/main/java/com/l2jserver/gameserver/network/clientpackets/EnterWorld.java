@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -45,6 +45,7 @@ import java.util.Base64;
 import com.l2jserver.gameserver.LoginServerThread;
 import com.l2jserver.gameserver.SevenSigns;
 import com.l2jserver.gameserver.cache.HtmCache;
+import com.l2jserver.gameserver.custom.AutoLootExtension;
 import com.l2jserver.gameserver.data.sql.impl.AnnouncementsTable;
 import com.l2jserver.gameserver.data.xml.impl.AdminData;
 import com.l2jserver.gameserver.data.xml.impl.SkillTreesData;
@@ -395,8 +396,8 @@ public class EnterWorld extends L2GameClientPacket {
 		
 		activeChar.sendMessage(getText("VGhpcyBzZXJ2ZXIgdXNlcyBMMkosIGEgcHJvamVjdCBmb3VuZGVkIGJ5IEwyQ2hlZg=="));
 		activeChar.sendMessage(getText("YW5kIGRldmVsb3BlZCBieSBMMkogVGVhbSBhdCB3d3cubDJqc2VydmVyLmNvbQ=="));
-		activeChar.sendMessage(getText("Q29weXJpZ2h0IDIwMDQtMjAyMA=="));
-		activeChar.sendMessage(getText("VGhhbmsgeW91IGZvciAxNiB5ZWFycyE="));
+		activeChar.sendMessage(getText("Q29weXJpZ2h0IDIwMDQtMjAyMQ"));
+		activeChar.sendMessage(getText("VGhhbmsgeW91IGZvciAxNyB5ZWFycyE"));
 		
 		SevenSigns.getInstance().sendCurrentPeriodMsg(activeChar);
 		AnnouncementsTable.getInstance().showAnnouncements(activeChar);
@@ -482,6 +483,9 @@ public class EnterWorld extends L2GameClientPacket {
 		}
 		
 		TvTEvent.onLogin(activeChar);
+		
+		// Auto Loot Extension.
+		AutoLootExtension.onLogin(activeChar);
 		
 		if (customs().screenWelcomeMessageEnable()) {
 			activeChar.sendPacket(new ExShowScreenMessage(customs().getScreenWelcomeMessageText(), customs().getScreenWelcomeMessageTime()));

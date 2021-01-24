@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,10 +18,20 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.network.SystemMessageId.A_USER_CURRENTLY_PARTICIPATING_IN_THE_OLYMPIAD_CANNOT_SEND_PARTY_AND_FRIEND_INVITATIONS;
+import static com.l2jserver.gameserver.network.SystemMessageId.BLOCKED_C1;
+import static com.l2jserver.gameserver.network.SystemMessageId.C1_IS_BUSY_TRY_LATER;
+import static com.l2jserver.gameserver.network.SystemMessageId.S1_ALREADY_IN_FRIENDS_LIST;
+import static com.l2jserver.gameserver.network.SystemMessageId.THE_FRIENDS_LIST_OF_THE_PERSON_YOU_ARE_TRYING_TO_ADD_IS_FULL_SO_REGISTRATION_IS_NOT_POSSIBLE;
+import static com.l2jserver.gameserver.network.SystemMessageId.THE_USER_YOU_REQUESTED_IS_NOT_IN_GAME;
+import static com.l2jserver.gameserver.network.SystemMessageId.YOU_CANNOT_ADD_YOURSELF_TO_OWN_FRIEND_LIST;
+import static com.l2jserver.gameserver.network.SystemMessageId.YOU_CAN_ONLY_ENTER_UP_128_NAMES_IN_YOUR_FRIENDS_LIST;
+import static com.l2jserver.gameserver.network.SystemMessageId.YOU_REQUESTED_C1_TO_BE_FRIEND;
+
 import com.l2jserver.gameserver.model.BlockList;
 import com.l2jserver.gameserver.model.L2World;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
-import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.network.serverpackets.FriendAddRequest;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
@@ -46,50 +56,66 @@ public final class RequestFriendInvite extends L2GameClientPacket {
 		
 		// Target is not found in the game.
 		if ((friend == null) || !friend.isOnline() || friend.isInvisible()) {
-			activeChar.sendPacket(SystemMessageId.THE_USER_YOU_REQUESTED_IS_NOT_IN_GAME);
+			activeChar.sendPacket(THE_USER_YOU_REQUESTED_IS_NOT_IN_GAME);
 			return;
 		}
+		
 		// You cannot add yourself to your own friend list.
 		if (friend == activeChar) {
-			activeChar.sendPacket(SystemMessageId.YOU_CANNOT_ADD_YOURSELF_TO_OWN_FRIEND_LIST);
+			activeChar.sendPacket(YOU_CANNOT_ADD_YOURSELF_TO_OWN_FRIEND_LIST);
 			return;
 		}
+		
+		if (activeChar.getFriends().size() >= character().getFriendListLimit()) {
+			activeChar.sendPacket(YOU_CAN_ONLY_ENTER_UP_128_NAMES_IN_YOUR_FRIENDS_LIST);
+			return;
+		}
+		
+		if (friend.getFriends().size() >= character().getFriendListLimit()) {
+			activeChar.sendPacket(THE_FRIENDS_LIST_OF_THE_PERSON_YOU_ARE_TRYING_TO_ADD_IS_FULL_SO_REGISTRATION_IS_NOT_POSSIBLE);
+			return;
+		}
+		
 		// Target is in olympiad.
 		if (activeChar.isInOlympiadMode() || friend.isInOlympiadMode()) {
-			activeChar.sendPacket(SystemMessageId.A_USER_CURRENTLY_PARTICIPATING_IN_THE_OLYMPIAD_CANNOT_SEND_PARTY_AND_FRIEND_INVITATIONS);
+			activeChar.sendPacket(A_USER_CURRENTLY_PARTICIPATING_IN_THE_OLYMPIAD_CANNOT_SEND_PARTY_AND_FRIEND_INVITATIONS);
 			return;
 		}
+		
 		// Target blocked active player.
 		if (BlockList.isBlocked(friend, activeChar)) {
 			activeChar.sendMessage("You are in target's block list.");
 			return;
 		}
-		SystemMessage sm;
+		
 		// Target is blocked.
 		if (BlockList.isBlocked(activeChar, friend)) {
-			sm = SystemMessage.getSystemMessage(SystemMessageId.BLOCKED_C1);
+			final var sm = SystemMessage.getSystemMessage(BLOCKED_C1);
 			sm.addCharName(friend);
 			activeChar.sendPacket(sm);
 			return;
 		}
+		
 		// Target already in friend list.
 		if (activeChar.isFriend(friend.getObjectId())) {
-			sm = SystemMessage.getSystemMessage(SystemMessageId.S1_ALREADY_IN_FRIENDS_LIST);
+			final var sm = SystemMessage.getSystemMessage(S1_ALREADY_IN_FRIENDS_LIST);
 			sm.addString(_name);
 			activeChar.sendPacket(sm);
 			return;
 		}
+		
 		// Target is busy.
 		if (friend.isProcessingRequest()) {
-			sm = SystemMessage.getSystemMessage(SystemMessageId.C1_IS_BUSY_TRY_LATER);
+			final var sm = SystemMessage.getSystemMessage(C1_IS_BUSY_TRY_LATER);
 			sm.addString(_name);
 			activeChar.sendPacket(sm);
 			return;
 		}
+		
 		// Friend request sent.
 		activeChar.onTransactionRequest(friend);
 		friend.sendPacket(new FriendAddRequest(activeChar.getName()));
-		sm = SystemMessage.getSystemMessage(SystemMessageId.YOU_REQUESTED_C1_TO_BE_FRIEND);
+		final var sm = SystemMessage.getSystemMessage(YOU_REQUESTED_C1_TO_BE_FRIEND);
 		sm.addString(_name);
 		activeChar.sendPacket(sm);
 	}

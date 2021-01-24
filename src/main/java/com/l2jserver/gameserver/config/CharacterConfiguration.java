@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  *
  * This file is part of L2J Server.
  *
@@ -305,6 +305,12 @@ public interface CharacterConfiguration extends Reloadable {
 	
 	@Key("NpcTalkBlockingTime")
 	Integer getNpcTalkBlockingTime();
+	
+	@Key("FriendListLimit")
+	Integer getFriendListLimit();
+	
+	@Key("BlockListLimit")
+	Integer getBlockListLimit();
 	
 	// Enchanting
 	

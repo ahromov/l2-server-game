@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -548,7 +548,7 @@ public final class QuestState {
 	 * @param value the value
 	 * @return this QuestState
 	 */
-	public QuestState setMemoStateEx(int slot, int value) {
+	public QuestState setMemoStateEx(int slot, long value) {
 		set("memoStateEx" + slot, String.valueOf(value));
 		return this;
 	}

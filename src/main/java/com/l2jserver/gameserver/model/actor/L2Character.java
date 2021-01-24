@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -127,7 +127,7 @@ import com.l2jserver.gameserver.model.skills.EffectScope;
 import com.l2jserver.gameserver.model.skills.Skill;
 import com.l2jserver.gameserver.model.skills.SkillChannelized;
 import com.l2jserver.gameserver.model.skills.SkillChannelizer;
-import com.l2jserver.gameserver.model.skills.targets.L2TargetType;
+import com.l2jserver.gameserver.model.skills.targets.TargetType;
 import com.l2jserver.gameserver.model.stats.Calculator;
 import com.l2jserver.gameserver.model.stats.Formulas;
 import com.l2jserver.gameserver.model.stats.Stats;
@@ -1760,7 +1760,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 				return false;
 			}
 			boolean canCast = true;
-			if ((skill.getTargetType() == L2TargetType.GROUND) && isPlayer()) {
+			if ((skill.getTargetType() == TargetType.GROUND) && isPlayer()) {
 				Location wp = getActingPlayer().getCurrentSkillWorldPosition();
 				if (!region.checkEffectRangeInsidePeaceZone(skill, wp.getX(), wp.getY(), wp.getZ())) {
 					canCast = false;
@@ -3760,7 +3760,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 			// Pathfinding checks. Only when geodata setting is 2, the LoS check gives shorter result
 			// than the original movement was and the LoS gives a shorter distance than 2000
 			// This way of detecting need for pathfinding could be changed.
-			if ((geodata().getPathFinding() > 0) && ((originalDistance - distance) > 30) && (distance < 2000)) {
+			if ((geodata().getPathFinding() > 0) && ((originalDistance - distance) > 30)) {
 				// Path calculation
 				// Overrides previous movement check
 				if ((isPlayable() && !isInVehicle) || isMinion() || isInCombat()) {
@@ -3775,7 +3775,8 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 						// Summons will follow their masters no matter what.
 						// Currently minions also must move freely since L2AttackableAI commands them to move along with their leader
 						if (isPlayer() || (!isPlayable() && !isMinion() && (Math.abs(z - curZ) > 140)) || (isSummon() && !((L2Summon) this).getFollowStatus())) {
-							getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
+							final Location destination = GeoData.getInstance().moveCheck(curX, curY, curZ, x, y, z, getInstanceId());
+							getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, destination);
 							return;
 						}
 						
@@ -4603,7 +4604,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 					}
 					
 					// Healing party members should ignore LOS.
-					if (((skill.getTargetType() != L2TargetType.PARTY) || !skill.hasEffectType(L2EffectType.HP)) //
+					if (((skill.getTargetType() != TargetType.PARTY) || !skill.hasEffectType(L2EffectType.HP)) //
 						&& !GeoData.getInstance().canSeeTarget(this, target)) {
 						skipLOS++;
 						continue;
@@ -4786,7 +4787,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder, IDe
 			}
 		}
 		
-		if (skill.isBad() && (skill.getTargetType() != L2TargetType.UNLOCKABLE)) {
+		if (skill.isBad() && (skill.getTargetType() != TargetType.UNLOCKABLE)) {
 			getAI().clientStartAutoAttack();
 		}
 		

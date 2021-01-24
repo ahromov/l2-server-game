@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -19,7 +19,9 @@
 package com.l2jserver.gameserver.enums;
 
 /**
+ * Effect calculation type.
  * @author Zealar
+ * @version 2.6.2.0
  */
 public enum EffectCalculationType {
 	DIFF,

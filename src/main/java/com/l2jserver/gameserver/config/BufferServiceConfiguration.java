@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  *
  * This file is part of L2J Server.
  *
@@ -27,9 +27,12 @@ import org.aeonbits.owner.Config.LoadPolicy;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Reloadable;
 
+import com.l2jserver.gameserver.model.zone.ZoneId;
+
 /**
  * Buffer Service Configuration.
  * @author HorridoJoho
+ * @version 2.6.2.0
  */
 @Sources({
 	"file:${L2J_HOME}/custom/game/config/bufferservice.properties",
@@ -51,6 +54,24 @@ public interface BufferServiceConfiguration extends Reloadable {
 	
 	@Key("Debug")
 	Boolean getDebug();
+	
+	@Key("ForbidInZones")
+	ZoneId[] getForbidInZones();
+	
+	@Key("ForbidInEvents")
+	Boolean getForbidInEvents();
+	
+	@Key("ForbidInDuell")
+	Boolean getForbidInDuell();
+	
+	@Key("ForbidInFight")
+	Boolean getForbidInFight();
+	
+	@Key("ForbidInPvp")
+	Boolean getForbidInPvp();
+	
+	@Key("ForbidForChaoticPlayers")
+	Boolean getForbidForChaoticPlayers();
 	
 	@Key("VoicedEnable")
 	Boolean getVoicedEnable();

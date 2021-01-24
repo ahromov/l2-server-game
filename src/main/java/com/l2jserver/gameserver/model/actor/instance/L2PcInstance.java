@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -260,7 +260,7 @@ import com.l2jserver.gameserver.model.skills.AbnormalType;
 import com.l2jserver.gameserver.model.skills.BuffInfo;
 import com.l2jserver.gameserver.model.skills.CommonSkill;
 import com.l2jserver.gameserver.model.skills.Skill;
-import com.l2jserver.gameserver.model.skills.targets.L2TargetType;
+import com.l2jserver.gameserver.model.skills.targets.TargetType;
 import com.l2jserver.gameserver.model.stats.BaseStats;
 import com.l2jserver.gameserver.model.stats.Formulas;
 import com.l2jserver.gameserver.model.stats.Stats;
@@ -645,6 +645,10 @@ public final class L2PcInstance extends L2Playable {
 	private Map<Stats, Double> _servitorShare;
 	// Character UI
 	private UIKeysSettings _uiKeySettings;
+	/** Auto Loot Extension. */
+	private boolean _enableAutoLoot = false;
+	private boolean _enableAutoLootItem = false;
+	private boolean _enableAutoLootHerb = false;
 	// L2JMOD Wedding
 	private boolean _married = false;
 	private int _partnerId = 0;
@@ -2492,7 +2496,7 @@ public final class L2PcInstance extends L2Playable {
 			return;
 		}
 		
-		if (!_waitTypeSitting && !isAttackingDisabled() && !isOutOfControl() && !isImmobilized()) {
+		if (!_waitTypeSitting && !isAttackingDisabled() && !isOutOfControl() && !isImmobilized() && !isMoving()) {
 			breakAttack();
 			setIsSitting(true);
 			getAI().setIntention(CtrlIntention.AI_INTENTION_REST);
@@ -2786,7 +2790,7 @@ public final class L2PcInstance extends L2Playable {
 			sendPacket(su);
 			
 			// If over capacity, drop the item
-			if (!canOverrideCond(PcCondOverride.ITEM_CONDITIONS) && !_inventory.validateCapacity(0, item.isQuestItem()) && newitem.isDropable() && (!newitem.isStackable() || (newitem.getLastChange() != L2ItemInstance.MODIFIED))) {
+			if (!canOverrideCond(PcCondOverride.ITEM_CONDITIONS) && !_inventory.validateCapacity(0, item.isQuestItem()) && newitem.isDroppable() && (!newitem.isStackable() || (newitem.getLastChange() != L2ItemInstance.MODIFIED))) {
 				dropItem("InvDrop", newitem, null, true, true);
 			} else if (CursedWeaponsManager.getInstance().isCursed(newitem.getId())) {
 				CursedWeaponsManager.getInstance().activate(this, newitem);
@@ -2891,7 +2895,7 @@ public final class L2PcInstance extends L2Playable {
 				L2ItemInstance createdItem = _inventory.addItem(process, itemId, count, enchantLevel, this, reference);
 				
 				// If over capacity, drop the item
-				if (!canOverrideCond(PcCondOverride.ITEM_CONDITIONS) && !_inventory.validateCapacity(0, item.isQuestItem()) && createdItem.isDropable() && (!createdItem.isStackable() || (createdItem.getLastChange() != L2ItemInstance.MODIFIED))) {
+				if (!canOverrideCond(PcCondOverride.ITEM_CONDITIONS) && !_inventory.validateCapacity(0, item.isQuestItem()) && createdItem.isDroppable() && (!createdItem.isStackable() || (createdItem.getLastChange() != L2ItemInstance.MODIFIED))) {
 					dropItem("InvDrop", createdItem, null, true);
 				} else if (CursedWeaponsManager.getInstance().isCursed(createdItem.getId())) {
 					CursedWeaponsManager.getInstance().activate(this, createdItem);
@@ -4273,6 +4277,30 @@ public final class L2PcInstance extends L2Playable {
 		return false;
 	}
 	
+	public boolean isAutoLoot() {
+		return _enableAutoLoot;
+	}
+	
+	public void setAutoLoot(boolean val) {
+		_enableAutoLoot = val;
+	}
+	
+	public boolean isAutoLootItem() {
+		return _enableAutoLootItem;
+	}
+	
+	public void setAutoLootItem(boolean val) {
+		_enableAutoLootItem = val;
+	}
+	
+	public boolean isAutoLootHerb() {
+		return _enableAutoLootHerb;
+	}
+	
+	public void setAutoLootHerbs(boolean val) {
+		_enableAutoLootHerb = val;
+	}
+	
 	public boolean isMarried() {
 		return _married;
 	}
@@ -4538,7 +4566,7 @@ public final class L2PcInstance extends L2Playable {
 					// Control Item of active pet
 					// Item listed in the non droppable item list
 					// Item listed in the non droppable pet item list
-					if (itemDrop.isShadowItem() || itemDrop.isTimeLimitedItem() || !itemDrop.isDropable() || (itemDrop.getId() == Inventory.ADENA_ID) || //
+					if (itemDrop.isShadowItem() || itemDrop.isTimeLimitedItem() || !itemDrop.isDroppable() || (itemDrop.getId() == Inventory.ADENA_ID) || //
 						(itemDrop.getItem().getType2() == ItemType2.QUEST) || (hasSummon() && (getSummon().getControlObjectId() == itemDrop.getObjectId())) || //
 						pvp().getNonDroppableItems().contains(itemDrop.getId()) || pvp().getPetItems().contains(itemDrop.getId())) {
 						continue;
@@ -6441,10 +6469,10 @@ public final class L2PcInstance extends L2Playable {
 		// ************************************* Check Target *******************************************
 		// Create and set a L2Object containing the target of the skill
 		L2Object target = null;
-		L2TargetType sklTargetType = skill.getTargetType();
+		TargetType sklTargetType = skill.getTargetType();
 		Location worldPosition = getCurrentSkillWorldPosition();
 		
-		if ((sklTargetType == L2TargetType.GROUND) && (worldPosition == null)) {
+		if ((sklTargetType == TargetType.GROUND) && (worldPosition == null)) {
 			LOG.warn("WorldPosition is null for {}, {}", skill.getName(), this);
 			sendPacket(ActionFailed.STATIC_PACKET);
 			return false;
@@ -6597,7 +6625,7 @@ public final class L2PcInstance extends L2Playable {
 			// Check if the target is in the skill cast range
 			if (dontMove) {
 				// Calculate the distance between the L2PcInstance and the target
-				if (sklTargetType == L2TargetType.GROUND) {
+				if (sklTargetType == TargetType.GROUND) {
 					if (!isInsideRadius(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), skill.getCastRange() + getTemplate().getCollisionRadius(), false, false)) {
 						// Send a System Message to the caster
 						sendPacket(SystemMessageId.TARGET_TOO_FAR);
@@ -6632,6 +6660,7 @@ public final class L2PcInstance extends L2Playable {
 			case FRONT_AURA:
 			case BEHIND_AURA:
 			case AREA_SUMMON:
+			case AURA_UNDEAD_ENEMY:
 			case GROUND:
 			case SELF:
 			case ENEMY:
@@ -6650,7 +6679,7 @@ public final class L2PcInstance extends L2Playable {
 		
 		// GeoData Los Check here
 		if (skill.getCastRange() > 0) {
-			if (sklTargetType == L2TargetType.GROUND) {
+			if (sklTargetType == TargetType.GROUND) {
 				if (!GeoData.getInstance().canSeeTarget(this, worldPosition)) {
 					sendPacket(SystemMessageId.CANT_SEE_TARGET);
 					sendPacket(ActionFailed.STATIC_PACKET);

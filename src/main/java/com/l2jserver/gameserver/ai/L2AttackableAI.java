@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -64,7 +64,7 @@ import com.l2jserver.gameserver.model.events.impl.character.npc.attackable.OnAtt
 import com.l2jserver.gameserver.model.events.returns.TerminateReturn;
 import com.l2jserver.gameserver.model.skills.AbnormalVisualEffect;
 import com.l2jserver.gameserver.model.skills.Skill;
-import com.l2jserver.gameserver.model.skills.targets.L2TargetType;
+import com.l2jserver.gameserver.model.skills.targets.TargetType;
 import com.l2jserver.gameserver.model.zone.ZoneId;
 import com.l2jserver.gameserver.util.Util;
 
@@ -854,7 +854,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 					L2Character leader = npc.getLeader();
 					if ((leader != null) && !leader.isDead() && (Rnd.get(100) > ((leader.getCurrentHp() / leader.getMaxHp()) * 100))) {
 						for (Skill healSkill : aiHealSkills) {
-							if (healSkill.getTargetType() == L2TargetType.SELF) {
+							if (healSkill.getTargetType() == TargetType.SELF) {
 								continue;
 							}
 							
@@ -901,7 +901,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 						continue;
 					}
 					
-					if (sk.getTargetType() == L2TargetType.ONE) {
+					if (sk.getTargetType() == TargetType.ONE) {
 						for (L2Character obj : npc.getKnownList().getKnownCharactersInRadius(sk.getCastRange() + collision)) {
 							if (!(obj instanceof L2Attackable) || obj.isDead()) {
 								continue;
@@ -942,7 +942,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 					L2Character leader = npc.getLeader();
 					if ((leader != null) && leader.isDead()) {
 						for (Skill sk : aiResSkills) {
-							if (sk.getTargetType() == L2TargetType.SELF) {
+							if (sk.getTargetType() == TargetType.SELF) {
 								continue;
 							}
 							
@@ -972,7 +972,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 					if (!checkSkillCastConditions(npc, sk)) {
 						continue;
 					}
-					if (sk.getTargetType() == L2TargetType.ONE) {
+					if (sk.getTargetType() == TargetType.ONE) {
 						for (L2Character obj : npc.getKnownList().getKnownCharactersInRadius(sk.getCastRange() + collision)) {
 							if (!(obj instanceof L2Attackable) || !obj.isDead()) {
 								continue;
@@ -1099,10 +1099,10 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 					return true;
 				}
 				// If actor already have buff, start looking at others same faction mob to cast
-				if (sk.getTargetType() == L2TargetType.SELF) {
+				if (sk.getTargetType() == TargetType.SELF) {
 					return false;
 				}
-				if (sk.getTargetType() == L2TargetType.ONE) {
+				if (sk.getTargetType() == TargetType.ONE) {
 					L2Character target = effectTargetReconsider(sk, true);
 					if (target != null) {
 						clientStopMoving(null);
@@ -1127,17 +1127,17 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 						return true;
 					}
 				} else if (canAOE(sk)) {
-					if ((sk.getTargetType() == L2TargetType.AURA) || (sk.getTargetType() == L2TargetType.BEHIND_AURA) || (sk.getTargetType() == L2TargetType.FRONT_AURA) || (sk.getTargetType() == L2TargetType.AURA_CORPSE_MOB) || (sk.getTargetType() == L2TargetType.AURA_UNDEAD_ENEMY)) {
+					if ((sk.getTargetType() == TargetType.AURA) || (sk.getTargetType() == TargetType.BEHIND_AURA) || (sk.getTargetType() == TargetType.FRONT_AURA) || (sk.getTargetType() == TargetType.AURA_CORPSE_MOB) || (sk.getTargetType() == TargetType.AURA_UNDEAD_ENEMY)) {
 						clientStopMoving(null);
 						caster.doCast(sk);
 						return true;
 					}
-					if (((sk.getTargetType() == L2TargetType.AREA) || (sk.getTargetType() == L2TargetType.BEHIND_AREA) || (sk.getTargetType() == L2TargetType.FRONT_AREA)) && GeoData.getInstance().canSeeTarget(caster, attackTarget) && !attackTarget.isDead() && (dist2 <= srange)) {
+					if (((sk.getTargetType() == TargetType.AREA) || (sk.getTargetType() == TargetType.BEHIND_AREA) || (sk.getTargetType() == TargetType.FRONT_AREA)) && GeoData.getInstance().canSeeTarget(caster, attackTarget) && !attackTarget.isDead() && (dist2 <= srange)) {
 						clientStopMoving(null);
 						caster.doCast(sk);
 						return true;
 					}
-				} else if (sk.getTargetType() == L2TargetType.ONE) {
+				} else if (sk.getTargetType() == TargetType.ONE) {
 					L2Character target = effectTargetReconsider(sk, false);
 					if (target != null) {
 						clientStopMoving(null);
@@ -1149,7 +1149,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 		}
 		
 		if (sk.hasEffectType(L2EffectType.DISPEL)) {
-			if (sk.getTargetType() == L2TargetType.ONE) {
+			if (sk.getTargetType() == TargetType.ONE) {
 				if ((attackTarget.getEffectList().getFirstEffect(L2EffectType.BUFF) != null) && GeoData.getInstance().canSeeTarget(caster, attackTarget) && !attackTarget.isDead() && (dist2 <= srange)) {
 					clientStopMoving(null);
 					caster.doCast(sk);
@@ -1164,13 +1164,13 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 					return true;
 				}
 			} else if (canAOE(sk)) {
-				if (((sk.getTargetType() == L2TargetType.AURA) || (sk.getTargetType() == L2TargetType.BEHIND_AURA) || (sk.getTargetType() == L2TargetType.FRONT_AURA)) && GeoData.getInstance().canSeeTarget(caster, attackTarget))
+				if (((sk.getTargetType() == TargetType.AURA) || (sk.getTargetType() == TargetType.BEHIND_AURA) || (sk.getTargetType() == TargetType.FRONT_AURA)) && GeoData.getInstance().canSeeTarget(caster, attackTarget))
 				
 				{
 					clientStopMoving(null);
 					caster.doCast(sk);
 					return true;
-				} else if (((sk.getTargetType() == L2TargetType.AREA) || (sk.getTargetType() == L2TargetType.BEHIND_AREA) || (sk.getTargetType() == L2TargetType.FRONT_AREA)) && GeoData.getInstance().canSeeTarget(caster, attackTarget) && !attackTarget.isDead() && (dist2 <= srange)) {
+				} else if (((sk.getTargetType() == TargetType.AREA) || (sk.getTargetType() == TargetType.BEHIND_AREA) || (sk.getTargetType() == TargetType.FRONT_AREA)) && GeoData.getInstance().canSeeTarget(caster, attackTarget) && !attackTarget.isDead() && (dist2 <= srange)) {
 					clientStopMoving(null);
 					caster.doCast(sk);
 					return true;
@@ -1180,7 +1180,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 		
 		if (sk.hasEffectType(L2EffectType.HP)) {
 			double percentage = (caster.getCurrentHp() / caster.getMaxHp()) * 100;
-			if (caster.isMinion() && (sk.getTargetType() != L2TargetType.SELF)) {
+			if (caster.isMinion() && (sk.getTargetType() != TargetType.SELF)) {
 				L2Character leader = caster.getLeader();
 				if ((leader != null) && !leader.isDead() && (Rnd.get(100) > ((leader.getCurrentHp() / leader.getMaxHp()) * 100))) {
 					if (!Util.checkIfInRange((sk.getCastRange() + caster.getTemplate().getCollisionRadius() + leader.getTemplate().getCollisionRadius()), caster, leader, false) && !isParty(sk) && !caster.isMovementDisabled()) {
@@ -1204,7 +1204,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 				return true;
 			}
 			
-			if (sk.getTargetType() == L2TargetType.ONE) {
+			if (sk.getTargetType() == TargetType.ONE) {
 				for (L2Character obj : caster.getKnownList().getKnownCharactersInRadius(sk.getCastRange() + caster.getTemplate().getCollisionRadius())) {
 					if (!(obj instanceof L2Attackable) || obj.isDead()) {
 						continue;
@@ -1271,7 +1271,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 		}
 		
 		if (sk.hasEffectType(L2EffectType.SLEEP)) {
-			if (sk.getTargetType() == L2TargetType.ONE) {
+			if (sk.getTargetType() == TargetType.ONE) {
 				if (!attackTarget.isDead() && (dist2 <= srange)) {
 					if ((dist2 > range) || attackTarget.isMoving()) {
 						if (!attackTarget.isAffectedBySkill(sk.getId())) {
@@ -1289,12 +1289,12 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 					return true;
 				}
 			} else if (canAOE(sk)) {
-				if ((sk.getTargetType() == L2TargetType.AURA) || (sk.getTargetType() == L2TargetType.BEHIND_AURA) || (sk.getTargetType() == L2TargetType.FRONT_AURA)) {
+				if ((sk.getTargetType() == TargetType.AURA) || (sk.getTargetType() == TargetType.BEHIND_AURA) || (sk.getTargetType() == TargetType.FRONT_AURA)) {
 					clientStopMoving(null);
 					caster.doCast(sk);
 					return true;
 				}
-				if (((sk.getTargetType() == L2TargetType.AREA) || (sk.getTargetType() == L2TargetType.BEHIND_AREA) || (sk.getTargetType() == L2TargetType.FRONT_AREA)) && GeoData.getInstance().canSeeTarget(caster, attackTarget) && !attackTarget.isDead() && (dist2 <= srange)) {
+				if (((sk.getTargetType() == TargetType.AREA) || (sk.getTargetType() == TargetType.BEHIND_AREA) || (sk.getTargetType() == TargetType.FRONT_AREA)) && GeoData.getInstance().canSeeTarget(caster, attackTarget) && !attackTarget.isDead() && (dist2 <= srange)) {
 					clientStopMoving(null);
 					caster.doCast(sk);
 					return true;
@@ -1310,17 +1310,17 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 					return true;
 				}
 			} else if (canAOE(sk)) {
-				if ((sk.getTargetType() == L2TargetType.AURA) || (sk.getTargetType() == L2TargetType.BEHIND_AURA) || (sk.getTargetType() == L2TargetType.FRONT_AURA)) {
+				if ((sk.getTargetType() == TargetType.AURA) || (sk.getTargetType() == TargetType.BEHIND_AURA) || (sk.getTargetType() == TargetType.FRONT_AURA)) {
 					clientStopMoving(null);
 					caster.doCast(sk);
 					return true;
 				}
-				if (((sk.getTargetType() == L2TargetType.AREA) || (sk.getTargetType() == L2TargetType.BEHIND_AREA) || (sk.getTargetType() == L2TargetType.FRONT_AREA)) && GeoData.getInstance().canSeeTarget(caster, attackTarget) && !attackTarget.isDead() && (dist2 <= srange)) {
+				if (((sk.getTargetType() == TargetType.AREA) || (sk.getTargetType() == TargetType.BEHIND_AREA) || (sk.getTargetType() == TargetType.FRONT_AREA)) && GeoData.getInstance().canSeeTarget(caster, attackTarget) && !attackTarget.isDead() && (dist2 <= srange)) {
 					clientStopMoving(null);
 					caster.doCast(sk);
 					return true;
 				}
-			} else if (sk.getTargetType() == L2TargetType.ONE) {
+			} else if (sk.getTargetType() == TargetType.ONE) {
 				L2Character target = effectTargetReconsider(sk, false);
 				if (target != null) {
 					clientStopMoving(null);
@@ -1338,17 +1338,17 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 					return true;
 				}
 			} else if (canAOE(sk)) {
-				if ((sk.getTargetType() == L2TargetType.AURA) || (sk.getTargetType() == L2TargetType.BEHIND_AURA) || (sk.getTargetType() == L2TargetType.FRONT_AURA) || (sk.getTargetType() == L2TargetType.AURA_CORPSE_MOB) || (sk.getTargetType() == L2TargetType.AURA_UNDEAD_ENEMY)) {
+				if ((sk.getTargetType() == TargetType.AURA) || (sk.getTargetType() == TargetType.BEHIND_AURA) || (sk.getTargetType() == TargetType.FRONT_AURA) || (sk.getTargetType() == TargetType.AURA_CORPSE_MOB) || (sk.getTargetType() == TargetType.AURA_UNDEAD_ENEMY)) {
 					clientStopMoving(null);
 					caster.doCast(sk);
 					return true;
 				}
-				if (((sk.getTargetType() == L2TargetType.AREA) || (sk.getTargetType() == L2TargetType.BEHIND_AREA) || (sk.getTargetType() == L2TargetType.FRONT_AREA)) && GeoData.getInstance().canSeeTarget(caster, attackTarget) && !attackTarget.isDead() && (dist2 <= srange)) {
+				if (((sk.getTargetType() == TargetType.AREA) || (sk.getTargetType() == TargetType.BEHIND_AREA) || (sk.getTargetType() == TargetType.FRONT_AREA)) && GeoData.getInstance().canSeeTarget(caster, attackTarget) && !attackTarget.isDead() && (dist2 <= srange)) {
 					clientStopMoving(null);
 					caster.doCast(sk);
 					return true;
 				}
-			} else if (sk.getTargetType() == L2TargetType.ONE) {
+			} else if (sk.getTargetType() == TargetType.ONE) {
 				L2Character target = effectTargetReconsider(sk, false);
 				if (target != null) {
 					clientStopMoving(null);
@@ -1360,7 +1360,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 		
 		if (sk.hasEffectType(L2EffectType.RESURRECTION)) {
 			if (!isParty(sk)) {
-				if (caster.isMinion() && (sk.getTargetType() != L2TargetType.SELF)) {
+				if (caster.isMinion() && (sk.getTargetType() != TargetType.SELF)) {
 					L2Character leader = caster.getLeader();
 					if (leader != null) {
 						if (leader.isDead()) {

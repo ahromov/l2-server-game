@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -18,11 +18,19 @@
  */
 package com.l2jserver.gameserver.network.clientpackets;
 
+import static com.l2jserver.gameserver.config.Configuration.character;
+import static com.l2jserver.gameserver.network.SystemMessageId.FAILED_TO_INVITE_A_FRIEND;
+import static com.l2jserver.gameserver.network.SystemMessageId.S1_ADDED_TO_FRIENDS;
+import static com.l2jserver.gameserver.network.SystemMessageId.S1_ALREADY_IN_FRIENDS_LIST;
+import static com.l2jserver.gameserver.network.SystemMessageId.S1_JOINED_AS_FRIEND;
+import static com.l2jserver.gameserver.network.SystemMessageId.THE_FRIENDS_LIST_OF_THE_PERSON_YOU_ARE_TRYING_TO_ADD_IS_FULL_SO_REGISTRATION_IS_NOT_POSSIBLE;
+import static com.l2jserver.gameserver.network.SystemMessageId.YOU_CAN_ONLY_ENTER_UP_128_NAMES_IN_YOUR_FRIENDS_LIST;
+import static com.l2jserver.gameserver.network.SystemMessageId.YOU_HAVE_SUCCEEDED_INVITING_FRIEND;
+
 import java.util.logging.Level;
 
 import com.l2jserver.commons.database.ConnectionFactory;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
-import com.l2jserver.gameserver.network.SystemMessageId;
 import com.l2jserver.gameserver.network.serverpackets.FriendPacket;
 import com.l2jserver.gameserver.network.serverpackets.SystemMessage;
 
@@ -50,9 +58,19 @@ public final class RequestAnswerFriendInvite extends L2GameClientPacket {
 		}
 		
 		if (player.isFriend(requestor.getObjectId()) || requestor.isFriend(player.getObjectId())) {
-			final SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.S1_ALREADY_IN_FRIENDS_LIST);
+			final SystemMessage sm = SystemMessage.getSystemMessage(S1_ALREADY_IN_FRIENDS_LIST);
 			sm.addCharName(player);
 			requestor.sendPacket(sm);
+			return;
+		}
+		
+		if (player.getFriends().size() >= character().getFriendListLimit()) {
+			player.sendPacket(YOU_CAN_ONLY_ENTER_UP_128_NAMES_IN_YOUR_FRIENDS_LIST);
+			return;
+		}
+		
+		if (requestor.getFriends().size() >= character().getFriendListLimit()) {
+			requestor.sendPacket(THE_FRIENDS_LIST_OF_THE_PERSON_YOU_ARE_TRYING_TO_ADD_IS_FULL_SO_REGISTRATION_IS_NOT_POSSIBLE);
 			return;
 		}
 		
@@ -64,17 +82,16 @@ public final class RequestAnswerFriendInvite extends L2GameClientPacket {
 				statement.setInt(3, player.getObjectId());
 				statement.setInt(4, requestor.getObjectId());
 				statement.execute();
-				SystemMessage msg = SystemMessage.getSystemMessage(SystemMessageId.YOU_HAVE_SUCCEEDED_INVITING_FRIEND);
-				requestor.sendPacket(msg);
+				requestor.sendPacket(YOU_HAVE_SUCCEEDED_INVITING_FRIEND);
 				
 				// Player added to your friend list
-				msg = SystemMessage.getSystemMessage(SystemMessageId.S1_ADDED_TO_FRIENDS);
+				var msg = SystemMessage.getSystemMessage(S1_ADDED_TO_FRIENDS);
 				msg.addString(player.getName());
 				requestor.sendPacket(msg);
 				requestor.addFriend(player.getObjectId());
 				
 				// has joined as friend.
-				msg = SystemMessage.getSystemMessage(SystemMessageId.S1_JOINED_AS_FRIEND);
+				msg = SystemMessage.getSystemMessage(S1_JOINED_AS_FRIEND);
 				msg.addString(requestor.getName());
 				player.sendPacket(msg);
 				player.addFriend(requestor.getObjectId());
@@ -86,8 +103,7 @@ public final class RequestAnswerFriendInvite extends L2GameClientPacket {
 				_log.log(Level.WARNING, "Could not add friend objectid: " + e.getMessage(), e);
 			}
 		} else {
-			SystemMessage msg = SystemMessage.getSystemMessage(SystemMessageId.FAILED_TO_INVITE_A_FRIEND);
-			requestor.sendPacket(msg);
+			requestor.sendPacket(FAILED_TO_INVITE_A_FRIEND);
 		}
 		
 		player.setActiveRequester(null);

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -21,13 +21,13 @@ package com.l2jserver.gameserver.handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.l2jserver.gameserver.model.skills.targets.L2TargetType;
+import com.l2jserver.gameserver.model.skills.targets.TargetType;
 
 /**
  * @author UnAfraid
  */
-public class TargetHandler implements IHandler<ITargetTypeHandler, Enum<L2TargetType>> {
-	private final Map<Enum<L2TargetType>, ITargetTypeHandler> _datatable;
+public class TargetHandler implements IHandler<ITargetTypeHandler, Enum<TargetType>> {
+	private final Map<Enum<TargetType>, ITargetTypeHandler> _datatable;
 	
 	protected TargetHandler() {
 		_datatable = new HashMap<>();
@@ -44,7 +44,7 @@ public class TargetHandler implements IHandler<ITargetTypeHandler, Enum<L2Target
 	}
 	
 	@Override
-	public ITargetTypeHandler getHandler(Enum<L2TargetType> targetType) {
+	public ITargetTypeHandler getHandler(Enum<TargetType> targetType) {
 		return _datatable.get(targetType);
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -673,11 +673,11 @@ public final class L2ItemInstance extends L2Object {
 	}
 	
 	/**
-	 * Returns if item is dropable
+	 * Returns if item is droppable
 	 * @return boolean
 	 */
-	public boolean isDropable() {
-		return !isAugmented() && _item.isDropable();
+	public boolean isDroppable() {
+		return !isAugmented() && _item.isDroppable();
 	}
 	
 	/**

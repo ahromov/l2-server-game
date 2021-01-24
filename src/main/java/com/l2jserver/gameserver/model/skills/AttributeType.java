@@ -1,5 +1,5 @@
 /*
- * Copyright © 2004-2020 L2J Server
+ * Copyright © 2004-2021 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -30,7 +30,7 @@ public enum AttributeType {
 	WIND(2),
 	EARTH(3),
 	HOLY(4),
-	DARK(5);
+	UNHOLY(5);
 	
 	private final byte _id;
 	

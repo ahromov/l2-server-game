@@ -652,6 +652,10 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
 			return;
 		}
 		
+		if (npc.isOutOfControl()) {
+			return;
+		}
+		
 		final L2Character mostHate = npc.getMostHated();
 		if (mostHate == null) {
 			setIntention(AI_INTENTION_ACTIVE);

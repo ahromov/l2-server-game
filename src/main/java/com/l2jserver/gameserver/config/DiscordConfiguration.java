@@ -18,37 +18,48 @@
  */
 package com.l2jserver.gameserver.config;
 
+import org.aeonbits.owner.Config.HotReload;
+import org.aeonbits.owner.Config.LoadPolicy;
+import org.aeonbits.owner.Config.Sources;
+import org.aeonbits.owner.Mutable;
+import org.aeonbits.owner.Reloadable;
+
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.aeonbits.owner.Config.HotReloadType.ASYNC;
 import static org.aeonbits.owner.Config.LoadType.MERGE;
-
-import org.aeonbits.owner.Config;
-import org.aeonbits.owner.Mutable;
-import org.aeonbits.owner.Reloadable;
 
 /**
  * Discord Configuration.
  * @author Stalitsa
  * @version 2.6.2.0
  */
-@Config.Sources({
+@Sources({
 	"file:${L2J_HOME}/custom/game/config/discord.properties",
 	"file:./config/discord.properties",
 	"classpath:config/discord.properties"
 })
-@Config.LoadPolicy(MERGE)
-@Config.HotReload(value = 20, unit = MINUTES, type = ASYNC)
+@LoadPolicy(MERGE)
+@HotReload(value = 20, unit = MINUTES, type = ASYNC)
 public interface DiscordConfiguration extends Mutable, Reloadable {
-	
-	@Config.Key("BotEnable")
+
+	@Key("BotEnable")
 	Boolean enableBot();
-	
-	@Config.Key("BotPrefix")
+
+	@Key("BotPrefix")
 	String getPrefix();
-	
-	@Config.Key("BotToken")
+
+	@Key("BotToken")
 	String getBotToken();
-	
-	@Config.Key("ConsoleLogChannelId")
+
+	@Key("ServerId")
+	String getServerId();
+
+	@Key("GameMasterId")
+	String getGameMasterId();
+
+	@Key("ConsoleLogChannelId")
 	String getConsoleLogChannelId();
+
+	@Key("GameChatChannelId")
+	String getGameChatChannelId();
 }
